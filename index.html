@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gamefica Ação Matemática</title>
+<link rel="icon" href="favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/svg+xml" href="icone.svg?v=3">
+<link rel="icon" type="image/png" sizes="192x192" href="icone-192.png?v=3">
+<link rel="apple-touch-icon" href="icone-180.png?v=3">
+<meta name="description" content="Jogos e atividades de Matemática – Prof. Dr. Haroldo Aleixo de Lima Junior">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+  /* Mesmo visual do portal: caderno quadriculado e jogos como post-its coloridos */
+  :root{
+    --chao:#f3f6fb; --quadro:rgba(47,91,170,.11); --cartao:#ffffff; --cartao2:#f7f9fd;
+    --tinta:#1d2b53; --tinta2:#55627f; --linha:#d9e1ee;
+    --marca:#ffd23f; --marca-borda:#e0ad00; --coral:#d9442f; --verde:#12865f; --azul:#2f63d6;
+    --sombra:0 1px 0 rgba(29,43,83,.06),0 10px 26px -14px rgba(29,43,83,.32);
+    --n-amarelo:#ffe27a; --n-coral:#ffb4a6; --n-verde:#a6e4c6; --n-azul:#b9d4ff; --n-lilas:#d8c9ff; --n-laranja:#ffc88a;
+    --tinta-nota:#1d2b53; --hero-bg:#1d2b53; --hero-bg2:#2f4aa0;
+    --f-display:'Fredoka','Nunito',system-ui,sans-serif;
+    --f-corpo:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background-color:var(--chao);background-image:linear-gradient(var(--quadro) 1px,transparent 1px),linear-gradient(90deg,var(--quadro) 1px,transparent 1px);background-size:26px 26px;color:var(--tinta);font-family:var(--f-corpo);font-size:16px;line-height:1.5;min-height:100vh}
+  h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.15;margin:0}
+  button,input,select{font:inherit;color:inherit}
+  :focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+
+  header.topo{background:linear-gradient(135deg,var(--hero-bg),var(--hero-bg2));color:#fff;padding:22px 16px 26px}
+  header.topo .in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  header.topo h1{font-size:clamp(1.4rem,3.4vw,2rem)}
+  header.topo h1 span{color:var(--marca)}
+  header.topo small{display:block;opacity:.8;font-weight:700;margin-top:2px}
+  #usuario{display:flex;align-items:center;gap:10px;font-weight:700;flex-wrap:wrap}
+  #usuario button{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.35);color:#fff;box-shadow:none}
+
+  main{max-width:1080px;margin:0 auto;padding:20px 16px}
+  .card{background:var(--cartao);border:2px solid var(--linha);border-radius:var(--r);padding:20px;margin-bottom:20px;box-shadow:var(--sombra)}
+  h2{font-size:1.45rem;margin-bottom:4px}
+  .sub{color:var(--tinta2);margin:0 0 14px;font-weight:600}
+  .passo{display:flex;align-items:center;gap:10px;margin:18px 0 10px;font-family:var(--f-display);font-size:1.15rem;font-weight:600}
+  .passo b{width:30px;height:30px;border-radius:50%;background:var(--marca);border:2px solid var(--marca-borda);display:grid;place-items:center;font-size:.95rem;color:var(--tinta-nota)}
+  label{display:block;font-weight:800;font-size:.92rem;margin:10px 0 5px}
+  input,select{width:100%;padding:12px 13px;border:2px solid var(--linha);border-radius:12px;font-size:1rem;background:var(--cartao)}
+  input:focus,select:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px rgba(47,99,214,.18)}
+
+  button{display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border:2px solid var(--marca-borda);border-radius:12px;padding:10px 16px;font-weight:800;background:var(--marca);color:var(--tinta-nota);box-shadow:0 3px 0 var(--marca-borda);transition:transform .12s,box-shadow .12s}
+  button:hover{transform:translateY(-1px)}
+  button:active{transform:translateY(1px);box-shadow:0 1px 0 var(--marca-borda)}
+  button.sec{background:var(--cartao);border-color:var(--linha);color:var(--tinta);box-shadow:none}
+  button.perigo{background:transparent;border-color:var(--coral);color:var(--coral);box-shadow:none}
+  button.peq{padding:7px 12px;font-size:.9rem;border-radius:10px}
+  button.grande{padding:13px 22px;font-size:1.08rem}
+  button:disabled{opacity:.55;cursor:default;transform:none}
+  .linha{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .duas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+
+  /* Cartões dos jogos (iguais aos do portal) */
+  .grade-jogos{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:16px}
+  .cartao-jogo{position:relative;display:flex;flex-direction:column;text-align:left;padding:0;overflow:hidden;background:var(--cartao);border:2px solid var(--linha);border-radius:var(--r);color:var(--tinta);box-shadow:none;transition:transform .18s ease,box-shadow .18s ease,border-color .18s}
+  .cartao-jogo:hover{transform:translateY(-4px) rotate(-.5deg);box-shadow:var(--sombra)}
+  .cartao-jogo:active{transform:translateY(-1px);box-shadow:var(--sombra)}
+  .cartao-jogo[aria-pressed="true"]{border-color:var(--azul);box-shadow:0 0 0 3px var(--azul),var(--sombra);transform:translateY(-3px)}
+  .nota{background:var(--n,var(--n-amarelo));height:100px;display:grid;place-items:center;font-size:50px;position:relative;width:100%}
+  .nota .tema{position:absolute;left:10px;top:9px;font-size:12px;font-weight:800;color:var(--tinta-nota);background:rgba(255,255,255,.65);padding:2px 9px;border-radius:99px;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--f-corpo)}
+  .nota .emoji{transition:transform .25s;line-height:1}
+  .cartao-jogo:hover .emoji{transform:scale(1.15) rotate(-6deg)}
+  .marcado{position:absolute;right:9px;top:9px;width:30px;height:30px;border-radius:50%;background:var(--azul);color:#fff;display:none;place-items:center;font-size:16px;font-weight:900;font-family:var(--f-corpo);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  .cartao-jogo[aria-pressed="true"] .marcado{display:grid}
+  .corpo{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px;flex:1;width:100%}
+  .corpo h3{font-size:1.08rem}
+  .corpo p{margin:0;color:var(--tinta2);font-size:.88rem;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+  .escolhido{display:flex;align-items:center;gap:12px;background:var(--cartao2);border:2px dashed var(--linha);border-radius:12px;padding:10px 14px;margin-top:4px;font-weight:700}
+  .escolhido .mini{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:26px;background:var(--n,var(--n-amarelo));flex-shrink:0}
+
+  /* Minhas atividades */
+  .grade-ativ{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .ativ{display:flex;flex-direction:column;border:2px solid var(--linha);border-radius:var(--r);overflow:hidden;background:var(--cartao)}
+  .ativ .topo-ativ{background:var(--n,var(--n-amarelo));display:flex;align-items:center;gap:12px;padding:12px 14px;color:var(--tinta-nota)}
+  .ativ .topo-ativ .em{font-size:34px;line-height:1}
+  .ativ .topo-ativ h3{font-size:1.12rem}
+  .ativ .topo-ativ small{display:block;font-weight:800;opacity:.75}
+  .ativ .meio{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .tags{display:flex;gap:6px;flex-wrap:wrap}
+  .tag{font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px;border:1.5px solid currentColor;color:var(--tinta2)}
+  .tag.aberta{color:var(--verde)}
+  .tag.enc{color:var(--coral)}
+  .qr-caixa{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px;border:2px dashed var(--linha);border-radius:12px;background:#fff}
+  .qr-caixa canvas{width:100%;max-width:200px;height:auto;image-rendering:pixelated}
+  .qr-caixa small{color:#444;font-weight:800;text-align:center}
+  .link{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;background:var(--cartao2);border:1.5px solid var(--linha);border-radius:10px;padding:7px 10px;word-break:break-all}
+
+  .msg{padding:10px 12px;border-radius:12px;margin:10px 0;font-size:.95rem;font-weight:700}
+  .msg.erro{background:#fde3df;color:#8f2416}
+  .msg.ok{background:#d9f3e7;color:#0b5c40}
+  .msg.info{background:#e3ecff;color:#1f3f91}
+  .tabs{display:flex;gap:8px;margin:10px 0 6px}
+  .tabs button{flex:1;background:var(--cartao);border-color:var(--linha);box-shadow:none;color:var(--tinta)}
+  .tabs button.ativo{background:var(--marca);border-color:var(--marca-borda);box-shadow:0 3px 0 var(--marca-borda)}
+  .tabela-wrap{overflow-x:auto;border:2px solid var(--linha);border-radius:12px}
+  table{border-collapse:collapse;width:100%;min-width:560px;background:var(--cartao)}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--linha);text-align:left;font-size:.93rem}
+  th{background:var(--cartao2);font-weight:800;position:sticky;top:0}
+  td.n,th.n{text-align:center}
+  .nota-alta{color:var(--verde);font-weight:800}
+  .nota-baixa{color:var(--coral);font-weight:800}
+  .resumo{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+  .resumo div{background:var(--n-amarelo);color:var(--tinta-nota);border-radius:12px;padding:10px 14px;font-weight:700}
+  .resumo div:nth-child(2){background:var(--n-azul)}
+  .resumo div:nth-child(3){background:var(--n-verde)}
+  .resumo b{display:block;font-size:1.6rem;font-family:var(--f-display)}
+  footer{max-width:1080px;margin:0 auto;padding:6px 16px 30px;color:var(--tinta2);font-size:.88rem;text-align:center;font-weight:600}
+  .vazio{color:var(--tinta2);padding:6px 0;font-weight:600}
+  @media (max-width:560px){
+    .grade-jogos{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .nota{height:78px;font-size:38px}
+    .nota .tema{font-size:10.5px;left:6px;top:6px;padding:1px 7px}
+    .corpo{padding:9px 10px 11px}
+    .corpo h3{font-size:.95rem}
+    .corpo p{font-size:.78rem}
+    .marcado{width:24px;height:24px;font-size:13px;right:6px;top:6px}
+    .card{padding:16px}
+    .grade-ativ{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ---------- Site único: navegação, login, jogos, administração ---------- */
+  nav.abas{max-width:1080px;margin:-18px auto 0;padding:0 16px;display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:2}
+  nav.abas button{background:var(--cartao);border-color:var(--linha);box-shadow:var(--sombra);color:var(--tinta);font-size:1rem}
+  nav.abas button[aria-current="page"]{background:var(--marca);border-color:var(--marca-borda);box-shadow:0 3px 0 var(--marca-borda)}
+  .ola{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between}
+  .filtros{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+  .filtro{font:inherit;font-weight:800;font-size:.92rem;padding:8px 14px;border-radius:99px;border:2px solid var(--linha);background:var(--cartao);color:var(--tinta);cursor:pointer}
+  .filtro[aria-pressed="true"]{background:var(--marca);border-color:var(--marca-borda)}
+  .secao-titulo.conteudo{font-size:1.1rem;margin-top:22px}
+  .secao-titulo small{font-family:var(--f-texto,inherit);font-size:.8rem;font-weight:700;opacity:.6}
+  .sugestao{border:2px solid var(--marca-borda);background:#fffbea;border-radius:16px;padding:12px 14px;margin:10px 0}
+  .sugestao.lida{border-color:var(--linha);background:var(--cartao2);opacity:.85}
+  .sug-topo{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+  .sug-quem{font-size:.85rem;color:var(--tinta2);margin:4px 0}
+  .sug-texto{white-space:pre-wrap;margin:8px 0;line-height:1.5}
+  .secao-titulo{display:flex;align-items:center;gap:10px;margin:6px 0 12px;font-family:var(--f-display);font-size:1.3rem;font-weight:600}
+  .login-box{max-width:440px;margin:26px auto}
+  .login-box .nota{height:120px;font-size:58px;border-radius:12px 12px 0 0}
+  .login-box .card{padding:0;overflow:hidden}
+  .login-box form{padding:18px 20px 22px}
+  .campo-senha{position:relative}
+  .campo-senha input{padding-right:48px}
+  .olho{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent!important;border:0!important;box-shadow:none!important;padding:6px 8px;font-size:1.1rem}
+  .sub2{color:var(--tinta2);font-size:.9rem;font-weight:600;margin-top:10px}
+  .aviso-saida{background:#fff4d6;border:2px solid #f0c75e;color:#6b4a00;border-radius:12px;padding:12px 14px;font-weight:700;margin-bottom:14px}
+
+  /* Player do jogo */
+  .player{position:fixed;inset:0;z-index:50;background:#0b1430;display:flex;flex-direction:column}
+  .player-barra{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--hero-bg);color:#fff;padding-top:max(8px,env(safe-area-inset-top))}
+  .player-barra h2{font-size:1.05rem;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .player-barra button{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff;box-shadow:none}
+  .player iframe{flex:1;width:100%;border:0;background:#fff}
+  .player .carregando{flex:1;display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.1rem;text-align:center;padding:20px}
+
+  /* Administração */
+  .contas{display:grid;gap:12px}
+  .conta{border:2px solid var(--linha);border-radius:var(--r);padding:12px 14px;background:var(--cartao)}
+  .conta.bloq{background:var(--cartao2)}
+  .conta-topo{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .conta-topo h3{font-size:1.08rem}
+  .conta-topo .login{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;color:var(--tinta2)}
+  .bolinha{width:11px;height:11px;border-radius:50%;background:#b8c2d6;display:inline-block}
+  .bolinha.on{background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.2)}
+  .conta-info{display:flex;gap:6px 14px;flex-wrap:wrap;color:var(--tinta2);font-size:.88rem;font-weight:600;margin:6px 0 8px}
+  .alerta{background:#fff1ec;border:1.5px solid #f3b3a2;color:#8f2416;border-radius:10px;padding:6px 10px;font-size:.85rem;font-weight:700;margin-bottom:8px}
+  .editar-conta{background:var(--cartao2);border:2px dashed var(--linha);border-radius:12px;padding:10px 12px;margin-top:10px}
+  .historico{margin-top:8px;font-size:.85rem}
+  .historico div{padding:3px 0;border-bottom:1px dashed var(--linha)}
+  .entrega{background:#eaf7f0;border:2px solid #9bd8b8;border-radius:12px;padding:12px 14px;margin-top:12px;white-space:pre-wrap;font-weight:700;color:#0b5c40}
+  .tag.venc{color:#b45309}
+</style>
+</head>
+<body>
+<header class="topo"><div class="in">
+  <div><h1>🎮 Gamefica <span>Ação Matemática</span></h1><small>Jogos e atividades de Matemática para aprender brincando</small></div>
+  <div id="usuario"></div>
+</div></header>
+<nav class="abas" id="abas" hidden></nav>
+<main id="app"><div class="card">Carregando…</div></main>
+<footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.8.1/dist/index.iife.js"></script>
+<script src="turma/supabase-config.js"></script>
+<script src="turma/jogos.js?v=20261101184426"></script>
+<script src="turma/qr.js"></script>
+<script src="turma/resultado-jogo.js?v=20261101184026"></script>
+<script>ResultadoJogo.protegerPagina();</script>
+<script>
+(function(){
+'use strict';
+
+var sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
+var FUNCOES = window.SUPABASE_URL + '/functions/v1/';
+var DOMINIO = 'contas.gamefica.example.com';
+var app = document.getElementById('app');
+var usuarioBox = document.getElementById('usuario');
+var abasBox = document.getElementById('abas');
+
+var sessao = null;      // sessão do Supabase (token)
+var perfil = null;      // {nome, papel, login, validade}
+var SID = null;         // identificador desta sessão (um aparelho por vez)
+var aba = 'jogos';
+var vigia = null;
+var atividades = [], contagem = {}, abertaId = null, modo = 'melhor', resultadosBrutos = [];
+var jogoEscolhido = null;
+var contas = [], buscaContas = '';
+
+/* ---------- utilidades ---------- */
+function el(tag, props){
+  var e = document.createElement(tag);
+  props = props || {};
+  Object.keys(props).forEach(function(k){
+    var v = props[k];
+    if(v === null || v === undefined || v === false) return;
+    if(k === 'class') e.className = v;
+    else if(k.indexOf('on') === 0) e.addEventListener(k.slice(2), v);
+    else if(k === 'value') e.value = v;
+    else e.setAttribute(k, v);
+  });
+  for(var i = 2; i < arguments.length; i++){
+    [].concat(arguments[i]).forEach(function(c){
+      if(c === null || c === undefined || c === false) return;
+      e.append(c.nodeType ? c : document.createTextNode(String(c)));
+    });
+  }
+  return e;
+}
+function fmtNota(n){ return Number(n).toFixed(1).replace('.', ','); }
+function fmtTempo(s){ if(s === null || s === undefined) return '—'; return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
+function fmtData(iso){ return iso ? new Date(iso).toLocaleString('pt-BR', {dateStyle:'short', timeStyle:'short'}) : '—'; }
+function fmtDia(d){ if(!d) return ''; var p = String(d).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+function hojeISO(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function slug(t){ return (t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-zA-Z0-9]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase() || 'relatorio'; }
+function linkDe(a){ return new URL('turma/jogar.html?a=' + encodeURIComponent(a.codigo), location.href).href; }
+function msg(tipo, texto){ return el('div', {class:'msg ' + tipo, role:'alert'}, texto); }
+function corDe(id){ var j = window.JOGOS[id]; return '--n:var(--n-' + ((j && j.cor) || 'amarelo') + ')'; }
+function baixar(blob, nome){
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = nome;
+  document.body.append(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+function copiar(texto, botao){
+  function ok(){ var t = botao.textContent; botao.textContent = '✔ Copiado!'; setTimeout(function(){ botao.textContent = t; }, 1600); }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(texto).then(ok, function(){ window.prompt('Copie:', texto); });
+  } else { window.prompt('Copie:', texto); }
+}
+function chaveAluno(r){
+  return (r.aluno_nome || '').toLowerCase().replace(/\s+/g,' ').trim() + '|' + (r.aluno_turma || '').toLowerCase().trim();
+}
+function guardar(k, v){ try{ if(v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){} }
+function ler(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function novoSid(){
+  if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  var a = new Uint8Array(16); crypto.getRandomValues(a);
+  return Array.from(a, function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+}
+function aparelho(){
+  var ua = navigator.userAgent || '';
+  var so = /Android/i.test(ua) ? 'Android' : /iPhone|iPad|iPod/i.test(ua) ? 'iPhone/iPad' : /Windows/i.test(ua) ? 'Windows'
+         : /Mac OS X|Macintosh/i.test(ua) ? 'Mac' : /CrOS/i.test(ua) ? 'Chromebook' : /Linux/i.test(ua) ? 'Linux' : 'Outro';
+  var nav = /Edg\//.test(ua) ? 'Edge' : /OPR\//.test(ua) ? 'Opera' : /SamsungBrowser/.test(ua) ? 'Samsung' : /Firefox\//.test(ua) ? 'Firefox'
+          : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Navegador';
+  return so + ' · ' + nav;
+}
+function emailDe(login){ login = String(login || '').trim().toLowerCase(); return login.indexOf('@') >= 0 ? login : login + '@' + DOMINIO; }
+function gerarSenha(){
+  var letras = 'abcdefghjkmnpqrstuvwxyz', nums = '23456789', a = new Uint32Array(8); crypto.getRandomValues(a);
+  var s = ''; for(var i = 0; i < 5; i++) s += letras[a[i] % letras.length];
+  for(i = 5; i < 8; i++) s += nums[a[i] % nums.length];
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+async function chamarFuncao(nome, corpo){
+  var r = await fetch(FUNCOES + nome, {method:'POST', headers:{
+    'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY,
+    'Authorization':'Bearer ' + (sessao ? sessao.access_token : '')}, body: JSON.stringify(corpo)});
+  return r;
+}
+
+/* ---------- sessão única ---------- */
+var MOTIVOS = {
+  outro_aparelho: '🔒 Sua conta foi aberta em outro aparelho, então esta tela foi desconectada. Cada login só pode ser usado em um aparelho por vez.',
+  encerrada: 'Sua sessão foi encerrada. Entre de novo.',
+  bloqueada: '⛔ Sua conta está bloqueada. Fale com o Prof. Haroldo.',
+  vencida: '⏰ Seu acesso venceu. Fale com o Prof. Haroldo para renovar.',
+  sem_perfil: '⛔ Esta conta ainda não foi liberada. Fale com o Prof. Haroldo.'
+};
+async function expulsar(motivo){
+  pararVigia(); fecharPlayer();
+  try { await sb.auth.signOut({scope:'local'}); } catch(e){}
+  if(sessao) guardar('gm_sid_' + sessao.user.id, null);
+  sessao = null; perfil = null; SID = null;
+  desenharLogin(MOTIVOS[motivo] || null);
+}
+async function verificar(){
+  if(!sessao || !SID) return;
+  var r = await sb.rpc('verificar_sessao', {p_sessao: SID});
+  if(r.error) return;               // sem internet: tenta de novo depois
+  if(r.data !== 'ok') expulsar(r.data);
+}
+function iniciarVigia(){
+  pararVigia();
+  vigia = setInterval(verificar, 25000);
+}
+function pararVigia(){ if(vigia){ clearInterval(vigia); vigia = null; } }
+document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') verificar(); });
+window.addEventListener('focus', verificar);
+
+/* ---------- visitante com convite de 1 hora ---------- */
+var visitante = null, visitanteTimer = null;
+function pegaConvite(){
+  var u = new URLSearchParams(location.search).get('convite');
+  if(u) return u.trim();
+  try{ return sessionStorage.getItem('gm_convite') || ''; }catch(e){ return ''; }
+}
+async function entrarVisitante(tok){
+  var r, d = {};
+  try{
+    r = await fetch(FUNCOES + 'jogo', {method:'POST', headers:{'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY},
+      body: JSON.stringify({convite: tok, acao: 'entrar_site'})});
+    d = await r.json().catch(function(){ return {}; });
+  }catch(e){ desenharLogin('Sem conexão. Verifique a internet e recarregue a página.'); return true; }
+  if(r.status === 410){ desenharLogin(d.mensagem || 'Seu tempo de teste acabou. Entre com seu login e senha.'); return true; }
+  if(!r.ok || !d.ok){ desenharLogin('Este convite não é válido. Peça um novo link ao Prof. Haroldo.'); return true; }
+  visitante = {token: tok, expira: Date.parse(d.expira_em)};
+  try{ sessionStorage.setItem('gm_convite', tok); }catch(e){}
+  try{ history.replaceState(null, '', location.pathname + (location.hash || '')); }catch(e){}
+  perfil = {nome: 'Visitante de teste', papel: 'visitante', login: '', validade: null};
+  aba = 'jogos';
+  usuarioBox.replaceChildren(
+    el('span', {id:'tempo-visitante', style:'font-size:13px;font-weight:700;align-self:center'}, '🧪 Teste'),
+    el('button', {class:'sec peq', onclick: function(){ sairVisitante(null); }}, 'Entrar com login'));
+  desenharAbas(); mostrarAba();
+  atualizaTempoVisitante();
+  visitanteTimer = setInterval(atualizaTempoVisitante, 1000);
+  return true;
+}
+function atualizaTempoVisitante(){
+  if(!visitante) return;
+  var falta = visitante.expira - Date.now();
+  if(falta <= 0){ sairVisitante('Seu tempo de teste acabou (1 hora). Entre com seu login e senha.'); return; }
+  var m = Math.floor(falta / 60000), s = Math.floor((falta % 60000) / 1000);
+  var t = document.getElementById('tempo-visitante');
+  if(t) t.textContent = '🧪 Teste · ' + m + ':' + (s < 10 ? '0' : '') + s;
+}
+function sairVisitante(aviso){
+  if(visitanteTimer){ clearInterval(visitanteTimer); visitanteTimer = null; }
+  visitante = null; perfil = null;
+  try{ sessionStorage.removeItem('gm_convite'); }catch(e){}
+  fecharPlayer();
+  desenharLogin(aviso);
+}
+async function compartilharSite(){
+  var r, d = {};
+  try{
+    r = await chamarFuncao('jogo', {acao: 'compartilhar_site', sessao: SID});
+    d = await r.json().catch(function(){ return {}; });
+  }catch(e){ app.prepend(msg('erro', 'Sem conexão. Tente de novo.')); return; }
+  if(r.status === 403){ expulsar('outro_aparelho'); return; }
+  if(!r.ok || !d.token){ app.prepend(msg('erro', d.erro || 'Não consegui gerar o link do site.')); return; }
+  var url = new URL('index.html?convite=' + d.token, location.href).href;
+  var txt = el('input', {type:'text', readonly:true, value:url, style:'width:100%;margin:6px 0;padding:8px;border:1px solid #c7cfe3;border-radius:8px;font-size:13px'});
+  txt.onclick = function(){ this.select(); };
+  var aviso = el('p', {style:'margin:0 0 6px;font-size:14px'}, 'Quem abrir este link entra sem login e tem 1 hora de acesso, contada a partir do primeiro acesso. Depois disso, precisa de login e senha.');
+  var caixa = el('div', {class:'card', style:'padding:14px 16px;margin:0 0 14px'},
+    el('p', {style:'margin:0 0 4px;font-weight:800'}, '🔗 Link de teste do portal'), aviso, txt,
+    el('button', {class:'sec peq', onclick: function(){
+      if(navigator.clipboard) navigator.clipboard.writeText(url).then(function(){ aviso.textContent = '✅ Link copiado! Envie para a pessoa.'; }).catch(function(){ txt.select(); });
+      else txt.select();
+    }}, '📋 Copiar link'),
+    el('button', {class:'sec peq', style:'margin-left:6px', onclick: function(){ caixa.remove(); }}, 'Fechar'));
+  app.prepend(caixa); txt.select();
+}
+
+/* ---------- início ---------- */
+async function iniciar(){
+  var r = await sb.auth.getSession();
+  sessao = r.data.session;
+  sb.auth.onAuthStateChange(function(evt, s){
+    if(evt === 'TOKEN_REFRESHED' || evt === 'SIGNED_IN') sessao = s;
+    if(evt === 'SIGNED_OUT' && perfil){ sessao = null; perfil = null; pararVigia(); desenharLogin(); }
+  });
+  if(!sessao){ var conv = pegaConvite(); if(conv && await entrarVisitante(conv)) return; desenharLogin(); return; }
+  SID = ler('gm_sid_' + sessao.user.id);
+  if(!SID){ await sb.auth.signOut({scope:'local'}); sessao = null; desenharLogin(); return; }
+  var v = await sb.rpc('verificar_sessao', {p_sessao: SID});
+  if(v.error){ app.replaceChildren(el('div', {class:'card'}, msg('erro', 'Sem conexão com o servidor. Verifique a internet e recarregue a página.'))); return; }
+  if(v.data !== 'ok'){ expulsar(v.data); return; }
+  var p = await sb.from('perfis').select('nome, papel, login, validade').eq('id', sessao.user.id).single();
+  if(p.error || !p.data){ expulsar('sem_perfil'); return; }
+  perfil = p.data;
+  entrarNoSite();
+}
+
+function entrarNoSite(){
+  usuarioBox.replaceChildren(
+    el('span', {}, (perfil.papel === 'admin' ? '🛡️ ' : '👤 ') + (perfil.nome || sessao.user.email)),
+    perfil.papel === 'admin' ? el('button', {class:'sec peq', onclick: compartilharSite}, '🔗 Compartilhar site') : null,
+    el('button', {class:'sec peq', onclick: sair}, 'Sair'));
+  var h = (location.hash || '').replace('#', '');
+  if(h === 'turmas' || h === 'atribuir' || h === 'jogos' || h === 'simuladores' || h === 'ferramentas' || (h === 'admin' && perfil.papel === 'admin')) aba = h;
+  iniciarVigia();
+  desenharAbas(); mostrarAba();
+}
+async function sair(){
+  pararVigia();
+  try { if(SID) await sb.rpc('encerrar_sessao', {p_sessao: SID}); } catch(e){}
+  if(sessao) guardar('gm_sid_' + sessao.user.id, null);
+  try { await sb.auth.signOut({scope:'local'}); } catch(e){}
+  sessao = null; perfil = null; SID = null;
+  desenharLogin();
+}
+
+/* ---------- login ---------- */
+function desenharLogin(aviso){
+  abasBox.hidden = true; usuarioBox.replaceChildren();
+  var login = el('input', {type:'text', id:'login', autocomplete:'username', autocapitalize:'none', spellcheck:'false', placeholder:'Seu login ou e-mail', required:'required'});
+  var senha = el('input', {type:'password', id:'senha', autocomplete:'current-password', placeholder:'Sua senha', required:'required'});
+  var olho = el('button', {type:'button', class:'olho', 'aria-label':'Mostrar senha', onclick: function(){ senha.type = senha.type === 'password' ? 'text' : 'password'; }}, '👁');
+  var caixa = el('div');
+  var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '🚀 Entrar');
+  var ult = ler('gm_ultimo_login'); if(ult) login.value = ult;
+
+  var form = el('form', {onsubmit: async function(ev){
+    ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Entrando…';
+    try{
+      var r = await sb.auth.signInWithPassword({email: emailDe(login.value), password: senha.value});
+      if(r.error) throw r.error;
+      sessao = r.data.session;
+      var sid = novoSid();
+      var s = await sb.rpc('iniciar_sessao', {p_sessao: sid, p_aparelho: aparelho()});
+      if(s.error) throw s.error;
+      if(!s.data || !s.data.ok){
+        await sb.auth.signOut({scope:'local'}); sessao = null;
+        caixa.append(msg('erro', MOTIVOS[s.data && s.data.motivo] || 'Não foi possível entrar.'));
+      } else {
+        SID = sid; guardar('gm_sid_' + sessao.user.id, SID); guardar('gm_ultimo_login', login.value.trim());
+        perfil = {nome: s.data.nome, papel: s.data.papel, login: s.data.login, validade: s.data.validade};
+        aba = 'jogos'; entrarNoSite(); return;
+      }
+    }catch(e){
+      var t = String(e.message || e);
+      if(/invalid login|invalid credentials/i.test(t)) t = 'Login ou senha incorretos.';
+      else if(/fetch|network/i.test(t)) t = 'Sem conexão. Verifique a internet.';
+      caixa.append(msg('erro', t));
+    }
+    botao.disabled = false; botao.textContent = '🚀 Entrar';
+  }},
+    aviso ? el('div', {class:'aviso-saida'}, aviso) : null,
+    el('h2', {}, 'Entrar no portal'),
+    el('p', {class:'sub'}, 'Use o login e a senha que você recebeu.'),
+    el('label', {for:'login'}, 'Login'), login,
+    el('label', {for:'senha'}, 'Senha'), el('div', {class:'campo-senha'}, senha, olho),
+    botao, caixa,
+    el('p', {class:'sub2'}, '🔒 Cada login funciona em um aparelho por vez. Se você entrar em outro aparelho, o anterior é desconectado.'),
+    el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'));
+
+  app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
+    el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form)));
+  setTimeout(function(){ (login.value ? senha : login).focus(); }, 50);
+}
+
+/* ---------- abas ---------- */
+function desenharAbas(){
+  var itens = [['jogos', '🎮 Jogos'], ['simuladores', '🔬 Simuladores'], ['ferramentas', '🧰 Ferramentas'], ['atribuir', '📝 Atribuir tarefas'], ['turmas', '👩‍🏫 Turmas e notas']];
+  if(visitante) itens = itens.slice(0, 3);
+  else if(perfil.papel === 'admin') itens.push(['admin', '🛡️ Administração']);
+  abasBox.replaceChildren.apply(abasBox, itens.map(function(it){
+    return el('button', {'aria-current': aba === it[0] ? 'page' : 'false', onclick: function(){ aba = it[0]; history.replaceState(null, '', '#' + aba); desenharAbas(); mostrarAba(); }}, it[1]);
+  }));
+  abasBox.hidden = false;
+}
+function mostrarAba(){
+  if(aba === 'turmas') carregarAtividades().then(desenharTurmas);
+  else if(aba === 'atribuir') desenharAtribuir();
+  else if(aba === 'simuladores' || aba === 'ferramentas') desenharJogos(aba);
+  else if(aba === 'admin') carregarContas().then(desenharAdmin);
+  else desenharJogos();
+  window.scrollTo(0, 0);
+}
+
+/* ---------- aba Jogos ---------- */
+function cartaoJogo(id, aoClicar, marcado){
+  var j = window.JOGOS[id];
+  return el('button', {type:'button', class:'cartao-jogo', style: corDe(id), 'aria-pressed': marcado === undefined ? null : String(!!marcado), onclick: aoClicar},
+    el('div', {class:'nota'}, j.tema ? el('span', {class:'tema'}, j.tema) : null, el('span', {class:'emoji', 'aria-hidden':'true'}, j.emoji), el('span', {class:'marcado', 'aria-hidden':'true'}, '✓')),
+    el('div', {class:'corpo'}, el('h3', {}, j.nome), j.desc ? el('p', {}, j.desc) : null));
+}
+var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Geometria', 'Funções e trigonometria', 'Estatística e probabilidade', 'Educação Financeira', 'Desafios'];
+var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Outros':'🎲'};
+var filtroConteudo = 'todos';
+function tipoDe(id){ var j = window.JOGOS[id]; return j.tipo || (j.ferramenta ? 'ferramenta' : 'jogo'); }
+function gruposPorConteudo(ids){
+  var g = {};
+  ids.forEach(function(id){ var c = window.JOGOS[id].conteudo || 'Outros'; (g[c] = g[c] || []).push(id); });
+  return Object.keys(g).sort(function(a, b){
+    var ia = ORDEM_CONTEUDOS.indexOf(a), ib = ORDEM_CONTEUDOS.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b, 'pt-BR');
+  }).map(function(c){ return [c, g[c].sort(function(a, b){ return window.JOGOS[a].nome.localeCompare(window.JOGOS[b].nome, 'pt-BR'); })]; });
+}
+function desenharJogos(qual){
+  qual = qual || 'jogos';
+  var ids = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem'; });
+  var venc = perfil.validade ? el('span', {class:'tag'}, '📅 Acesso até ' + fmtDia(perfil.validade)) : null;
+  var cabecalho = {
+    jogos: ['🎮 Jogos', 'Jogos com perguntas e pontuação. Toque para jogar ou mande para a turma pela aba “Atribuir tarefas” (as notas chegam em “Turmas e notas”).'],
+    simuladores: ['🔬 Simuladores', 'Laboratórios para explorar e projetar em aula: o aluno experimenta e observa o que acontece.'],
+    ferramentas: ['🧰 Ferramentas do professor', 'Ferramentas para o dia a dia da sala de aula.']
+  }[qual];
+  var corpo = [];
+  if(qual === 'jogos'){
+    var grupos = gruposPorConteudo(ids.filter(function(id){ return tipoDe(id) === 'jogo'; }));
+    if(filtroConteudo !== 'todos' && !grupos.some(function(g){ return g[0] === filtroConteudo; })) filtroConteudo = 'todos';
+    var chips = el('div', {class:'filtros'}, [['todos', '✨ Todos']].concat(grupos.map(function(g){ return [g[0], (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0]]; })).map(function(f){
+      return el('button', {type:'button', class:'filtro', 'aria-pressed': String(filtroConteudo === f[0]), onclick: function(){ filtroConteudo = f[0]; desenharJogos('jogos'); }}, f[1]);
+    }));
+    corpo.push(chips);
+    grupos.filter(function(g){ return filtroConteudo === 'todos' || g[0] === filtroConteudo; }).forEach(function(g){
+      corpo.push(el('div', {class:'secao-titulo conteudo'}, (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0], el('small', {}, g[1].length + (g[1].length === 1 ? ' jogo' : ' jogos'))));
+      corpo.push(el('div', {class:'grade-jogos'}, g[1].map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); })));
+    });
+  } else {
+    var lista = ids.filter(function(id){ return tipoDe(id) === (qual === 'simuladores' ? 'simulador' : 'ferramenta'); })
+      .sort(function(a, b){ return window.JOGOS[a].nome.localeCompare(window.JOGOS[b].nome, 'pt-BR'); });
+    corpo.push(lista.length ? el('div', {class:'grade-jogos'}, lista.map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); }))
+      : el('p', {class:'vazio'}, 'Nada por aqui ainda.'));
+  }
+  app.replaceChildren(
+    el('div', {class:'card'},
+      el('div', {class:'ola'}, el('div', {}, el('h2', {}, 'Olá, ' + (perfil.nome || '').split(' ')[0] + '! 👋'),
+        el('p', {class:'sub', style:'margin:0'}, cabecalho[1])), venc),
+      el('div', {class:'secao-titulo', style:'margin-top:18px'}, cabecalho[0]),
+      corpo));
+}
+
+var urlJogo = null;
+function fecharPlayer(){
+  var p = document.getElementById('player'); if(p) p.remove();
+  ResultadoJogo.removerMarcaDagua();
+  if(urlJogo){ URL.revokeObjectURL(urlJogo); urlJogo = null; }
+  document.body.style.overflow = '';
+}
+var somMudo = false;
+async function compartilharJogo(id, caixa){
+  if(!caixa) return;
+  caixa.style.display = 'block';
+  caixa.innerHTML = '<p style="margin:0">⏳ Gerando o link…</p>';
+  try{
+    var r = await chamarFuncao('jogo', {acao:'compartilhar', jogo:id, sessao:SID});
+    var d = await r.json().catch(function(){ return {}; });
+    if(r.status === 403){ expulsar('outro_aparelho'); return; }
+    if(!r.ok || !d.token) throw new Error(d.erro || 'Não consegui gerar o link.');
+    var url = new URL('turma/compartilhado.html?l=' + d.token, location.href).href;
+    caixa.innerHTML = '';
+    var txt = el('input', {type:'text', readonly:true, value:url, style:'width:100%;margin:6px 0;padding:8px;border:1px solid #c7cfe3;border-radius:8px;font-size:13px'});
+    txt.onclick = function(){ this.select(); };
+    caixa.append(
+      el('p', {style:'margin:0 0 4px'}, '🔗 Link de teste: vale 1 hora a partir de quando a pessoa abrir. Nesse prazo ela não precisa de login.'),
+      txt,
+      el('button', {class:'peq', onclick: function(){
+        if(navigator.clipboard) navigator.clipboard.writeText(url).then(function(){ caixa.querySelector('p').textContent = '✅ Link copiado! Envie para a pessoa.'; }).catch(function(){ txt.select(); });
+        else { txt.select(); }
+      }}, '📋 Copiar link'),
+      el('button', {class:'peq', style:'margin-left:6px', onclick: function(){ caixa.style.display = 'none'; }}, 'Fechar'));
+    txt.select();
+  }catch(e){
+    caixa.innerHTML = '';
+    caixa.append(el('p', {style:'margin:0;color:#dc2626'}, '😕 ' + (e.message || 'Não consegui gerar o link.')));
+  }
+}
+async function abrirJogo(id){
+  var j = window.JOGOS[id];
+  fecharPlayer();
+  var miolo = el('div', {class:'carregando'}, '⏳ Abrindo ' + j.nome + '…');
+  var quadro = null;
+  var p = el('div', {class:'player', id:'player', role:'dialog', 'aria-label': j.nome},
+    el('div', {class:'player-barra'},
+      el('button', {class:'peq', onclick: fecharPlayer}, '← Voltar'),
+      el('h2', {}, j.emoji + ' ' + j.nome),
+      el('button', {class:'peq', id:'btnSomJogo', 'aria-label':'Ligar ou desligar o som', title:'Som', onclick: function(){
+        somMudo = !somMudo; this.textContent = somMudo ? '🔇' : '🔊'; ResultadoJogo.somDoJogo(quadro, somMudo);
+      }}, somMudo ? '🔇' : '🔊'),
+      (visitante || perfil.papel !== 'admin') ? null : el('button', {class:'peq', title:'Compartilhar um link de teste (1 hora)', onclick: function(){
+        compartilharJogo(id, document.getElementById('partilha'));
+      }}, '🔗'),
+      el('button', {class:'peq', 'aria-label':'Tela cheia', onclick: function(){
+        if(document.fullscreenElement) document.exitFullscreen(); else if(p.requestFullscreen) p.requestFullscreen().catch(function(){});
+      }}, '⛶')),
+    el('div', {id:'partilha', style:'display:none;padding:12px 16px;background:#eef2ff;border-bottom:1px solid #d6dcea;font-size:14px'}),
+    miolo);
+  document.body.append(p); document.body.style.overflow = 'hidden';
+  try{
+    var r = visitante
+      ? await fetch(FUNCOES + 'jogo', {method:'POST', headers:{'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY}, body: JSON.stringify({jogo: id, convite: visitante.token})})
+      : await chamarFuncao('jogo', {jogo: id, sessao: SID});
+    if(visitante && r.status === 410){ sairVisitante('Seu tempo de teste acabou (1 hora). Entre com seu login e senha.'); return; }
+    if(r.status === 403){ expulsar('outro_aparelho'); return; }
+    if(r.status === 401){ expulsar('encerrada'); return; }
+    if(!r.ok){ var e = await r.json().catch(function(){ return {}; }); throw new Error(e.erro || 'Erro ' + r.status); }
+    var html = await r.text();
+    if(!document.getElementById('player')) return;
+    urlJogo = URL.createObjectURL(new Blob([ResultadoJogo.preparar(html, j.tema || j.conteudo || '')], {type:'text/html'}));
+    quadro = el('iframe', {title: j.nome, allow:'fullscreen; autoplay; camera; microphone; clipboard-write; xr-spatial-tracking'});
+    quadro.src = urlJogo + '#livre';
+    ResultadoJogo.anexar(quadro, j.nome);
+    quadro.addEventListener('load', function(){ ResultadoJogo.somDoJogo(quadro, somMudo); ResultadoJogo.marcaDagua(perfil ? perfil.nome : ''); });
+    miolo.replaceWith(quadro);
+  }catch(e){
+    miolo.textContent = '😕 ' + (e.message || 'Não foi possível abrir o jogo.') + ' Tente de novo.';
+  }
+}
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && document.getElementById('player') && !document.fullscreenElement) fecharPlayer(); });
+
+/* ---------- aba Atribuir tarefas e aba Turmas e notas ---------- */
+async function carregarAtividades(){
+  var a = await sb.from('atividades').select('*').eq('professor_id', sessao.user.id).order('criada_em', {ascending:false});
+  atividades = a.error ? [] : a.data;
+  var ids = atividades.map(function(x){ return x.id; });
+  contagem = {};
+  if(!ids.length) return;
+  var r = await sb.from('resultados').select('atividade_id,aluno_nome,aluno_turma').in('atividade_id', ids).limit(5000);
+  if(!r.error){
+    var vistos = {};
+    r.data.forEach(function(x){
+      var k = x.atividade_id + '#' + chaveAluno(x);
+      if(!vistos[k]){ vistos[k] = 1; contagem[x.atividade_id] = (contagem[x.atividade_id] || 0) + 1; }
+    });
+  }
+}
+function desenharAtribuir(){
+  var ids = Object.keys(window.JOGOS).filter(function(id){ return !window.JOGOS[id].ferramenta; });
+  if(jogoEscolhido && ids.indexOf(jogoEscolhido) < 0) jogoEscolhido = null;
+  var titulo = el('input', {type:'text', id:'titulo', maxlength:'120', placeholder:'Ex.: Porcentagem – lista 1'});
+  var turma  = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Ex.: 3ª A (opcional)'});
+  var aviso  = el('div');
+  var botao  = el('button', {type:'submit', class:'grande'}, '🔗 Criar atividade e gerar link');
+  var resumoEscolha = el('div');
+  var tituloAuto = '';
+  function mostrarEscolha(){
+    resumoEscolha.replaceChildren();
+    if(!jogoEscolhido){ resumoEscolha.append(el('p', {class:'vazio'}, '👆 Toque em um jogo acima para escolher.')); return; }
+    var j = window.JOGOS[jogoEscolhido];
+    resumoEscolha.append(el('div', {class:'escolhido'}, el('span', {class:'mini', style: corDe(jogoEscolhido)}, j.emoji), el('span', {}, 'Jogo escolhido: ', el('b', {}, j.nome))));
+  }
+  var cartoes = ids.map(function(id){
+    var c = cartaoJogo(id, function(){
+      jogoEscolhido = id;
+      cartoes.forEach(function(x){ x.setAttribute('aria-pressed', String(x === c)); });
+      var j = window.JOGOS[id];
+      if(!titulo.value.trim() || titulo.value === tituloAuto){ tituloAuto = j.nome; titulo.value = j.nome; }
+      mostrarEscolha(); aviso.replaceChildren();
+    }, id === jogoEscolhido);
+    return c;
+  });
+  var form = el('form', {onsubmit: async function(ev){
+    ev.preventDefault(); aviso.replaceChildren();
+    if(!jogoEscolhido){ aviso.append(msg('erro', 'Escolha um jogo tocando em um dos cartões.')); return; }
+    var t = titulo.value.trim();
+    if(!t){ aviso.append(msg('erro', 'Dê um nome à atividade.')); titulo.focus(); return; }
+    botao.disabled = true;
+    var r = await sb.from('atividades').insert({jogo: jogoEscolhido, titulo: t, turma: turma.value.trim() || null}).select().single();
+    botao.disabled = false;
+    if(r.error){ aviso.append(msg('erro', 'Não foi possível criar: ' + r.error.message)); return; }
+    jogoEscolhido = null; abertaId = null;
+    aba = 'turmas'; history.replaceState(null, '', '#turmas'); desenharAbas();
+    await carregarAtividades(); desenharTurmas();
+    var lista = document.getElementById('minhas'); if(lista) lista.scrollIntoView({behavior:'smooth', block:'start'});
+  }},
+    el('div', {class:'passo'}, el('b', {}, '1'), 'Escolha o jogo'),
+    el('div', {class:'grade-jogos'}, cartoes),
+    el('div', {class:'passo'}, el('b', {}, '2'), 'Dê um nome e (se quiser) a turma'),
+    resumoEscolha,
+    el('div', {class:'duas', style:'margin-top:6px'},
+      el('div', {}, el('label', {for:'titulo'}, 'Nome da atividade'), titulo),
+      el('div', {}, el('label', {for:'turma'}, 'Turma'), turma)),
+    el('div', {class:'passo'}, el('b', {}, '3'), 'Gere o link e mande aos alunos'),
+    botao, aviso);
+  mostrarEscolha();
+  app.replaceChildren(
+    el('div', {class:'card'}, el('h2', {}, '✨ Nova atividade para a turma'),
+      el('p', {class:'sub'}, 'Escolha o jogo, dê um nome e gere o link. Os alunos abrem em qualquer lugar (celular ou computador), sem login, e a nota chega em “Turmas e notas”.'), form));
+}
+function desenharTurmas(){
+  var lista = atividades.length === 0
+    ? el('p', {class:'vazio'}, 'Você ainda não atribuiu nenhuma tarefa. Use a aba “Atribuir tarefas” para criar a primeira.')
+    : el('div', {class:'grade-ativ'}, atividades.map(cartaoAtividade));
+  app.replaceChildren(
+    el('div', {class:'card', id:'minhas'}, el('h2', {}, '📚 Minhas atividades'),
+      el('p', {class:'sub'}, 'Copie o link e cole na Sala do Futuro, no Classroom, no Moodle ou no WhatsApp.'), lista),
+    el('div', {id:'area-resultados'}));
+  if(abertaId) mostrarResultados(abertaId);
+}
+function cartaoAtividade(a){
+  var link = linkDe(a);
+  var j = window.JOGOS[a.jogo] || {nome: a.jogo, emoji: '🎮'};
+  var btnCopiar = el('button', {class:'peq'}, '📋 Copiar link');
+  btnCopiar.addEventListener('click', function(){ copiar(link, btnCopiar); });
+  var qrCaixa = el('div');
+  var btnQr = el('button', {class:'peq sec', onclick: function(){
+    if(qrCaixa.firstChild){ qrCaixa.replaceChildren(); btnQr.textContent = '📱 Mostrar QR code'; return; }
+    try{
+      var cv = window.QRMini.canvas(link, 520), baixa = el('button', {class:'peq', onclick: function(){
+        cv.toBlob(function(b){ baixar(b, 'qr-' + slug(a.titulo) + '.png'); });
+      }}, '⬇ Baixar QR (PNG)');
+      qrCaixa.replaceChildren(el('div', {class:'qr-caixa'}, cv, el('small', {}, 'Aponte a câmera do celular para abrir a atividade'), baixa));
+      btnQr.textContent = '🙈 Ocultar QR code';
+    }catch(e){ qrCaixa.replaceChildren(msg('erro', 'Não foi possível gerar o QR code.')); }
+  }}, '📱 Mostrar QR code');
+  var alunos = contagem[a.id] || 0;
+  return el('div', {class:'ativ'},
+    el('div', {class:'topo-ativ', style: corDe(a.jogo)}, el('span', {class:'em', 'aria-hidden':'true'}, j.emoji),
+      el('div', {}, el('h3', {}, a.titulo), el('small', {}, j.nome))),
+    el('div', {class:'meio'},
+      el('div', {class:'tags'},
+        a.turma ? el('span', {class:'tag'}, a.turma) : null,
+        el('span', {class:'tag ' + (a.ativa ? 'aberta' : 'enc')}, a.ativa ? '● Aberta' : '⏸ Encerrada'),
+        el('span', {class:'tag'}, '👥 ' + alunos + (alunos === 1 ? ' aluno' : ' alunos'))),
+      el('div', {class:'link'}, link),
+      qrCaixa,
+      el('div', {class:'linha'},
+        btnCopiar, btnQr,
+        el('button', {class:'peq sec', onclick: function(){ abertaId = a.id; mostrarResultados(a.id, true); }}, '📊 Ver notas'),
+        el('button', {class:'peq sec', onclick: async function(){
+          var r = await sb.from('atividades').update({ativa: !a.ativa}).eq('id', a.id);
+          if(!r.error){ await carregarAtividades(); desenharTurmas(); }
+        }}, a.ativa ? '⏸ Encerrar' : '▶ Reabrir'),
+        el('button', {class:'peq perigo', onclick: async function(){
+          if(!window.confirm('Excluir "' + a.titulo + '" e todas as notas dela? Isso não pode ser desfeito.')) return;
+          var r = await sb.from('atividades').delete().eq('id', a.id);
+          if(!r.error){ if(abertaId === a.id) abertaId = null; await carregarAtividades(); desenharTurmas(); }
+        }}, '🗑 Excluir'))));
+}
+
+/* ---------- notas e relatórios ---------- */
+function consolidar(brutos){
+  var porAluno = {};
+  brutos.forEach(function(r){
+    var k = chaveAluno(r);
+    var g = porAluno[k] || (porAluno[k] = {nome: r.aluno_nome, turma: r.aluno_turma || '', tentativas: 0, escolhido: null});
+    g.tentativas++;
+    var c = g.escolhido;
+    if(modo === 'ultima'){
+      if(!c || r.enviado_em >= c.enviado_em) g.escolhido = r;
+    } else {
+      if(!c || Number(r.nota) > Number(c.nota) || (Number(r.nota) === Number(c.nota) && r.pontos > c.pontos)) g.escolhido = r;
+    }
+  });
+  return Object.keys(porAluno).map(function(k){ return porAluno[k]; })
+    .sort(function(a, b){
+      var ea = a.escolhido, eb = b.escolhido;
+      return (Number(eb.nota) - Number(ea.nota)) || ((eb.pontos || 0) - (ea.pontos || 0)) ||
+        ((ea.tempo_segundos || 0) - (eb.tempo_segundos || 0)) || a.nome.localeCompare(b.nome, 'pt-BR');
+    });
+}
+
+var timerNotas = null, autoNotas = true, ultimaAtualizacao = null;
+async function mostrarResultados(id, rolar, silencioso){
+  var area = document.getElementById('area-resultados');
+  var a = atividades.find(function(x){ return x.id === id; });
+  if(!a){ area.replaceChildren(); return; }
+  if(!silencioso) area.replaceChildren(el('div', {class:'card'}, 'Carregando resultados…'));
+  var r = await sb.from('resultados').select('*').eq('atividade_id', id).order('enviado_em', {ascending:true}).limit(5000);
+  if(r.error){ area.replaceChildren(el('div', {class:'card'}, msg('erro', 'Erro ao carregar: ' + r.error.message))); return; }
+  resultadosBrutos = r.data;
+  ultimaAtualizacao = new Date();
+  desenharResultados(a);
+  if(rolar) area.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function agendarAtualizacaoNotas(a){
+  clearInterval(timerNotas); timerNotas = null;
+  if(!autoNotas) return;
+  timerNotas = setInterval(function(){
+    if(!document.getElementById('area-resultados') || aba !== 'turmas' || abertaId !== a.id || document.hidden){
+      if(!document.getElementById('area-resultados') || aba !== 'turmas' || abertaId !== a.id){ clearInterval(timerNotas); timerNotas = null; }
+      return;
+    }
+    mostrarResultados(a.id, false, true);
+  }, 15000);
+}
+function desenharResultados(a){
+  var area = document.getElementById('area-resultados');
+  var linhas = consolidar(resultadosBrutos);
+  var notas = linhas.map(function(l){ return Number(l.escolhido.nota); });
+  var media = notas.length ? notas.reduce(function(s, n){ return s + n; }, 0) / notas.length : 0;
+  var acima = notas.filter(function(n){ return n >= 6; }).length;
+
+  var selModo = el('select', {style:'width:auto', onchange: function(){ modo = this.value; desenharResultados(a); }},
+    el('option', {value:'melhor'}, 'Contar a melhor tentativa'),
+    el('option', {value:'ultima'}, 'Contar a última tentativa'));
+  selModo.value = modo;
+
+  /* posição no ranking: alunos com a mesma nota ficam no mesmo lugar */
+  function posicaoDe(i){ var n = Number(linhas[i].escolhido.nota), k = 0; linhas.forEach(function(l){ if(Number(l.escolhido.nota) > n) k++; }); return k + 1; }
+  var corpo = linhas.length === 0
+    ? el('p', {class:'vazio'}, 'Nenhum aluno enviou resultado ainda. Cole o link da atividade na Sala do Futuro ou no Moodle.')
+    : el('div', {class:'tabela-wrap'}, el('table', {},
+        el('thead', {}, el('tr', {},
+          el('th', {class:'n'}, 'Posição'), el('th', {}, 'Aluno'), el('th', {}, 'Turma'),
+          el('th', {class:'n'}, 'Acertos'), el('th', {class:'n'}, 'Nota'),
+          el('th', {class:'n'}, 'Tentativas'), el('th', {class:'n'}, 'Tempo'), el('th', {}, 'Enviado em'))),
+        el('tbody', {}, linhas.map(function(l, i){
+          var e = l.escolhido, n = Number(e.nota);
+          return el('tr', {},
+            el('td', {class:'n'}, posicaoDe(i) + ' ' + ({1:'🥇', 2:'🥈', 3:'🥉'}[posicaoDe(i)] || '')), el('td', {}, l.nome), el('td', {}, l.turma || '—'),
+            el('td', {class:'n'}, e.acertos + '/' + e.total_questoes),
+            el('td', {class:'n ' + (n >= 6 ? 'nota-alta' : 'nota-baixa')}, fmtNota(n)),
+            el('td', {class:'n'}, l.tentativas), el('td', {class:'n'}, fmtTempo(e.tempo_segundos)),
+            el('td', {}, fmtData(e.enviado_em)));
+        }))));
+
+  area.replaceChildren(el('div', {class:'card'},
+    el('h2', {}, '📊 Notas: ' + a.titulo),
+    el('div', {class:'resumo'},
+      el('div', {}, el('b', {}, linhas.length), 'alunos'),
+      el('div', {}, el('b', {}, linhas.length ? fmtNota(media) : '—'), 'média da turma'),
+      el('div', {}, el('b', {}, linhas.length ? acima + '/' + linhas.length : '—'), 'com nota ≥ 6,0')),
+    el('div', {class:'linha', style:'margin-bottom:10px'},
+      selModo,
+      el('button', {class:'peq', onclick: function(){ baixarWord(a, linhas, media); }, disabled: linhas.length ? null : 'disabled'}, '📄 Baixar Word (.docx)'),
+      el('button', {class:'peq sec', onclick: function(){ baixarCsv(a, linhas); }, disabled: linhas.length ? null : 'disabled'}, '📑 Baixar Excel (.csv)'),
+      el('button', {class:'peq', onclick: function(){ mostrarResultados(a.id, false, true); }}, '🔄 Atualizar notas')),
+    el('div', {class:'linha', style:'margin-bottom:10px;align-items:center'},
+      el('label', {style:'margin:0;font-weight:600;display:flex;gap:6px;align-items:center'},
+        el('input', {type:'checkbox', style:'width:auto', checked: autoNotas ? 'checked' : null, onchange: function(){ autoNotas = this.checked; agendarAtualizacaoNotas(a); }}),
+        'Atualizar sozinho a cada 15 s'),
+      el('small', {class:'vazio', style:'margin:0'}, 'Ordem: da maior para a menor nota' + (ultimaAtualizacao ? ' · atualizado às ' + ultimaAtualizacao.toLocaleTimeString('pt-BR') : ''))),
+    corpo,
+    el('p', {class:'vazio'}, 'A nota vai de 0 a 10 e é calculada pelo servidor: acertos ÷ total de questões × 10.')
+  ));
+  agendarAtualizacaoNotas(a);
+}
+
+/* ---------- exportações ---------- */
+function baixarCsv(a, linhas){
+  function cel(v){
+    var t = String(v === null || v === undefined ? '' : v);
+    if(/^[=+\-@\t\r]/.test(t)) t = "'" + t;   // evita que o Excel trate o texto como fórmula
+    return '"' + t.replace(/"/g, '""') + '"';
+  }
+  var rows = [['Nº','Aluno','Turma','Acertos','Total de questões','Nota','Tentativas','Tempo','Enviado em']];
+  linhas.forEach(function(l, i){
+    var e = l.escolhido;
+    rows.push([i + 1, l.nome, l.turma, e.acertos, e.total_questoes, fmtNota(e.nota), l.tentativas, fmtTempo(e.tempo_segundos), fmtData(e.enviado_em)]);
+  });
+  var csv = '﻿' + rows.map(function(r){ return r.map(cel).join(';'); }).join('\r\n');
+  baixar(new Blob([csv], {type:'text/csv;charset=utf-8'}), 'resultados-' + slug(a.titulo) + '.csv');
+}
+
+async function baixarWord(a, linhas, media){
+  if(!window.docx){ window.alert('A biblioteca do Word não carregou. Verifique a internet e tente de novo.'); return; }
+  var D = window.docx;
+  var nomeProf = (sessao.user.user_metadata && sessao.user.user_metadata.nome) || sessao.user.email;
+  var larguras = [600, 3500, 1300, 1300, 1100, 1838];   // soma = 9638 (A4 com margens de 2 cm)
+  var borda = {style: D.BorderStyle.SINGLE, size: 4, color: 'B8C0D9'};
+  var bordas = {top:borda, bottom:borda, left:borda, right:borda};
+
+  function celula(texto, i, opt){
+    opt = opt || {};
+    return new D.TableCell({
+      width: {size: larguras[i], type: D.WidthType.DXA},
+      borders: bordas,
+      shading: opt.cabecalho ? {fill:'E3E7FA', type: D.ShadingType.CLEAR, color:'auto'} : undefined,
+      margins: {top: 70, bottom: 70, left: 100, right: 100},
+      children: [new D.Paragraph({
+        alignment: opt.centro ? D.AlignmentType.CENTER : D.AlignmentType.LEFT,
+        children: [new D.TextRun({text: String(texto), bold: !!opt.cabecalho || !!opt.negrito, size: 22, font: 'Arial'})]
+      })]
+    });
+  }
+  function par(rotulo, valor){
+    return new D.Paragraph({spacing:{after:60}, children:[
+      new D.TextRun({text: rotulo + ': ', bold:true, size:23, font:'Arial'}),
+      new D.TextRun({text: String(valor), size:23, font:'Arial'})]});
+  }
+
+  var cab = new D.TableRow({tableHeader:true, children:[
+    celula('Nº',0,{cabecalho:true,centro:true}), celula('Aluno',1,{cabecalho:true}), celula('Turma',2,{cabecalho:true}),
+    celula('Acertos',3,{cabecalho:true,centro:true}), celula('Nota',4,{cabecalho:true,centro:true}), celula('Tentativas',5,{cabecalho:true,centro:true})]});
+  var corpo = linhas.map(function(l, i){
+    var e = l.escolhido;
+    return new D.TableRow({cantSplit:true, children:[
+      celula(i+1,0,{centro:true}), celula(l.nome,1), celula(l.turma || '—',2),
+      celula(e.acertos + '/' + e.total_questoes,3,{centro:true}), celula(fmtNota(e.nota),4,{centro:true,negrito:true}),
+      celula(l.tentativas,5,{centro:true})]});
+  });
+
+  var doc = new D.Document({
+    creator: nomeProf, title: 'Relatório – ' + a.titulo,
+    sections: [{
+      properties: {page: {size: {width: 11906, height: 16838}, margin: {top:1134, bottom:1134, left:1134, right:1134}}},
+      children: [
+        new D.Paragraph({alignment: D.AlignmentType.CENTER, spacing:{after:80}, children:[
+          new D.TextRun({text:'Relatório da Atividade', bold:true, size:36, font:'Arial'})]}),
+        new D.Paragraph({alignment: D.AlignmentType.CENTER, spacing:{after:240}, children:[
+          new D.TextRun({text: a.titulo, size:28, font:'Arial', color:'4F46E5'})]}),
+        par('Jogo', (window.JOGOS[a.jogo] ? window.JOGOS[a.jogo].nome : a.jogo)),
+        par('Turma', a.turma || '—'),
+        par('Professor(a)', nomeProf),
+        par('Gerado em', new Date().toLocaleString('pt-BR', {dateStyle:'long', timeStyle:'short'})),
+        par('Critério da nota', modo === 'ultima' ? 'última tentativa de cada aluno' : 'melhor tentativa de cada aluno'),
+        par('Alunos que participaram', linhas.length),
+        par('Média da turma', fmtNota(media)),
+        new D.Paragraph({spacing:{before:200, after:120}, children:[]}),
+        new D.Table({width:{size:9638, type:D.WidthType.DXA}, columnWidths: larguras, rows:[cab].concat(corpo)}),
+        new D.Paragraph({spacing:{before:200}, children:[
+          new D.TextRun({text:'Nota de 0 a 10 = acertos ÷ total de questões × 10. Gerado pelo portal Gamefica Ação Matemática.', italics:true, size:18, font:'Arial', color:'5D6785'})]})
+      ]
+    }]
+  });
+  var blob = await D.Packer.toBlob(doc);
+  baixar(blob, 'relatorio-' + slug(a.titulo) + '.docx');
+}
+
+
+
+/* ---------- aba Administração ---------- */
+async function carregarContas(){
+  var r = await sb.rpc('admin_contas');
+  contas = r.error ? [] : r.data;
+  if(r.error) contas.erro = r.error.message;
+}
+function situacao(c){
+  if(!c.ativo) return {t:'⛔ Bloqueada', cls:'enc'};
+  if(c.validade && c.validade < hojeISO()) return {t:'⏰ Vencida', cls:'venc'};
+  return {t:'● Ativa', cls:'aberta'};
+}
+function desenharAdmin(){
+  var nome = el('input', {type:'text', id:'cNome', maxlength:'80', placeholder:'Ex.: Maria da Silva'});
+  var login = el('input', {type:'text', id:'cLogin', maxlength:'80', autocapitalize:'none', spellcheck:'false', placeholder:'Ex.: maria.silva'});
+  var senha = el('input', {type:'text', id:'cSenha', maxlength:'60', value: gerarSenha()});
+  var validade = el('input', {type:'date', id:'cVal'});
+  var obs = el('input', {type:'text', id:'cObs', maxlength:'300', placeholder:'Ex.: pagou via Pix em 26/10 (opcional)'});
+  var valorNovo = el('input', {type:'number', id:'cValor', min:'0', step:'0.01', placeholder:'Ex.: 49,90'});
+  var aviso = el('div'), botao = el('button', {type:'submit', class:'grande'}, '➕ Criar conta');
+  nome.addEventListener('input', function(){
+    if(login.dataset.mexeu) return;
+    var p = nome.value.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9 ]/g,'').trim().split(/\s+/).filter(Boolean);
+    login.value = p.length ? (p.length > 1 ? p[0] + '.' + p[p.length - 1] : p[0]) : '';
+  });
+  login.addEventListener('input', function(){ login.dataset.mexeu = '1'; });
+  var form = el('form', {onsubmit: async function(ev){
+    ev.preventDefault(); aviso.replaceChildren(); botao.disabled = true;
+    var corpo = {acao:'criar', nome: nome.value.trim(), login: login.value.trim().toLowerCase(), senha: senha.value, validade: validade.value || null};
+    var r = await chamarFuncao('admin-contas', corpo);
+    var d = await r.json().catch(function(){ return {}; });
+    botao.disabled = false;
+    if(!r.ok){ aviso.append(msg('erro', d.erro || 'Não foi possível criar a conta.')); return; }
+    if(obs.value.trim()) await sb.rpc('admin_atualizar', {p_id: d.id, p_nome: corpo.nome, p_ativo: true, p_validade: corpo.validade, p_observacao: obs.value.trim()});
+    if(valorNovo.value !== '') await sb.rpc('admin_definir_valor', {p_id: d.id, p_valor: Number(valorNovo.value)});
+    var texto = 'Olá, ' + corpo.nome.split(' ')[0] + '! Seu acesso ao Gamefica Ação Matemática está pronto 🎮\n\n' +
+      '🌐 Site: ' + location.origin + location.pathname.replace(/[^/]*$/, '') + '\n👤 Login: ' + corpo.login + '\n🔑 Senha: ' + corpo.senha + '\n' +
+      (corpo.validade ? '📅 Válido até: ' + fmtDia(corpo.validade) + '\n' : '') +
+      '\nAtenção: o login funciona em um aparelho por vez. Não compartilhe sua senha.';
+    var btn = el('button', {class:'peq', type:'button'}, '📋 Copiar mensagem');
+    btn.addEventListener('click', function(){ copiar(texto, btn); });
+    await carregarContas(); desenharAdmin();
+    var area = document.getElementById('entrega');
+    if(area){ area.replaceChildren(msg('ok', '✅ Conta criada! Envie estes dados para a pessoa:'), el('div', {class:'entrega'}, texto), el('div', {style:'margin-top:8px'}, btn)); area.scrollIntoView({behavior:'smooth', block:'center'}); }
+  }},
+    el('div', {class:'duas'},
+      el('div', {}, el('label', {for:'cNome'}, 'Nome da pessoa'), nome),
+      el('div', {}, el('label', {for:'cLogin'}, 'Login'), login)),
+    el('div', {class:'duas'},
+      el('div', {}, el('label', {for:'cSenha'}, 'Senha'), el('div', {class:'linha', style:'flex-wrap:nowrap'}, senha,
+        el('button', {type:'button', class:'peq sec', onclick: function(){ senha.value = gerarSenha(); }, title:'Gerar outra senha'}, '🎲'))),
+      el('div', {}, el('label', {for:'cVal'}, 'Acesso válido até (opcional)'), validade)),
+    el('div', {class:'duas'}, el('div', {}, el('label', {for:'cObs'}, 'Observação (só você vê)'), obs), el('div', {}, el('label', {for:'cValor'}, 'Valor pago (R$, opcional)'), valorNovo)),
+    el('div', {style:'margin-top:14px'}, botao), aviso);
+
+  var lista = contas.filter(function(c){
+    var b = buscaContas.toLowerCase();
+    return !b || (c.nome || '').toLowerCase().indexOf(b) >= 0 || (c.login || '').indexOf(b) >= 0 || (c.email || '').indexOf(b) >= 0;
+  });
+  var ativos = contas.filter(function(c){ return situacao(c).cls === 'aberta'; }).length;
+  var online = contas.filter(function(c){ return c.online; }).length;
+  var recebido = contas.reduce(function(t, c){ return t + Number(c.valor_pago || 0); }, 0);
+  var busca = el('input', {type:'search', placeholder:'🔎 Procurar por nome ou login', value: buscaContas, oninput: function(){
+    buscaContas = this.value; var pos = this.selectionStart; desenharAdmin(); var b = document.getElementById('buscaC'); if(b){ b.focus(); try{ b.setSelectionRange(pos, pos); }catch(e){} }
+  }, id:'buscaC'});
+
+  app.replaceChildren(
+    el('div', {class:'card'}, el('h2', {}, '👥 Contas'),
+      contas.erro ? msg('erro', 'Erro ao carregar: ' + contas.erro) : null,
+      el('div', {class:'resumo'},
+        el('div', {}, el('b', {}, contas.length), 'contas'),
+        el('div', {}, el('b', {}, ativos), 'com acesso liberado'),
+        el('div', {}, el('b', {}, online), 'usando agora'),
+        el('div', {}, el('b', {}, 'R$ ' + recebido.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})), 'total recebido')),
+      el('div', {class:'linha', style:'margin-bottom:12px'}, busca,
+        el('button', {class:'peq sec', onclick: async function(){ await carregarContas(); desenharAdmin(); }}, '🔄 Atualizar')),
+      lista.length ? el('div', {class:'contas'}, lista.map(cartaoConta)) : el('p', {class:'vazio'}, 'Nenhuma conta encontrada.')),
+    el('div', {class:'card'}, el('h2', {}, '➕ Nova conta para quem comprou'),
+      el('p', {class:'sub'}, 'Crie o login e a senha e envie para a pessoa. Cada login funciona em um aparelho por vez.'), form, el('div', {id:'entrega'})));
+}
+function cartaoConta(c){
+  var s = situacao(c), eu = c.id === sessao.user.id, extra = el('div');
+  var loginMostrado = c.login || c.email;
+  async function atualizar(campos){
+    var p = Object.assign({p_id: c.id, p_nome: c.nome, p_ativo: c.ativo, p_validade: c.validade, p_observacao: c.observacao || ''}, campos);
+    var r = await sb.rpc('admin_atualizar', p);
+    if(r.error){ extra.replaceChildren(msg('erro', r.error.message)); return false; }
+    await carregarContas(); desenharAdmin(); return true;
+  }
+  var botoes = [];
+  if(!eu) botoes.push(el('button', {class:'peq ' + (c.ativo ? 'perigo' : ''), onclick: function(){ atualizar({p_ativo: !c.ativo}); }}, c.ativo ? '⛔ Bloquear' : '✅ Desbloquear'));
+  botoes.push(el('button', {class:'peq sec', onclick: function(){
+    var n = el('input', {type:'text', value: c.nome, maxlength:'80'});
+    var v = el('input', {type:'date', value: c.validade || ''});
+    var o = el('input', {type:'text', value: c.observacao || '', maxlength:'300'});
+    var vl = el('input', {type:'number', min:'0', step:'0.01', value: c.valor_pago != null ? String(c.valor_pago) : ''});
+    extra.replaceChildren(el('div', {class:'editar-conta'},
+      el('div', {class:'duas'}, el('div', {}, el('label', {}, 'Nome'), n), el('div', {}, el('label', {}, 'Acesso válido até (vazio = sem prazo)'), v)),
+      el('div', {class:'duas'}, el('div', {}, el('label', {}, 'Observação'), o), el('div', {}, el('label', {}, 'Valor pago (R$)'), vl)),
+      el('div', {class:'linha', style:'margin-top:10px'},
+        el('button', {class:'peq', onclick: async function(){
+          var rv = await sb.rpc('admin_definir_valor', {p_id: c.id, p_valor: vl.value === '' ? null : Number(vl.value)});
+          if(rv.error){ extra.replaceChildren(msg('erro', rv.error.message)); return; }
+          atualizar({p_nome: n.value.trim() || c.nome, p_validade: v.value || null, p_observacao: o.value});
+        }}, '💾 Salvar'),
+        el('button', {class:'peq sec', onclick: function(){ extra.replaceChildren(); }}, 'Cancelar'))));
+  }}, '✏️ Editar'));
+  if(!eu) botoes.push(el('button', {class:'peq sec', onclick: async function(){
+    var nova = gerarSenha();
+    if(!window.confirm('Trocar a senha de ' + c.nome + '? A pessoa será desconectada e só entrará com a senha nova.')) return;
+    var r = await chamarFuncao('admin-contas', {acao:'senha', id: c.id, senha: nova});
+    var d = await r.json().catch(function(){ return {}; });
+    if(!r.ok){ extra.replaceChildren(msg('erro', d.erro || 'Erro ao trocar a senha.')); return; }
+    var texto = 'Sua nova senha do Gamefica Ação Matemática:\n👤 Login: ' + loginMostrado + '\n🔑 Senha: ' + nova;
+    var btn = el('button', {class:'peq'}, '📋 Copiar'); btn.addEventListener('click', function(){ copiar(texto, btn); });
+    extra.replaceChildren(msg('ok', 'Senha trocada. Envie para a pessoa:'), el('div', {class:'entrega'}, texto), el('div', {style:'margin-top:8px'}, btn));
+  }}, '🔑 Nova senha'));
+  if(!eu && c.online) botoes.push(el('button', {class:'peq sec', onclick: async function(){
+    var r = await sb.rpc('admin_derrubar', {p_id: c.id});
+    if(!r.error){ await carregarContas(); desenharAdmin(); }
+  }}, '⏏ Desconectar agora'));
+  botoes.push(el('button', {class:'peq sec', onclick: async function(){
+    var r = await sb.rpc('admin_historico', {p_id: c.id});
+    if(r.error){ extra.replaceChildren(msg('erro', r.error.message)); return; }
+    var nomes = {entrou:'🟢 Entrou', derrubado:'🔁 Desconectado (entrou em outro aparelho)', saiu:'⚪ Saiu'};
+    extra.replaceChildren(el('div', {class:'historico'},
+      r.data.length ? r.data.map(function(h){ return el('div', {}, fmtData(h.quando) + ' — ' + (nomes[h.evento] || h.evento) + (h.aparelho ? ' · ' + h.aparelho : '')); }) : el('div', {}, 'Nenhum acesso ainda.')));
+  }}, '📜 Acessos'));
+  if(!eu) botoes.push(el('button', {class:'peq perigo', onclick: async function(){
+    if(!window.confirm('Excluir a conta de ' + c.nome + ' (' + loginMostrado + ')? A pessoa perde o acesso e as atividades de turma dela. Isso não pode ser desfeito.')) return;
+    var r = await chamarFuncao('admin-contas', {acao:'excluir', id: c.id});
+    var d = await r.json().catch(function(){ return {}; });
+    if(!r.ok){ extra.replaceChildren(msg('erro', d.erro || 'Erro ao excluir.')); return; }
+    await carregarContas(); desenharAdmin();
+  }}, '🗑 Excluir'));
+
+  return el('div', {class:'conta' + (c.ativo ? '' : ' bloq')},
+    el('div', {class:'conta-topo'},
+      el('span', {class:'bolinha' + (c.online ? ' on' : ''), title: c.online ? 'Usando agora' : 'Fora do site'}),
+      el('h3', {}, c.nome || '(sem nome)'), el('span', {class:'login'}, loginMostrado),
+      c.papel === 'admin' ? el('span', {class:'tag'}, '🛡️ Administrador') : null,
+      el('span', {class:'tag ' + s.cls}, s.t)),
+    el('div', {class:'conta-info'},
+      el('span', {}, c.online ? '🟢 Usando agora' : '🕒 Último acesso: ' + fmtData(c.ultimo_acesso)),
+      c.aparelho ? el('span', {}, '💻 ' + c.aparelho) : null,
+      c.validade ? el('span', {}, '📅 Até ' + fmtDia(c.validade)) : el('span', {}, '📅 Sem prazo'),
+      c.observacao ? el('span', {}, '📝 ' + c.observacao) : null,
+      el('span', {}, '💰 ' + (c.valor_pago != null ? 'R$ ' + Number(c.valor_pago).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : 'valor não informado'))),
+    (c.trocas_30d >= 3 || c.aparelhos_30d >= 4) ? el('div', {class:'alerta'},
+      '⚠️ Possível compartilhamento: ' + c.trocas_30d + ' desconexões por login em outro aparelho e ' + c.aparelhos_30d + ' aparelhos diferentes nos últimos 30 dias.') : null,
+    el('div', {class:'linha'}, botoes), extra);
+}
+
+iniciar();
+})();
+</script>
+</body>
+</html>
