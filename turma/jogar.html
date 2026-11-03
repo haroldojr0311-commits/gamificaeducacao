@@ -123,8 +123,8 @@ function gravarSaidas(){
 function registrarSaida(){
   if(!prova() || fora) return;
   fora = true; saidas++; gravarSaidas();
-  mostrarBloqueio('Você saiu da atividade',
-    'Para continuar, volte para a atividade. Cada vez que você sai da tela, o registro é guardado para o professor.',
+  mostrarBloqueio('⚠ Atenção: você saiu da atividade',
+    'Este site usa um sistema anti-cola. Sua saída desta tela foi registrada e o professor será avisado. Para continuar, volte para a atividade.',
     '▶ Voltar à atividade');
 }
 function voltarAtividade(){
@@ -133,8 +133,8 @@ function voltarAtividade(){
 document.addEventListener('visibilitychange', function(){
   if(!prova()) return;
   if(document.hidden) { registrarSaida(); }
-  else if(fora) { mostrarBloqueio('Você saiu da atividade',
-      'Para continuar, toque no botão abaixo. Cada vez que você sai da tela, o registro é guardado para o professor.',
+  else if(fora) { mostrarBloqueio('⚠ Atenção: você saiu da atividade',
+      'Este site usa um sistema anti-cola. Sua saída desta tela foi registrada e o professor será avisado. Para continuar, toque no botão abaixo.',
       '▶ Voltar à atividade'); }
 });
 document.addEventListener('fullscreenchange', function(){
@@ -143,7 +143,16 @@ document.addEventListener('fullscreenchange', function(){
 });
 /* Sem copiar, colar ou menu de contexto durante a tarefa */
 ['copy','cut','paste','contextmenu'].forEach(function(ev){
-  document.addEventListener(ev, function(e){ if(prova()) e.preventDefault(); });
+  document.addEventListener(ev, function(e){
+    if(!prova()) return;
+    e.preventDefault();
+    if(!fora){
+      fora = true; saidas++; gravarSaidas();
+      mostrarBloqueio('⚠ Atenção: tentativa de cola',
+        'Este site usa um sistema anti-cola. Essa tentativa de copiar ou colar foi registrada e o professor será avisado. Para continuar, toque no botão abaixo.',
+        '▶ Voltar à atividade');
+    }
+  });
 });
 
 function el(tag, props){
