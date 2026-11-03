@@ -424,10 +424,11 @@ async function iniciar(){
 }
 
 function entrarNoSite(){
-  usuarioBox.replaceChildren(
+  /* Sem o filtro, o item vazio (null) iria para a tela como o texto "null". */
+  usuarioBox.replaceChildren.apply(usuarioBox, [
     el('span', {}, (perfil.papel === 'admin' ? '🛡️ ' : '👤 ') + (perfil.nome || sessao.user.email)),
     perfil.papel === 'admin' ? el('button', {class:'sec peq', onclick: compartilharSite}, '🔗 Compartilhar site') : null,
-    el('button', {class:'sec peq', onclick: sair}, 'Sair'));
+    el('button', {class:'sec peq', onclick: sair}, 'Sair')].filter(function(x){ return x; }));
   var h = (location.hash || '').replace('#', '');
   if(h === 'turmas' || h === 'atribuir' || h === 'jogos' || h === 'simuladores' || h === 'ferramentas' || (h === 'admin' && perfil.papel === 'admin')) aba = h;
   iniciarVigia();
