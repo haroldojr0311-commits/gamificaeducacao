@@ -8,11 +8,11 @@
 <link rel="icon" type="image/svg+xml" href="icone.svg?v=3">
 <link rel="icon" type="image/png" sizes="192x192" href="icone-192.png?v=3">
 <link rel="apple-touch-icon" href="icone-180.png?v=3">
-<meta name="description" content="Jogos e atividades de Matemática para aprender de um jeito lúdico.">
+<meta name="description" content="Jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gamifica Educação">
 <meta property="og:title" content="Gamifica Educação">
-<meta property="og:description" content="Jogos e atividades de Matemática para aprender de um jeito lúdico.">
+<meta property="og:description" content="Jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico.">
 <meta property="og:url" content="https://gamificaeducacao.com.br/">
 <meta property="og:image" content="https://gamificaeducacao.com.br/capa.png?v=2">
 <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Gamifica Educação">
-<meta name="twitter:description" content="Jogos e atividades de Matemática para aprender de um jeito lúdico.">
+<meta name="twitter:description" content="Jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico.">
 <meta name="twitter:image" content="https://gamificaeducacao.com.br/capa.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -161,6 +161,9 @@
   .sug-texto{white-space:pre-wrap;margin:8px 0;line-height:1.5}
   .secao-titulo{display:flex;align-items:center;gap:10px;margin:6px 0 12px;font-family:var(--f-display);font-size:1.3rem;font-weight:600}
   .login-box{max-width:440px;margin:26px auto}
+  .teste-gratis{margin:18px 20px 22px;padding:14px;border-radius:12px;background:#eef2ff;text-align:center}
+  .teste-gratis p{margin:0 0 10px;font-weight:700}
+  .teste-gratis a{display:inline-block;text-decoration:none}
   .login-box .nota{height:120px;font-size:58px;border-radius:12px 12px 0 0}
   .login-box .card{padding:0;overflow:hidden}
   .login-box form{padding:18px 20px 22px}
@@ -198,7 +201,7 @@
 </head>
 <body>
 <header class="topo"><div class="in">
-  <div><h1>🎮 Gamifica <span>Educação</span></h1><small>Jogos e atividades de Matemática para aprender brincando</small></div>
+  <div><h1>🎮 Gamifica <span>Educação</span></h1><small>Jogos, simuladores e ferramentas educacionais para aprender brincando</small></div>
   <div id="usuario"></div>
 </div></header>
 <nav class="abas" id="abas" hidden></nav>
@@ -440,6 +443,12 @@ async function sair(){
 }
 
 /* ---------- login ---------- */
+/* Contato para pedir o login teste gratuito (WhatsApp, com DDI 55 e DDD, só números). */
+var WHATSAPP_TESTE = '';
+function linkTesteGratis(){
+  var txt = 'Olá, Prof. Haroldo! Gostaria de pedir um login teste gratuito do Gamifica Educação.';
+  return WHATSAPP_TESTE ? 'https://wa.me/' + WHATSAPP_TESTE + '?text=' + encodeURIComponent(txt) : null;
+}
 function desenharLogin(aviso){
   abasBox.hidden = true; usuarioBox.replaceChildren();
   var login = el('input', {type:'text', id:'login', autocomplete:'username', autocapitalize:'none', spellcheck:'false', placeholder:'Seu login ou e-mail', required:'required'});
@@ -481,7 +490,10 @@ function desenharLogin(aviso){
     el('label', {for:'senha'}, 'Senha'), el('div', {class:'campo-senha'}, senha, olho),
     botao, caixa,
     el('p', {class:'sub2'}, '🔒 Cada login funciona em um aparelho por vez. Se você entrar em outro aparelho, o anterior é desconectado.'),
-    el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'));
+    el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'),
+    linkTesteGratis() ? el('div', {class:'teste-gratis'},
+      el('p', {}, '🧪 Quer conhecer o portal antes?'),
+      el('a', {class:'grande', href: linkTesteGratis(), target:'_blank', rel:'noopener'}, '💬 Pedir login teste gratuito')) : null);
 
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form)));
