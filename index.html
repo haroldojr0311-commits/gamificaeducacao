@@ -210,7 +210,7 @@
 <script src="turma/supabase-config.js"></script>
 <script src="turma/jogos.js?v=20261102213800"></script>
 <script src="turma/qr.js"></script>
-<script src="turma/resultado-jogo.js?v=20261101184026"></script>
+<script src="turma/resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
 <script>
 (function(){
@@ -605,9 +605,6 @@ async function abrirJogo(id){
     el('div', {class:'player-barra'},
       el('button', {class:'peq', onclick: fecharPlayer}, '← Voltar'),
       el('h2', {}, j.emoji + ' ' + j.nome),
-      el('button', {class:'peq', id:'btnSomJogo', 'aria-label':'Ligar ou desligar o som', title:'Som', onclick: function(){
-        somMudo = !somMudo; this.textContent = somMudo ? '🔇' : '🔊'; ResultadoJogo.somDoJogo(quadro, somMudo);
-      }}, somMudo ? '🔇' : '🔊'),
       (visitante || perfil.papel !== 'admin') ? null : el('button', {class:'peq', title:'Compartilhar um link de teste (1 hora)', onclick: function(){
         compartilharJogo(id, document.getElementById('partilha'));
       }}, '🔗'),
@@ -631,7 +628,7 @@ async function abrirJogo(id){
     quadro = el('iframe', {title: j.nome, allow:'fullscreen; autoplay; camera; microphone; clipboard-write; xr-spatial-tracking'});
     quadro.src = urlJogo + '#livre';
     ResultadoJogo.anexar(quadro, j.nome);
-    quadro.addEventListener('load', function(){ ResultadoJogo.somDoJogo(quadro, somMudo); ResultadoJogo.marcaDagua(perfil ? perfil.nome : ''); });
+    quadro.addEventListener('load', function(){ ResultadoJogo.marcaDagua(perfil ? perfil.nome : ''); });
     miolo.replaceWith(quadro);
   }catch(e){
     miolo.textContent = '😕 ' + (e.message || 'Não foi possível abrir o jogo.') + ' Tente de novo.';

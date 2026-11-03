@@ -55,7 +55,7 @@
 </style>
 </head>
 <body>
-<div class="barra"><b id="barra-titulo"></b><span id="barra-status" role="status" aria-live="polite"></span><button id="barra-reenviar" type="button" hidden>🔁 Reenviar</button><button id="barra-som" type="button" aria-label="Ligar ou desligar o som" title="Som">🔊</button><button id="barra-tela" type="button" aria-label="Tela cheia" title="Tela cheia">⛶</button></div>
+<div class="barra"><b id="barra-titulo"></b><span id="barra-status" role="status" aria-live="polite"></span><button id="barra-reenviar" type="button" hidden>🔁 Reenviar</button><button id="barra-tela" type="button" aria-label="Tela cheia" title="Tela cheia">⛶</button></div>
 <div class="centro"><div class="cartao" id="cartao"><p>Carregando atividade…</p></div></div>
 <div class="parabens" id="parabens" role="dialog" aria-modal="true" aria-live="polite"><div class="cx" id="parabens-cx"></div></div>
 <iframe id="quadro" title="Atividade" allow="autoplay; fullscreen"></iframe>
@@ -63,7 +63,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="jogos.js"></script>
-<script src="resultado-jogo.js?v=20261101184026"></script>
+<script src="resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
 <script>
 (function(){
@@ -282,10 +282,7 @@ quadro.addEventListener('load', function(){
     quadro.contentWindow.postMessage({tipo:'gamifica-aluno', nome: aluno.nome, turma: aluno.turma, estado: (pg && pg.save) || null}, '*'); }catch(e){}
 });
 var statusEl = document.getElementById('barra-status');
-var somMudoAluno = false;
-document.getElementById('barra-som').addEventListener('click', function(){ somMudoAluno = !somMudoAluno; this.textContent = somMudoAluno ? '🔇' : '🔊'; ResultadoJogo.somDoJogo(quadro, somMudoAluno); });
 document.getElementById('barra-tela').addEventListener('click', function(){ ResultadoJogo.telaCheia(quadro); });
-quadro.addEventListener('load', function(){ ResultadoJogo.somDoJogo(quadro, somMudoAluno); });
 quadro.addEventListener('load', function(){ ResultadoJogo.marcaDagua(aluno.nome); });
 var reenviarBtn = document.getElementById('barra-reenviar');
 function setStatus(texto, classe){ statusEl.textContent = texto; statusEl.className = classe || ''; }

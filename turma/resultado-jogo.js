@@ -261,15 +261,7 @@
         c.resume().then(function(){ if (c.state === 'running') iniciaMusica(c); }).catch(function(){});
       }catch(e){}
     }
-    /* Tenta sozinho no começo, a cada toque/tecla dentro do item e por alguns segundos */
-    ligaMusica();
-    ['pointerdown','touchstart','mousedown','keydown','click'].forEach(function(ev){
-      document.addEventListener(ev, ligaMusica, true);
-    });
-    timerMusica = setInterval(function(){
-      tentativas++; ligaMusica();
-      if (musicaIniciada || tentativas > 60) clearInterval(timerMusica);
-    }, 1000);
+    /* Música de fundo desligada: só os efeitos curtos de acerto/erro. */
 
     function toca(nome){
       var agora = Date.now(); if (agora - ultimo < 250) return; ultimo = agora;

@@ -33,7 +33,6 @@
   <h1>🧪 Acesso de teste</h1>
   <div class="barra-btns">
     <span class="tempo" id="tempo" hidden></span>
-    <button class="peq" id="btnSom" aria-label="Ligar ou desligar o som" title="Som" hidden>🔊</button>
     <button class="peq" id="btnTela" aria-label="Tela cheia" title="Tela cheia" hidden>⛶</button>
   </div>
 </header>
@@ -47,7 +46,6 @@
 (function(){
   var principal = document.getElementById('principal');
   var tempoEl = document.getElementById('tempo');
-  var btnSom = document.getElementById('btnSom');
   var btnTela = document.getElementById('btnTela');
   var quadro = null, expira = 0, timer = null, somMudo = false;
 
@@ -59,7 +57,7 @@
     a.querySelector('h2').textContent = titulo;
     a.querySelector('p').textContent = texto;
     principal.appendChild(a);
-    tempoEl.hidden = true; btnSom.hidden = true; btnTela.hidden = true;
+    tempoEl.hidden = true; btnTela.hidden = true;
     if(timer){ clearInterval(timer); timer = null; }
   }
 
@@ -108,18 +106,13 @@
     principal.appendChild(quadro);
     ResultadoJogo.anexar(quadro, 'Acesso de teste');
     quadro.addEventListener('load', function(){
-      ResultadoJogo.somDoJogo(quadro, somMudo);
-      ResultadoJogo.marcaDagua('Acesso de teste');
+            ResultadoJogo.marcaDagua('Acesso de teste');
     });
-    tempoEl.hidden = false; btnSom.hidden = false; btnTela.hidden = false;
+    tempoEl.hidden = false; btnTela.hidden = false;
     atualizaTempo();
     timer = setInterval(atualizaTempo, 1000);
   }
 
-  btnSom.onclick = function(){
-    somMudo = !somMudo; btnSom.textContent = somMudo ? '🔇' : '🔊';
-    if(quadro) ResultadoJogo.somDoJogo(quadro, somMudo);
-  };
   btnTela.onclick = function(){
     if(document.fullscreenElement) document.exitFullscreen();
     else if(principal.requestFullscreen) principal.requestFullscreen().catch(function(){});
