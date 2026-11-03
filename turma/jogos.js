@@ -256,5 +256,12 @@ window.JOGOS = {
     desc: "Jogo curto (5 perguntas) para você testar o envio de notas.",
     emoji: "🧪", cor: "azul",
     conteudo: "Proporção e porcentagem"
+  },
+  "gerador-provas": {
+    nome: "Gerador de Provas",
+    tema: "Ferramenta do professor",
+    desc: "Monte provas e simulados de Matemática inspirados em Prova Paulista, Provão Paulista, SAEB e SARESP, com gabarito.",
+    emoji: "📝", cor: "lilas", ferramenta: true,
+    tipo: "ferramenta"
   }
 };
