@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Atividade · Gamefica Ação Matemática</title>
+<title>Atividade · Gamifica Educação</title>
 <link rel="icon" href="../favicon.ico?v=3" sizes="any">
 <link rel="icon" type="image/svg+xml" href="../icone.svg?v=3">
 <link rel="icon" type="image/png" sizes="192x192" href="../icone-192.png?v=3">
@@ -154,7 +154,7 @@ function baixarResultadoWord(d){
   var linhas = [['Aluno(a)', d.aluno], ['Série / turma', d.serie], ['Atividade', d.atividade], ['Acertos', d.acertos + ' de ' + d.total], ['Nota (0 a 10)', fmtNota(d.nota)], ['Pontos', d.pontos], ['Data', d.data]];
   var tr = linhas.map(function(l){ return '<tr><td style="background:#eef0fb;font-weight:bold;width:35%;border:1px solid #b8c0d9;padding:6px">' + escHtml(l[0]) + '</td><td style="border:1px solid #b8c0d9;padding:6px">' + escHtml(l[1]) + '</td></tr>'; }).join('');
   var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Resultado final</title></head><body style="font-family:Arial,sans-serif">' +
-    '<h1 style="color:#1d2b53">Resultado final da atividade</h1><p style="color:#5d6785">Gamefica Ação Matemática</p>' +
+    '<h1 style="color:#1d2b53">Resultado final da atividade</h1><p style="color:#5d6785">Gamifica Educação</p>' +
     '<table style="border-collapse:collapse;width:100%">' + tr + '</table>' +
     '<p style="margin-top:18px;color:#5d6785;font-size:10pt">Documento gerado automaticamente ao término da atividade.</p></body></html>';
   var blob = new Blob(['﻿', html], {type: 'application/msword'});

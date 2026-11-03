@@ -14,7 +14,7 @@
     var linhas = [['Aluno(a)', d.aluno], ['Série / turma', d.serie], ['Atividade', d.atividade], ['Acertos', d.acertos + ' de ' + d.total], ['Nota (0 a 10)', nota1(d.nota)], ['Pontos', d.pontos], ['Data', d.data]];
     var tr = linhas.map(function(l){ return '<tr><td style="background:#eef0fb;font-weight:bold;width:35%;border:1px solid #b8c0d9;padding:6px">' + esc(l[0]) + '</td><td style="border:1px solid #b8c0d9;padding:6px">' + esc(l[1]) + '</td></tr>'; }).join('');
     var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Resultado final</title></head><body style="font-family:Arial,sans-serif">' +
-      '<h1 style="color:#1d2b53">Resultado final da atividade</h1><p style="color:#5d6785">Gamefica Ação Matemática</p>' +
+      '<h1 style="color:#1d2b53">Resultado final da atividade</h1><p style="color:#5d6785">Gamifica Educação</p>' +
       '<table style="border-collapse:collapse;width:100%">' + tr + '</table>' +
       '<p style="margin-top:18px;color:#5d6785;font-size:10pt">Documento gerado automaticamente ao término da atividade.</p></body></html>';
     var blob = new Blob(['\ufeff', html], {type: 'application/msword'});
@@ -106,7 +106,7 @@
       'body{font-family:Arial,Helvetica,sans-serif;color:#1b2440;margin:40px}h1{color:#1d2b53;margin:0 0 4px}.sub{color:#5d6785;margin:0 0 24px}' +
       'table{border-collapse:collapse;width:100%}th,td{border:1px solid #b8c0d9;padding:10px;text-align:left}th{background:#eef0fb;width:35%}' +
       '.rod{margin-top:26px;color:#5d6785;font-size:12px}</style></head><body>' +
-      '<h1>Resultado final da atividade</h1><p class="sub">Gamefica Ação Matemática</p><table>' + tr + '</table>' +
+      '<h1>Resultado final da atividade</h1><p class="sub">Gamifica Educação</p><table>' + tr + '</table>' +
       '<p class="rod">Relatório gerado automaticamente ao término da atividade.</p></body></html>';
   }
   function pdf(d){

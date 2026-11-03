@@ -1,4 +1,4 @@
-// Catálogo do portal Gamefica Ação Matemática.
+// Catálogo do portal Gamifica Educação.
 // Os arquivos dos jogos ficam CIFRADOS na pasta protegido/ (só o servidor abre).
 // Para incluir um jogo novo: node _ferramentas/proteger.mjs <id> <arquivo.html> e acrescente um item aqui.
 // cor: amarelo | coral | verde | azul | lilas | laranja

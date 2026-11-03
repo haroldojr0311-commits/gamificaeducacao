@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Gamefica Ação Matemática</title>
+<title>Gamifica Educação</title>
 <link rel="icon" href="favicon.ico?v=3" sizes="any">
 <link rel="icon" type="image/svg+xml" href="icone.svg?v=3">
 <link rel="icon" type="image/png" sizes="192x192" href="icone-192.png?v=3">
@@ -185,7 +185,7 @@
 </head>
 <body>
 <header class="topo"><div class="in">
-  <div><h1>🎮 Gamefica <span>Ação Matemática</span></h1><small>Jogos e atividades de Matemática para aprender brincando</small></div>
+  <div><h1>🎮 Gamifica <span>Educação</span></h1><small>Jogos e atividades de Matemática para aprender brincando</small></div>
   <div id="usuario"></div>
 </div></header>
 <nav class="abas" id="abas" hidden></nav>
@@ -919,7 +919,7 @@ async function baixarWord(a, linhas, media){
         new D.Paragraph({spacing:{before:200, after:120}, children:[]}),
         new D.Table({width:{size:9638, type:D.WidthType.DXA}, columnWidths: larguras, rows:[cab].concat(corpo)}),
         new D.Paragraph({spacing:{before:200}, children:[
-          new D.TextRun({text:'Nota de 0 a 10 = acertos ÷ total de questões × 10. Gerado pelo portal Gamefica Ação Matemática.', italics:true, size:18, font:'Arial', color:'5D6785'})]})
+          new D.TextRun({text:'Nota de 0 a 10 = acertos ÷ total de questões × 10. Gerado pelo portal Gamifica Educação.', italics:true, size:18, font:'Arial', color:'5D6785'})]})
       ]
     }]
   });
@@ -963,7 +963,7 @@ function desenharAdmin(){
     if(!r.ok){ aviso.append(msg('erro', d.erro || 'Não foi possível criar a conta.')); return; }
     if(obs.value.trim()) await sb.rpc('admin_atualizar', {p_id: d.id, p_nome: corpo.nome, p_ativo: true, p_validade: corpo.validade, p_observacao: obs.value.trim()});
     if(valorNovo.value !== '') await sb.rpc('admin_definir_valor', {p_id: d.id, p_valor: Number(valorNovo.value)});
-    var texto = 'Olá, ' + corpo.nome.split(' ')[0] + '! Seu acesso ao Gamefica Ação Matemática está pronto 🎮\n\n' +
+    var texto = 'Olá, ' + corpo.nome.split(' ')[0] + '! Seu acesso ao Gamifica Educação está pronto 🎮\n\n' +
       '🌐 Site: ' + location.origin + location.pathname.replace(/[^/]*$/, '') + '\n👤 Login: ' + corpo.login + '\n🔑 Senha: ' + corpo.senha + '\n' +
       (corpo.validade ? '📅 Válido até: ' + fmtDia(corpo.validade) + '\n' : '') +
       '\nAtenção: o login funciona em um aparelho por vez. Não compartilhe sua senha.';
@@ -1041,7 +1041,7 @@ function cartaoConta(c){
     var r = await chamarFuncao('admin-contas', {acao:'senha', id: c.id, senha: nova});
     var d = await r.json().catch(function(){ return {}; });
     if(!r.ok){ extra.replaceChildren(msg('erro', d.erro || 'Erro ao trocar a senha.')); return; }
-    var texto = 'Sua nova senha do Gamefica Ação Matemática:\n👤 Login: ' + loginMostrado + '\n🔑 Senha: ' + nova;
+    var texto = 'Sua nova senha do Gamifica Educação:\n👤 Login: ' + loginMostrado + '\n🔑 Senha: ' + nova;
     var btn = el('button', {class:'peq'}, '📋 Copiar'); btn.addEventListener('click', function(){ copiar(texto, btn); });
     extra.replaceChildren(msg('ok', 'Senha trocada. Envie para a pessoa:'), el('div', {class:'entrega'}, texto), el('div', {style:'margin-top:8px'}, btn));
   }}, '🔑 Nova senha'));
