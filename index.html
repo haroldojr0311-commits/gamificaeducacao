@@ -404,6 +404,95 @@ async function compartilharSite(){
 }
 
 /* ---------- início ---------- */
+/* ---------- Acesso definitivo pago (Mercado Pago: Pix ou cartão) ---------- */
+var PRECO_MES = 10;
+function reais(v){ return 'R$ ' + Number(v).toFixed(2).replace('.', ','); }
+function dataBr(iso){ if(!iso) return ''; var p = String(iso).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+function desenharCompra(){
+  abasBox.hidden = true; usuarioBox.replaceChildren();
+  var nome = el('input', {type:'text', maxlength:'80', placeholder:'Seu nome completo', required:'required', autocomplete:'name'});
+  var email = el('input', {type:'email', maxlength:'120', placeholder:'Seu e-mail', required:'required', autocomplete:'email'});
+  var login = el('input', {type:'text', maxlength:'40', autocapitalize:'none', spellcheck:'false', placeholder:'Login que você quer', required:'required'});
+  var opcoes = []; for(var n = 1; n <= 12; n++) opcoes.push(el('option', {value: n}, n + (n > 1 ? ' meses' : ' mês') + ' · ' + reais(n * PRECO_MES)));
+  var meses = el('select', {}, opcoes);
+  var total = el('p', {class:'sub', style:'font-weight:700'}, '');
+  function atualizaTotal(){ total.textContent = 'Total: ' + reais(Number(meses.value) * PRECO_MES) + ' (Pix ou cartão)'; }
+  meses.addEventListener('change', atualizaTotal); atualizaTotal();
+  var caixa = el('div');
+  var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '💳 Ir para o pagamento');
+  var form = el('form', {onsubmit: async function(ev){
+    ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Gerando pagamento…';
+    try{
+      var res = await fetch(FUNCOES + 'pagar', {method:'POST', headers:{'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY},
+        body: JSON.stringify({nome: nome.value, email: email.value, login: login.value, meses: Number(meses.value)})});
+      var d = await res.json().catch(function(){ return {}; });
+      if(!res.ok || !d.link) throw new Error(d.erro || 'Não foi possível gerar o pagamento.');
+      window.location.href = d.link; return;
+    }catch(e){ caixa.append(msg('erro', e.message || String(e))); }
+    botao.disabled = false; botao.textContent = '💳 Ir para o pagamento';
+  }},
+    el('label', {}, 'Nome completo'), nome,
+    el('label', {}, 'E-mail (para o pagamento)'), email,
+    el('label', {}, 'Login que você quer (letras sem acento, números, ponto ou traço)'), login,
+    el('label', {}, 'Quantos meses de acesso'), meses,
+    total,
+    el('p', {class:'sub2'}, '🔒 A senha é criada automaticamente e aparece na tela assim que o pagamento for aprovado. Guarde-a.'),
+    botao, caixa);
+  app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
+    el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🎓')),
+    el('div', {style:'padding:18px 20px 22px'},
+      el('h2', {}, 'Acesso definitivo'),
+      el('p', {class:'sub'}, 'Login e senha só seus, para todos os jogos, simuladores e ferramentas do site. Sem prazo de teste.'),
+      form,
+      el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
+}
+function desenharAcompanhar(tok){
+  abasBox.hidden = true; usuarioBox.replaceChildren();
+  var caixa = el('div', {}, msg('ok', 'Confirmando o seu pagamento… isso pode levar alguns instantes.'));
+  app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
+    el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '⏳')),
+    el('div', {style:'padding:18px 20px 22px'}, el('h2', {}, 'Seu acesso'), caixa))));
+  function sairDaTela(){ history.replaceState(null, '', location.pathname); desenharLogin(); }
+  function mostraCredenciais(d){
+    history.replaceState(null, '', location.pathname);
+    var texto = 'Login: ' + d.login + '\nSenha: ' + d.senha + (d.validade ? '\nAcesso válido até ' + dataBr(d.validade) : '');
+    var copiar = el('button', {type:'button', class:'sec', style:'width:100%;margin-top:10px', onclick: function(){
+      try{ navigator.clipboard.writeText(texto); this.textContent = '✔ Copiado'; }catch(e){ this.textContent = 'Copie manualmente'; }
+    }}, '📋 Copiar login e senha');
+    caixa.replaceChildren(
+      msg('ok', '✅ Pagamento aprovado! Guarde seu login e sua senha agora. Eles aparecem só uma vez.'),
+      el('div', {class:'entrega'}, 'Login: ', el('b', {}, d.login), el('br'), 'Senha: ', el('b', {}, d.senha),
+        d.validade ? el('div', {style:'margin-top:6px'}, 'Acesso válido até ', el('b', {}, dataBr(d.validade))) : null),
+      copiar,
+      el('button', {type:'button', class:'grande', style:'width:100%;margin-top:12px', onclick: function(){
+        guardar('gm_ultimo_login', d.login); sairDaTela();
+      }}, '🚀 Entrar agora'));
+  }
+  var tentativas = 0;
+  async function consultar(){
+    tentativas++;
+    try{
+      var res = await fetch(FUNCOES + 'pagamento-status', {method:'POST', headers:{'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY}, body: JSON.stringify({token: tok})});
+      var d = await res.json().catch(function(){ return {}; });
+      if(!res.ok) throw new Error(d.erro || 'Erro ao consultar.');
+      if(d.status === 'aprovado' && d.senha){ mostraCredenciais(d); return; }
+      if(d.status === 'aprovado'){
+        caixa.replaceChildren(msg('ok', 'Seu acesso já foi entregue. Se você perdeu a senha, peça ao professor para trocá-la.'),
+          el('button', {type:'button', class:'grande', style:'width:100%;margin-top:12px', onclick: sairDaTela}, 'Ir para o login'));
+        return;
+      }
+      if(d.status === 'recusado'){
+        caixa.replaceChildren(msg('erro', 'O pagamento não foi aprovado. Você pode tentar de novo.'),
+          el('button', {type:'button', class:'grande', style:'width:100%;margin-top:12px', onclick: function(){ history.replaceState(null, '', location.pathname); desenharCompra(); }}, 'Tentar de novo'));
+        return;
+      }
+    }catch(e){ /* tenta de novo logo abaixo */ }
+    if(tentativas < 150) setTimeout(consultar, 4000);
+    else caixa.replaceChildren(msg('erro', 'Ainda não recebemos a confirmação. Se o pagamento foi feito, atualize esta página depois de alguns minutos.'));
+  }
+  consultar();
+}
+
 async function iniciar(){
   var r = await sb.auth.getSession();
   sessao = r.data.session;
@@ -411,6 +500,8 @@ async function iniciar(){
     if(evt === 'TOKEN_REFRESHED' || evt === 'SIGNED_IN') sessao = s;
     if(evt === 'SIGNED_OUT' && perfil){ sessao = null; perfil = null; pararVigia(); desenharLogin(); }
   });
+  var pagTok = new URLSearchParams(location.search).get('pagamento');
+  if(pagTok && !sessao){ desenharAcompanhar(pagTok); return; }
   if(!sessao){ var conv = pegaConvite(); if(conv && await entrarVisitante(conv)) return; desenharLogin(); return; }
   SID = ler('gm_sid_' + sessao.user.id);
   if(!SID){ await sb.auth.signOut({scope:'local'}); sessao = null; desenharLogin(); return; }
@@ -494,7 +585,8 @@ function desenharLogin(aviso){
     el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'),
     linkTesteGratis() ? el('div', {class:'teste-gratis'},
       el('p', {}, '🧪 Quer conhecer o portal antes?'),
-      el('a', {class:'grande', href: linkTesteGratis(), target:'_blank', rel:'noopener'}, '💬 Pedir login teste gratuito')) : null);
+      el('a', {class:'grande', href: linkTesteGratis(), target:'_blank', rel:'noopener'}, '💬 Pedir login teste gratuito')) : null,
+    el('div', {style:'padding:0 20px 22px'}, el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharCompra}, '💳 Quero o acesso definitivo: R$ 10,00 por mês')));
 
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form)));
