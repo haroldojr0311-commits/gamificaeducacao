@@ -836,7 +836,7 @@ function desenharResultados(a){
         el('thead', {}, el('tr', {},
           el('th', {class:'n'}, 'Posição'), el('th', {}, 'Aluno'), el('th', {}, 'Turma'),
           el('th', {class:'n'}, 'Acertos'), el('th', {class:'n'}, 'Nota'),
-          el('th', {class:'n'}, 'Tentativas'), el('th', {class:'n'}, 'Tempo'), el('th', {}, 'Enviado em'))),
+          el('th', {class:'n'}, 'Tentativas'), el('th', {class:'n'}, 'Tempo'), el('th', {class:'n', title:'Quantas vezes o aluno saiu da tela durante a tarefa'}, 'Saídas'), el('th', {}, 'Enviado em'))),
         el('tbody', {}, linhas.map(function(l, i){
           var e = l.escolhido, n = Number(e.nota);
           return el('tr', {},
@@ -844,6 +844,7 @@ function desenharResultados(a){
             el('td', {class:'n'}, e.acertos + '/' + e.total_questoes),
             el('td', {class:'n ' + (n >= 6 ? 'nota-alta' : 'nota-baixa')}, fmtNota(n)),
             el('td', {class:'n'}, l.tentativas), el('td', {class:'n'}, fmtTempo(e.tempo_segundos)),
+            el('td', {class:'n ' + (Number(e.saidas || 0) > 0 ? 'nota-baixa' : '')}, String(Number(e.saidas || 0))),
             el('td', {}, fmtData(e.enviado_em)));
         }))));
 

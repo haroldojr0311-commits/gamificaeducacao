@@ -52,6 +52,14 @@
   .parabens .grande{font-size:4rem;line-height:1}
   .parabens h2{font-family:'Fredoka','Nunito',system-ui,sans-serif;font-size:1.6rem;margin:8px 0 4px}
   .parabens .nota{color:var(--primary)}
+  /* Modo prova: aviso de saída e início em tela cheia */
+  .bloqueio{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,.96);color:#fff;text-align:center}
+  .bloqueio.on{display:flex}
+  .bloqueio .caixa{max-width:420px}
+  .bloqueio h2{margin:0 0 12px;font-size:1.4rem}
+  .bloqueio p{margin:0 0 18px;line-height:1.5;font-size:1rem}
+  .bloqueio button{width:auto;padding:12px 22px;font-size:1rem;border-radius:12px;background:#facc15;color:#1e293b;font-weight:800;border:0}
+  .bloqueio small{display:block;margin-top:14px;color:#cbd5e1}
 </style>
 </head>
 <body>
@@ -78,6 +86,65 @@ var aluno = {nome:'', turma:''};
 var inicio = 0;
 var enviando = false;
 var pendente = null;
+var saidas = 0;          // quantas vezes o aluno saiu da tela durante a tarefa
+var fora = false;        // true enquanto o aviso de saída estiver aberto
+var telaCheiaOk = !!(document.documentElement.requestFullscreen);
+var concluida = false;   // depois da nota enviada, a tarefa deixa de ser prova
+function prova(){ return !concluida && document.body.classList.contains('jogando'); }
+var caixaBloqueio = document.createElement('div');
+caixaBloqueio.className = 'bloqueio';
+caixaBloqueio.setAttribute('role', 'alertdialog');
+caixaBloqueio.setAttribute('aria-live', 'assertive');
+document.body.appendChild(caixaBloqueio);
+function mostrarBloqueio(titulo, texto, rotuloBotao){
+  caixaBloqueio.replaceChildren();
+  var c = document.createElement('div'); c.className = 'caixa';
+  var h = document.createElement('h2'); h.textContent = titulo;
+  var p = document.createElement('p'); p.textContent = texto;
+  var b = document.createElement('button'); b.type = 'button'; b.textContent = rotuloBotao;
+  b.addEventListener('click', voltarAtividade);
+  c.append(h, p, b);
+  if(saidas > 0){
+    var pequeno = document.createElement('small');
+    pequeno.textContent = 'Saídas registradas: ' + saidas + '. Seu professor verá esse registro.';
+    c.append(pequeno);
+  }
+  caixaBloqueio.appendChild(c);
+  caixaBloqueio.classList.add('on');
+}
+function esconderBloqueio(){ caixaBloqueio.classList.remove('on'); }
+function entrarTelaCheia(){
+  if(!telaCheiaOk) return;
+  try{ var f = document.documentElement.requestFullscreen(); if(f && f.catch) f.catch(function(){}); }catch(e){}
+}
+function gravarSaidas(){
+  var pg = lerProg(); if(pg){ pg.saidas = saidas; gravarProg(pg); }
+}
+function registrarSaida(){
+  if(!prova() || fora) return;
+  fora = true; saidas++; gravarSaidas();
+  mostrarBloqueio('Você saiu da atividade',
+    'Para continuar, volte para a atividade. Cada vez que você sai da tela, o registro é guardado para o professor.',
+    '▶ Voltar à atividade');
+}
+function voltarAtividade(){
+  fora = false; esconderBloqueio(); entrarTelaCheia();
+}
+document.addEventListener('visibilitychange', function(){
+  if(!prova()) return;
+  if(document.hidden) { registrarSaida(); }
+  else if(fora) { mostrarBloqueio('Você saiu da atividade',
+      'Para continuar, toque no botão abaixo. Cada vez que você sai da tela, o registro é guardado para o professor.',
+      '▶ Voltar à atividade'); }
+});
+document.addEventListener('fullscreenchange', function(){
+  if(!prova() || !telaCheiaOk) return;
+  if(!document.fullscreenElement) { registrarSaida(); }
+});
+/* Sem copiar, colar ou menu de contexto durante a tarefa */
+['copy','cut','paste','contextmenu'].forEach(function(ev){
+  document.addEventListener(ev, function(e){ if(prova()) e.preventDefault(); });
+});
 
 function el(tag, props){
   var e = document.createElement(tag);
@@ -257,7 +324,18 @@ function comecar(retomando){
   var antigo = lerProg();
   inicio = (retomando && antigo && antigo.inicio) ? antigo.inicio : Date.now();
   gravarProg({nome: aluno.nome, turma: aluno.turma, estado: 'andamento', inicio: inicio, save: (retomando && antigo) ? antigo.save : null});
-  carregarJogo();
+  saidas = (antigo && antigo.saidas) ? Number(antigo.saidas) || 0 : 0;
+  fora = false;
+  mostrarInicio();
+}
+function mostrarInicio(){
+  mostrarBloqueio('Pronto para começar?',
+    telaCheiaOk ? 'A atividade abre em tela cheia. Não saia da tela até terminar.' : 'Não saia da tela até terminar a atividade.',
+    '▶ Começar');
+  caixaBloqueio.querySelector('button').onclick = function(){
+    esconderBloqueio(); entrarTelaCheia(); carregarJogo();
+  };
+  caixaBloqueio.querySelector('button').removeEventListener('click', voltarAtividade);
 }
 var urlJogo = null;
 async function carregarJogo(){
@@ -282,7 +360,7 @@ quadro.addEventListener('load', function(){
     quadro.contentWindow.postMessage({tipo:'gamifica-aluno', nome: aluno.nome, turma: aluno.turma, estado: (pg && pg.save) || null}, '*'); }catch(e){}
 });
 var statusEl = document.getElementById('barra-status');
-document.getElementById('barra-tela').addEventListener('click', function(){ ResultadoJogo.telaCheia(quadro); });
+document.getElementById('barra-tela').addEventListener('click', function(){ if(document.fullscreenElement) document.exitFullscreen(); else entrarTelaCheia(); });
 quadro.addEventListener('load', function(){ ResultadoJogo.marcaDagua(aluno.nome); });
 var reenviarBtn = document.getElementById('barra-reenviar');
 function setStatus(texto, classe){ statusEl.textContent = texto; statusEl.className = classe || ''; }
@@ -305,7 +383,8 @@ window.addEventListener('message', function(ev){
     p_codigo: codigo, p_nome: aluno.nome, p_turma: aluno.turma || '',
     p_acertos: acertos, p_total: total,
     p_pontos: Number.isFinite(pontos) ? Math.max(0, Math.round(pontos)) : 0,
-    p_tempo: Math.max(0, Math.round((Date.now() - inicio) / 1000))
+    p_tempo: Math.max(0, Math.round((Date.now() - inicio) / 1000)),
+    p_saidas: saidas
   };
   enviar();
 });
@@ -313,7 +392,7 @@ window.addEventListener('message', function(ev){
 async function enviar(){
   enviando = true; reenviarBtn.hidden = true;
   setStatus('📤 Enviando nota…', '');
-  var r = await sb.rpc('enviar_resultado', pendente);
+  var r = await sb.rpc('enviar_resultado_saidas', pendente);
   enviando = false;
   if(r.error){
     var enc = /encerrada/i.test(r.error.message);
@@ -321,6 +400,7 @@ async function enviar(){
     reenviarBtn.hidden = enc;
     return;
   }
+  concluida = true; esconderBloqueio(); if(document.fullscreenElement){ try{ document.exitFullscreen(); }catch(e){} }
   setStatus('✔ Nota enviada: ' + fmtNota(Number(r.data)) + ' (' + pendente.p_acertos + '/' + pendente.p_total + ')', 'st-ok');
   var dados = dadosResultado(Number(r.data), pendente.p_acertos, pendente.p_total, pendente.p_pontos);
   gravarProg({nome: aluno.nome, turma: aluno.turma, estado: 'concluido', nota: Number(r.data), acertos: pendente.p_acertos, total: pendente.p_total, pontos: pendente.p_pontos, data: dados.data});
