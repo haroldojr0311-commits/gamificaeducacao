@@ -514,7 +514,22 @@ async function iniciar(){
   entrarNoSite();
 }
 
+/* Aviso no dia anterior ao vencimento (e no dia do vencimento): aparece em todas as abas do site. */
+function mostrarAvisoVencimento(){
+  var antigo = document.getElementById('aviso-venc'); if(antigo) antigo.remove();
+  if(!perfil || !perfil.validade || perfil.papel === 'admin' || visitante) return;
+  var hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+  var v = new Date(String(perfil.validade) + 'T00:00:00');
+  var dias = Math.round((v - hoje) / 86400000);
+  if(dias < 0 || dias > 1) return;
+  var texto = dias === 0 ? 'Seu acesso vence hoje.' : 'Seu acesso vence amanhã.';
+  var renovar = WHATSAPP_TESTE
+    ? el('a', {href: 'https://wa.me/' + WHATSAPP_TESTE + '?text=' + encodeURIComponent('Olá! Quero renovar o meu acesso ao Gamifica Educação. Meu login é ' + (perfil.login || '') + '.'), target:'_blank', rel:'noopener', style:'color:#1e293b;text-decoration:underline;margin-left:6px'}, 'Renovar pelo WhatsApp')
+    : el('span', {}, 'Fale com o professor para renovar.');
+  document.body.appendChild(el('div', {id:'aviso-venc', role:'status', style:'position:fixed;left:0;right:0;top:0;z-index:60;background:#facc15;color:#1e293b;padding:10px 14px;font-weight:700;text-align:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.25)'}, '⏰ ' + texto + ' ', renovar));
+}
 function entrarNoSite(){
+  mostrarAvisoVencimento();
   /* Sem o filtro, o item vazio (null) iria para a tela como o texto "null". */
   usuarioBox.replaceChildren.apply(usuarioBox, [
     el('span', {}, (perfil.papel === 'admin' ? '🛡️ ' : '👤 ') + (perfil.nome || sessao.user.email)),
@@ -542,6 +557,7 @@ function linkTesteGratis(){
   return WHATSAPP_TESTE ? 'https://wa.me/' + WHATSAPP_TESTE + '?text=' + encodeURIComponent(txt) : null;
 }
 function desenharLogin(aviso){
+  var av = document.getElementById('aviso-venc'); if(av) av.remove();
   abasBox.hidden = true; usuarioBox.replaceChildren();
   var login = el('input', {type:'text', id:'login', autocomplete:'username', autocapitalize:'none', spellcheck:'false', placeholder:'Seu login ou e-mail', required:'required'});
   var senha = el('input', {type:'password', id:'senha', autocomplete:'current-password', placeholder:'Sua senha', required:'required'});
