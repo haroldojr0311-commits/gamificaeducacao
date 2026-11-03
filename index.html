@@ -446,6 +446,57 @@ function desenharCompra(){
       form,
       el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
 }
+/* ---------- Teste grátis de 7 dias (uma vez por e-mail) ---------- */
+function desenharTeste(){
+  abasBox.hidden = true; usuarioBox.replaceChildren();
+  var nome = el('input', {type:'text', maxlength:'80', placeholder:'Seu nome completo', required:'required', autocomplete:'name'});
+  var email = el('input', {type:'email', maxlength:'120', placeholder:'Seu e-mail', required:'required', autocomplete:'email'});
+  var login = el('input', {type:'text', maxlength:'40', autocapitalize:'none', spellcheck:'false', placeholder:'Login que você quer', required:'required'});
+  var caixa = el('div');
+  var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '🎓 Criar meu teste de 7 dias');
+  function mostraCredenciais(d){
+    var texto = 'Login: ' + d.login + '\nSenha: ' + d.senha + '\nTeste válido até ' + dataBr(d.validade);
+    var copiar = el('button', {type:'button', class:'sec', style:'width:100%;margin-top:10px', onclick: function(){
+      try{ navigator.clipboard.writeText(texto); this.textContent = '✔ Copiado'; }catch(e){ this.textContent = 'Copie manualmente'; }
+    }}, '📋 Copiar login e senha');
+    app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
+      el('div', {class:'nota', style:'--n:var(--n-verde)'}, el('span', {class:'emoji'}, '🎉')),
+      el('div', {style:'padding:18px 20px 22px'},
+        el('h2', {}, 'Seu teste está pronto!'),
+        msg('ok', 'Guarde seu login e sua senha agora. Eles aparecem só uma vez.'),
+        el('div', {class:'entrega'}, 'Login: ', el('b', {}, d.login), el('br'), 'Senha: ', el('b', {}, d.senha),
+          el('div', {style:'margin-top:6px'}, 'Teste válido até ', el('b', {}, dataBr(d.validade)))),
+        copiar,
+        el('button', {type:'button', class:'grande', style:'width:100%;margin-top:12px', onclick: function(){
+          guardar('gm_ultimo_login', d.login); desenharLogin();
+        }}, '🚀 Entrar agora'),
+        el('p', {class:'sub2', style:'margin-top:16px'}, 'Gostou? Ao fim do teste, você pode comprar o acesso definitivo.'),
+        el('button', {type:'button', class:'sec', style:'width:100%;margin-top:8px', onclick: desenharCompra}, '💳 Quero o acesso definitivo: R$ 10,00 por mês')))));
+  }
+  var form = el('form', {onsubmit: async function(ev){
+    ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Criando seu teste…';
+    try{
+      var res = await fetch(FUNCOES + 'teste-gratis', {method:'POST', headers:{'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY},
+        body: JSON.stringify({nome: nome.value, email: email.value, login: login.value})});
+      var d = await res.json().catch(function(){ return {}; });
+      if(!res.ok || !d.ok) throw new Error(d.erro || 'Não foi possível criar o teste.');
+      mostraCredenciais(d); return;
+    }catch(e){ caixa.append(msg('erro', e.message || String(e))); }
+    botao.disabled = false; botao.textContent = '🎓 Criar meu teste de 7 dias';
+  }},
+    el('label', {}, 'Nome completo'), nome,
+    el('label', {}, 'E-mail'), email,
+    el('label', {}, 'Login que você quer (letras sem acento, números, ponto ou traço)'), login,
+    el('p', {class:'sub2'}, '🔒 Um teste por e-mail. A senha é criada na hora e aparece nesta tela.'),
+    botao, caixa);
+  app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
+    el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🎓')),
+    el('div', {style:'padding:18px 20px 22px'},
+      el('h2', {}, 'Teste grátis de 7 dias'),
+      el('p', {class:'sub'}, 'Conheça todos os jogos, simuladores e ferramentas do site por 7 dias, sem pagar nada.'),
+      form,
+      el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
+}
 function desenharAcompanhar(tok){
   abasBox.hidden = true; usuarioBox.replaceChildren();
   var caixa = el('div', {}, msg('ok', 'Confirmando o seu pagamento… isso pode levar alguns instantes.'));
@@ -550,12 +601,8 @@ async function sair(){
 }
 
 /* ---------- login ---------- */
-/* Contato para pedir o login teste gratuito (WhatsApp, com DDI 55 e DDD, só números). */
+/* Contato do professor (WhatsApp, com DDI 55 e DDD, só números), usado no aviso de renovação. */
 var WHATSAPP_TESTE = '5515988026805';
-function linkTesteGratis(){
-  var txt = 'Olá, Prof. Haroldo! Gostaria de pedir um login teste gratuito do Gamifica Educação.';
-  return WHATSAPP_TESTE ? 'https://wa.me/' + WHATSAPP_TESTE + '?text=' + encodeURIComponent(txt) : null;
-}
 function desenharLogin(aviso){
   var av = document.getElementById('aviso-venc'); if(av) av.remove();
   abasBox.hidden = true; usuarioBox.replaceChildren();
@@ -599,10 +646,7 @@ function desenharLogin(aviso){
     botao, caixa,
     el('p', {class:'sub2'}, '🔒 Cada login funciona em um aparelho por vez. Se você entrar em outro aparelho, o anterior é desconectado.'),
     el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'),
-    linkTesteGratis() ? el('div', {class:'teste-gratis'},
-      el('p', {}, '🧪 Quer conhecer o portal antes?'),
-      el('a', {class:'grande', href: linkTesteGratis(), target:'_blank', rel:'noopener'}, '💬 Pedir login teste gratuito')) : null,
-    el('div', {style:'padding:0 20px 22px'}, el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharCompra}, '💳 Quero o acesso definitivo: R$ 10,00 por mês')));
+    el('div', {style:'padding:6px 20px 22px'}, el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharTeste}, '🎓 Teste grátis por 7 dias')));
 
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form)));
