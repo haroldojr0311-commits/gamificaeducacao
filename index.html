@@ -459,6 +459,7 @@ function desenharTeste(){
     var copiar = el('button', {type:'button', class:'sec', style:'width:100%;margin-top:10px', onclick: function(){
       try{ navigator.clipboard.writeText(texto); this.textContent = '✔ Copiado'; }catch(e){ this.textContent = 'Copie manualmente'; }
     }}, '📋 Copiar login e senha');
+    var zap = el('a', {class:'sec', href: linkWhatsApp(texto), target:'_blank', rel:'noopener', style:'display:block;text-align:center;text-decoration:none;margin-top:10px;padding:12px;border-radius:12px'}, '💬 Enviar por WhatsApp');
     app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
       el('div', {class:'nota', style:'--n:var(--n-verde)'}, el('span', {class:'emoji'}, '🎉')),
       el('div', {style:'padding:18px 20px 22px'},
@@ -466,7 +467,7 @@ function desenharTeste(){
         msg('ok', 'Guarde seu login e sua senha agora. Eles aparecem só uma vez.'),
         el('div', {class:'entrega'}, 'Login: ', el('b', {}, d.login), el('br'), 'Senha: ', el('b', {}, d.senha),
           el('div', {style:'margin-top:6px'}, 'Teste válido até ', el('b', {}, dataBr(d.validade)))),
-        copiar,
+        copiar, zap,
         el('button', {type:'button', class:'grande', style:'width:100%;margin-top:12px', onclick: function(){
           guardar('gm_ultimo_login', d.login); desenharLogin();
         }}, '🚀 Entrar agora'),
@@ -1116,6 +1117,8 @@ function situacao(c){
   if(c.validade && c.validade < hojeISO()) return {t:'⏰ Vencida', cls:'venc'};
   return {t:'● Ativa', cls:'aberta'};
 }
+/* Abre o WhatsApp com o texto pronto (sem número: escolhe o contato na hora). */
+function linkWhatsApp(texto){ return 'https://wa.me/?text=' + encodeURIComponent(texto); }
 function desenharAdmin(){
   var nome = el('input', {type:'text', id:'cNome', maxlength:'80', placeholder:'Ex.: Maria da Silva'});
   var login = el('input', {type:'text', id:'cLogin', maxlength:'80', autocapitalize:'none', spellcheck:'false', placeholder:'Ex.: maria.silva'});
@@ -1145,9 +1148,10 @@ function desenharAdmin(){
       '\nAtenção: o login funciona em um aparelho por vez. Não compartilhe sua senha.';
     var btn = el('button', {class:'peq', type:'button'}, '📋 Copiar mensagem');
     btn.addEventListener('click', function(){ copiar(texto, btn); });
+    var wa = el('a', {class:'peq', href: linkWhatsApp(texto), target:'_blank', rel:'noopener', style:'margin-left:6px;text-decoration:none'}, '💬 Enviar por WhatsApp');
     await carregarContas(); desenharAdmin();
     var area = document.getElementById('entrega');
-    if(area){ area.replaceChildren(msg('ok', '✅ Conta criada! Envie estes dados para a pessoa:'), el('div', {class:'entrega'}, texto), el('div', {style:'margin-top:8px'}, btn)); area.scrollIntoView({behavior:'smooth', block:'center'}); }
+    if(area){ area.replaceChildren(msg('ok', '✅ Conta criada! Envie estes dados para a pessoa:'), el('div', {class:'entrega'}, texto), el('div', {style:'margin-top:8px'}, btn, wa)); area.scrollIntoView({behavior:'smooth', block:'center'}); }
   }},
     el('div', {class:'duas'},
       el('div', {}, el('label', {for:'cNome'}, 'Nome da pessoa'), nome),
@@ -1219,7 +1223,8 @@ function cartaoConta(c){
     if(!r.ok){ extra.replaceChildren(msg('erro', d.erro || 'Erro ao trocar a senha.')); return; }
     var texto = 'Sua nova senha do Gamifica Educação:\n👤 Login: ' + loginMostrado + '\n🔑 Senha: ' + nova;
     var btn = el('button', {class:'peq'}, '📋 Copiar'); btn.addEventListener('click', function(){ copiar(texto, btn); });
-    extra.replaceChildren(msg('ok', 'Senha trocada. Envie para a pessoa:'), el('div', {class:'entrega'}, texto), el('div', {style:'margin-top:8px'}, btn));
+    var wa = el('a', {class:'peq', href: linkWhatsApp(texto), target:'_blank', rel:'noopener', style:'margin-left:6px;text-decoration:none'}, '💬 Enviar por WhatsApp');
+    extra.replaceChildren(msg('ok', 'Senha trocada. Envie para a pessoa:'), el('div', {class:'entrega'}, texto), el('div', {style:'margin-top:8px'}, btn, wa));
   }}, '🔑 Nova senha'));
   if(!eu && c.online) botoes.push(el('button', {class:'peq sec', onclick: async function(){
     var r = await sb.rpc('admin_derrubar', {p_id: c.id});
