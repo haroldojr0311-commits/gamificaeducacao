@@ -277,7 +277,7 @@ function copiar(texto, botao){
   } else { window.prompt('Copie:', texto); }
 }
 function chaveAluno(r){
-  return (r.aluno_nome || '').toLowerCase().replace(/\s+/g,' ').trim() + '|' + (r.aluno_turma || '').toLowerCase().trim();
+  return (r.aluno_nome || '').toLowerCase().replace(/\s+/g,' ').trim() + '|' + (r.aluno_turma || '').toLowerCase().replace(/\s+/g,'');
 }
 function guardar(k, v){ try{ if(v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){} }
 function ler(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }

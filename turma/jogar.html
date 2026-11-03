@@ -295,21 +295,25 @@ function nomeValido(n){
   }
   return '';
 }
+/* Aceita 3A, 3a, 3 A, 3 a, 3ª série A etc. Padroniza para o mesmo formato (ex.: "3 a" vira "3A"). */
+function normalizaTurma(t){
+  return String(t || '').trim().replace(/\s+/g, ' ').replace(/(\d+)\s*([a-zA-Z])\b/g, function(m, n, l){ return n + l.toUpperCase(); });
+}
 function turmaValida(t){
-  return t.length >= 3 && t.length <= 30 && /\d/.test(t) && /[A-Za-zÀ-ÿ]/.test(t);
+  return t.length >= 2 && t.length <= 30 && /[0-9A-Za-zÀ-ÿ]/.test(t);
 }
 
 function telaNome(){
   var nome = el('input', {type:'text', id:'nome', maxlength:'80', autocomplete:'name', placeholder:'Nome e sobrenome', value: ler('gm_nome')});
-  var turma = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Ex.: 3ª série A', value: atividade.turma || ler('gm_turma')});
+  var turma = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Ex.: 3A, 3 A ou 3ª série A', value: atividade.turma || ler('gm_turma')});
   var aviso = el('div');
   var form = el('form', {onsubmit: function(ev){
     ev.preventDefault(); aviso.replaceChildren();
     var n = nome.value.trim().replace(/\s+/g, ' ');
-    var s = turma.value.trim().replace(/\s+/g, ' ');
+    var s = normalizaTurma(turma.value);
     var erroNome = nomeValido(n);
     if(erroNome){ aviso.append(el('div', {class:'msg erro'}, erroNome)); return; }
-    if(!turmaValida(s)){ aviso.append(el('div', {class:'msg erro'}, 'Digite sua série e turma (ex.: 3ª série A).')); return; }
+    if(!turmaValida(s)){ aviso.append(el('div', {class:'msg erro'}, 'Digite sua série e turma (ex.: 3A ou 3ª série A).')); return; }
     aluno = {nome: n, turma: s};
     guardar('gm_nome', aluno.nome); guardar('gm_turma', aluno.turma);
     comecar();
