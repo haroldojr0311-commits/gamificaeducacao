@@ -61,6 +61,13 @@ window.JOGOS = {
     emoji: "📈", cor: "azul",
     conteudo: "Funções e trigonometria"
   },
+  "laboratorio-de-exponenciais": {
+    nome: "Laboratório de Exponenciais",
+    tema: "Função exponencial",
+    desc: "Crescimento, juros compostos e meia-vida: mude os controles, veja o gráfico e vença o desafio.",
+    emoji: "🧪", cor: "verde",
+    conteudo: "Funções e trigonometria"
+  },
   "geometria-espacial-3d": {
     nome: "Missão Geometria Espacial 3D",
     tema: "Geometria espacial",
