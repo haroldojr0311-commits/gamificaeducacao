@@ -801,6 +801,19 @@ async function abrirJogo(id){
   }
 }
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && document.getElementById('player') && !document.fullscreenElement) fecharPlayer(); });
+/* Setas, Page Up/Down, Início e Fim rolam a página mesmo depois de clicar em qualquer ponto do site */
+document.addEventListener('keydown', function(e){
+  if(e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+  var a = document.activeElement;
+  if(a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) return;
+  if(document.getElementById('player')) return;
+  var h = window.innerHeight * 0.85, mapa = {ArrowDown: 80, ArrowUp: -80, PageDown: h, PageUp: -h};
+  if(e.key === 'Home'){ e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); return; }
+  if(e.key === 'End'){ e.preventDefault(); window.scrollTo({top: document.documentElement.scrollHeight, behavior: 'smooth'}); return; }
+  if(!(e.key in mapa)) return;
+  e.preventDefault();
+  window.scrollBy({top: mapa[e.key], behavior: 'smooth'});
+});
 
 /* ---------- aba Atribuir tarefas e aba Turmas e notas ---------- */
 async function carregarAtividades(){
