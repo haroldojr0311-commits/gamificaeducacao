@@ -138,6 +138,13 @@ window.JOGOS = {
     emoji: "🎲", cor: "lilas", ferramenta: true,
     tipo: "simulador"
   },
+  "caca-palavras": {
+    nome: "Caça-Palavras Gerador",
+    tema: "Ferramenta do professor",
+    desc: "Cole um texto, gere a grade de palavras-chave e imprima com ou sem gabarito.",
+    emoji: "🔤", cor: "lilas", ferramenta: true,
+    tipo: "ferramenta"
+  },
   "gerador-qrcode": {
     nome: "Gerador de QR Code",
     tema: "Ferramenta",
