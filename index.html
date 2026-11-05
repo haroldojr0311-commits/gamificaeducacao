@@ -220,7 +220,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@9.8.1/dist/index.iife.js"></script>
 <script src="turma/supabase-config.js"></script>
-<script src="turma/jogos.js?v=20261105173500"></script>
+<script src="turma/jogos.js?v=20261105174000"></script>
 <script src="turma/qr.js"></script>
 <script src="turma/resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
@@ -475,7 +475,7 @@ function desenharCompra(){
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🎓')),
     el('div', {style:'padding:18px 20px 22px'},
-      el('h2', {}, 'Acesso definitivo'),
+      el('h2', {}, 'Acesso ao Plano Pró'),
       el('p', {class:'sub'}, 'Login e senha só seus, para todos os jogos, simuladores e ferramentas do site. Sem prazo de teste.'),
       form,
       el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
@@ -505,8 +505,8 @@ function desenharTeste(){
         el('button', {type:'button', class:'grande', style:'width:100%;margin-top:12px', onclick: function(){
           guardar('gm_ultimo_login', d.login); desenharLogin();
         }}, '🚀 Entrar agora'),
-        el('p', {class:'sub2', style:'margin-top:16px'}, 'Gostou? Ao fim do teste, você pode comprar o acesso definitivo.'),
-        el('button', {type:'button', class:'sec', style:'width:100%;margin-top:8px', onclick: desenharCompra}, '💳 Quero o acesso definitivo: R$ 10,00 por mês')))));
+        el('p', {class:'sub2', style:'margin-top:16px'}, 'Gostou? Ao fim do teste, você pode assinar o Plano Pró.'),
+        el('button', {type:'button', class:'sec', style:'width:100%;margin-top:8px', onclick: desenharCompra}, '💳 Quero o Plano Pró: R$ 10,00 por mês')))));
   }
   var form = el('form', {onsubmit: async function(ev){
     ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Criando seu teste…';
@@ -532,13 +532,13 @@ function desenharTeste(){
       form,
       el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
 }
-/* ---------- Degustação grátis de 3 minutos (até 3 por dia para cada e-mail) ---------- */
+/* ---------- Degustação grátis de 5 minutos (até 2 por dia para cada e-mail) ---------- */
 function desenharDegustacao(){
   abasBox.hidden = true; usuarioBox.replaceChildren();
   var nome = el('input', {type:'text', maxlength:'80', placeholder:'Seu nome completo', required:'required', autocomplete:'name'});
   var email = el('input', {type:'email', maxlength:'120', placeholder:'Seu e-mail', required:'required', autocomplete:'email'});
   var caixa = el('div');
-  var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '⏱️ Começar degustação de 3 minutos');
+  var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '⏱️ Começar degustação de 5 minutos');
   var form = el('form', {onsubmit: async function(ev){
     ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Preparando sua degustação…';
     try{
@@ -550,18 +550,18 @@ function desenharDegustacao(){
       entrarVisitante(d.token);
       return;
     }catch(e){ caixa.append(msg('erro', e.message || String(e))); }
-    botao.disabled = false; botao.textContent = '⏱️ Começar degustação de 3 minutos';
+    botao.disabled = false; botao.textContent = '⏱️ Começar degustação de 5 minutos';
   }},
     el('label', {}, 'Nome completo'), nome,
     el('label', {}, 'E-mail'), email,
-    el('p', {class:'sub2'}, '⏱️ São 3 minutos para conhecer os jogos, simuladores e ferramentas. A contagem aparece no topo da tela.'),
-    el('p', {class:'sub2'}, '🔒 Na degustação não é possível atribuir tarefas e nada fica salvo. Cada e-mail pode fazer até 3 degustações por dia.'),
+    el('p', {class:'sub2'}, '⏱️ São 5 minutos para conhecer os jogos, simuladores e ferramentas. A contagem aparece no topo da tela.'),
+    el('p', {class:'sub2'}, '🔒 Na degustação não é possível atribuir tarefas e nada fica salvo. Cada e-mail pode fazer até 2 degustações por dia.'),
     botao, caixa);
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '⏱️')),
     el('div', {style:'padding:18px 20px 22px'},
-      el('h2', {}, 'Degustação grátis de 3 minutos'),
-      el('p', {class:'sub'}, 'Sinta como é o site por 3 minutos, sem pagar nada.'),
+      el('h2', {}, 'Degustação grátis de 5 minutos'),
+      el('p', {class:'sub'}, 'Sinta como é o site por 5 minutos, sem pagar nada.'),
       form,
       el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
 }
@@ -756,7 +756,7 @@ function desenharLogin(aviso){
     el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'),
     el('div', {style:'padding:6px 20px 22px;display:grid;gap:8px'},
       el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, '💳 Comprar acesso · R$ 10,00 por mês'),
-      el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Degustação grátis · 3 minutos')));
+      el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Degustação grátis · 5 minutos')));
 
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form)));
