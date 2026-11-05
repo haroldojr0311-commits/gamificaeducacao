@@ -419,7 +419,7 @@ function desenharCompra(){
   function atualizaTotal(){ total.textContent = 'Total: ' + reais(Number(meses.value) * PRECO_MES) + ' (Pix ou cartão)'; }
   meses.addEventListener('change', atualizaTotal); atualizaTotal();
   var caixa = el('div');
-  var senhaNova = el('input', {type:'text', maxlength:'30', autocapitalize:'none', spellcheck:'false', placeholder:'Crie sua senha (6 a 30 caracteres, sem espaço)'});
+  var senhaNova = el('input', {type:'text', maxlength:'30', autocapitalize:'none', spellcheck:'false', placeholder:'Crie sua senha (6 a 30, com maiúscula, minúscula e símbolo)'});
   var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '💳 Ir para o pagamento');
   var form = el('form', {onsubmit: async function(ev){
     ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Gerando pagamento…';
