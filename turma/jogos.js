@@ -291,5 +291,11 @@ window.JOGOS = {
     desc: "Marcador de tarefas das turmas com tabela de classificação estilo campeonato, pódio, nota final e exportação em Word e Excel.",
     emoji: "🏆", cor: "amarelo", ferramenta: true,
     tipo: "ferramenta"
+  },
+  "jogo-dama": {
+    nome: "Dama · Campeonato",
+    tema: "Jogo de estratégia",
+    desc: "Dama para dois jogadores, com relógio por jogador, e modo campeonato com chaveamento, sorteio, partida única ou melhor de três.",
+    emoji: "♟️", cor: "coral", ferramenta: false
   }
 };
