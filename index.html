@@ -52,6 +52,15 @@
   header.topo small{display:block;opacity:.8;font-weight:700;margin-top:2px}
   #usuario{display:flex;align-items:center;gap:10px;font-weight:700;flex-wrap:wrap}
   #usuario button{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.35);color:#fff;box-shadow:none}
+  #usuario button.acesso{background:#ecfdf5;border-color:#6ee7b7;color:#065f46}
+  #usuario button.acesso.perto{background:#fef3c7;border-color:#fbbf24;color:#92400e}
+  #usuario button.acesso.fim{background:#fee2e2;border-color:#f87171;color:#991b1b}
+  .ma-fundo{position:fixed;inset:0;z-index:80;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+  .ma-caixa{background:var(--cartao);color:var(--tinta);border-radius:var(--r);max-width:400px;width:100%;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.35);text-align:center}
+  .ma-dias{font-family:var(--f-display);font-size:3rem;font-weight:700;line-height:1;margin:10px 0 2px}
+  .ma-barra{height:10px;border-radius:99px;background:var(--linha);overflow:hidden;margin:12px 0 16px}
+  .ma-barra i{display:block;height:100%;border-radius:99px}
+  .ma-linha{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--linha);font-weight:600;text-align:left}
 
   main{max-width:1080px;margin:0 auto;padding:20px 16px}
   .card{background:var(--cartao);border:2px solid var(--linha);border-radius:var(--r);padding:20px;margin-bottom:20px;box-shadow:var(--sombra)}
@@ -639,12 +648,51 @@ function mostrarAvisoVencimento(){
     : el('span', {}, 'Fale com o professor para renovar.');
   document.body.appendChild(el('div', {id:'aviso-venc', role:'status', style:'position:fixed;left:0;right:0;top:0;z-index:60;background:#facc15;color:#1e293b;padding:10px 14px;font-weight:700;text-align:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.25)'}, '⏰ ' + texto + ' ', renovar));
 }
+/* "Meu acesso": mostra até quando vale o login comprado e quantos dias faltam. */
+function diasRestantes(){
+  if(!perfil || !perfil.validade) return null;
+  var hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+  return Math.round((new Date(String(perfil.validade) + 'T00:00:00') - hoje) / 86400000);
+}
+function botaoMeuAcesso(){
+  if(!perfil || perfil.papel === 'admin' || visitante) return null;
+  var d = diasRestantes();
+  var cls = 'sec peq acesso' + (d === null ? '' : d < 0 ? ' fim' : d <= 7 ? ' perto' : '');
+  var txt = d === null ? '📅 Acesso sem prazo' : d < 0 ? '⛔ Acesso vencido' : '📅 Válido até ' + fmtDia(perfil.validade);
+  return el('button', {class: cls, onclick: abrirMeuAcesso, title: 'Ver os detalhes do meu acesso'}, txt);
+}
+function abrirMeuAcesso(){
+  var d = diasRestantes();
+  var cor = d === null || d > 7 ? 'var(--verde)' : d >= 0 ? '#f59e0b' : 'var(--coral)';
+  var fechar = function(){ fundo.remove(); document.removeEventListener('keydown', esc); };
+  var esc = function(e){ if(e.key === 'Escape') fechar(); };
+  var renovar = el('a', {class:'btn', href: 'https://wa.me/' + WHATSAPP_TESTE + '?text=' + encodeURIComponent('Olá! Quero renovar o meu acesso ao Gamifica Educação. Meu login é ' + (perfil.login || '') + '.'), target:'_blank', rel:'noopener', style:'display:inline-block;margin-top:14px;padding:10px 18px;border-radius:12px;background:#22c55e;color:#fff;font-weight:800;text-decoration:none'}, '💬 Renovar pelo WhatsApp');
+  var destaque = d === null
+    ? [el('div', {class:'ma-dias', style:'color:' + cor}, '∞'), el('div', {class:'sub'}, 'Seu acesso não tem data para acabar.')]
+    : d < 0
+      ? [el('div', {class:'ma-dias', style:'color:' + cor}, '0'), el('div', {class:'sub'}, 'Seu acesso venceu em ' + fmtDia(perfil.validade) + '.')]
+      : [el('div', {class:'ma-dias', style:'color:' + cor}, String(d)),
+         el('div', {class:'sub'}, d === 0 ? 'Seu acesso vence hoje.' : d === 1 ? 'dia restante — vence amanhã.' : 'dias restantes'),
+         el('div', {class:'ma-barra'}, el('i', {style:'width:' + Math.max(4, Math.min(100, d / 30 * 100)) + '%;background:' + cor}))];
+  var fundo = el('div', {class:'ma-fundo', onclick: function(e){ if(e.target === fundo) fechar(); }},
+    el('div', {class:'ma-caixa', role:'dialog', 'aria-modal':'true', 'aria-label':'Meu acesso'},
+      el('h2', {}, '📅 Meu acesso'),
+      destaque,
+      el('div', {class:'ma-linha'}, el('span', {}, '👤 Nome'), el('b', {}, perfil.nome || '—')),
+      el('div', {class:'ma-linha'}, el('span', {}, '🔑 Login'), el('b', {}, perfil.login || (sessao && sessao.user.email) || '—')),
+      el('div', {class:'ma-linha'}, el('span', {}, '🗓️ Válido até'), el('b', {}, perfil.validade ? fmtDia(perfil.validade) : 'Sem prazo')),
+      d !== null && d <= 7 ? renovar : null,
+      el('div', {}, el('button', {class:'sec', style:'margin-top:14px', onclick: fechar}, 'Fechar'))));
+  document.body.appendChild(fundo);
+  document.addEventListener('keydown', esc);
+}
 function entrarNoSite(){
   mostrarAvisoVencimento();
   /* Sem o filtro, o item vazio (null) iria para a tela como o texto "null". */
   usuarioBox.replaceChildren.apply(usuarioBox, [
     el('span', {}, (perfil.papel === 'admin' ? '🛡️ ' : '👤 ') + (perfil.nome || sessao.user.email)),
     perfil.papel === 'admin' ? el('button', {class:'sec peq', onclick: compartilharSite}, '🔗 Compartilhar site') : null,
+    botaoMeuAcesso(),
     el('button', {class:'sec peq', onclick: sair}, 'Sair')].filter(function(x){ return x; }));
   var h = (location.hash || '').replace('#', '');
   if(h === 'turmas' || h === 'atribuir' || h === 'jogos' || h === 'simuladores' || h === 'ferramentas' || (h === 'admin' && perfil.papel === 'admin')) aba = h;
