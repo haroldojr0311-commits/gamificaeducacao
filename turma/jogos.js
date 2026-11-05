@@ -284,5 +284,12 @@ window.JOGOS = {
     desc: "Gere folhas de Sudoku para imprimir em 4 níveis (fácil, médio, difícil e especialista), com gabarito e 4 jogos por folha A4.",
     emoji: "🧩", cor: "verde", ferramenta: true,
     tipo: "ferramenta"
+  },
+  "campeonato-tarefas": {
+    nome: "Campeonato de Tarefas",
+    tema: "Ferramenta do professor",
+    desc: "Marcador de tarefas das turmas com tabela de classificação estilo campeonato, pódio, nota final e exportação em Word e Excel.",
+    emoji: "🏆", cor: "amarelo", ferramenta: true,
+    tipo: "ferramenta"
   }
 };
