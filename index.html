@@ -419,16 +419,13 @@ function desenharCompra(){
   function atualizaTotal(){ total.textContent = 'Total: ' + reais(Number(meses.value) * PRECO_MES) + ' (Pix ou cartão)'; }
   meses.addEventListener('change', atualizaTotal); atualizaTotal();
   var caixa = el('div');
-  var querSenha = el('input', {type:'checkbox', style:'width:auto;margin:0 8px 0 0'});
-  var senhaNova = el('input', {type:'text', maxlength:'30', autocapitalize:'none', spellcheck:'false', placeholder:'Nova senha (6 a 30 letras ou números)'});
-  senhaNova.hidden = true;
-  querSenha.addEventListener('change', function(){ senhaNova.hidden = !querSenha.checked; });
+  var senhaNova = el('input', {type:'text', maxlength:'30', autocapitalize:'none', spellcheck:'false', placeholder:'Crie sua senha (6 a 30 letras ou números)'});
   var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '💳 Ir para o pagamento');
   var form = el('form', {onsubmit: async function(ev){
     ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Gerando pagamento…';
     try{
       var res = await fetch(FUNCOES + 'pagar', {method:'POST', headers:{'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY},
-        body: JSON.stringify({nome: nome.value, email: email.value, login: login.value, meses: Number(meses.value), senha_nova: querSenha.checked ? senhaNova.value : ''})});
+        body: JSON.stringify({nome: nome.value, email: email.value, login: login.value, meses: Number(meses.value), senha_nova: senhaNova.value.trim()})});
       var d = await res.json().catch(function(){ return {}; });
       if(!res.ok || !d.link) throw new Error(d.erro || 'Não foi possível gerar o pagamento.');
       window.location.href = d.link; return;
@@ -440,9 +437,8 @@ function desenharCompra(){
     el('label', {}, 'Login que você quer (letras sem acento, números, ponto ou traço)'), login,
     el('label', {}, 'Quantos meses de acesso'), meses,
     total,
-    el('label', {style:'display:flex;align-items:center;font-weight:700;margin-top:10px'}, querSenha, 'Quero criar minha própria senha'),
-    senhaNova,
-    el('p', {class:'sub2'}, '🔒 Se você já tem login e não marcar a opção acima, a senha atual continua valendo. Login novo recebe uma senha automática. Em qualquer caso, a senha aparece na tela assim que o pagamento for aprovado. Guarde-a.'),
+    el('label', {}, 'Senha que você quer (opcional)'), senhaNova,
+    el('p', {class:'sub2'}, '🔒 Deixe a senha em branco para receber uma automática (login novo) ou para manter a senha atual (quem já tem login). Em qualquer caso, a senha aparece na tela assim que o pagamento for aprovado. Guarde-a.'),
     botao, caixa);
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🎓')),
@@ -653,7 +649,9 @@ function desenharLogin(aviso){
     botao, caixa,
     el('p', {class:'sub2'}, '🔒 Cada login funciona em um aparelho por vez. Se você entrar em outro aparelho, o anterior é desconectado.'),
     el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'),
-    el('div', {style:'padding:6px 20px 22px'}, el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharTeste}, '🎓 Teste grátis por 7 dias')));
+    el('div', {style:'padding:6px 20px 22px;display:grid;gap:8px'},
+      el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, '💳 Comprar acesso · R$ 10,00 por mês'),
+      el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharTeste}, '🎓 Teste grátis por 7 dias')));
 
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form)));
