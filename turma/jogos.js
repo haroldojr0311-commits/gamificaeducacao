@@ -277,5 +277,12 @@ window.JOGOS = {
     desc: "Monte provas e simulados de Matemática inspirados em Prova Paulista, Provão Paulista, SAEB e SARESP, com gabarito.",
     emoji: "📝", cor: "lilas", ferramenta: true,
     tipo: "ferramenta"
+  },
+  "gerador-sudoku": {
+    nome: "Gerador de Sudoku",
+    tema: "Ferramenta do professor",
+    desc: "Gere folhas de Sudoku para imprimir em 4 níveis (fácil, médio, difícil e especialista), com gabarito e 4 jogos por folha A4.",
+    emoji: "🧩", cor: "verde", ferramenta: true,
+    tipo: "ferramenta"
   }
 };
