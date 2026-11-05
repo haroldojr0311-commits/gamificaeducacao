@@ -419,12 +419,16 @@ function desenharCompra(){
   function atualizaTotal(){ total.textContent = 'Total: ' + reais(Number(meses.value) * PRECO_MES) + ' (Pix ou cartão)'; }
   meses.addEventListener('change', atualizaTotal); atualizaTotal();
   var caixa = el('div');
+  var querSenha = el('input', {type:'checkbox', style:'width:auto;margin:0 8px 0 0'});
+  var senhaNova = el('input', {type:'text', maxlength:'30', autocapitalize:'none', spellcheck:'false', placeholder:'Nova senha (6 a 30 letras ou números)'});
+  senhaNova.hidden = true;
+  querSenha.addEventListener('change', function(){ senhaNova.hidden = !querSenha.checked; });
   var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '💳 Ir para o pagamento');
   var form = el('form', {onsubmit: async function(ev){
     ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Gerando pagamento…';
     try{
       var res = await fetch(FUNCOES + 'pagar', {method:'POST', headers:{'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY},
-        body: JSON.stringify({nome: nome.value, email: email.value, login: login.value, meses: Number(meses.value)})});
+        body: JSON.stringify({nome: nome.value, email: email.value, login: login.value, meses: Number(meses.value), senha_nova: querSenha.checked ? senhaNova.value : ''})});
       var d = await res.json().catch(function(){ return {}; });
       if(!res.ok || !d.link) throw new Error(d.erro || 'Não foi possível gerar o pagamento.');
       window.location.href = d.link; return;
@@ -436,7 +440,9 @@ function desenharCompra(){
     el('label', {}, 'Login que você quer (letras sem acento, números, ponto ou traço)'), login,
     el('label', {}, 'Quantos meses de acesso'), meses,
     total,
-    el('p', {class:'sub2'}, '🔒 A senha é criada automaticamente e aparece na tela assim que o pagamento for aprovado. Guarde-a.'),
+    el('label', {style:'display:flex;align-items:center;font-weight:700;margin-top:10px'}, querSenha, 'Quero criar minha própria senha'),
+    senhaNova,
+    el('p', {class:'sub2'}, '🔒 Se você já tem login e não marcar a opção acima, a senha atual continua valendo. Login novo recebe uma senha automática. Em qualquer caso, a senha aparece na tela assim que o pagamento for aprovado. Guarde-a.'),
     botao, caixa);
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🎓')),
@@ -529,7 +535,7 @@ function desenharAcompanhar(tok){
       if(!res.ok) throw new Error(d.erro || 'Erro ao consultar.');
       if(d.status === 'aprovado' && d.senha){ mostraCredenciais(d); return; }
       if(d.status === 'aprovado'){
-        caixa.replaceChildren(msg('ok', 'Seu acesso já foi entregue. Se você perdeu a senha, peça ao professor para trocá-la.'),
+        caixa.replaceChildren(msg('ok', 'Seu acesso foi confirmado. Se você não escolheu uma senha nova, use a mesma senha de antes. Se perdeu a senha, peça ao professor para trocá-la.'),
           el('button', {type:'button', class:'grande', style:'width:100%;margin-top:12px', onclick: sairDaTela}, 'Ir para o login'));
         return;
       }
