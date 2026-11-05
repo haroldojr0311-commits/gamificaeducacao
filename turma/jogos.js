@@ -309,5 +309,35 @@ window.JOGOS = {
     tema: "Matemática",
     desc: "Jogo de Torre de Hanói em 3D, com a história da lenda, a matemática por trás (recursão e 2ⁿ − 1), gráfico e desafios com pontuação.",
     emoji: "🗼", cor: "verde", ferramenta: false, conteudo: "Desafios"
+  },
+  "fazenda-contagem": {
+    nome: "Fazenda da contagem",
+    tema: "Fundamental 1",
+    desc: "Conte os animais da fazenda e toque no número certo. Três fases, de 1 a 5, de 1 a 10 e de 6 a 15.",
+    emoji: "🐄", cor: "amarelo", ferramenta: false, conteudo: "Anos iniciais"
+  },
+  "corrida-dezenas": {
+    nome: "Corrida dos dezenas",
+    tema: "Fundamental 1",
+    desc: "Monte o número pedido com barras de 10 e bolinhas de 1 e leve o corredor até a chegada.",
+    emoji: "🏃", cor: "verde", ferramenta: false, conteudo: "Anos iniciais"
+  },
+  "monte-desenho": {
+    nome: "Monte o desenho",
+    tema: "Fundamental 1",
+    desc: "Descubra quadrado, retângulo, triângulo e círculo pelos lados e cantos e depois monte uma casinha.",
+    emoji: "🔷", cor: "azul", ferramenta: false, conteudo: "Anos iniciais"
+  },
+  "relogio-horas": {
+    nome: "Relógio das horas",
+    tema: "Fundamental 1",
+    desc: "Ajuste o relógio de ponteiros para as horas em ponto e meia hora pedidas.",
+    emoji: "⏰", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais"
+  },
+  "quebra-cabeca-soma": {
+    nome: "Quebra-cabeça da soma",
+    tema: "Fundamental 1",
+    desc: "Encontre pares de números que somam 5, 8, 10 e 12. Treine a soma de cabeça, sem papel.",
+    emoji: "🧩", cor: "coral", ferramenta: false, conteudo: "Anos iniciais"
   }
 };

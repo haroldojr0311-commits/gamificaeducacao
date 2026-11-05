@@ -220,7 +220,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@9.8.1/dist/index.iife.js"></script>
 <script src="turma/supabase-config.js"></script>
-<script src="turma/jogos.js?v=20261105174500"></script>
+<script src="turma/jogos.js?v=20261105190000"></script>
 <script src="turma/qr.js"></script>
 <script src="turma/resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
@@ -790,7 +790,7 @@ function cartaoJogo(id, aoClicar, marcado){
     el('div', {class:'corpo'}, el('h3', {}, j.nome), j.desc ? el('p', {}, j.desc) : null));
 }
 var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Geometria', 'Funções e trigonometria', 'Estatística e probabilidade', 'Educação Financeira', 'Desafios'];
-var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Outros':'🎲'};
+var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Outros':'🎲'};
 var filtroConteudo = 'todos';
 function tipoDe(id){ var j = window.JOGOS[id]; return j.tipo || (j.ferramenta ? 'ferramenta' : 'jogo'); }
 function gruposPorConteudo(ids){
