@@ -6,6 +6,7 @@
 // tipo: "simulador" | "ferramenta" (aba onde aparece; sem tipo = Jogos). conteudo: agrupa os jogos na aba Jogos.
 window.JOGOS = {
   "aventura-do-pi": {
+    nivel: ["Fundamental 2"],
     nome: "Aventura do Pi",
     tema: "Geometria plana",
     desc: "Plataforma com portões de perímetro e área das figuras planas.",
@@ -13,6 +14,7 @@ window.JOGOS = {
     conteudo: "Geometria"
   },
   "dossie-geometrico": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Dossiê Geométrico",
     tema: "Figuras e sólidos",
     desc: "Investigação: abra as pistas e descubra qual é a figura geométrica.",
@@ -20,6 +22,7 @@ window.JOGOS = {
     conteudo: "Geometria"
   },
   "projeto-omega": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Projeto Ômega",
     tema: "Escape room",
     desc: "Resolva os enigmas das 4 portas antes que o tempo acabe.",
@@ -27,6 +30,7 @@ window.JOGOS = {
     conteudo: "Desafios"
   },
   "forca-financeira": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Forca Financeira",
     tema: "Educação Financeira",
     desc: "Adivinhe 10 termos de educação financeira antes que as moedas acabem.",
@@ -34,6 +38,7 @@ window.JOGOS = {
     conteudo: "Educação Financeira"
   },
   "orcamento-em-familia": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Orçamento em Família",
     tema: "Educação Financeira",
     desc: "Cuide do dinheiro de uma família por 6 meses: contas, imprevistos, golpes e ranking.",
@@ -41,6 +46,7 @@ window.JOGOS = {
     conteudo: "Educação Financeira"
   },
   "invasao-alienigena": {
+    nivel: ["Fundamental 2"],
     nome: "Invasão Alienígena",
     tema: "Porcentagem",
     desc: "Calcule porcentagens para defender a Terra dos invasores.",
@@ -48,6 +54,7 @@ window.JOGOS = {
     conteudo: "Proporção e porcentagem"
   },
   "estatistica-agrupados": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Laboratório Estatístico",
     tema: "Estatística",
     desc: "Tabela de frequências, média, mediana, moda, histograma e polígono.",
@@ -55,6 +62,7 @@ window.JOGOS = {
     conteudo: "Estatística e probabilidade"
   },
   "laboratorio-de-funcoes": {
+    nivel: ["Ensino Médio"],
     nome: "Laboratório de Funções",
     tema: "Função do 2º grau",
     desc: "Raízes, vértice e gráfico da parábola, passo a passo.",
@@ -62,6 +70,7 @@ window.JOGOS = {
     conteudo: "Funções e trigonometria"
   },
   "laboratorio-de-exponenciais": {
+    nivel: ["Ensino Médio"],
     nome: "Laboratório de Exponenciais",
     tema: "Função exponencial",
     desc: "Crescimento, juros compostos e meia-vida: mude os controles, veja o gráfico e vença o desafio.",
@@ -69,6 +78,7 @@ window.JOGOS = {
     conteudo: "Funções e trigonometria"
   },
   "geometria-espacial-3d": {
+    nivel: ["Ensino Médio"],
     nome: "Missão Geometria Espacial 3D",
     tema: "Geometria espacial",
     desc: "Conte vértices, arestas e faces dos sólidos girando em 3D.",
@@ -76,6 +86,7 @@ window.JOGOS = {
     conteudo: "Geometria"
   },
   "show-da-proporcao": {
+    nivel: ["Fundamental 2"],
     nome: "Show da Proporção",
     tema: "Proporcionalidade",
     desc: "Show de perguntas de regra de três valendo um milhão.",
@@ -83,6 +94,7 @@ window.JOGOS = {
     conteudo: "Proporção e porcentagem"
   },
   "uno-potenciacao": {
+    nivel: ["Fundamental 2"],
     nome: "UNO da Potenciação",
     tema: "Potências",
     desc: "UNO contra o Prof. Robô com perguntas relâmpago de potências.",
@@ -90,6 +102,7 @@ window.JOGOS = {
     conteudo: "Números e operações"
   },
   "uno-radiciacao": {
+    nivel: ["Fundamental 2"],
     nome: "UNO da Radiciação",
     tema: "Raízes",
     desc: "UNO contra o Prof. Robô com perguntas relâmpago de raízes.",
@@ -97,6 +110,7 @@ window.JOGOS = {
     conteudo: "Números e operações"
   },
   "uno-fracoes-decimais": {
+    nivel: ["Fundamental 2"],
     nome: "UNO de Frações e Decimais",
     tema: "Frações",
     desc: "UNO contra o Prof. Robô: transforme frações em decimais.",
@@ -104,6 +118,7 @@ window.JOGOS = {
     conteudo: "Números e operações"
   },
   "roda-gigante": {
+    nivel: ["Ensino Médio"],
     nome: "Roda-Gigante Trigonométrica",
     tema: "Trigonometria",
     desc: "A cabine gira e a altura vira gráfico: seno, cosseno, quadrantes e ângulos notáveis.",
@@ -125,6 +140,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "urna-eletronica": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Urna Eletrônica",
     tema: "Simulador",
     desc: "Simulador de votação com boletim de urna e zerésima.",
@@ -132,6 +148,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "laboratorio-probabilidade": {
+    nivel: ["Ensino Médio"],
     nome: "Laboratório de Probabilidade",
     tema: "Probabilidade",
     desc: "Lance dados e moedas, sorteie cartas e compare o observado com o teórico.",
@@ -153,6 +170,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "derivada-integral": {
+    nivel: ["Superior"],
     nome: "Derivada e Integral",
     tema: "Cálculo",
     desc: "Veja no gráfico a integral definida como área e a derivada como inclinação.",
@@ -188,6 +206,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "geoplano": {
+    nivel: ["Fundamental 2"],
     nome: "Geoplano Digital",
     tema: "Geometria plana",
     desc: "Estique elásticos nos pinos: área, perímetro, Pitágoras e simetria, com 10 desafios.",
@@ -195,6 +214,7 @@ window.JOGOS = {
     tipo: "simulador", conteudo: "Geometria"
   },
   "domino-equivalencias": {
+    nivel: ["Fundamental 2"],
     nome: "Dominó de Equivalências",
     tema: "Frações, decimais e %",
     desc: "Dominó contra o robô: encaixe frações, decimais, porcentagens e desenhos que valem o mesmo.",
@@ -202,6 +222,7 @@ window.JOGOS = {
     conteudo: "Números e operações"
   },
   "cofre-combinacoes": {
+    nivel: ["Ensino Médio"],
     nome: "Cofre das Combinações",
     tema: "Análise combinatória",
     desc: "Abra 10 cofres resolvendo problemas de princípio multiplicativo, fatorial, permutação, arranjo e combinação.",
@@ -209,6 +230,7 @@ window.JOGOS = {
     conteudo: "Estatística e probabilidade"
   },
   "escada-progressoes": {
+    nivel: ["Ensino Médio"],
     nome: "Escada das Progressões",
     tema: "PA e PG",
     desc: "Suba 10 degraus resolvendo PA e PG: próximo termo, razão, termo geral, soma e problemas do dia a dia.",
@@ -216,6 +238,7 @@ window.JOGOS = {
     conteudo: "Álgebra"
   },
   "batalha-naval": {
+    nivel: ["Fundamental 2"],
     nome: "Batalha Naval Cartesiana",
     tema: "Plano cartesiano",
     desc: "Batalha naval contra o robô: leia e localize pontos (x, y), com radar de distância e ponto médio.",
@@ -223,6 +246,7 @@ window.JOGOS = {
     conteudo: "Geometria"
   },
   "balanca-equacoes": {
+    nivel: ["Fundamental 2"],
     nome: "Balança das Equações",
     tema: "Equações do 1º grau",
     desc: "Equilibre a balança fazendo a mesma operação nos dois lados até deixar o x sozinho.",
@@ -230,6 +254,7 @@ window.JOGOS = {
     conteudo: "Álgebra"
   },
   "missao-trigonometria": {
+    nivel: ["Ensino Médio"],
     nome: "Missão Trigonometria",
     tema: "Seno, cosseno e tangente",
     desc: "Meça prédios, rampas, escadas e pipas usando o triângulo retângulo e os ângulos notáveis.",
@@ -237,6 +262,7 @@ window.JOGOS = {
     conteudo: "Funções e trigonometria"
   },
   "supermercado-inteligente": {
+    nivel: ["Fundamental 2"],
     nome: "Supermercado Inteligente",
     tema: "Preço por unidade, desconto e troco",
     desc: "Compare embalagens, calcule descontos, promoções leve 3 pague 2 e o troco certo.",
@@ -244,6 +270,7 @@ window.JOGOS = {
     conteudo: "Educação Financeira"
   },
   "armadilha-cartao": {
+    nivel: ["Ensino Médio", "Superior"],
     nome: "Armadilha do Cartão",
     tema: "Juros compostos",
     desc: "Simule o rotativo mês a mês: pagar o mínimo, parcelar e ver os juros sobre juros crescerem.",
@@ -251,6 +278,7 @@ window.JOGOS = {
     conteudo: "Educação Financeira"
   },
   "geoar-solidos-ar": {
+    nivel: ["Ensino Médio"],
     nome: "GeoAR · Sólidos na Sua Sala",
     tema: "Geometria espacial",
     desc: "Sólidos geométricos em realidade aumentada: veja, gire e conte faces, arestas e vértices na sua sala. Com fórmulas e desafios.",
@@ -258,6 +286,7 @@ window.JOGOS = {
     tipo: "simulador", conteudo: "Geometria espacial"
   },
   "bioar-biologia-ar": {
+    nivel: ["Ensino Médio"],
     nome: "BioAR · Biologia em Realidade Aumentada",
     tema: "Biologia celular",
     desc: "Células, DNA, vírus, bactérias, neurônio e hemácia em 3D: gire, corte, use o raio-X e toque nas estruturas para ver o nome e a função.",
@@ -265,6 +294,7 @@ window.JOGOS = {
     tipo: "simulador", conteudo: "Biologia celular"
   },
   "demo-porcentagem": {
+    nivel: ["Fundamental 2"],
     nome: "Quiz de teste",
     tema: "Porcentagem",
     desc: "Jogo curto (5 perguntas) para você testar o envio de notas.",
@@ -293,48 +323,56 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "jogo-dama": {
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Dama · Campeonato",
     tema: "Jogo de estratégia",
     desc: "Dama para dois jogadores ou contra a máquina em 3 níveis, com relógio por jogador e campeonato com chaveamento, sorteio, partida única ou melhor de três.",
     emoji: "♟️", cor: "coral", ferramenta: false, conteudo: "Jogos de tabuleiro"
   },
   "jogo-xadrez": {
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Xadrez · Campeonato",
     tema: "Jogo de estratégia",
     desc: "Xadrez com peças em 3D: partida rápida, contra a máquina em 3 níveis e campeonato com chaveamento, sorteio e melhor de três.",
     emoji: "♞", cor: "azul", ferramenta: false, conteudo: "Jogos de tabuleiro"
   },
   "jogo-hanoi": {
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Torre de Hanói",
     tema: "Matemática",
     desc: "Jogo de Torre de Hanói em 3D, com a história da lenda, a matemática por trás (recursão e 2ⁿ − 1), gráfico e desafios com pontuação.",
     emoji: "🗼", cor: "verde", ferramenta: false, conteudo: "Desafios"
   },
   "fazenda-contagem": {
+    nivel: ["Fundamental 1"],
     nome: "Fazenda da contagem",
     tema: "Fundamental 1",
     desc: "Conte os animais da fazenda e toque no número certo. Três fases, de 1 a 5, de 1 a 10 e de 6 a 15.",
     emoji: "🐄", cor: "amarelo", ferramenta: false, conteudo: "Anos iniciais"
   },
   "corrida-dezenas": {
+    nivel: ["Fundamental 1"],
     nome: "Corrida dos dezenas",
     tema: "Fundamental 1",
     desc: "Monte o número pedido com barras de 10 e bolinhas de 1 e leve o corredor até a chegada.",
     emoji: "🏃", cor: "verde", ferramenta: false, conteudo: "Anos iniciais"
   },
   "monte-desenho": {
+    nivel: ["Fundamental 1"],
     nome: "Monte o desenho",
     tema: "Fundamental 1",
     desc: "Descubra quadrado, retângulo, triângulo e círculo pelos lados e cantos e depois monte uma casinha.",
     emoji: "🔷", cor: "azul", ferramenta: false, conteudo: "Anos iniciais"
   },
   "relogio-horas": {
+    nivel: ["Fundamental 1"],
     nome: "Relógio das horas",
     tema: "Fundamental 1",
     desc: "Ajuste o relógio de ponteiros para as horas em ponto e meia hora pedidas.",
     emoji: "⏰", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais"
   },
   "quebra-cabeca-soma": {
+    nivel: ["Fundamental 1"],
     nome: "Quebra-cabeça da soma",
     tema: "Fundamental 1",
     desc: "Encontre pares de números que somam 5, 8, 10 e 12. Treine a soma de cabeça, sem papel.",
