@@ -281,6 +281,27 @@ function chaveAluno(r){
 }
 function guardar(k, v){ try{ if(v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){} }
 function ler(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+/* Degustação/visitante: guarda o estado do navegador antes de começar e, ao terminar,
+   devolve tudo como estava (apaga o progresso dos jogos feito durante a visita). */
+var SNAP_CHAVE = 'gm_snap_visitante';
+function snapshotVisitante(){
+  try{
+    if(localStorage.getItem(SNAP_CHAVE) !== null) return;
+    var o = {};
+    for(var i = 0; i < localStorage.length; i++){ var k = localStorage.key(i); if(k !== SNAP_CHAVE) o[k] = localStorage.getItem(k); }
+    localStorage.setItem(SNAP_CHAVE, JSON.stringify(o));
+  }catch(e){}
+}
+function limparVisitante(){
+  try{
+    var s = localStorage.getItem(SNAP_CHAVE); if(s === null) return;
+    var o = JSON.parse(s), atuais = [];
+    for(var i = 0; i < localStorage.length; i++) atuais.push(localStorage.key(i));
+    atuais.forEach(function(k){ if(k !== SNAP_CHAVE && !(k in o)) localStorage.removeItem(k); });
+    Object.keys(o).forEach(function(k){ if(localStorage.getItem(k) !== o[k]) localStorage.setItem(k, o[k]); });
+    localStorage.removeItem(SNAP_CHAVE);
+  }catch(e){}
+}
 function novoSid(){
   if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
   var a = new Uint8Array(16); crypto.getRandomValues(a);
@@ -351,9 +372,10 @@ async function entrarVisitante(tok){
       body: JSON.stringify({convite: tok, acao: 'entrar_site'})});
     d = await r.json().catch(function(){ return {}; });
   }catch(e){ desenharLogin('Sem conexão. Verifique a internet e recarregue a página.'); return true; }
-  if(r.status === 410){ desenharLogin(d.mensagem || 'Seu tempo de teste acabou. Entre com seu login e senha.'); return true; }
-  if(!r.ok || !d.ok){ desenharLogin('Este convite não é válido. Peça um novo link ao Prof. Haroldo.'); return true; }
+  if(r.status === 410){ limparVisitante(); desenharLogin(d.mensagem || 'Seu tempo de teste acabou. Entre com seu login e senha.'); return true; }
+  if(!r.ok || !d.ok){ limparVisitante(); desenharLogin('Este convite não é válido. Peça um novo link ao Prof. Haroldo.'); return true; }
   visitante = {token: tok, expira: Date.parse(d.expira_em)};
+  snapshotVisitante();
   try{ sessionStorage.setItem('gm_convite', tok); }catch(e){}
   try{ history.replaceState(null, '', location.pathname + (location.hash || '')); }catch(e){}
   perfil = {nome: 'Visitante de teste', papel: 'visitante', login: '', validade: null};
@@ -375,6 +397,7 @@ function atualizaTempoVisitante(){
   if(t) t.textContent = '🧪 Teste · ' + m + ':' + (s < 10 ? '0' : '') + s;
 }
 function sairVisitante(aviso){
+  limparVisitante();
   if(visitanteTimer){ clearInterval(visitanteTimer); visitanteTimer = null; }
   visitante = null; perfil = null;
   try{ sessionStorage.removeItem('gm_convite'); }catch(e){}
@@ -589,6 +612,7 @@ async function iniciar(){
   });
   var pagTok = new URLSearchParams(location.search).get('pagamento');
   if(pagTok && !sessao){ desenharAcompanhar(pagTok); return; }
+  if(!pegaConvite()) limparVisitante();
   if(!sessao){ var conv = pegaConvite(); if(conv && await entrarVisitante(conv)) return; desenharLogin(); return; }
   SID = ler('gm_sid_' + sessao.user.id);
   if(!SID){ await sb.auth.signOut({scope:'local'}); sessao = null; desenharLogin(); return; }
