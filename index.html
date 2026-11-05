@@ -369,7 +369,7 @@ async function entrarVisitante(tok){
 function atualizaTempoVisitante(){
   if(!visitante) return;
   var falta = visitante.expira - Date.now();
-  if(falta <= 0){ sairVisitante('Seu tempo de teste acabou (1 hora). Entre com seu login e senha.'); return; }
+  if(falta <= 0){ sairVisitante('Seu tempo de teste acabou. Entre com seu login e senha.'); return; }
   var m = Math.floor(falta / 60000), s = Math.floor((falta % 60000) / 1000);
   var t = document.getElementById('tempo-visitante');
   if(t) t.textContent = '🧪 Teste · ' + m + ':' + (s < 10 ? '0' : '') + s;
@@ -497,6 +497,39 @@ function desenharTeste(){
     el('div', {style:'padding:18px 20px 22px'},
       el('h2', {}, 'Teste grátis de 7 dias'),
       el('p', {class:'sub'}, 'Conheça todos os jogos, simuladores e ferramentas do site por 7 dias, sem pagar nada.'),
+      form,
+      el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
+}
+/* ---------- Degustação grátis de 3 minutos (até 3 por dia para cada e-mail) ---------- */
+function desenharDegustacao(){
+  abasBox.hidden = true; usuarioBox.replaceChildren();
+  var nome = el('input', {type:'text', maxlength:'80', placeholder:'Seu nome completo', required:'required', autocomplete:'name'});
+  var email = el('input', {type:'email', maxlength:'120', placeholder:'Seu e-mail', required:'required', autocomplete:'email'});
+  var caixa = el('div');
+  var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '⏱️ Começar degustação de 3 minutos');
+  var form = el('form', {onsubmit: async function(ev){
+    ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Preparando sua degustação…';
+    try{
+      var res = await fetch(FUNCOES + 'degustacao', {method:'POST', headers:{'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY},
+        body: JSON.stringify({nome: nome.value, email: email.value})});
+      var d = await res.json().catch(function(){ return {}; });
+      if(!res.ok || !d.ok) throw new Error(d.erro || 'Não foi possível começar a degustação.');
+      try{ sessionStorage.setItem('gm_convite', d.token); }catch(e){}
+      entrarVisitante(d.token);
+      return;
+    }catch(e){ caixa.append(msg('erro', e.message || String(e))); }
+    botao.disabled = false; botao.textContent = '⏱️ Começar degustação de 3 minutos';
+  }},
+    el('label', {}, 'Nome completo'), nome,
+    el('label', {}, 'E-mail'), email,
+    el('p', {class:'sub2'}, '⏱️ São 3 minutos para conhecer os jogos, simuladores e ferramentas. A contagem aparece no topo da tela.'),
+    el('p', {class:'sub2'}, '🔒 Na degustação não é possível atribuir tarefas e nada fica salvo. Cada e-mail pode fazer até 3 degustações por dia.'),
+    botao, caixa);
+  app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
+    el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '⏱️')),
+    el('div', {style:'padding:18px 20px 22px'},
+      el('h2', {}, 'Degustação grátis de 3 minutos'),
+      el('p', {class:'sub'}, 'Sinta como é o site por 3 minutos, sem pagar nada.'),
       form,
       el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
 }
@@ -651,7 +684,7 @@ function desenharLogin(aviso){
     el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'),
     el('div', {style:'padding:6px 20px 22px;display:grid;gap:8px'},
       el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, '💳 Comprar acesso · R$ 10,00 por mês'),
-      el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharTeste}, '🎓 Teste grátis por 7 dias')));
+      el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Degustação grátis · 3 minutos')));
 
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form)));
@@ -788,7 +821,7 @@ async function abrirJogo(id){
     var r = visitante
       ? await fetch(FUNCOES + 'jogo', {method:'POST', headers:{'Content-Type':'application/json', 'apikey': window.SUPABASE_KEY}, body: JSON.stringify({jogo: id, convite: visitante.token})})
       : await chamarFuncao('jogo', {jogo: id, sessao: SID});
-    if(visitante && r.status === 410){ sairVisitante('Seu tempo de teste acabou (1 hora). Entre com seu login e senha.'); return; }
+    if(visitante && r.status === 410){ sairVisitante('Seu tempo de teste acabou. Entre com seu login e senha.'); return; }
     if(r.status === 403){ expulsar('outro_aparelho'); return; }
     if(r.status === 401){ expulsar('encerrada'); return; }
     if(!r.ok){ var e = await r.json().catch(function(){ return {}; }); throw new Error(e.erro || 'Erro ' + r.status); }
