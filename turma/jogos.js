@@ -297,5 +297,11 @@ window.JOGOS = {
     tema: "Jogo de estratégia",
     desc: "Dama para dois jogadores ou contra a máquina em 3 níveis, com relógio por jogador e campeonato com chaveamento, sorteio, partida única ou melhor de três.",
     emoji: "♟️", cor: "coral", ferramenta: false
+  },
+  "jogo-xadrez": {
+    nome: "Xadrez · Campeonato",
+    tema: "Jogo de estratégia",
+    desc: "Xadrez com peças em 3D: partida rápida, contra a máquina em 3 níveis e campeonato com chaveamento, sorteio e melhor de três.",
+    emoji: "♞", cor: "azul", ferramenta: false
   }
 };
