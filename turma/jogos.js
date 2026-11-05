@@ -303,5 +303,11 @@ window.JOGOS = {
     tema: "Jogo de estratégia",
     desc: "Xadrez com peças em 3D: partida rápida, contra a máquina em 3 níveis e campeonato com chaveamento, sorteio e melhor de três.",
     emoji: "♞", cor: "azul", ferramenta: false
+  },
+  "jogo-hanoi": {
+    nome: "Torre de Hanói",
+    tema: "Matemática",
+    desc: "Jogo de Torre de Hanói em 3D, com a história da lenda, a matemática por trás (recursão e 2ⁿ − 1), gráfico e desafios com pontuação.",
+    emoji: "🗼", cor: "verde", ferramenta: false
   }
 };
