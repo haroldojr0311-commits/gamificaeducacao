@@ -377,5 +377,11 @@ window.JOGOS = {
     tema: "Fundamental 1",
     desc: "Encontre pares de números que somam 5, 8, 10 e 12. Treine a soma de cabeça, sem papel.",
     emoji: "🧩", cor: "coral", ferramenta: false, conteudo: "Anos iniciais"
+  },
+  "cartesiano-desenhos": {
+    nome: "Plano Cartesiano · Desenhos",
+    tema: "Plano cartesiano",
+    desc: "Localize pontos pelas coordenadas (x, y) e descubra figuras ligando os pontos. Crie seu próprio desenho e imprima a atividade para os alunos.",
+    emoji: "📍", cor: "azul", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2"]
   }
 };
