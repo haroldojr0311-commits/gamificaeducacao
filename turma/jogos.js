@@ -505,5 +505,13 @@ window.JOGOS = {
     tema: "Potenciação e radiciação",
     desc: "Ligue colunas (potências, raízes, propriedades, bases negativas e frações) e arraste cartões para categorias (quadrado perfeito, mesmo valor, sinal, raiz exata). Com combo, estrelas e dicas. Tem editor para criar o seu jogo de qualquer matéria.",
     emoji: "🔗", cor: "lilas", ferramenta: false, conteudo: "Números e operações"
+  },
+  "planificacao-solidos": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
+    nome: "Planificação de Sólidos",
+    tema: "Geometria espacial",
+    desc: "15 sólidos em 3D (cubo, paralelepípedo, prismas, pirâmides, os 5 de Platão, cilindro e cone) que abrem e fecham animados. Mude as medidas, veja faces, vértices, arestas, Euler, área e volume, e imprima a planificação com abas para montar. Tem desafio.",
+    emoji: "🧊", cor: "azul", ferramenta: true,
+    tipo: "simulador", conteudo: "Geometria espacial"
   }
 };
