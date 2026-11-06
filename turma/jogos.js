@@ -389,5 +389,11 @@ window.JOGOS = {
     tema: "Horas e relógio",
     desc: "Encontre o par: a hora escrita (3 horas) e o relógio que mostra essa hora. Três níveis, com tempo e jogadas.",
     emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais", nivel: ["Fundamental 1"]
+  },
+  "memoria-areas": {
+    nome: "Jogo da memória · Áreas",
+    tema: "Áreas de figuras planas",
+    desc: "Relacione cada figura plana à sua fórmula da área: quadrado, retângulo, triângulo, losango, trapézio, paralelogramo e círculo.",
+    emoji: "📐", cor: "coral", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2"]
   }
 };
