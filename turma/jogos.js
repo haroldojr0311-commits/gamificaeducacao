@@ -490,5 +490,13 @@ window.JOGOS = {
     desc: "Estilo Mentimeter: os alunos respondem anônimos pelo celular em gamificaeducacao.com.br/enquete e o resultado aparece no projetor na hora. Múltipla escolha, nuvem de palavras, escala de 1 a 5 e mural de respostas, com filtro de palavrões.",
     emoji: "📊", cor: "azul", ferramenta: true,
     tipo: "ferramenta"
+  },
+  "fichas-tabuada": {
+    nivel: ["Fundamental 1", "Fundamental 2"],
+    nome: "Fichas de Tabuada e Cálculo Mental",
+    tema: "Ferramenta do professor",
+    desc: "Gere fichas para imprimir: tabuadas, número que falta, tabela pitagórica, adição e subtração mental, dobro e metade, ×÷ por 10/100/1000, porcentagem, expressões, potências e raízes. Várias versões, letra grande e gabarito separado.",
+    emoji: "🖨️", cor: "lilas", ferramenta: true,
+    tipo: "ferramenta"
   }
 };
