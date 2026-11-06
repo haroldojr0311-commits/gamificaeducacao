@@ -431,5 +431,12 @@ window.JOGOS = {
     tema: "Quiz de Halloween",
     desc: "15 desafios de matemática com tema de Halloween no estilo quiz de auditório: tempo, pontos por rapidez, bônus de sequência, explicações e ranking.",
     emoji: "🎃", cor: "coral", ferramenta: false, conteudo: "Desafios", nivel: ["Fundamental 2"]
+  },
+  "gamifica-cards": {
+    nome: "Gamifica Cards",
+    tema: "Ferramenta do professor",
+    desc: "Quiz com cartões impressos: o celular do professor lê as respostas da turma (alunos sem celular e sem internet). Anexe perguntas do Word, Excel ou texto e a app monta os slides e os relatórios.",
+    emoji: "🃏", cor: "lilas", ferramenta: true,
+    tipo: "ferramenta"
   }
 };
