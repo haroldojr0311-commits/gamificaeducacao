@@ -361,7 +361,7 @@ window.JOGOS = {
     nivel: ["Fundamental 1"],
     nome: "Monte o desenho",
     tema: "Fundamental 1",
-    desc: "Descubra quadrado, retângulo, triângulo e círculo pelos lados e cantos e depois monte uma casinha.",
+    desc: "Descubra quadrado, retângulo, triângulo e círculo e monte um desenho com eles. Perguntas e desenhos diferentes a cada partida (casinha, foguete, barco, robô e parque).",
     emoji: "🔷", cor: "azul", ferramenta: false, conteudo: "Anos iniciais"
   },
   "relogio-horas": {
@@ -375,7 +375,7 @@ window.JOGOS = {
     nivel: ["Fundamental 1"],
     nome: "Quebra-cabeça da soma",
     tema: "Fundamental 1",
-    desc: "Encontre pares de números que somam 5, 8, 10 e 12. Treine a soma de cabeça, sem papel.",
+    desc: "Escolha duas peças que somam o número pedido. Cinco rodadas, de 5 a 15, com a conta montada na tela e dica quando falta ou passa.",
     emoji: "🧩", cor: "coral", ferramenta: false, conteudo: "Anos iniciais"
   },
   "cartesiano-desenhos": {
