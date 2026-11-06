@@ -573,5 +573,22 @@ window.JOGOS = {
     desc: "15 sólidos em 3D (cubo, paralelepípedo, prismas, pirâmides, os 5 de Platão, cilindro e cone) que abrem e fecham animados. Mude as medidas, veja faces, vértices, arestas, Euler, área e volume, e imprima a planificação com abas para montar. Tem desafio.",
     emoji: "🧊", cor: "azul", ferramenta: false,
     tipo: "simulador", conteudo: "Geometria espacial"
+  },
+  "lojinha-troco": {
+    nivel: ["Fundamental 1", "Fundamental 2"],
+    bncc: ["EF02MA20", "EF03MA24", "EF05MA07"],
+    nome: "Lojinha do Troco",
+    tema: "Sistema monetário",
+    desc: "Dinheiro de brinquedo com cédulas e moedas: conte quanto tem no balcão, pague a conta certinha, dê o troco com o dinheiro do caixa e calcule o troco de várias compras. 4 níveis com dicas e estrelas.",
+    emoji: "🏪", cor: "verde", ferramenta: false, conteudo: "Anos iniciais"
+  },
+  "financiamento-sac-price": {
+    nivel: ["Ensino Médio", "Superior"],
+    bncc: ["EM13MAT203", "EM13MAT303"],
+    nome: "Financiamento: SAC × Price",
+    tema: "Sistemas de amortização",
+    desc: "Digite valor, taxa (ao mês ou ao ano) e parcelas: veja lado a lado o SAC e a Price, com tabela de amortização, gráfico de juros e amortização, saldo devedor e planilha. Desafio de 8 questões que envia a nota.",
+    emoji: "🏦", cor: "lilas", ferramenta: false,
+    tipo: "simulador", conteudo: "Educação Financeira"
   }
 };
