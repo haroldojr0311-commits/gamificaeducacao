@@ -458,5 +458,13 @@ window.JOGOS = {
     desc: "Digite qualquer função e mexa nos controles deslizantes (a, b, c…) para ver o gráfico mudar. Modelos de afim, quadrática, cúbica, exponencial, logarítmica, modular, seno, cosseno, tangente, raiz e hipérbole, com raízes, vértice e tabela de valores.",
     emoji: "📈", cor: "azul", ferramenta: true,
     tipo: "simulador"
+  },
+  "fracoes-visuais": {
+    nivel: ["Fundamental 1", "Fundamental 2"],
+    nome: "Frações Visuais",
+    tema: "Frações",
+    desc: "Simulador com pizzas e barras: compare frações (com reta numérica), descubra equivalentes cortando os pedaços, some e subtraia passo a passo com MMC. Termina com um desafio de 10 questões.",
+    emoji: "🍕", cor: "laranja", ferramenta: true,
+    tipo: "simulador"
   }
 };
