@@ -519,7 +519,7 @@ window.JOGOS = {
     nome: "Frações Visuais",
     tema: "Frações",
     desc: "Simulador com pizzas e barras: compare frações (com reta numérica), descubra equivalentes cortando os pedaços, some e subtraia passo a passo com MMC. Termina com um desafio de 10 questões.",
-    emoji: "🍕", cor: "laranja", ferramenta: true,
+    emoji: "🍕", cor: "laranja", ferramenta: false,
     tipo: "simulador"
   },
   "material-dourado": {
@@ -528,7 +528,7 @@ window.JOGOS = {
     nome: "Material Dourado e Ábaco",
     tema: "Sistema de numeração",
     desc: "Monte números com cubinhos, barras, placas e cubo (ou no ábaco) e veja o valor posicional. Faça adição com reserva e subtração com empréstimo passo a passo, junto com a conta armada. Termina com desafio.",
-    emoji: "🟨", cor: "amarelo", ferramenta: true,
+    emoji: "🟨", cor: "amarelo", ferramenta: false,
     tipo: "simulador"
   },
   "lousa-geometria": {
@@ -537,7 +537,7 @@ window.JOGOS = {
     nome: "Lousa de Geometria",
     tema: "Construções geométricas",
     desc: "Régua, compasso e transferidor na tela, com ímã nos pontos e cruzamentos. 6 construções guiadas com correção automática: triângulo equilátero, mediatriz, bissetriz, ângulo de 60°, triângulo 3-4-5 e soma dos ângulos do triângulo.",
-    emoji: "📐", cor: "verde", ferramenta: true,
+    emoji: "📐", cor: "verde", ferramenta: false,
     tipo: "simulador", conteudo: "Geometria"
   },
   "enquete-ao-vivo": {
@@ -571,7 +571,7 @@ window.JOGOS = {
     nome: "Planificação de Sólidos",
     tema: "Geometria espacial",
     desc: "15 sólidos em 3D (cubo, paralelepípedo, prismas, pirâmides, os 5 de Platão, cilindro e cone) que abrem e fecham animados. Mude as medidas, veja faces, vértices, arestas, Euler, área e volume, e imprima a planificação com abas para montar. Tem desafio.",
-    emoji: "🧊", cor: "azul", ferramenta: true,
+    emoji: "🧊", cor: "azul", ferramenta: false,
     tipo: "simulador", conteudo: "Geometria espacial"
   }
 };
