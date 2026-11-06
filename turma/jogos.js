@@ -387,43 +387,43 @@ window.JOGOS = {
   "memoria-horas": {
     nome: "Memória das horas",
     tema: "Horas e relógio",
-    desc: "Encontre o par: a hora escrita e o relógio que mostra essa hora. Cartas grandes, até 12 pares, pontos com sequência, espiada e recorde.",
+    desc: "Encontre o par: a hora escrita e o relógio que mostra essa hora. Até 18 pares, com meias horas, pontos, espiada e recorde.",
     emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais", nivel: ["Fundamental 1"]
   },
   "memoria-areas": {
-    nome: "Jogo da memória · Áreas",
+    nome: "Memória das áreas",
     tema: "Áreas de figuras planas",
-    desc: "Relacione cada figura plana à sua fórmula da área: quadrado, retângulo, triângulo, losango, trapézio, paralelogramo e círculo.",
-    emoji: "📐", cor: "coral", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2"]
+    desc: "Relacione 12 figuras planas às fórmulas da área, do quadrado ao setor circular, com legenda do que significa cada letra.",
+    emoji: "📐", cor: "coral", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2", "Ensino Médio"]
   },
   "memoria-fracoes-equivalentes": {
-    nome: "Frações equivalentes",
+    nome: "Memória das frações equivalentes",
     tema: "Frações equivalentes",
-    desc: "Encontre os grupos de três frações com o mesmo valor, como 1/2, 2/4 e 4/8.",
+    desc: "Grupos de três frações equivalentes, como 1/2, 2/4 e 4/8. Até 12 grupos (36 cartas).",
     emoji: "🧠", cor: "verde", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
   },
   "memoria-fracao-decimal-porcentagem": {
-    nome: "Fração, decimal e porcentagem",
+    nome: "Memória: fração, decimal e %",
     tema: "Frações, decimais e porcentagem",
-    desc: "Junte fração, decimal e porcentagem do mesmo valor, como 1/4, 0,25 e 25%.",
+    desc: "Junte fração, decimal e porcentagem do mesmo valor, como 1/4, 0,25 e 25%. Até 12 grupos (36 cartas).",
     emoji: "🧠", cor: "amarelo", ferramenta: false, conteudo: "Proporção e porcentagem", nivel: ["Fundamental 2"]
   },
   "memoria-potencia-valor": {
-    nome: "Potência e valor",
+    nome: "Memória das potências",
     tema: "Potências",
-    desc: "Relacione cada potência ao seu valor, como 2³ com 8.",
+    desc: "Relacione cada potência ao seu valor, como 2³ com 8. Até 20 pares.",
     emoji: "🧠", cor: "azul", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
   },
   "memoria-raiz-valor": {
-    nome: "Raiz quadrada e valor",
+    nome: "Memória das raízes",
     tema: "Raízes quadradas",
-    desc: "Relacione cada raiz quadrada ao seu valor, como √49 com 7.",
+    desc: "Relacione cada raiz quadrada ao seu valor, de √1 a √400. Até 20 pares.",
     emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
   },
   "memoria-equacao-solucao": {
-    nome: "Equação e solução",
+    nome: "Memória das equações",
     tema: "Equações do 1º grau",
-    desc: "Relacione cada equação ao valor de x que a resolve, como 2x = 10 com x = 5.",
+    desc: "Relacione cada equação do 1º grau ao valor de x, com soluções de 1 a 20. Até 20 pares.",
     emoji: "🧠", cor: "coral", ferramenta: false, conteudo: "Álgebra", nivel: ["Fundamental 2"]
   }
 };
