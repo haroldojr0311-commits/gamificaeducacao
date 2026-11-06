@@ -3,9 +3,11 @@
 // Para incluir um jogo novo: node _ferramentas/proteger.mjs <id> <arquivo.html> e acrescente um item aqui.
 // cor: amarelo | coral | verde | azul | lilas | laranja
 // ferramenta: true = aparece só para quem tem conta (não vira atividade de turma).
+// bncc: códigos de habilidade da BNCC (Matemática) atendidos.
 // tipo: "simulador" | "ferramenta" (aba onde aparece; sem tipo = Jogos). conteudo: agrupa os jogos na aba Jogos.
 window.JOGOS = {
   "aventura-do-pi": {
+    bncc: ["EF07MA31", "EF07MA33", "EF08MA19"],
     nivel: ["Fundamental 2"],
     nome: "Aventura do Pi",
     tema: "Geometria plana",
@@ -14,6 +16,7 @@ window.JOGOS = {
     conteudo: "Geometria"
   },
   "dossie-geometrico": {
+    bncc: ["EF06MA17"],
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Dossiê Geométrico",
     tema: "Figuras e sólidos",
@@ -38,6 +41,7 @@ window.JOGOS = {
     conteudo: "Educação Financeira"
   },
   "orcamento-em-familia": {
+    bncc: ["EM13MAT203"],
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Orçamento em Família",
     tema: "Educação Financeira",
@@ -46,6 +50,7 @@ window.JOGOS = {
     conteudo: "Educação Financeira"
   },
   "invasao-alienigena": {
+    bncc: ["EF06MA13", "EF07MA02"],
     nivel: ["Fundamental 2"],
     nome: "Invasão Alienígena",
     tema: "Porcentagem",
@@ -54,6 +59,7 @@ window.JOGOS = {
     conteudo: "Proporção e porcentagem"
   },
   "estatistica-agrupados": {
+    bncc: ["EF08MA25", "EM13MAT316", "EM13MAT406"],
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Laboratório Estatístico",
     tema: "Estatística",
@@ -62,6 +68,7 @@ window.JOGOS = {
     conteudo: "Estatística e probabilidade"
   },
   "laboratorio-de-funcoes": {
+    bncc: ["EM13MAT302", "EM13MAT402", "EM13MAT503"],
     nivel: ["Ensino Médio"],
     nome: "Laboratório de Funções",
     tema: "Função do 2º grau",
@@ -70,6 +77,7 @@ window.JOGOS = {
     conteudo: "Funções e trigonometria"
   },
   "laboratorio-de-exponenciais": {
+    bncc: ["EM13MAT303", "EM13MAT304"],
     nivel: ["Ensino Médio"],
     nome: "Laboratório de Exponenciais",
     tema: "Função exponencial",
@@ -78,6 +86,7 @@ window.JOGOS = {
     conteudo: "Funções e trigonometria"
   },
   "geometria-espacial-3d": {
+    bncc: ["EF06MA17"],
     nivel: ["Ensino Médio"],
     nome: "Missão Geometria Espacial 3D",
     tema: "Geometria espacial",
@@ -86,6 +95,7 @@ window.JOGOS = {
     conteudo: "Geometria"
   },
   "show-da-proporcao": {
+    bncc: ["EF07MA17", "EF09MA08"],
     nivel: ["Fundamental 2"],
     nome: "Show da Proporção",
     tema: "Proporcionalidade",
@@ -94,6 +104,7 @@ window.JOGOS = {
     conteudo: "Proporção e porcentagem"
   },
   "uno-potenciacao": {
+    bncc: ["EF08MA01"],
     nivel: ["Fundamental 2"],
     nome: "UNO da Potenciação",
     tema: "Potências",
@@ -102,6 +113,7 @@ window.JOGOS = {
     conteudo: "Números e operações"
   },
   "uno-radiciacao": {
+    bncc: ["EF08MA02"],
     nivel: ["Fundamental 2"],
     nome: "UNO da Radiciação",
     tema: "Raízes",
@@ -110,6 +122,7 @@ window.JOGOS = {
     conteudo: "Números e operações"
   },
   "uno-fracoes-decimais": {
+    bncc: ["EF06MA08"],
     nivel: ["Fundamental 2"],
     nome: "UNO de Frações e Decimais",
     tema: "Frações",
@@ -118,6 +131,7 @@ window.JOGOS = {
     conteudo: "Números e operações"
   },
   "roda-gigante": {
+    bncc: ["EM13MAT306"],
     nivel: ["Ensino Médio"],
     nome: "Roda-Gigante Trigonométrica",
     tema: "Trigonometria",
@@ -150,6 +164,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "laboratorio-probabilidade": {
+    bncc: ["EF08MA22", "EM13MAT511"],
     nivel: ["Ensino Médio"],
     nome: "Laboratório de Probabilidade",
     tema: "Probabilidade",
@@ -214,6 +229,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "geoplano": {
+    bncc: ["EF07MA31", "EF08MA19", "EF09MA14"],
     nivel: ["Fundamental 2"],
     nome: "Geoplano Digital",
     tema: "Geometria plana",
@@ -222,6 +238,7 @@ window.JOGOS = {
     tipo: "simulador", conteudo: "Geometria"
   },
   "domino-equivalencias": {
+    bncc: ["EF05MA06", "EF06MA08"],
     nivel: ["Fundamental 2"],
     nome: "Dominó de Equivalências",
     tema: "Frações, decimais e %",
@@ -230,6 +247,7 @@ window.JOGOS = {
     conteudo: "Números e operações"
   },
   "cofre-combinacoes": {
+    bncc: ["EM13MAT310"],
     nivel: ["Ensino Médio"],
     nome: "Cofre das Combinações",
     tema: "Análise combinatória",
@@ -238,6 +256,7 @@ window.JOGOS = {
     conteudo: "Estatística e probabilidade"
   },
   "escada-progressoes": {
+    bncc: ["EM13MAT507", "EM13MAT508"],
     nivel: ["Ensino Médio"],
     nome: "Escada das Progressões",
     tema: "PA e PG",
@@ -246,6 +265,7 @@ window.JOGOS = {
     conteudo: "Álgebra"
   },
   "batalha-naval": {
+    bncc: ["EF05MA15", "EF06MA16"],
     nivel: ["Fundamental 2"],
     nome: "Batalha Naval Cartesiana",
     tema: "Plano cartesiano",
@@ -254,6 +274,7 @@ window.JOGOS = {
     conteudo: "Geometria"
   },
   "balanca-equacoes": {
+    bncc: ["EF07MA18"],
     nivel: ["Fundamental 2"],
     nome: "Balança das Equações",
     tema: "Equações do 1º grau",
@@ -262,6 +283,7 @@ window.JOGOS = {
     conteudo: "Álgebra"
   },
   "missao-trigonometria": {
+    bncc: ["EM13MAT308"],
     nivel: ["Ensino Médio"],
     nome: "Missão Trigonometria",
     tema: "Seno, cosseno e tangente",
@@ -270,6 +292,7 @@ window.JOGOS = {
     conteudo: "Funções e trigonometria"
   },
   "supermercado-inteligente": {
+    bncc: ["EF06MA13", "EF07MA02"],
     nivel: ["Fundamental 2"],
     nome: "Supermercado Inteligente",
     tema: "Preço por unidade, desconto e troco",
@@ -278,6 +301,7 @@ window.JOGOS = {
     conteudo: "Educação Financeira"
   },
   "armadilha-cartao": {
+    bncc: ["EM13MAT203", "EM13MAT303"],
     nivel: ["Ensino Médio", "Superior"],
     nome: "Armadilha do Cartão",
     tema: "Juros compostos",
@@ -286,6 +310,7 @@ window.JOGOS = {
     conteudo: "Educação Financeira"
   },
   "geoar-solidos-ar": {
+    bncc: ["EF06MA17"],
     nivel: ["Ensino Médio"],
     nome: "GeoAR · Sólidos na Sua Sala",
     tema: "Geometria espacial",
@@ -348,6 +373,7 @@ window.JOGOS = {
     emoji: "♞", cor: "azul", ferramenta: false, conteudo: "Jogos de tabuleiro"
   },
   "jogo-hanoi": {
+    bncc: ["EF08MA10"],
     nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Torre de Hanói",
     tema: "Matemática",
@@ -355,6 +381,7 @@ window.JOGOS = {
     emoji: "🗼", cor: "verde", ferramenta: false, conteudo: "Desafios"
   },
   "fazenda-contagem": {
+    bncc: ["EF01MA01", "EF01MA02"],
     nivel: ["Fundamental 1"],
     nome: "Fazenda da contagem",
     tema: "Fundamental 1",
@@ -362,6 +389,7 @@ window.JOGOS = {
     emoji: "🐄", cor: "amarelo", ferramenta: false, conteudo: "Anos iniciais"
   },
   "corrida-dezenas": {
+    bncc: ["EF01MA07", "EF02MA04"],
     nivel: ["Fundamental 1"],
     nome: "Corrida das dezenas",
     tema: "Fundamental 1",
@@ -369,6 +397,7 @@ window.JOGOS = {
     emoji: "🏃", cor: "verde", ferramenta: false, conteudo: "Anos iniciais"
   },
   "monte-desenho": {
+    bncc: ["EF01MA14"],
     nivel: ["Fundamental 1"],
     nome: "Monte o desenho",
     tema: "Fundamental 1",
@@ -376,6 +405,7 @@ window.JOGOS = {
     emoji: "🔷", cor: "azul", ferramenta: false, conteudo: "Anos iniciais"
   },
   "relogio-horas": {
+    bncc: ["EF02MA19", "EF03MA23"],
     nivel: ["Fundamental 1"],
     nome: "Relógio das horas",
     tema: "Fundamental 1",
@@ -383,6 +413,7 @@ window.JOGOS = {
     emoji: "⏰", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais"
   },
   "quebra-cabeca-soma": {
+    bncc: ["EF01MA06", "EF02MA05"],
     nivel: ["Fundamental 1"],
     nome: "Quebra-cabeça da soma",
     tema: "Fundamental 1",
@@ -390,48 +421,56 @@ window.JOGOS = {
     emoji: "🧩", cor: "coral", ferramenta: false, conteudo: "Anos iniciais"
   },
   "cartesiano-desenhos": {
+    bncc: ["EF05MA15", "EF06MA16"],
     nome: "Plano Cartesiano · Desenhos",
     tema: "Plano cartesiano",
     desc: "Localize pontos pelas coordenadas (x, y) e descubra figuras ligando os pontos. Crie seu próprio desenho e imprima a atividade para os alunos.",
     emoji: "📍", cor: "azul", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2"]
   },
   "memoria-horas": {
+    bncc: ["EF03MA23"],
     nome: "Memória das horas",
     tema: "Horas e relógio",
     desc: "Encontre o par: a hora escrita e o relógio que mostra essa hora. Até 18 pares, com meias horas, pontos, espiada e recorde.",
     emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais", nivel: ["Fundamental 1"]
   },
   "memoria-areas": {
+    bncc: ["EF07MA31", "EF08MA19"],
     nome: "Memória das áreas",
     tema: "Áreas de figuras planas",
     desc: "Relacione 12 figuras planas às fórmulas da área, do quadrado ao setor circular, com legenda do que significa cada letra.",
     emoji: "📐", cor: "coral", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2", "Ensino Médio"]
   },
   "memoria-fracoes-equivalentes": {
+    bncc: ["EF05MA04", "EF06MA07"],
     nome: "Memória das frações equivalentes",
     tema: "Frações equivalentes",
     desc: "Grupos de três frações equivalentes, como 1/2, 2/4 e 4/8. Até 12 grupos (36 cartas).",
     emoji: "🧠", cor: "verde", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
   },
   "memoria-fracao-decimal-porcentagem": {
+    bncc: ["EF05MA06", "EF06MA08"],
     nome: "Memória: fração, decimal e %",
     tema: "Frações, decimais e porcentagem",
     desc: "Junte fração, decimal e porcentagem do mesmo valor, como 1/4, 0,25 e 25%. Até 12 grupos (36 cartas).",
     emoji: "🧠", cor: "amarelo", ferramenta: false, conteudo: "Proporção e porcentagem", nivel: ["Fundamental 2"]
   },
   "memoria-potencia-valor": {
+    bncc: ["EF08MA01"],
     nome: "Memória das potências",
     tema: "Potências",
     desc: "Relacione cada potência ao seu valor, como 2³ com 8. Até 20 pares.",
     emoji: "🧠", cor: "azul", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
   },
   "memoria-raiz-valor": {
+    bncc: ["EF08MA02"],
     nome: "Memória das raízes",
     tema: "Raízes quadradas",
     desc: "Relacione cada raiz quadrada ao seu valor, de √1 a √400. Até 20 pares.",
     emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
   },
   "memoria-equacao-solucao": {
+    bncc: ["EF07MA18"],
     nome: "Memória das equações",
     tema: "Equações do 1º grau",
     desc: "Relacione cada equação do 1º grau ao valor de x, com soluções de 1 a 20. Até 20 pares.",
@@ -452,6 +491,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "tabuada-turbo": {
+    bncc: ["EF03MA03", "EF04MA04"],
     nome: "Tabuada Turbo",
     tema: "Tabuada",
     desc: "Treine a tabuada de multiplicação e de divisão: modo treino com dica de bolinhas, contra o relógio (60 s) e duelo para dois jogadores. Mostra os fatos para treinar.",
@@ -465,6 +505,7 @@ window.JOGOS = {
     emoji: "📡", cor: "lilas", ferramenta: true
   },
   "calculadora-grafica": {
+    bncc: ["EF09MA06", "EM13MAT302", "EM13MAT402", "EM13MAT306"],
     nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Calculadora Gráfica",
     tema: "Funções",
@@ -473,6 +514,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "fracoes-visuais": {
+    bncc: ["EF05MA04", "EF05MA05", "EF06MA07", "EF06MA10"],
     nivel: ["Fundamental 1", "Fundamental 2"],
     nome: "Frações Visuais",
     tema: "Frações",
@@ -481,6 +523,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "material-dourado": {
+    bncc: ["EF02MA04", "EF03MA01", "EF03MA05"],
     nivel: ["Fundamental 1"],
     nome: "Material Dourado e Ábaco",
     tema: "Sistema de numeração",
@@ -489,6 +532,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "lousa-geometria": {
+    bncc: ["EF06MA27", "EF07MA24", "EF08MA15", "EF08MA17"],
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Lousa de Geometria",
     tema: "Construções geométricas",
@@ -505,6 +549,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "fichas-tabuada": {
+    bncc: ["EF03MA03", "EF03MA05", "EF04MA04"],
     nivel: ["Fundamental 1", "Fundamental 2"],
     nome: "Fichas de Tabuada e Cálculo Mental",
     tema: "Ferramenta do professor",
@@ -513,6 +558,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "ligar-classificar": {
+    bncc: ["EF08MA01", "EF08MA02", "EF09MA03"],
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Ligar e Classificar: Potências e Raízes",
     tema: "Potenciação e radiciação",
@@ -520,6 +566,7 @@ window.JOGOS = {
     emoji: "🔗", cor: "lilas", ferramenta: false, conteudo: "Números e operações"
   },
   "planificacao-solidos": {
+    bncc: ["EF04MA17", "EF05MA16", "EF06MA17", "EM13MAT309"],
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Planificação de Sólidos",
     tema: "Geometria espacial",

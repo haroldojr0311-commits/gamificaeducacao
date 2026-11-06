@@ -144,9 +144,12 @@ for k, v in ordenados:
           "learningResourceType": NOME_TIPO[t], "educationalLevel": v.get('nivel', []), "url": f"{SITE}/catalogo/{k}.html",
           "provider": {"@type": "Person", "name": "Prof. Dr. Haroldo Aleixo de Lima Junior"}}
     if v.get('tema'): ld["about"] = v['tema']
+    if v.get('bncc'): ld["educationalAlignment"] = [{"@type": "AlignmentObject", "alignmentType": "teaches", "educationalFramework": "BNCC", "targetName": c} for c in v['bncc']]
     corpo = (f'<p><a href="./">← Voltar ao catálogo</a></p><div class="card"><div class="cab-app"><div class="nota" style="background:{COR.get(v.get("cor"), "#ffe27a")}">{e(v.get("emoji", "🎲"))}</div>'
              f'<div><div class="tags"><span class="tag">{ICONE_TIPO[t]} {NOME_TIPO[t]}</span>{"<span class=tag>" + e(v["tema"]) + "</span>" if v.get("tema") else ""}</div><h1>{e(v["nome"])}</h1><p>{e(v.get("desc", ""))}</p>'
-             f'<div class="tags">{niveis}</div></div></div></div>'
+             f'<div class="tags">{niveis}</div>'
+             + (f'<p style="margin:8px 0 0;font-size:15px"><b>Habilidades da BNCC:</b> {", ".join(e(c) for c in v["bncc"])}</p>' if v.get('bncc') else '') +
+             '</div></div></div>'
              f'<div class="card"><h2>Como usar em aula</h2><ul>{"".join("<li>" + x + "</li>" for x in USO[t])}</ul>'
              f'<p><a class="bt" href="../">🚀 Abrir no portal</a><a class="bt sec" href="../">⏱️ Fazer a degustação grátis</a></p>'
              f'<p class="sub" style="font-size:15px">O acesso completo é pelo Plano Pró. Alunos não precisam de login: usam o link que o professor envia.</p></div>'

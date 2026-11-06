@@ -97,6 +97,7 @@
   .cartao-jogo:hover .emoji{transform:scale(1.15) rotate(-6deg)}
   .marcado{position:absolute;right:9px;top:9px;width:30px;height:30px;border-radius:50%;background:var(--azul);color:#fff;display:none;place-items:center;font-size:16px;font-weight:900;font-family:var(--f-corpo);box-shadow:0 2px 6px rgba(0,0,0,.25)}
   .cartao-jogo[aria-pressed="true"] .marcado{display:grid}
+  .bncc{margin-top:6px;font-size:11.5px;font-weight:800;color:#3b4a8a;letter-spacing:.2px}
   .fav{position:absolute;right:8px;top:7px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.75);display:grid;place-items:center;font-size:19px;line-height:1;cursor:pointer;color:#94a3b8;transition:transform .15s,background .15s}
   .fav:hover{transform:scale(1.15);background:#fff}
   .fav.on{color:#f59e0b;background:#fff}
@@ -253,7 +254,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@9.8.1/dist/index.iife.js"></script>
 <script src="turma/supabase-config.js"></script>
-<script src="turma/jogos.js?v=20261106220000"></script>
+<script src="turma/jogos.js?v=20261106224000"></script>
 <script src="turma/qr.js"></script>
 <script src="turma/resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
@@ -834,7 +835,7 @@ function cartaoJogo(id, aoClicar, marcado){
   var j = window.JOGOS[id];
   return el('button', {type:'button', class:'cartao-jogo', style: corDe(id), 'aria-pressed': marcado === undefined ? null : String(!!marcado), onclick: aoClicar},
     el('div', {class:'nota'}, j.tema ? el('span', {class:'tema'}, j.tema) : null, el('span', {class:'emoji', 'aria-hidden':'true'}, j.emoji), el('span', {class:'marcado', 'aria-hidden':'true'}, '✓'), marcado === undefined ? botaoFav(id) : null),
-    el('div', {class:'corpo'}, el('h3', {}, j.nome), j.desc ? el('p', {}, j.desc) : null));
+    el('div', {class:'corpo'}, el('h3', {}, j.nome), j.desc ? el('p', {}, j.desc) : null, j.bncc && j.bncc.length ? el('div', {class:'bncc', title:'Habilidades da BNCC: ' + j.bncc.join(', ')}, 'BNCC ' + j.bncc.slice(0, 3).join(' · ') + (j.bncc.length > 3 ? ' +' + (j.bncc.length - 3) : '')) : null));
 }
 var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Geometria', 'Funções e trigonometria', 'Estatística e probabilidade', 'Educação Financeira', 'Desafios'];
 var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Outros':'🎲'};
@@ -864,7 +865,7 @@ function desenharJogos(qual){
   if(filtroNivel !== 'todos') ids = ids.filter(function(id){ return nivelDe(id).indexOf(filtroNivel) >= 0; });
   if(busca.trim()){
     var termo = normalizar(busca.trim());
-    ids = ids.filter(function(id){ var j = window.JOGOS[id]; return normalizar([j.nome, j.desc, j.tema, j.conteudo, nivelDe(id).join(' ')].join(' ')).indexOf(termo) >= 0; });
+    ids = ids.filter(function(id){ var j = window.JOGOS[id]; return normalizar([j.nome, j.desc, j.tema, j.conteudo, nivelDe(id).join(' '), (j.bncc || []).join(' ')].join(' ')).indexOf(termo) >= 0; });
   }
   var venc = perfil.validade ? el('span', {class:'tag'}, '📅 Acesso até ' + fmtDia(perfil.validade)) : null;
   var cabecalho = {
@@ -873,7 +874,7 @@ function desenharJogos(qual){
     ferramentas: ['🧰 Ferramentas do professor', 'Ferramentas para o dia a dia da sala de aula.']
   }[qual];
   var corpo = [];
-  var campoBusca = el('input', {type:'search', id:'busca', value:busca, placeholder:{jogos:'Buscar jogo, conteúdo ou série…', simuladores:'Buscar simulador…', ferramentas:'Buscar ferramenta…'}[qual], 'aria-label':'Buscar', autocomplete:'off'});
+  var campoBusca = el('input', {type:'search', id:'busca', value:busca, placeholder:{jogos:'Buscar jogo, conteúdo, série ou código BNCC…', simuladores:'Buscar simulador…', ferramentas:'Buscar ferramenta…'}[qual], 'aria-label':'Buscar', autocomplete:'off'});
   campoBusca.oninput = function(){ busca = campoBusca.value; var pos = campoBusca.selectionStart; desenharJogos(qual); var n = document.getElementById('busca'); if(n){ n.focus(); try{ n.setSelectionRange(pos, pos); }catch(e){} } };
   corpo.push(el('div', {class:'busca'}, campoBusca));
   corpo.push(barraNiveis(qual));
