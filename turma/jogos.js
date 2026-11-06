@@ -450,5 +450,13 @@ window.JOGOS = {
     tema: "Quiz em tempo real",
     desc: "Você projeta, os alunos respondem pelo celular em gamificaeducacao.com.br/vivo com um código. Pontos por rapidez, ranking a cada pergunta, pódio e planilha de resultados. Use perguntas prontas ou crie as suas.",
     emoji: "📡", cor: "lilas", ferramenta: true
+  },
+  "calculadora-grafica": {
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
+    nome: "Calculadora Gráfica",
+    tema: "Funções",
+    desc: "Digite qualquer função e mexa nos controles deslizantes (a, b, c…) para ver o gráfico mudar. Modelos de afim, quadrática, cúbica, exponencial, logarítmica, modular, seno, cosseno, tangente, raiz e hipérbole, com raízes, vértice e tabela de valores.",
+    emoji: "📈", cor: "azul", ferramenta: true,
+    tipo: "simulador"
   }
 };
