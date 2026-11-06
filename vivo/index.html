@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#24135a">
+<title>Gamifica Ao Vivo · Entrar</title>
+<link rel="icon" href="../favicon.ico">
+<style>
+:root{--fundo:#24135a;--fundo2:#3b1f8f;--tinta:#1b1640;--a:#e21b3c;--b:#1368ce;--c:#d89e00;--d:#26890c;--ok:#26890c;--erro:#e21b3c}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:linear-gradient(160deg,var(--fundo2),var(--fundo));color:#fff;font-family:"Segoe UI",Roboto,Arial,sans-serif;display:flex;flex-direction:column;min-height:100%}
+button,input{font:inherit}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:max(10px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:#00000033;font-weight:800}
+.topo b{color:#ffd23f}
+main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:16px max(16px,env(safe-area-inset-left,0px)) max(20px,env(safe-area-inset-bottom,0px));max-width:560px;width:100%;margin:0 auto}
+.tela{display:none;text-align:center}
+.tela.on{display:block;animation:entra .3s ease}
+@keyframes entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{margin:0 0 6px;font-size:34px}
+.sub{opacity:.9;margin:0 0 18px}
+.cartao{background:#fff;color:var(--tinta);border-radius:22px;padding:22px;box-shadow:0 14px 30px #0006;text-align:left}
+label{display:block;font-weight:800;margin:0 0 6px}
+input{width:100%;border:3px solid #d8d3ee;border-radius:14px;padding:14px;font-size:22px;font-weight:800;margin-bottom:14px;color:var(--tinta)}
+input:focus{outline:none;border-color:#5b2dbf}
+#inCodigo{letter-spacing:8px;text-align:center;font-size:30px}
+.btn{width:100%;border:0;border-radius:14px;padding:16px;font-weight:900;font-size:20px;background:#1b1640;color:#fff;cursor:pointer;box-shadow:0 5px 0 #000}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #000}
+.btn:disabled{opacity:.6}
+.erro{color:var(--erro);font-weight:800;min-height:1.3em;margin-top:10px;text-align:center}
+.grande{font-size:64px;line-height:1}
+.nome-eu{display:inline-block;background:#ffffff22;border-radius:999px;padding:8px 18px;font-weight:900;font-size:22px;margin:10px 0}
+.pergunta{background:#fff;color:var(--tinta);border-radius:18px;padding:14px 16px;font-weight:800;font-size:19px;line-height:1.35;margin-bottom:14px;text-align:center}
+.relogio{font-weight:900;font-size:20px;margin-bottom:10px}
+.opcoes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.op{border:0;border-radius:18px;min-height:130px;color:#fff;font-weight:900;font-size:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px;cursor:pointer;box-shadow:0 6px 0 #0006;touch-action:manipulation}
+.op svg{width:48px;height:48px}
+.op:active{transform:translateY(4px);box-shadow:0 2px 0 #0006}
+.op[data-k="0"]{background:var(--a)}.op[data-k="1"]{background:var(--b)}.op[data-k="2"]{background:var(--c)}.op[data-k="3"]{background:var(--d)}
+.res{border-radius:22px;padding:26px 18px;font-weight:900}
+.res.ok{background:var(--ok)}.res.no{background:var(--erro)}
+.res h2{margin:0 0 6px;font-size:34px}
+.pts{font-size:24px;color:#ffe08a}
+.pos{margin-top:12px;font-size:20px;background:#00000033;border-radius:14px;padding:10px}
+.carregando{width:46px;height:46px;border:5px solid #ffffff44;border-top-color:#ffd23f;border-radius:50%;animation:gira 1s linear infinite;margin:14px auto}
+@keyframes gira{to{transform:rotate(360deg)}}
+.rodape{text-align:center;opacity:.7;font-size:13px;padding:8px 16px max(10px,env(safe-area-inset-bottom,0px))}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="topo"><span>🎮 Gamifica <b>Ao Vivo</b></span><span id="topoInfo"></span></div>
+<main>
+  <section class="tela on" id="tEntrar">
+    <h1>Entrar no jogo</h1>
+    <p class="sub">Digite o código que aparece na tela do professor.</p>
+    <div class="cartao">
+      <label for="inCodigo">Código da sala</label>
+      <input id="inCodigo" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000">
+      <label for="inNome">Seu nome</label>
+      <input id="inNome" maxlength="20" autocomplete="nickname" placeholder="ex.: Ana Clara">
+      <button class="btn" id="btnEntrar" type="button">Entrar ▶</button>
+      <div class="erro" id="erroEntrar" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="tela" id="tEspera">
+    <div class="grande">✅</div>
+    <h1>Você está dentro!</h1>
+    <div class="nome-eu" id="nomeEu"></div>
+    <p class="sub" id="esperaTxt">Veja o seu nome na tela do professor.<br>O jogo já vai começar…</p>
+    <div class="carregando" aria-hidden="true"></div>
+  </section>
+
+  <section class="tela" id="tPergunta">
+    <div class="relogio" id="relogio">⏱️ 20</div>
+    <div class="pergunta" id="pTexto"></div>
+    <div class="opcoes" id="opcoes"></div>
+  </section>
+
+  <section class="tela" id="tEnviada">
+    <div class="grande">⏳</div>
+    <h1>Resposta enviada!</h1>
+    <p class="sub">Aguarde o resultado na tela do professor.</p>
+    <div class="carregando" aria-hidden="true"></div>
+  </section>
+
+  <section class="tela" id="tResultado">
+    <div class="res" id="resBox"></div>
+  </section>
+
+  <section class="tela" id="tFim">
+    <div class="grande" id="fimEmoji">🏆</div>
+    <h1 id="fimTitulo">Fim de jogo!</h1>
+    <div class="res ok" id="fimBox"></div>
+    <p class="sub" style="margin-top:16px">Obrigado por jogar! 🎉</p>
+  </section>
+</main>
+<div class="rodape">gamificaeducacao.com.br</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../turma/supabase-config.js"></script>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const FORMAS = [
+  '<svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,4 37,35 3,35" fill="#fff"/></svg>',
+  '<svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,3 37,20 20,37 3,20" fill="#fff"/></svg>',
+  '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="#fff"/></svg>',
+  '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="5" width="30" height="30" rx="3" fill="#fff"/></svg>'];
+const NOMES_FORMA = ['Triângulo', 'Losango', 'Círculo', 'Quadrado'];
+const EVENTOS = ['estado', 'entrar', 'resposta'];
+
+/* canal em tempo real: Supabase Realtime (broadcast). Para testes no mesmo navegador: #local */
+function criarCanal(codigo, aoMsg){
+  const nome = 'gamifica-vivo-' + codigo;
+  if (location.hash.indexOf('local') >= 0 || !window.supabase){
+    const bc = new BroadcastChannel(nome);
+    bc.onmessage = e => aoMsg(e.data.ev, e.data.p);
+    return Promise.resolve({ enviar(ev, p){ bc.postMessage({ev, p}); }, fechar(){ bc.close(); } });
+  }
+  const sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY, {auth: {persistSession: false}, realtime: {params: {eventsPerSecond: 20}}});
+  const ch = sb.channel(nome, {config: {broadcast: {self: false, ack: false}}});
+  EVENTOS.forEach(ev => ch.on('broadcast', {event: ev}, m => aoMsg(ev, m.payload)));
+  return new Promise((ok, falha) => {
+    let feito = false;
+    ch.subscribe(st => {
+      if (st === 'SUBSCRIBED' && !feito){ feito = true; ok({ enviar(ev, p){ ch.send({type: 'broadcast', event: ev, payload: p}); }, fechar(){ sb.removeChannel(ch); } }); }
+      else if ((st === 'CHANNEL_ERROR' || st === 'TIMED_OUT') && !feito){ feito = true; falha(st); }
+    });
+    setTimeout(() => { if (!feito){ feito = true; falha('TEMPO'); } }, 12000);
+  });
+}
+
+const A = { codigo: '', nome: '', pid: '', canal: null, est: null, qiRespondida: -1, fase: '', tentEntrar: null, tentResp: null, relogio: null, ultimoEstado: 0, viuMeuNome: false };
+function mostrar(id){ document.querySelectorAll('.tela').forEach(t => t.classList.toggle('on', t.id === id)); }
+function vibrar(ms){ try { navigator.vibrate && navigator.vibrate(ms); } catch(e){} }
+
+const params = new URLSearchParams(location.search);
+if (params.get('c')) $('#inCodigo').value = params.get('c').replace(/\D/g, '').slice(0, 6);
+try { const n = localStorage.getItem('vivo-nome'); if (n) $('#inNome').value = n; } catch(e){}
+$('#inCodigo').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
+[$('#inCodigo'), $('#inNome')].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); }));
+$('#btnEntrar').onclick = entrar;
+
+async function entrar(){
+  const codigo = $('#inCodigo').value.trim(), nome = $('#inNome').value.trim().replace(/\s+/g, ' ');
+  const erro = $('#erroEntrar');
+  if (codigo.length !== 6){ erro.textContent = 'O código tem 6 números.'; return; }
+  if (nome.length < 2){ erro.textContent = 'Digite o seu nome.'; return; }
+  erro.textContent = ''; $('#btnEntrar').disabled = true; $('#btnEntrar').textContent = 'Conectando…';
+  try { localStorage.setItem('vivo-nome', nome); } catch(e){}
+  let pid = '';
+  try { pid = sessionStorage.getItem('vivo-pid-' + codigo) || ''; } catch(e){}
+  if (!pid){ pid = Math.random().toString(36).slice(2, 10); try { sessionStorage.setItem('vivo-pid-' + codigo, pid); } catch(e){} }
+  Object.assign(A, {codigo, nome, pid});
+  try { A.canal = await criarCanal(codigo, aoMsg); }
+  catch(e){ falhaEntrar('Não foi possível conectar. Verifique a internet e tente de novo.'); return; }
+  const tentar = () => A.canal.enviar('entrar', {pid, nome});
+  tentar(); A.tentEntrar = setInterval(tentar, 2500);
+  setTimeout(() => { if (!A.viuMeuNome) falhaEntrar('Sala não encontrada. Confira o código na tela do professor.'); }, 15000);
+}
+function falhaEntrar(t){
+  clearInterval(A.tentEntrar);
+  if (A.canal){ try { A.canal.fechar(); } catch(e){} A.canal = null; }
+  $('#erroEntrar').textContent = t; $('#btnEntrar').disabled = false; $('#btnEntrar').textContent = 'Entrar ▶';
+  mostrar('tEntrar');
+}
+
+function aoMsg(ev, p){
+  if (ev !== 'estado' || !p) return;
+  A.est = p; A.ultimoEstado = Date.now();
+  const meu = p.jog && p.jog[A.pid];
+  if (!meu) return;              // o professor ainda não registrou este aluno
+  if (!A.viuMeuNome){ A.viuMeuNome = true; clearInterval(A.tentEntrar); }
+  A.nome = meu;
+  $('#topoInfo').textContent = '👤 ' + meu;
+  render(p);
+}
+function render(p){
+  const chave = p.fase + ':' + p.qi;
+  if (p.fase === 'lobby'){
+    if (A.fase !== chave){ $('#nomeEu').textContent = A.nome; mostrar('tEspera'); }
+  } else if (p.fase === 'pergunta'){
+    const respondi = (p.resp || []).includes(A.pid);
+    if (respondi){ clearInterval(A.tentResp); if (A.fase !== chave + ':ok'){ mostrar('tEnviada'); A.fase = chave + ':ok'; } return; }
+    if (A.qiRespondida === p.qi){ mostrar('tEnviada'); return; }   // enviada, aguardando confirmação
+    if (A.fase !== chave){ montarPergunta(p); vibrar(80); }
+    iniciarRelogio(p.restaMs);
+  } else if (p.fase === 'resultado' || p.fase === 'ranking'){
+    clearInterval(A.tentResp); clearInterval(A.relogio);
+    if (A.fase !== chave){
+      const r = p.res && p.res.por && p.res.por[A.pid];
+      const box = $('#resBox');
+      if (!r){ box.className = 'res no'; box.innerHTML = '<h2>⏰ Sem resposta</h2><div>Você não respondeu esta pergunta.</div>'; }
+      else {
+        box.className = 'res ' + (r[0] ? 'ok' : 'no');
+        box.innerHTML = r[0]
+          ? `<h2>✅ Correto!</h2><div class="pts">+${r[1]} pontos</div>`
+          : `<h2>❌ Incorreto</h2><div>Resposta certa: <b>${esc(p.res.textoCerta || '')}</b></div>`;
+        box.innerHTML += `<div class="pos">Total: <b>${r[2]}</b> pontos · ${r[3]}º lugar</div>`;
+      }
+      if (r) vibrar(r[0] ? 60 : [60, 60, 60]);
+      mostrar('tResultado');
+    }
+  } else if (p.fase === 'fim'){
+    clearInterval(A.relogio);
+    if (A.fase !== chave){
+      const f = p.fin && p.fin[A.pid];
+      const pos = f ? f[1] : null;
+      $('#fimEmoji').textContent = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : '🏁';
+      $('#fimTitulo').textContent = pos && pos <= 3 ? 'Você está no pódio!' : 'Fim de jogo!';
+      $('#fimBox').innerHTML = f ? `<h2>${f[1]}º lugar</h2><div class="pts">${f[0]} pontos</div><div class="pos">${f[2]} de ${p.total} acertos</div>` : '<h2>Fim de jogo</h2>';
+      mostrar('tFim');
+    }
+  }
+  if (!(p.fase === 'pergunta' && A.fase.endsWith(':ok'))) A.fase = chave;
+}
+function montarPergunta(p){
+  A.qiRespondida = -1;
+  $('#pTexto').textContent = p.mostrarTexto ? p.perg.t : 'Escolha a resposta na tela do professor';
+  $('#pTexto').style.display = '';
+  $('#opcoes').innerHTML = p.perg.o.map((txt, k) => `<button class="op" type="button" data-k="${k}" aria-label="${NOMES_FORMA[k]}${p.mostrarTexto ? ': ' + esc(txt) : ''}">${FORMAS[k]}${p.mostrarTexto ? `<span>${esc(txt)}</span>` : ''}</button>`).join('');
+  mostrar('tPergunta');
+}
+$('#opcoes').addEventListener('click', e => {
+  const b = e.target.closest('.op'); if (!b || !A.est || A.est.fase !== 'pergunta') return;
+  const qi = A.est.qi, op = +b.dataset.k;
+  A.qiRespondida = qi; vibrar(40);
+  const enviar = () => A.canal && A.canal.enviar('resposta', {pid: A.pid, qi, op});
+  enviar(); clearInterval(A.tentResp); A.tentResp = setInterval(enviar, 2000);
+  clearInterval(A.relogio);
+  mostrar('tEnviada');
+});
+function iniciarRelogio(restaMs){
+  clearInterval(A.relogio);
+  const fim = Date.now() + (restaMs || 0);
+  const tick = () => { const s = Math.max(0, Math.ceil((fim - Date.now()) / 1000)); $('#relogio').textContent = '⏱️ ' + s; };
+  tick(); A.relogio = setInterval(tick, 250);
+}
+// perdeu contato com o professor?
+setInterval(() => {
+  if (A.viuMeuNome && A.ultimoEstado && Date.now() - A.ultimoEstado > 9000 && A.est && A.est.fase !== 'fim'){
+    $('#topoInfo').textContent = '⚠️ reconectando…';
+  }
+}, 3000);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+</script>
+</body>
+</html>

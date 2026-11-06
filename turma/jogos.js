@@ -444,5 +444,11 @@ window.JOGOS = {
     tema: "Tabuada",
     desc: "Treine a tabuada de multiplicação e de divisão: modo treino com dica de bolinhas, contra o relógio (60 s) e duelo para dois jogadores. Mostra os fatos para treinar.",
     emoji: "✖️", cor: "amarelo", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 1", "Fundamental 2"]
+  },
+  "quiz-ao-vivo": {
+    nome: "Quiz Ao Vivo",
+    tema: "Quiz em tempo real",
+    desc: "Você projeta, os alunos respondem pelo celular em gamificaeducacao.com.br/vivo com um código. Pontos por rapidez, ranking a cada pergunta, pódio e planilha de resultados. Use perguntas prontas ou crie as suas.",
+    emoji: "📡", cor: "lilas", ferramenta: true
   }
 };
