@@ -395,5 +395,35 @@ window.JOGOS = {
     tema: "Áreas de figuras planas",
     desc: "Relacione cada figura plana à sua fórmula da área: quadrado, retângulo, triângulo, losango, trapézio, paralelogramo e círculo.",
     emoji: "📐", cor: "coral", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2"]
+  },
+  "memoria-fracoes-equivalentes": {
+    nome: "Frações equivalentes",
+    tema: "Frações equivalentes",
+    desc: "Encontre os grupos de três frações com o mesmo valor, como 1/2, 2/4 e 4/8.",
+    emoji: "🧠", cor: "verde", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
+  },
+  "memoria-fracao-decimal-porcentagem": {
+    nome: "Fração, decimal e porcentagem",
+    tema: "Frações, decimais e porcentagem",
+    desc: "Junte fração, decimal e porcentagem do mesmo valor, como 1/4, 0,25 e 25%.",
+    emoji: "🧠", cor: "amarelo", ferramenta: false, conteudo: "Proporção e porcentagem", nivel: ["Fundamental 2"]
+  },
+  "memoria-potencia-valor": {
+    nome: "Potência e valor",
+    tema: "Potências",
+    desc: "Relacione cada potência ao seu valor, como 2³ com 8.",
+    emoji: "🧠", cor: "azul", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
+  },
+  "memoria-raiz-valor": {
+    nome: "Raiz quadrada e valor",
+    tema: "Raízes quadradas",
+    desc: "Relacione cada raiz quadrada ao seu valor, como √49 com 7.",
+    emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
+  },
+  "memoria-equacao-solucao": {
+    nome: "Equação e solução",
+    tema: "Equações do 1º grau",
+    desc: "Relacione cada equação ao valor de x que a resolve, como 2x = 10 com x = 5.",
+    emoji: "🧠", cor: "coral", ferramenta: false, conteudo: "Álgebra", nivel: ["Fundamental 2"]
   }
 };
