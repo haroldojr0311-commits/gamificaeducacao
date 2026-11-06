@@ -57,7 +57,7 @@ window.JOGOS = {
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Laboratório Estatístico",
     tema: "Estatística",
-    desc: "Tabela de frequências, média, mediana, moda, histograma e polígono.",
+    desc: "Roteiro completo e escolhido pelo professor ou aluno: média, moda, rol e mediana, tabelas de frequência, medidas da tabela, histograma e polígono, desvio médio, variância, desvio padrão e coeficiente de variação.",
     emoji: "📊", cor: "amarelo",
     conteudo: "Estatística e probabilidade"
   },
