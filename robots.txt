@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /protegido/
+Disallow: /_ferramentas/
+Disallow: /turma/
+
+Sitemap: https://gamificaeducacao.com.br/sitemap.xml

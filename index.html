@@ -8,6 +8,8 @@
 <link rel="icon" type="image/svg+xml" href="icone.svg?v=3">
 <link rel="icon" type="image/png" sizes="192x192" href="icone-192.png?v=3">
 <link rel="apple-touch-icon" href="icone-180.png?v=3">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d2b53">
 <meta name="description" content="Jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gamifica Educação">
@@ -144,6 +146,7 @@
   .resumo div:nth-child(3){background:var(--n-verde)}
   .resumo b{display:block;font-size:1.6rem;font-family:var(--f-display)}
   footer{max-width:1080px;margin:0 auto;padding:6px 16px 30px;color:var(--tinta2);font-size:.88rem;text-align:center;font-weight:600}
+  footer .links-rodape a{color:var(--tinta2);font-weight:700}
   .vazio{color:var(--tinta2);padding:6px 0;font-weight:600}
   @media (max-width:560px){
     .grade-jogos{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -244,7 +247,8 @@
 </div></header>
 <nav class="abas" id="abas" hidden></nav>
 <main id="app"><div class="card">Carregando…</div></main>
-<footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i></footer>
+<footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br><span class="links-rodape"><a href="catalogo/">Catálogo (<span id="totalApps">mais de 60</span> aplicações)</a> · <a href="como-funciona.html">Como funciona</a> · <a href="privacidade.html">Privacidade</a> · <a href="termos.html">Termos de uso</a></span></footer>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@9.8.1/dist/index.iife.js"></script>
@@ -1456,6 +1460,7 @@ function cartaoConta(c){
     el('div', {class:'linha'}, botoes), extra);
 }
 
+try{ var nApps = Object.keys(window.JOGOS).filter(function(k){ return k !== 'demo-porcentagem'; }).length, tA = document.getElementById('totalApps'); if(tA) tA.textContent = nApps; }catch(e){}
 iniciar();
 })();
 </script>
