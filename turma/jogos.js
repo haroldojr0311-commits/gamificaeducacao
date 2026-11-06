@@ -425,5 +425,11 @@ window.JOGOS = {
     tema: "Equações do 1º grau",
     desc: "Relacione cada equação do 1º grau ao valor de x, com soluções de 1 a 20. Até 20 pares.",
     emoji: "🧠", cor: "coral", ferramenta: false, conteudo: "Álgebra", nivel: ["Fundamental 2"]
+  },
+  "quiz-halloween": {
+    nome: "Quiz Assombrado · Halloween",
+    tema: "Quiz de Halloween",
+    desc: "15 desafios de matemática com tema de Halloween no estilo quiz de auditório: tempo, pontos por rapidez, bônus de sequência, explicações e ranking.",
+    emoji: "🎃", cor: "coral", ferramenta: false, conteudo: "Desafios", nivel: ["Fundamental 2"]
   }
 };
