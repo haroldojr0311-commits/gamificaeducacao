@@ -498,5 +498,12 @@ window.JOGOS = {
     desc: "Gere fichas para imprimir: tabuadas, número que falta, tabela pitagórica, adição e subtração mental, dobro e metade, ×÷ por 10/100/1000, porcentagem, expressões, potências e raízes. Várias versões, letra grande e gabarito separado.",
     emoji: "🖨️", cor: "lilas", ferramenta: true,
     tipo: "ferramenta"
+  },
+  "ligar-classificar": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Ligar e Classificar: Potências e Raízes",
+    tema: "Potenciação e radiciação",
+    desc: "Ligue colunas (potências, raízes, propriedades, bases negativas e frações) e arraste cartões para categorias (quadrado perfeito, mesmo valor, sinal, raiz exata). Com combo, estrelas e dicas. Tem editor para criar o seu jogo de qualquer matéria.",
+    emoji: "🔗", cor: "lilas", ferramenta: false, conteudo: "Números e operações"
   }
 };
