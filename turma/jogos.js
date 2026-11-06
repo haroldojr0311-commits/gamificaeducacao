@@ -466,5 +466,13 @@ window.JOGOS = {
     desc: "Simulador com pizzas e barras: compare frações (com reta numérica), descubra equivalentes cortando os pedaços, some e subtraia passo a passo com MMC. Termina com um desafio de 10 questões.",
     emoji: "🍕", cor: "laranja", ferramenta: true,
     tipo: "simulador"
+  },
+  "material-dourado": {
+    nivel: ["Fundamental 1"],
+    nome: "Material Dourado e Ábaco",
+    tema: "Sistema de numeração",
+    desc: "Monte números com cubinhos, barras, placas e cubo (ou no ábaco) e veja o valor posicional. Faça adição com reserva e subtração com empréstimo passo a passo, junto com a conta armada. Termina com desafio.",
+    emoji: "🟨", cor: "amarelo", ferramenta: true,
+    tipo: "simulador"
   }
 };
