@@ -45,7 +45,7 @@
   button,input,select{font:inherit;color:inherit}
   :focus-visible{outline:3px solid var(--azul);outline-offset:2px}
 
-  header.topo{background:linear-gradient(135deg,var(--hero-bg),var(--hero-bg2));color:#fff;padding:22px 16px 26px}
+  header.topo{background:linear-gradient(135deg,var(--hero-bg),var(--hero-bg2));color:#fff;padding:18px 16px 18px}
   header.topo .in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
   header.topo h1{font-size:clamp(1.4rem,3.4vw,2rem)}
   header.topo h1 span{color:var(--marca)}
@@ -154,13 +154,37 @@
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
   /* ---------- Site único: navegação, login, jogos, administração ---------- */
-  nav.abas{max-width:1080px;margin:-18px auto 0;padding:0 16px;display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:2}
-  nav.abas button{background:var(--cartao);border-color:var(--linha);box-shadow:var(--sombra);color:var(--tinta);font-size:1rem}
-  nav.abas button[aria-current="page"]{background:var(--marca);border-color:var(--marca-borda);box-shadow:0 3px 0 var(--marca-borda)}
+  /* barra de abas: uma linha, sublinhado na aba ativa, rola para o lado no celular (padrão YouTube/Play/Khan) */
+  nav.abas{position:sticky;top:0;z-index:30;display:flex;gap:2px;overflow-x:auto;white-space:nowrap;scrollbar-width:none;
+    background:var(--cartao);border-bottom:1px solid var(--linha);box-shadow:0 6px 16px -14px rgba(29,43,83,.5);
+    padding:0 max(12px,calc((100% - 1080px) / 2))}
+  nav.abas::-webkit-scrollbar{display:none}
+  nav.abas[hidden]{display:none}
+  nav.abas button{flex:none;background:transparent;border:0;border-bottom:3px solid transparent;border-radius:0;box-shadow:none;
+    color:var(--tinta2);font-size:.98rem;font-weight:800;padding:14px 14px 11px;gap:7px}
+  nav.abas button:hover{transform:none;color:var(--tinta);background:var(--cartao2)}
+  nav.abas button:active{transform:none;box-shadow:none}
+  nav.abas button[aria-current="page"]{color:var(--tinta);border-bottom-color:var(--marca-borda)}
+  @media(max-width:700px){nav.abas{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}nav.abas button{padding:13px 11px 10px;font-size:.93rem}}
+  /* busca */
+  .busca{position:relative;margin:4px 0 14px}
+  .busca input{padding:12px 14px 12px 42px;border-radius:999px;border:1px solid var(--linha);background:var(--cartao2);font-weight:600}
+  .busca input:focus{outline:none;border-color:var(--azul);background:var(--cartao);box-shadow:0 0 0 4px rgba(47,99,214,.15)}
+  .busca::before{content:'';position:absolute;left:16px;top:50%;width:14px;height:14px;margin-top:-9px;border:2.5px solid var(--tinta2);border-radius:50%;pointer-events:none}
+  .busca::after{content:'';position:absolute;left:29px;top:50%;width:7px;height:2.5px;margin-top:5px;background:var(--tinta2);transform:rotate(45deg);border-radius:2px;pointer-events:none}
   .ola{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between}
-  .filtros{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
-  .filtro{font:inherit;font-weight:800;font-size:.92rem;padding:8px 14px;border-radius:99px;border:2px solid var(--linha);background:var(--cartao);color:var(--tinta);cursor:pointer}
-  .filtro[aria-pressed="true"]{background:var(--marca);border-color:var(--marca-borda)}
+  /* filtros em chips planos; no celular, uma linha que rola para o lado */
+  .filtros{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px}
+  .filtros-rot{font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta2);margin-right:2px;flex:none}
+  .filtro{flex:none;font:inherit;font-weight:700;font-size:.9rem;padding:7px 14px;border-radius:99px;border:1px solid var(--linha);background:var(--cartao2);color:var(--tinta);box-shadow:none;cursor:pointer}
+  .filtro:hover{transform:none;background:#e9eef8}
+  .filtro:active{transform:none;box-shadow:none}
+  .filtro[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:#fff}
+  @media(max-width:700px){
+    .filtros{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-20px;margin-right:-20px;padding:0 20px 2px;
+      -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16px,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent 0,#000 16px,#000 88%,transparent)}
+    .filtros::-webkit-scrollbar{display:none}
+  }
   .secao-titulo.conteudo{font-size:1.1rem;margin-top:22px}
   .secao-titulo small{font-family:var(--f-texto,inherit);font-size:.8rem;font-weight:700;opacity:.6}
   .sugestao{border:2px solid var(--marca-borda);background:#fffbea;border-radius:16px;padding:12px 14px;margin:10px 0}
@@ -769,7 +793,7 @@ function desenharAbas(){
   if(visitante) itens = itens.slice(0, 3);
   else if(perfil.papel === 'admin') itens.push(['admin', '🛡️ Administração']);
   abasBox.replaceChildren.apply(abasBox, itens.map(function(it){
-    return el('button', {'aria-current': aba === it[0] ? 'page' : 'false', onclick: function(){ aba = it[0]; history.replaceState(null, '', '#' + aba); desenharAbas(); mostrarAba(); }}, it[1]);
+    return el('button', {'aria-current': aba === it[0] ? 'page' : 'false', onclick: function(){ aba = it[0]; busca = ''; history.replaceState(null, '', '#' + aba); desenharAbas(); mostrarAba(); }}, it[1]);
   }));
   abasBox.hidden = false;
 }
@@ -793,12 +817,14 @@ var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porc
 var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Outros':'🎲'};
 var filtroConteudo = 'todos';
 var filtroNivel = 'todos';
+var busca = '';
+function normalizar(t){ return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 var NIVEIS = ['Fundamental 1','Fundamental 2','Ensino Médio','Superior'];
 function nivelDe(id){ var n = window.JOGOS[id].nivel; return n ? [].concat(n) : []; }
 function barraNiveis(qual){
-  return el('div', {class:'filtros'}, [['todos','🎓 Todos os níveis']].concat(NIVEIS.map(function(n){ return [n, n]; })).map(function(f){
+  return el('div', {class:'filtros', role:'group', 'aria-label':'Nível'}, [el('span', {class:'filtros-rot'}, 'Nível')].concat([['todos','Todos']].concat(NIVEIS.map(function(n){ return [n, n]; })).map(function(f){
     return el('button', {type:'button', class:'filtro', 'aria-pressed': String(filtroNivel === f[0]), onclick: function(){ filtroNivel = f[0]; filtroConteudo = 'todos'; desenharJogos(qual); }}, f[1]);
-  }));
+  })));
 }
 function tipoDe(id){ var j = window.JOGOS[id]; return j.tipo || (j.ferramenta ? 'ferramenta' : 'jogo'); }
 function gruposPorConteudo(ids){
@@ -813,37 +839,44 @@ function desenharJogos(qual){
   qual = qual || 'jogos';
   var ids = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem'; });
   if(qual !== 'ferramentas' && filtroNivel !== 'todos') ids = ids.filter(function(id){ return nivelDe(id).indexOf(filtroNivel) >= 0; });
+  if(busca.trim()){
+    var termo = normalizar(busca.trim());
+    ids = ids.filter(function(id){ var j = window.JOGOS[id]; return normalizar([j.nome, j.desc, j.tema, j.conteudo, nivelDe(id).join(' ')].join(' ')).indexOf(termo) >= 0; });
+  }
   var venc = perfil.validade ? el('span', {class:'tag'}, '📅 Acesso até ' + fmtDia(perfil.validade)) : null;
   var cabecalho = {
-    jogos: ['🎮 Jogos', 'Jogos com perguntas e pontuação. Toque para jogar ou mande para a turma pela aba “Atribuir tarefas” (as notas chegam em “Turmas e notas”).'],
-    simuladores: ['🔬 Simuladores', 'Laboratórios para explorar e projetar em aula: o aluno experimenta e observa o que acontece.'],
+    jogos: ['🎮 Jogos', 'Toque em um jogo para jogar ou envie para a turma em “Atribuir tarefas”.'],
+    simuladores: ['🔬 Simuladores', 'Laboratórios para explorar e projetar em aula.'],
     ferramentas: ['🧰 Ferramentas do professor', 'Ferramentas para o dia a dia da sala de aula.']
   }[qual];
   var corpo = [];
+  var campoBusca = el('input', {type:'search', id:'busca', value:busca, placeholder:{jogos:'Buscar jogo, conteúdo ou série…', simuladores:'Buscar simulador…', ferramentas:'Buscar ferramenta…'}[qual], 'aria-label':'Buscar', autocomplete:'off'});
+  campoBusca.oninput = function(){ busca = campoBusca.value; var pos = campoBusca.selectionStart; desenharJogos(qual); var n = document.getElementById('busca'); if(n){ n.focus(); try{ n.setSelectionRange(pos, pos); }catch(e){} } };
+  corpo.push(el('div', {class:'busca'}, campoBusca));
   if(qual !== 'ferramentas') corpo.push(barraNiveis(qual));
   if(qual === 'jogos'){
     var grupos = gruposPorConteudo(ids.filter(function(id){ return tipoDe(id) === 'jogo'; }));
     if(filtroConteudo !== 'todos' && !grupos.some(function(g){ return g[0] === filtroConteudo; })) filtroConteudo = 'todos';
-    var chips = el('div', {class:'filtros'}, [['todos', '✨ Todos']].concat(grupos.map(function(g){ return [g[0], (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0]]; })).map(function(f){
+    var chips = el('div', {class:'filtros', role:'group', 'aria-label':'Conteúdo'}, [el('span', {class:'filtros-rot'}, 'Conteúdo')].concat([['todos', 'Todos']].concat(grupos.map(function(g){ return [g[0], (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0]]; })).map(function(f){
       return el('button', {type:'button', class:'filtro', 'aria-pressed': String(filtroConteudo === f[0]), onclick: function(){ filtroConteudo = f[0]; desenharJogos('jogos'); }}, f[1]);
-    }));
+    })));
     corpo.push(chips);
     grupos.filter(function(g){ return filtroConteudo === 'todos' || g[0] === filtroConteudo; }).forEach(function(g){
       corpo.push(el('div', {class:'secao-titulo conteudo'}, (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0], el('small', {}, g[1].length + (g[1].length === 1 ? ' jogo' : ' jogos'))));
       corpo.push(el('div', {class:'grade-jogos'}, g[1].map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); })));
     });
-    if(!grupos.length) corpo.push(el('p', {class:'vazio'}, 'Nenhum jogo deste nível ainda.'));
+    if(!grupos.length) corpo.push(el('p', {class:'vazio'}, busca.trim() ? 'Nenhum jogo encontrado para “' + busca.trim() + '”.' : 'Nenhum jogo deste nível ainda.'));
   } else {
     var lista = ids.filter(function(id){ return tipoDe(id) === (qual === 'simuladores' ? 'simulador' : 'ferramenta'); })
       .sort(function(a, b){ return window.JOGOS[a].nome.localeCompare(window.JOGOS[b].nome, 'pt-BR'); });
     corpo.push(lista.length ? el('div', {class:'grade-jogos'}, lista.map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); }))
-      : el('p', {class:'vazio'}, 'Nada por aqui ainda.'));
+      : el('p', {class:'vazio'}, busca.trim() ? 'Nada encontrado para “' + busca.trim() + '”.' : 'Nada por aqui ainda.'));
   }
   app.replaceChildren(
     el('div', {class:'card'},
       el('div', {class:'ola'}, el('div', {}, el('h2', {}, 'Olá, ' + (perfil.nome || '').split(' ')[0] + '! 👋'),
         el('p', {class:'sub', style:'margin:0'}, cabecalho[1])), venc),
-      el('div', {class:'secao-titulo', style:'margin-top:18px'}, cabecalho[0]),
+      el('div', {style:'height:14px'}),
       corpo));
 }
 
