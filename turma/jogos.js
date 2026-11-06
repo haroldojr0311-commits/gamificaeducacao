@@ -352,9 +352,9 @@ window.JOGOS = {
   },
   "corrida-dezenas": {
     nivel: ["Fundamental 1"],
-    nome: "Corrida dos dezenas",
+    nome: "Corrida das dezenas",
     tema: "Fundamental 1",
-    desc: "Monte o número pedido com barras de 10 e bolinhas de 1 e leve o corredor até a chegada.",
+    desc: "Monte o número com o material dourado (barras de 10 e cubinhos de 1), confira no quadro de valor de lugar e leve o corredor até a chegada.",
     emoji: "🏃", cor: "verde", ferramenta: false, conteudo: "Anos iniciais"
   },
   "monte-desenho": {
@@ -385,9 +385,9 @@ window.JOGOS = {
     emoji: "📍", cor: "azul", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2"]
   },
   "memoria-horas": {
-    nome: "Jogo da memória · Horas",
+    nome: "Memória das horas",
     tema: "Horas e relógio",
-    desc: "Encontre o par: a hora escrita (3 horas) e o relógio que mostra essa hora. Três níveis, com tempo e jogadas.",
+    desc: "Encontre o par: a hora escrita e o relógio que mostra essa hora. Cartas grandes, até 12 pares, pontos com sequência, espiada e recorde.",
     emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais", nivel: ["Fundamental 1"]
   },
   "memoria-areas": {
