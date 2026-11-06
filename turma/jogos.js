@@ -474,5 +474,13 @@ window.JOGOS = {
     desc: "Monte números com cubinhos, barras, placas e cubo (ou no ábaco) e veja o valor posicional. Faça adição com reserva e subtração com empréstimo passo a passo, junto com a conta armada. Termina com desafio.",
     emoji: "🟨", cor: "amarelo", ferramenta: true,
     tipo: "simulador"
+  },
+  "lousa-geometria": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Lousa de Geometria",
+    tema: "Construções geométricas",
+    desc: "Régua, compasso e transferidor na tela, com ímã nos pontos e cruzamentos. 6 construções guiadas com correção automática: triângulo equilátero, mediatriz, bissetriz, ângulo de 60°, triângulo 3-4-5 e soma dos ângulos do triângulo.",
+    emoji: "📐", cor: "verde", ferramenta: true,
+    tipo: "simulador", conteudo: "Geometria"
   }
 };
