@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gamifica Cards · Tela do projetor</title>
+<meta name="theme-color" content="#160f3d">
+<link rel="icon" href="../icone-48.png">
+<style>
+html,body{margin:0;height:100%;background:#0d0828;color:#fff;font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;overflow:hidden}
+#stage{display:none}
+body.on #stage{display:block}
+body.on #espera{display:none}
+#espera{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:24px;
+  background:radial-gradient(900px 500px at 10% 0,#4b36c955,transparent),radial-gradient(800px 500px at 100% 100%,#ff5d8f33,transparent),linear-gradient(160deg,#21175f,#150e40)}
+#espera h1{margin:0;font-size:clamp(28px,4vw,52px)}
+#espera .cod{font-size:clamp(70px,14vw,190px);font-weight:800;letter-spacing:.12em;color:#ffd23f;background:#ffffff12;border:3px solid #ffd23f66;border-radius:36px;padding:6px 40px 6px 56px;line-height:1.15}
+#espera p{margin:0;font-size:clamp(16px,1.8vw,24px);color:#c9c3f3;max-width:900px}
+#espera b{color:#fff}
+#estado{display:inline-flex;align-items:center;gap:10px;font-size:18px;color:#c9c3f3;background:#ffffff12;padding:8px 16px;border-radius:99px}
+#estado i{width:12px;height:12px;border-radius:50%;background:#ffb020;display:inline-block}
+#estado.ok i{background:#2ee59d}#estado.erro i{background:#ff5d6c}
+button{font:inherit;cursor:pointer;border:0;border-radius:16px;padding:14px 24px;font-weight:700;background:linear-gradient(135deg,#ffd23f,#ffb020);color:#2a1660;font-size:20px}
+#cantos{position:fixed;right:14px;top:12px;display:flex;gap:8px;z-index:20;opacity:.15;transition:opacity .3s}
+#cantos:hover{opacity:1}
+#cantos button{padding:8px 12px;font-size:15px;background:#ffffff22;color:#fff}
+.cred{font-size:16px!important;opacity:.75}
+</style>
+</head>
+<body>
+<div id="espera">
+  <div style="font-size:64px">📺</div>
+  <h1>Tela do projetor · Gamifica Cards</h1>
+  <p>No celular, abra o <b>Gamifica Cards</b>, toque em <b>📺 Conectar ao computador</b> e digite o código:</p>
+  <div class="cod" id="cod">-----</div>
+  <div id="estado"><i></i><span id="estTxt">Conectando ao servidor…</span></div>
+  <button id="ativar">🔊 Ativar som e tela cheia</button>
+  <p class="cred">Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i> · gamificaeducacao.com.br</p>
+</div>
+<div id="stage"></div>
+<div id="cantos"><button id="cheia" title="Tela cheia">⛶</button><button id="novo" title="Gerar outro código">↻ Código</button></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../turma/supabase-config.js"></script>
+<script>
+/* Slides do Gamifica Cards: usado pelo app (celular) e pela tela do projetor (computador). */
+var GSL = (function(){
+'use strict';
+var LT=['A','B','C','D'];
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function fechar(s,i,a,f){var n=0;for(var j=i;j<s.length;j++){if(s[j]===a)n++;else if(s[j]===f){n--;if(!n)return j}}return -1}
+function frac(a,b){return '<span class="fr"><span class="fn">'+a+'</span><span class="fd">'+b+'</span></span>'}
+function mat(s){
+  var out='',i=0,m;
+  while(i<s.length){
+    var resto=s.slice(i);
+    m=resto.match(/^(raiz|sqrt|√)\s*\(/i);
+    if(m){var ab=i+m[0].length-1,fe=fechar(s,ab,'(',')');if(fe>0){out+='<span class="rad"><span class="rs">√</span><span class="ri">'+mat(s.slice(ab+1,fe))+'</span></span>';i=fe+1;continue}}
+    m=resto.match(/^√\s*([0-9]+(?:,[0-9]+)?|[a-zA-Z])/);
+    if(m){out+='<span class="rad"><span class="rs">√</span><span class="ri">'+m[1]+'</span></span>';i+=m[0].length;continue}
+    if(s[i]==='{'||s[i]==='('){var ch=s[i],cf=ch==='{'?'}':')',f1=fechar(s,i,ch,cf);
+      if(f1>0&&s[f1+1]==='/'&&(s[f1+2]==='{'||s[f1+2]==='(')){var c2=s[f1+2],f2=fechar(s,f1+2,c2,c2==='{'?'}':')');
+        if(f2>0){out+=frac(mat(s.slice(i+1,f1)),mat(s.slice(f1+3,f2)));i=f2+1;continue}}}
+    m=resto.match(/^(-?[0-9]+(?:,[0-9]+)?|[a-zA-Z])\/([0-9]+(?:,[0-9]+)?|[a-zA-Z])(?![0-9a-zA-Z\/])/);
+    if(m&&(i===0||!/[0-9a-zA-Z\/]/.test(s[i-1]))){out+=frac(m[1],m[2]);i+=m[0].length;continue}
+    if(s[i]==='^'){var e;if(s[i+1]==='{'||s[i+1]==='('){var f3=fechar(s,i+1,s[i+1],s[i+1]==='{'?'}':')');if(f3>0){out+='<sup>'+mat(s.slice(i+2,f3))+'</sup>';i=f3+1;continue}}
+      e=resto.match(/^\^(-?[0-9a-zA-Z]+)/);if(e){out+='<sup>'+e[1]+'</sup>';i+=e[0].length;continue}}
+    if(s[i]==='*'&&i>0&&/[0-9a-zA-Z)\s]/.test(s[i-1])){out+='×';i++;continue}
+    out+=s[i];i++;
+  }
+  return out;
+}
+function fmt(txt){return mat(esc(txt).replace(/\r?\n/g,'<br>'))}
+var CSS='.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .12em;font-size:.82em;line-height:1.1}.fr .fn{border-bottom:.07em solid currentColor;padding:0 .15em}.fr .fd{padding:0 .15em}.rad{display:inline-flex;align-items:flex-start;white-space:nowrap}.rad .rs{font-size:1.1em;line-height:1}.rad .ri{border-top:.07em solid currentColor;padding:0 .12em;margin-top:.16em}sup{font-size:.62em}'+
+'.lA{background:#ff5d6c}.lB{background:#3d8bff}.lC{background:#ffc21a;color:#3b2a00}.lD{background:#22c97a;color:#032a17}'+
+'#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;transform-origin:center center;color:#fff;font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}'+
+'.sl{position:absolute;inset:0;padding:50px 70px 118px;display:flex;flex-direction:column;background:radial-gradient(900px 500px at 10% 0,#4b36c955,transparent),radial-gradient(800px 500px at 100% 100%,#ff5d8f33,transparent),linear-gradient(160deg,#21175f,#150e40);overflow:hidden}'+
+'.sl.tela{padding-bottom:60px}'+
+'.sl .sym{position:absolute;font-weight:800;opacity:.07;font-size:120px;pointer-events:none}'+
+'.sl .qn{display:flex;align-items:center;gap:16px;font-size:30px;font-weight:800;color:#ffd23f}'+
+'.sl .qn .tag{background:#ffffff1c;color:#fff;border-radius:99px;padding:6px 20px;font-size:24px}'+
+'.sl .enun{font-size:52px;font-weight:700;line-height:1.25;margin:26px 0 20px;flex:1;display:flex;align-items:center;gap:40px}'+
+'.sl .enun .tx{flex:1}.sl .enun img{max-height:330px;max-width:560px;border-radius:20px;box-shadow:0 14px 30px #0007;background:#fff}'+
+'.sl .alts{display:grid;grid-template-columns:1fr 1fr;gap:22px}'+
+'.sl .al{display:flex;align-items:center;gap:22px;background:#ffffff12;border:3px solid #ffffff22;border-radius:26px;padding:18px 24px;font-size:40px;font-weight:700;min-height:112px;position:relative;transition:opacity .4s}'+
+'.sl .al .lt{width:76px;height:76px;border-radius:20px;display:grid;place-items:center;font-size:44px;font-weight:800;flex:none}'+
+'.sl .al .pc{margin-left:auto;font-size:38px;font-weight:800}'+
+'.sl .al .bg{position:absolute;left:0;top:0;bottom:0;border-radius:23px;opacity:.28;transition:width 1s cubic-bezier(.2,.8,.2,1);width:0}'+
+'.sl .al.dim{opacity:.38}'+
+'.sl .al.cert{border-color:#2ee59d;box-shadow:0 0 0 6px #2ee59d44,0 0 40px #2ee59d66}'+
+'.sl .al.cert::after{content:"✓";position:absolute;right:-18px;top:-22px;width:58px;height:58px;border-radius:50%;background:#2ee59d;color:#07301e;font-size:38px;display:grid;place-items:center;font-weight:900}'+
+'.sl .rod{display:flex;justify-content:space-between;align-items:center;margin-top:22px;font-size:26px;color:#c9c3f3;font-weight:600}'+
+'.sl .big{font-size:96px;font-weight:800;line-height:1.05}'+
+'.sl .center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px}'+
+'.timer{min-width:120px;text-align:center;background:#ffffff1c;border-radius:99px;padding:6px 20px;color:#fff}'+
+'.timer.fim{background:#ff5d6c;animation:pul .6s infinite alternate}'+
+'@keyframes pul{to{transform:scale(1.08)}}@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}@keyframes sobe{0%{transform:translateY(40px);opacity:0}100%{transform:none;opacity:1}}'+
+'.anim>*{animation:sobe .5s both}.anim>*:nth-child(2){animation-delay:.08s}.anim>*:nth-child(3){animation-delay:.16s}.anim>*:nth-child(4){animation-delay:.24s}'+
+'.alts .al{animation:pop .45s both}.alts .al:nth-child(2){animation-delay:.1s}.alts .al:nth-child(3){animation-delay:.2s}.alts .al:nth-child(4){animation-delay:.3s}'+
+'.rank{display:flex;flex-direction:column;gap:14px;width:900px}'+
+'.rank div{display:flex;align-items:center;gap:20px;background:#ffffff14;border-radius:20px;padding:9px 26px;font-size:32px;font-weight:700;animation:sobe .5s both}'+
+'.rank div b{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#ffd23f;color:#2a1660;flex:none}'+
+'.rank div span{margin-left:auto;color:#ffd23f}'+
+'.faixa{position:absolute;left:40px;right:40px;bottom:24px;background:#0b0724e6;border:2px solid #2ee59d;border-radius:24px;padding:16px 24px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:26px;font-weight:700;animation:sobe .4s both;z-index:5}'+
+'.faixa .bx{font-size:34px;color:#2ee59d;margin-right:10px}.faixa span{background:#ffffff1c;border-radius:99px;padding:4px 14px;font-size:20px}';
+var st=document.createElement('style');st.textContent=CSS;document.head.append(st);
+var SIMB=['+','−','×','÷','%','π','√','=','½','∑'];
+function fundo(){var h='';for(var i=0;i<8;i++){h+='<div class="sym" style="left:'+((i*197)%1500)+'px;top:'+((i*331)%820)+'px;color:'+['#ffd23f','#ff5d8f','#36d6c3','#7c5cff'][i%4]+'">'+SIMB[i%SIMB.length]+'</div>'}return h}
+/* v = {fase, idx, n, quizNome, turmaNome, prof, p:{enun,alts,correta,img,tempo}, ct:{c:[],t}, totalAlunos, previa, final:{pc,rank:[{n,p}]}, ranking, tela} */
+function html(v){
+  var cls='sl'+(v.tela?' tela':'');
+  if(v.fase==='capa')return '<div class="'+cls+'">'+fundo()+'<div class="center anim"><div style="font-size:90px">🃏</div><div class="big">'+esc(v.quizNome)+'</div><div style="font-size:38px;color:#c9c3f3">'+esc(v.turmaNome||'')+(v.turmaNome?' · ':'')+v.n+' perguntas</div><div style="font-size:32px;margin-top:10px;background:#ffffff14;padding:16px 30px;border-radius:20px">✋ Pegue o seu cartão. Levante com a <b style="color:#ffd23f">letra escolhida para cima</b>.</div><div style="font-size:30px;font-style:italic;color:#c9c3f3;margin-top:24px">'+esc(v.prof||'')+'</div></div></div>';
+  if(v.fase==='final'){var f=v.final||{};return '<div class="'+cls+'">'+fundo()+'<div class="center" style="gap:14px"><div style="font-size:64px">🏆</div><div class="big" style="font-size:72px">Fim do jogo!</div><div style="font-size:40px;color:#c9c3f3">A turma acertou <b style="color:#2ee59d">'+(f.pc||0)+'%</b> das respostas</div>'+
+    (v.ranking&&f.rank&&f.rank.length?'<div class="rank">'+f.rank.map(function(r,i){return '<div style="animation-delay:'+(i*.15)+'s"><b>'+(i+1)+'</b>'+esc(r.n)+'<span>'+r.p+' ✓</span></div>'}).join('')+'</div>':'')+'</div></div>'}
+  var rev=v.fase==='revela',p=v.p||{alts:[]},ct=v.ct||{c:[0,0,0,0],t:0};
+  return '<div class="'+cls+'">'+fundo()+'<div class="qn anim"><span>Pergunta '+(v.idx+1)+' <span style="opacity:.6">de '+v.n+'</span></span>'+(rev?'<span class="tag">✓ Resposta: '+LT[p.correta]+'</span>':'')+(p.tempo&&!rev&&!v.previa?'<span class="timer" id="tmr" style="margin-left:auto">'+p.tempo+'s</span>':'')+'</div>'+
+    '<div class="enun"><div class="tx">'+fmt(p.enun)+'</div>'+(p.img?'<img src="'+p.img+'">':'')+'</div>'+
+    '<div class="alts">'+p.alts.map(function(a,j){var pc=ct.t?Math.round(100*ct.c[j]/ct.t):0,c=rev?(j===p.correta?' cert':' dim'):'';
+      return '<div class="al'+c+'"><div class="bg l'+LT[j]+'" data-w="'+(rev?pc:0)+'"></div><div class="lt l'+LT[j]+'">'+LT[j]+'</div><div style="position:relative">'+fmt(a)+'</div>'+(rev?'<div class="pc" style="position:relative">'+pc+'%<small style="font-size:22px;opacity:.7"> ('+ct.c[j]+')</small></div>':'')+'</div>'}).join('')+'</div>'+
+    '<div class="rod"><span id="rodTxt">'+rodape(v)+'</span><span>'+esc(v.quizNome)+'</span></div></div>';
+}
+function rodape(v){var ct=v.ct||{c:[0,0,0,0],t:0},p=v.p||{};
+  if(v.fase==='revela')return '<b style="color:#2ee59d">'+(ct.c[p.correta]||0)+' de '+ct.t+' acertaram</b>'+(ct.t?' ('+Math.round(100*(ct.c[p.correta]||0)/ct.t)+'%)':'');
+  return v.previa?'Prévia do slide':'📷 Respostas lidas: <b style="color:#fff">'+ct.t+'</b> de '+v.totalAlunos}
+function chave(v){return v.fase+'|'+v.idx+'|'+(v.quizNome||'')}
+function pintar(stage,v,anterior){
+  var k=chave(v);
+  if(anterior===k&&(v.fase==='pergunta')){var r=stage.querySelector('#rodTxt');if(r)r.innerHTML=rodape(v);return k}
+  stage.innerHTML=html(v);
+  if(v.fase==='revela')requestAnimationFrame(function(){stage.querySelectorAll('.bg').forEach(function(b){b.style.width=b.dataset.w+'%'})});
+  return k;
+}
+return {fmt:fmt,esc:esc,html:html,pintar:pintar,chave:chave,LT:LT};
+})();
+
+</script>
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)},stage=$('#stage'),chave='',timer=null,ultimaLeit=0,vAtual=null,faixa=null;
+function escalar(){var s=Math.min(innerWidth/1600,innerHeight/900);stage.style.transform='translate(-50%,-50%) scale('+s+')'}
+addEventListener('resize',escalar);escalar();
+var cod=sessionStorage.getItem('gcards-tela-cod');
+if(!cod||!/^\d{5}$/.test(cod)){cod=String(10000+Math.floor(Math.random()*90000));sessionStorage.setItem('gcards-tela-cod',cod)}
+$('#cod').textContent=cod;
+function est(c,t){$('#estado').className=c;$('#estTxt').textContent=t}
+/* sons */
+var AC=null;function som(tipo){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();var t=AC.currentTime;
+  var notas={bip:[[880,.07]],rev:[[523,.12],[659,.12],[784,.12],[1047,.3]],fim:[[392,.15],[523,.15],[659,.15],[784,.15],[1047,.45]],tic:[[1200,.03]],alarme:[[440,.2],[330,.35]]}[tipo]||[[600,.1]];
+  notas.forEach(function(n){var o=AC.createOscillator(),g=AC.createGain();o.type=tipo==='bip'||tipo==='tic'?'sine':'triangle';o.frequency.value=n[0];g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.3,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+n[1]);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+n[1]+.02);t+=n[1]*.85})}catch(e){}}
+function cheia(){try{document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}catch(e){}try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(function(){})}catch(e){}}
+$('#ativar').onclick=function(){som('bip');cheia();this.textContent='✓ Som ativado';};
+$('#cheia').onclick=cheia;
+$('#novo').onclick=function(){if(confirm('Gerar outro código? O celular precisará conectar de novo.')){sessionStorage.removeItem('gcards-tela-cod');location.reload()}};
+function pararTimer(){clearInterval(timer);timer=null}
+function iniciarTimer(seg){pararTimer();var r=seg,t=$('#tmr');if(!t)return;t.textContent=r+'s';
+  timer=setInterval(function(){r--;var e=$('#tmr');if(!e){pararTimer();return}e.textContent=Math.max(0,r)+'s';if(r<=5&&r>0)som('tic');if(r<=0){pararTimer();e.textContent='Tempo!';e.classList.add('fim');som('alarme')}},1000)}
+function esc(s){return GSL.esc(s)}
+function mostrarFaixa(n,tot,falt,mais){
+  if(!faixa||!faixa.isConnected){faixa=document.createElement('div');faixa.className='faixa';var sl=stage.querySelector('.sl');if(!sl)return;sl.append(faixa)}
+  faixa.innerHTML='<span class="bx" style="background:none;padding:0;font-size:34px">📷 '+n+' de '+tot+'</span>'+(falt&&falt.length?'<span style="background:#ff5d6c">Faltam</span>'+falt.map(function(x){return '<span>'+esc(x)+'</span>'}).join('')+(mais?'<span>+'+mais+'</span>':''):'<span style="background:#2ee59d;color:#05301d;font-size:24px">🎉 Todos responderam!</span>')}
+function tirarFaixa(){if(faixa){faixa.remove();faixa=null}}
+function receber(v){
+  if(!v||v.fase==='espera'){document.body.classList.remove('on');chave='';pararTimer();tirarFaixa();vAtual=null;return}
+  document.body.classList.add('on');escalar();
+  var antes=chave,fAnt=vAtual&&vAtual.fase;
+  chave=GSL.pintar(stage,v,chave);
+  if(chave!==antes){pararTimer();faixa=null;
+    if(v.fase==='pergunta'&&v.p&&v.p.tempo)iniciarTimer(v.p.tempo);
+    if(v.fase==='revela'&&fAnt!=='revela')som('rev');
+    if(v.fase==='final')som('fim')}
+  if(v.fase==='revela'||v.fase==='final')pararTimer();
+  if(v.lendo&&(v.fase==='pergunta'||v.fase==='revela')){pararTimer();mostrarFaixa(v.ct?v.ct.t:0,v.totalAlunos,null,0)}else tirarFaixa();
+  vAtual=v;
+}
+if(!window.supabase||!window.SUPABASE_URL){est('erro','Sem internet: este modo precisa de internet. Sem internet, espelhe a tela do celular.');return}
+var sb=window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storageKey:'gcards-tela'}});
+var canal=sb.channel('gcards-'+cod,{config:{broadcast:{self:false,ack:false}}});
+function oi(){canal.send({type:'broadcast',event:'oi',payload:{}})}
+canal.on('broadcast',{event:'ping'},function(){oi();est('ok','Celular conectado ✓')})
+     .on('broadcast',{event:'estado'},function(m){est('ok','Celular conectado ✓');receber(m.payload)})
+     .on('broadcast',{event:'leitura'},function(m){var p=m.payload;if(vAtual&&vAtual.lendo){if(p.n>ultimaLeit)som('bip');ultimaLeit=p.n;mostrarFaixa(p.n,p.tot,p.faltam,p.mais)}})
+     .on('broadcast',{event:'tchau'},function(){receber(null);est('','Celular desconectado. Aguardando…')})
+     .subscribe(function(s){if(s==='SUBSCRIBED'){est('','Pronto! Aguardando o celular…');oi()}else if(s==='CHANNEL_ERROR'||s==='TIMED_OUT')est('erro','Falha na conexão. Confira a internet deste computador.');else if(s==='CLOSED')est('erro','Conexão fechada. Recarregue a página.')});
+})();
+</script>
+</body>
+</html>

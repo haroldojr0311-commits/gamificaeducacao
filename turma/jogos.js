@@ -435,7 +435,7 @@ window.JOGOS = {
   "gamifica-cards": {
     nome: "Gamifica Cards",
     tema: "Ferramenta do professor",
-    desc: "Quiz com cartões impressos: o celular do professor lê as respostas da turma (alunos sem celular e sem internet). Anexe perguntas do Word, Excel ou texto e a app monta os slides e os relatórios.",
+    desc: "Quiz com cartões impressos: o celular do professor lê as respostas da turma (alunos sem celular e sem internet). Anexe perguntas do Word, Excel ou texto e a app monta os slides e os relatórios. Projete pelo celular ou pelo computador (gamificaeducacao.com.br/tela).",
     emoji: "🃏", cor: "lilas", ferramenta: true,
     tipo: "ferramenta"
   }
