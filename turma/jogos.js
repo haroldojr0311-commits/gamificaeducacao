@@ -383,5 +383,11 @@ window.JOGOS = {
     tema: "Plano cartesiano",
     desc: "Localize pontos pelas coordenadas (x, y) e descubra figuras ligando os pontos. Crie seu próprio desenho e imprima a atividade para os alunos.",
     emoji: "📍", cor: "azul", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2"]
+  },
+  "memoria-horas": {
+    nome: "Jogo da memória · Horas",
+    tema: "Horas e relógio",
+    desc: "Encontre o par: a hora escrita (3 horas) e o relógio que mostra essa hora. Três níveis, com tempo e jogadas.",
+    emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais", nivel: ["Fundamental 1"]
   }
 };
