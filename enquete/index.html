@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b3b5c">
+<title>Gamifica Enquete · Responder</title>
+<link rel="icon" href="../favicon.ico">
+<style>
+:root{--f1:#0e5a7a;--f2:#0b2f4a;--tinta:#10243a;--pri:#ff8a3d;--ok:#16a34a;--erro:#dc2626}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:linear-gradient(160deg,var(--f1),var(--f2));color:#fff;font-family:"Segoe UI",Roboto,Arial,sans-serif;display:flex;flex-direction:column;min-height:100%}
+button,input,textarea{font:inherit}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:max(10px,env(safe-area-inset-top,0px)) 16px 10px;background:#00000033;font-weight:800}
+.topo b{color:#ffcf6e}
+main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:16px 16px max(20px,env(safe-area-inset-bottom,0px));max-width:560px;width:100%;margin:0 auto}
+.tela{display:none;text-align:center}
+.tela.on{display:block;animation:entra .3s ease}
+@keyframes entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{margin:0 0 6px;font-size:32px}
+.sub{opacity:.9;margin:0 0 18px;line-height:1.5}
+.cartao{background:#fff;color:var(--tinta);border-radius:22px;padding:22px;box-shadow:0 14px 30px #0006;text-align:left}
+label{display:block;font-weight:800;margin:0 0 6px}
+input,textarea{width:100%;border:3px solid #d3e0ea;border-radius:14px;padding:13px;font-size:20px;font-weight:700;margin-bottom:12px;color:var(--tinta)}
+input:focus,textarea:focus{outline:none;border-color:var(--f1)}
+#inCodigo{letter-spacing:8px;text-align:center;font-size:30px;font-weight:900}
+textarea{min-height:120px;resize:vertical;font-size:18px}
+.btn{width:100%;border:0;border-radius:14px;padding:16px;font-weight:900;font-size:20px;background:var(--pri);color:#fff;cursor:pointer;box-shadow:0 5px 0 #b45309}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #b45309}
+.btn:disabled{opacity:.55}
+.erro{color:var(--erro);font-weight:800;min-height:1.3em;margin-top:10px;text-align:center}
+.grande{font-size:64px;line-height:1}
+.pergunta{background:#fff;color:var(--tinta);border-radius:18px;padding:16px;font-weight:800;font-size:21px;line-height:1.35;margin-bottom:14px}
+.ops{display:flex;flex-direction:column;gap:10px}
+.op{border:3px solid #ffffff55;background:#ffffff1a;color:#fff;border-radius:16px;padding:15px 16px;font-weight:800;font-size:19px;text-align:left;cursor:pointer;display:flex;gap:12px;align-items:center}
+.op .l{width:34px;height:34px;flex:none;border-radius:50%;background:#fff;color:var(--f1);display:flex;align-items:center;justify-content:center;font-weight:900}
+.op.on{background:#fff;color:var(--tinta);border-color:var(--pri)}
+.op.on .l{background:var(--pri);color:#fff}
+.escala{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.escala button{border:3px solid #ffffff55;background:#ffffff1a;color:#fff;border-radius:16px;padding:12px 0;font-size:30px;cursor:pointer}
+.escala button small{display:block;font-size:15px;font-weight:900}
+.escala button.on{background:#fff;border-color:var(--pri);color:var(--tinta)}
+.rotulos{display:flex;justify-content:space-between;font-size:14px;font-weight:700;opacity:.9;margin:8px 2px 14px}
+.dica{font-size:14px;opacity:.85;margin:6px 0 12px}
+.carregando{width:46px;height:46px;border:5px solid #ffffff44;border-top-color:#ffcf6e;border-radius:50%;animation:gira 1s linear infinite;margin:14px auto}
+@keyframes gira{to{transform:rotate(360deg)}}
+.rodape{text-align:center;opacity:.7;font-size:13px;padding:8px 16px max(10px,env(safe-area-inset-bottom,0px))}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="topo"><span>📊 Gamifica <b>Enquete</b></span><span id="topoInfo"></span></div>
+<main>
+  <section class="tela on" id="tEntrar">
+    <h1>Participar</h1>
+    <p class="sub">Digite o código que aparece na tela do professor.<br>Suas respostas são <b>anônimas</b>.</p>
+    <div class="cartao">
+      <label for="inCodigo">Código</label>
+      <input id="inCodigo" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000">
+      <button class="btn" id="btnEntrar" type="button">Entrar ▶</button>
+      <div class="erro" id="erroEntrar" aria-live="polite"></div>
+    </div>
+  </section>
+  <section class="tela" id="tEspera">
+    <div class="grande">👋</div>
+    <h1>Você está dentro!</h1>
+    <p class="sub" id="esperaTxt">Aguarde a próxima pergunta do professor…</p>
+    <div class="carregando" aria-hidden="true"></div>
+  </section>
+  <section class="tela" id="tPergunta">
+    <div class="pergunta" id="pTexto"></div>
+    <div id="pCorpo"></div>
+    <div class="erro" id="erroResp" aria-live="polite"></div>
+  </section>
+  <section class="tela" id="tEnviada">
+    <div class="grande">✅</div>
+    <h1>Resposta enviada!</h1>
+    <p class="sub" id="enviadaTxt">Olhe o resultado na tela do professor.</p>
+    <button class="btn" id="btnMais" type="button" style="display:none;margin-top:10px">➕ Enviar outra palavra</button>
+  </section>
+  <section class="tela" id="tFechada">
+    <div class="grande">⏸️</div>
+    <h1>Votação encerrada</h1>
+    <p class="sub">O professor fechou esta pergunta. Aguarde a próxima.</p>
+  </section>
+  <section class="tela" id="tFim">
+    <div class="grande">🎉</div>
+    <h1>Obrigado por participar!</h1>
+    <p class="sub">A enquete terminou.</p>
+  </section>
+</main>
+<div class="rodape">gamificaeducacao.com.br</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../turma/supabase-config.js"></script>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+const EVENTOS = ['estado', 'oi', 'resp'];
+const EMOJI = ['😞', '🙁', '😐', '🙂', '😄'];
+function criarCanal(codigo, aoMsg){
+  const nome = 'gamifica-enquete-' + codigo;
+  if (location.hash.indexOf('local') >= 0 || !window.supabase){
+    const bc = new BroadcastChannel(nome); bc.onmessage = e => aoMsg(e.data.ev, e.data.p);
+    return Promise.resolve({ enviar(ev, p){ bc.postMessage({ev, p}); }, fechar(){ bc.close(); } });
+  }
+  const sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY, {auth: {persistSession: false}, realtime: {params: {eventsPerSecond: 20}}});
+  const ch = sb.channel(nome, {config: {broadcast: {self: false, ack: false}}});
+  EVENTOS.forEach(ev => ch.on('broadcast', {event: ev}, m => aoMsg(ev, m.payload)));
+  return new Promise((ok, falha) => {
+    let feito = false;
+    ch.subscribe(st => {
+      if (st === 'SUBSCRIBED' && !feito){ feito = true; ok({ enviar(ev, p){ ch.send({type: 'broadcast', event: ev, payload: p}); }, fechar(){ sb.removeChannel(ch); } }); }
+      else if ((st === 'CHANNEL_ERROR' || st === 'TIMED_OUT') && !feito){ feito = true; falha(st); }
+    });
+    setTimeout(() => { if (!feito){ feito = true; falha('TEMPO'); } }, 12000);
+  });
+}
+const A = {codigo: '', pid: '', canal: null, est: null, chave: '', enviando: null, enviados: {}, escolha: null, conectado: false, ultimo: 0, oi: null, extra: false};
+function mostrar(id){ document.querySelectorAll('.tela').forEach(t => t.classList.toggle('on', t.id === id)); }
+const vibrar = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch(e){} };
+const params = new URLSearchParams(location.search);
+if (params.get('c')) $('#inCodigo').value = params.get('c').replace(/\D/g, '').slice(0, 6);
+$('#inCodigo').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
+$('#inCodigo').addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
+$('#btnEntrar').onclick = entrar;
+async function entrar(){
+  const codigo = $('#inCodigo').value.trim(), erro = $('#erroEntrar');
+  if (codigo.length !== 6){ erro.textContent = 'O código tem 6 números.'; return; }
+  erro.textContent = ''; $('#btnEntrar').disabled = true; $('#btnEntrar').textContent = 'Conectando…';
+  let pid = ''; try { pid = sessionStorage.getItem('enq-pid-' + codigo) || ''; } catch(e){}
+  if (!pid){ pid = Math.random().toString(36).slice(2, 10); try { sessionStorage.setItem('enq-pid-' + codigo, pid); } catch(e){} }
+  try { A.enviados = JSON.parse(sessionStorage.getItem('enq-env-' + codigo) || '{}'); } catch(e){}
+  Object.assign(A, {codigo, pid});
+  try { A.canal = await criarCanal(codigo, aoMsg); }
+  catch(e){ falha('Não foi possível conectar. Verifique a internet e tente de novo.'); return; }
+  const oi = () => A.canal && A.canal.enviar('oi', {pid});
+  oi(); A.oi = setInterval(oi, 5000);
+  setTimeout(() => { if (!A.conectado) falha('Enquete não encontrada. Confira o código na tela do professor.'); }, 15000);
+}
+function falha(t){
+  clearInterval(A.oi); if (A.canal){ try { A.canal.fechar(); } catch(e){} A.canal = null; }
+  $('#erroEntrar').textContent = t; $('#btnEntrar').disabled = false; $('#btnEntrar').textContent = 'Entrar ▶'; mostrar('tEntrar');
+}
+function aoMsg(ev, p){
+  if (ev !== 'estado' || !p) return;
+  A.est = p; A.ultimo = Date.now();
+  if (!A.conectado){ A.conectado = true; $('#topoInfo').textContent = '🔢 ' + A.codigo; }
+  render(p);
+}
+function guardarEnv(){ try { sessionStorage.setItem('enq-env-' + A.codigo, JSON.stringify(A.enviados)); } catch(e){} }
+function render(p){
+  const chave = p.fase + ':' + p.qi + ':' + (p.q ? p.q.id : '');
+  if (p.fase === 'lobby'){ if (A.chave !== chave){ mostrar('tEspera'); } A.chave = chave; return; }
+  if (p.fase === 'fim'){ clearInterval(A.enviando); clearInterval(A.oi); if (A.chave !== chave) mostrar('tFim'); A.chave = chave; return; }
+  const id = p.q.id, conf = (p.resp || []).includes(A.pid);
+  if (conf && A.enviando && A.enviando.id === id){ clearInterval(A.enviando.t); A.enviando = null; }
+  if (A.chave !== chave){ A.chave = chave; A.escolha = null; A.extra = false; if (A.enviando){ clearInterval(A.enviando.t); A.enviando = null; } }
+  const enviado = A.enviados[id];
+  if (!p.aberta){ if (!document.getElementById('tFechada').classList.contains('on')) mostrar('tFechada'); return; }
+  if (enviado && !A.extra){ mostrarEnviada(p); return; }
+  if (!document.getElementById('tPergunta').classList.contains('on') || $('#pTexto').dataset.id !== id) montar(p);
+}
+function mostrarEnviada(p){
+  const q = p.q, ja = A.enviados[q.id];
+  const mais = q.tipo === 'nuvem' && Array.isArray(ja) && ja.length < (q.max || 3);
+  $('#btnMais').style.display = mais ? '' : 'none';
+  $('#enviadaTxt').textContent = q.tipo === 'nuvem' ? `Você enviou: ${ja.join(', ')}. Veja a nuvem na tela do professor!` : 'Olhe o resultado na tela do professor.';
+  if (!document.getElementById('tEnviada').classList.contains('on')) { mostrar('tEnviada'); vibrar(40); }
+}
+$('#btnMais').onclick = () => { A.extra = true; montar(A.est); };
+function montar(p){
+  const q = p.q; $('#pTexto').textContent = q.t; $('#pTexto').dataset.id = q.id; $('#erroResp').textContent = '';
+  let h = '';
+  if (q.tipo === 'multipla'){
+    h = `<div class="ops">${q.o.map((o, k) => `<button class="op" type="button" data-k="${k}"><span class="l">${String.fromCharCode(65 + k)}</span><span>${esc(o)}</span></button>`).join('')}</div><button class="btn" type="button" id="btnEnviar" style="margin-top:14px" disabled>Enviar ✔</button>`;
+  } else if (q.tipo === 'escala'){
+    h = `<div class="escala">${[1, 2, 3, 4, 5].map(n => `<button type="button" data-n="${n}" aria-label="${n}">${EMOJI[n - 1]}<small>${n}</small></button>`).join('')}</div><div class="rotulos"><span>${esc(q.o[0] || '')}</span><span>${esc(q.o[1] || '')}</span></div><button class="btn" type="button" id="btnEnviar" disabled>Enviar ✔</button>`;
+  } else if (q.tipo === 'nuvem'){
+    const ja = A.enviados[q.id] || [], resta = (q.max || 3) - ja.length;
+    h = `<input id="inPal" maxlength="25" autocomplete="off" placeholder="Digite uma palavra"><div class="dica">Pode enviar até ${q.max || 3} palavra${(q.max || 3) > 1 ? 's' : ''}${ja.length ? ` (faltam ${resta})` : ''}. Palavras repetidas pela turma ficam maiores!</div><button class="btn" type="button" id="btnEnviar">Enviar ✔</button>`;
+  } else {
+    h = `<textarea id="inTxt" maxlength="200" placeholder="Escreva sua resposta"></textarea><button class="btn" type="button" id="btnEnviar">Enviar ✔</button>`;
+  }
+  $('#pCorpo').innerHTML = h; mostrar('tPergunta'); vibrar(60);
+  const ent = $('#inPal') || $('#inTxt'); if (ent){ ent.focus(); if (ent.id === 'inPal') ent.onkeydown = e => { if (e.key === 'Enter') enviar(); }; }
+  $('#pCorpo').querySelectorAll('[data-k],[data-n]').forEach(b => b.onclick = () => {
+    $('#pCorpo').querySelectorAll('[data-k],[data-n]').forEach(x => x.classList.toggle('on', x === b));
+    A.escolha = b.dataset.k !== undefined ? +b.dataset.k : +b.dataset.n; $('#btnEnviar').disabled = false; vibrar(20);
+  });
+  $('#btnEnviar').onclick = enviar;
+}
+function enviar(){
+  const p = A.est; if (!p || p.fase !== 'pergunta' || !p.aberta) return;
+  const q = p.q; let v;
+  if (q.tipo === 'multipla' || q.tipo === 'escala'){ if (A.escolha === null) return; v = A.escolha; }
+  else if (q.tipo === 'nuvem'){
+    const w = $('#inPal').value.trim().replace(/\s+/g, ' ');
+    if (w.length < 1){ $('#erroResp').textContent = 'Digite uma palavra.'; return; }
+    if (w.split(' ').length > 3){ $('#erroResp').textContent = 'Use no máximo 3 palavras.'; return; }
+    v = [...(A.enviados[q.id] || []), w].slice(0, q.max || 3);
+  } else {
+    const t = $('#inTxt').value.trim(); if (t.length < 1){ $('#erroResp').textContent = 'Escreva sua resposta.'; return; } v = t;
+  }
+  A.enviados[q.id] = v; guardarEnv(); A.extra = false;
+  const pacote = {pid: A.pid, qi: p.qi, id: q.id, v};
+  const mandar = () => A.canal && A.canal.enviar('resp', pacote);
+  if (A.enviando) clearInterval(A.enviando.t);
+  mandar(); A.enviando = {id: q.id, t: setInterval(mandar, 2000)};
+  setTimeout(() => { if (A.enviando && A.enviando.id === q.id){ clearInterval(A.enviando.t); A.enviando = null; } }, 20000);
+  mostrarEnviada(p);
+}
+setInterval(() => { if (A.conectado && Date.now() - A.ultimo > 9000 && A.est && A.est.fase !== 'fim') $('#topoInfo').textContent = '⚠️ reconectando…'; else if (A.conectado) $('#topoInfo').textContent = '🔢 ' + A.codigo; }, 3000);
+</script>
+</body>
+</html>

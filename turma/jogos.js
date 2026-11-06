@@ -482,5 +482,13 @@ window.JOGOS = {
     desc: "Régua, compasso e transferidor na tela, com ímã nos pontos e cruzamentos. 6 construções guiadas com correção automática: triângulo equilátero, mediatriz, bissetriz, ângulo de 60°, triângulo 3-4-5 e soma dos ângulos do triângulo.",
     emoji: "📐", cor: "verde", ferramenta: true,
     tipo: "simulador", conteudo: "Geometria"
+  },
+  "enquete-ao-vivo": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
+    nome: "Enquete e Nuvem de Palavras Ao Vivo",
+    tema: "Enquete em tempo real",
+    desc: "Estilo Mentimeter: os alunos respondem anônimos pelo celular em gamificaeducacao.com.br/enquete e o resultado aparece no projetor na hora. Múltipla escolha, nuvem de palavras, escala de 1 a 5 e mural de respostas, com filtro de palavrões.",
+    emoji: "📊", cor: "azul", ferramenta: true,
+    tipo: "ferramenta"
   }
 };
