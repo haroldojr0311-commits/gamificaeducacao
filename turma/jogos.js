@@ -201,7 +201,7 @@ window.JOGOS = {
   "bingo": {
     nome: "Bingo Matemático",
     tema: "Ferramenta do professor",
-    desc: "Sorteie contas no telão; os alunos calculam e marcam a resposta na cartela impressa.",
+    desc: "Sorteie contas no telão com narração de locutor; os alunos calculam e marcam a resposta na cartela impressa.",
     emoji: "🎯", cor: "coral", ferramenta: true,
     tipo: "ferramenta"
   },
