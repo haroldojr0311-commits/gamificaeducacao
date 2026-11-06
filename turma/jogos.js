@@ -126,6 +126,7 @@ window.JOGOS = {
     conteudo: "Funções e trigonometria"
   },
   "leitor-gabaritos": {
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Leitor de Gabaritos",
     tema: "Ferramenta do professor",
     desc: "Corrija cartões-resposta pela câmera do celular e veja as notas.",
@@ -133,6 +134,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "mapa-da-sala": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Mapa da Sala",
     tema: "Ferramenta do professor",
     desc: "Organize os grupos da sala por nível e imprima o mapa.",
@@ -156,6 +158,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "caca-palavras": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Caça-Palavras Gerador",
     tema: "Ferramenta do professor",
     desc: "Cole um texto, gere a grade de palavras-chave e imprima com ou sem gabarito.",
@@ -163,6 +166,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "gerador-qrcode": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Gerador de QR Code",
     tema: "Ferramenta",
     desc: "Crie QR Codes com links ou textos e baixe a imagem em PNG.",
@@ -178,6 +182,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "sorteador": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Sorteador de Alunos e Grupos",
     tema: "Ferramenta do professor",
     desc: "Sorteie quem responde (sem repetir) e forme grupos com líder em um toque.",
@@ -185,6 +190,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "calculadora-notas": {
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Calculadora de Notas e Médias",
     tema: "Ferramenta do professor",
     desc: "Escolha as avaliações e os pesos, cole os nomes, digite as notas e veja quem foi aprovado.",
@@ -192,6 +198,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "cronometro": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Cronômetro de Atividades",
     tema: "Ferramenta do professor",
     desc: "Contagem regressiva grande para projetar, com cores de alerta e alarme no fim.",
@@ -199,6 +206,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "bingo": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Bingo Matemático",
     tema: "Ferramenta do professor",
     desc: "Sorteie contas no telão com narração de locutor; os alunos calculam e marcam a resposta na cartela impressa.",
@@ -302,6 +310,7 @@ window.JOGOS = {
     conteudo: "Proporção e porcentagem"
   },
   "gerador-provas": {
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Gerador de Provas",
     tema: "Ferramenta do professor",
     desc: "Monte provas e simulados de Matemática inspirados em Prova Paulista, Provão Paulista, SAEB e SARESP, com gabarito.",
@@ -309,6 +318,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "gerador-sudoku": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Gerador de Sudoku",
     tema: "Ferramenta do professor",
     desc: "Gere folhas de Sudoku para imprimir em 4 níveis (fácil, médio, difícil e especialista), com gabarito e 4 jogos por folha A4.",
@@ -316,6 +326,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "campeonato-tarefas": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Campeonato de Tarefas",
     tema: "Ferramenta do professor",
     desc: "Marcador de tarefas das turmas com tabela de classificação estilo campeonato, pódio, nota final e exportação em Word e Excel.",
@@ -433,6 +444,7 @@ window.JOGOS = {
     emoji: "🎃", cor: "coral", ferramenta: false, conteudo: "Desafios", nivel: ["Fundamental 2"]
   },
   "gamifica-cards": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Gamifica Cards",
     tema: "Ferramenta do professor",
     desc: "Quiz com cartões impressos: o celular do professor lê as respostas da turma (alunos sem celular e sem internet). Anexe perguntas do Word, Excel ou texto e a app monta os slides e os relatórios. Projete pelo celular ou pelo computador (gamificaeducacao.com.br/tela).",
@@ -446,6 +458,7 @@ window.JOGOS = {
     emoji: "✖️", cor: "amarelo", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 1", "Fundamental 2"]
   },
   "quiz-ao-vivo": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Quiz Ao Vivo",
     tema: "Quiz em tempo real",
     desc: "Você projeta, os alunos respondem pelo celular em gamificaeducacao.com.br/vivo com um código. Pontos por rapidez, ranking a cada pergunta, pódio e planilha de resultados. Use perguntas prontas ou crie as suas.",
