@@ -907,6 +907,12 @@ function desenharJogos(qual){
     corpo.push(lista.length ? el('div', {class:'grade-jogos'}, lista.map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); }))
       : el('p', {class:'vazio'}, busca.trim() ? 'Nada encontrado para “' + busca.trim() + '”.' : 'Nada por aqui ainda.'));
   }
+  var oQue = {jogos:'um jogo', simuladores:'um simulador', ferramentas:'uma ferramenta'}[qual] || 'algo';
+  var textoSugestao = 'Olá, professor! Tenho uma sugestão para o Gamifica Educação. Sugiro ' + oQue + ' (ou uma melhoria em algo que já existe): ';
+  corpo.push(el('div', {class:'sugestao', style:'margin-top:18px'},
+    el('b', {}, '💡 Tem uma sugestão?'),
+    el('p', {class:'sub', style:'margin:4px 0 8px;font-size:15px'}, 'Conte o que faltou: ' + oQue + ' novo ou uma melhoria em algo que já existe.'),
+    el('a', {class:'btn', href: 'https://wa.me/' + WHATSAPP_TESTE + '?text=' + encodeURIComponent(textoSugestao), target:'_blank', rel:'noopener'}, '💬 Enviar sugestão pelo WhatsApp')));
   app.replaceChildren(
     el('div', {class:'card'},
       el('div', {class:'ola'}, el('div', {}, el('h2', {}, 'Olá, ' + (perfil.nome || '').split(' ')[0] + '! 👋'),
