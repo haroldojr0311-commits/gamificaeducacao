@@ -494,7 +494,7 @@ window.JOGOS = {
     bncc: ["EF03MA03", "EF04MA04"],
     nome: "Tabuada Turbo",
     tema: "Tabuada",
-    desc: "Treine a tabuada de multiplicação e de divisão: modo treino com dica de bolinhas, contra o relógio (60 s) e duelo para dois jogadores. Mostra os fatos para treinar.",
+    desc: "Treine a tabuada de multiplicação e de divisão: treino com dica de bolinhas, contra o relógio (60 s), duelo para dois jogadores e ranking da turma, com cronômetro por aluno, pódio e impressão do resultado.",
     emoji: "✖️", cor: "amarelo", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 1", "Fundamental 2"]
   },
   "quiz-ao-vivo": {
