@@ -878,16 +878,19 @@ function desenharJogos(qual){
   campoBusca.oninput = function(){ busca = campoBusca.value; var pos = campoBusca.selectionStart; desenharJogos(qual); var n = document.getElementById('busca'); if(n){ n.focus(); try{ n.setSelectionRange(pos, pos); }catch(e){} } };
   corpo.push(el('div', {class:'busca'}, campoBusca));
   corpo.push(barraNiveis(qual));
+  var emFaixa = [];
   if(!busca.trim() && filtroConteudo === 'todos'){
     var tipoAba = {jogos:'jogo', simuladores:'simulador', ferramentas:'ferramenta'}[qual];
     var doTipo = function(l){ return l.filter(function(id){ return tipoDe(id) === tipoAba && id !== 'demo-porcentagem'; }); };
     var favs = doTipo(favoritos()), recs = doTipo(recentes()).filter(function(id){ return favs.indexOf(id) < 0; }).slice(0, 4);
+    emFaixa = favs.concat(recs);
     if(favs.length) corpo.push(el('div', {class:'faixa-rapida'}, el('div', {class:'secao-titulo conteudo'}, '⭐ Seus favoritos', el('small', {}, favs.length)), el('div', {class:'grade-jogos'}, favs.map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); }))));
     if(recs.length) corpo.push(el('div', {class:'faixa-rapida'}, el('div', {class:'secao-titulo conteudo'}, '🕘 Usados recentemente'), el('div', {class:'grade-jogos'}, recs.map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); }))));
     if(!favs.length && qual === 'jogos') corpo.push(el('p', {class:'sub', style:'margin:4px 0 0;font-size:14px'}, '💡 Dica: toque na ☆ de um cartão para guardar nos favoritos.'));
   }
+  var idsLista = ids.filter(function(id){ return emFaixa.indexOf(id) < 0; });
   if(qual === 'jogos'){
-    var grupos = gruposPorConteudo(ids.filter(function(id){ return tipoDe(id) === 'jogo'; }));
+    var grupos = gruposPorConteudo(idsLista.filter(function(id){ return tipoDe(id) === 'jogo'; }));
     if(filtroConteudo !== 'todos' && !grupos.some(function(g){ return g[0] === filtroConteudo; })) filtroConteudo = 'todos';
     var chips = el('div', {class:'filtros', role:'group', 'aria-label':'Conteúdo'}, [el('span', {class:'filtros-rot'}, 'Conteúdo')].concat([['todos', 'Todos']].concat(grupos.map(function(g){ return [g[0], (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0]]; })).map(function(f){
       return el('button', {type:'button', class:'filtro', 'aria-pressed': String(filtroConteudo === f[0]), onclick: function(){ filtroConteudo = f[0]; desenharJogos('jogos'); }}, f[1]);
@@ -899,7 +902,7 @@ function desenharJogos(qual){
     });
     if(!grupos.length) corpo.push(el('p', {class:'vazio'}, busca.trim() ? 'Nenhum jogo encontrado para “' + busca.trim() + '”.' : 'Nenhum jogo deste nível ainda.'));
   } else {
-    var lista = ids.filter(function(id){ return tipoDe(id) === (qual === 'simuladores' ? 'simulador' : 'ferramenta'); })
+    var lista = idsLista.filter(function(id){ return tipoDe(id) === (qual === 'simuladores' ? 'simulador' : 'ferramenta'); })
       .sort(function(a, b){ return window.JOGOS[a].nome.localeCompare(window.JOGOS[b].nome, 'pt-BR'); });
     corpo.push(lista.length ? el('div', {class:'grade-jogos'}, lista.map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); }))
       : el('p', {class:'vazio'}, busca.trim() ? 'Nada encontrado para “' + busca.trim() + '”.' : 'Nada por aqui ainda.'));
