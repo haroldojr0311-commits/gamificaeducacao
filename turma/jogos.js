@@ -497,6 +497,12 @@ window.JOGOS = {
     desc: "Treine a tabuada de multiplicação e de divisão: treino com dica de bolinhas, contra o relógio (60 s), duelo para dois jogadores e ranking da turma, com cronômetro por aluno, pódio e impressão do resultado.",
     emoji: "✖️", cor: "amarelo", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 1", "Fundamental 2"]
   },
+  "potencia-raiz-turbo": {
+    nome: "Potência e Raiz Turbo",
+    tema: "Potenciação e radiciação",
+    desc: "Treine quadrados, cubos, potências e raízes quadradas e cúbicas: treino com dica e tabela de apoio, contra o relógio (60 s), duelo para dois jogadores e ranking da turma com cronômetro, pódio e impressão.",
+    emoji: "🔺", cor: "lilas", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2", "Ensino Médio"]
+  },
   "quiz-ao-vivo": {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Quiz Ao Vivo",
