@@ -73,6 +73,10 @@ footer a{margin:0 6px}
 def pagina(titulo, desc, corpo, caminho, extra_head=''):
     url = SITE + '/' + caminho
     prefixo = '../' * caminho.count('/')
+    # imagem de pré-visualização própria da aplicação (og/<slug>.png), se existir; senão, a capa do site
+    slug = os.path.basename(caminho)[:-5]
+    tem_og = caminho.startswith('catalogo/') and caminho != 'catalogo/index.html' and os.path.exists(os.path.join(RAIZ, 'og', slug + '.png'))
+    imagem = f'{SITE}/og/{slug}.png' if tem_og else f'{SITE}/capa.png?v=3'
     return f"""<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -88,7 +92,7 @@ def pagina(titulo, desc, corpo, caminho, extra_head=''):
 <meta name="theme-color" content="#1d2b53">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Gamifica Educação"><meta property="og:locale" content="pt_BR">
 <meta property="og:title" content="{e(titulo)}"><meta property="og:description" content="{e(desc)}"><meta property="og:url" content="{url}">
-<meta property="og:image" content="{SITE}/capa.png?v=3"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="{imagem}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{imagem}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
 <style>{CSS}</style>
