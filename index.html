@@ -843,6 +843,11 @@ function botaoFav(id){
   return b;
 }
 var qualAtual = 'jogos';
+function cartaoMural(){
+  return el('button', {type:'button', class:'cartao-jogo', style:'--n:var(--n-amarelo)', onclick: function(){ window.open('mural/', '_blank'); }},
+    el('div', {class:'nota'}, el('span', {class:'tema'}, 'Mural colaborativo'), el('span', {class:'emoji', 'aria-hidden':'true'}, '📌')),
+    el('div', {class:'corpo'}, el('h3', {}, 'Mural Eletrônico'), el('p', {}, 'Mural para a turma: texto, imagem, áudio, vídeo, links e arquivos, com comentários, reações, código de acesso, QR Code e modo apresentação. Os alunos postam pelo celular, sem criar conta.')));
+}
 function cartaoJogo(id, aoClicar, marcado){
   var j = window.JOGOS[id];
   return el('button', {type:'button', class:'cartao-jogo', style: corDe(id), 'aria-pressed': marcado === undefined ? null : String(!!marcado), onclick: aoClicar},
@@ -916,7 +921,9 @@ function desenharJogos(qual){
   } else {
     var lista = idsLista.filter(function(id){ return tipoDe(id) === (qual === 'simuladores' ? 'simulador' : 'ferramenta'); })
       .sort(function(a, b){ return window.JOGOS[a].nome.localeCompare(window.JOGOS[b].nome, 'pt-BR'); });
-    corpo.push(lista.length ? el('div', {class:'grade-jogos'}, lista.map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); }))
+    var cartoesLista = lista.map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); });
+    if(qual === 'ferramentas' && filtroNivel === 'todos' && (!busca.trim() || normalizar('mural eletronico turbo padlet publicacoes turma').indexOf(normalizar(busca.trim())) >= 0)) cartoesLista.unshift(cartaoMural());
+    corpo.push(cartoesLista.length ? el('div', {class:'grade-jogos'}, cartoesLista)
       : el('p', {class:'vazio'}, busca.trim() ? 'Nada encontrado para “' + busca.trim() + '”.' : 'Nada por aqui ainda.'));
   }
   var oQue = {jogos:'um jogo', simuladores:'um simulador', ferramentas:'uma ferramenta'}[qual] || 'algo';
