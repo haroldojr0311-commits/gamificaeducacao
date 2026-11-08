@@ -17,12 +17,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <style>
-:root{--tinta:#1d2b53;--tinta2:#55627f;--chao:#f3f6fb;--cartao:#ffffff;--linha:#d9e1ee;--marca:#ffd23f;--azul:#2f63d6;--verde:#12865f;--perigo:#c62828;--fd:'Fredoka','Nunito',system-ui,sans-serif;--fc:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--tinta:#eef2ff;--tinta2:#b8c2dc;--chao:#0f1730;--cartao:#1a2550;--linha:#2b3a63}}
-:root[data-theme="dark"]{--tinta:#eef2ff;--tinta2:#b8c2dc;--chao:#0f1730;--cartao:#1a2550;--linha:#2b3a63}
+:root{--ativo:#1d2b53;--ativo-texto:#ffffff;--tinta:#1d2b53;--tinta2:#55627f;--chao:#f3f6fb;--cartao:#ffffff;--linha:#d9e1ee;--marca:#ffd23f;--azul:#2f63d6;--verde:#12865f;--perigo:#c62828;--fd:'Fredoka','Nunito',system-ui,sans-serif;--fc:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--ativo:#ffd23f;--ativo-texto:#1d2b53;--tinta:#eef2ff;--tinta2:#b8c2dc;--chao:#0f1730;--cartao:#1a2550;--linha:#2b3a63}}
+:root[data-theme="dark"]{--ativo:#ffd23f;--ativo-texto:#1d2b53;--tinta:#eef2ff;--tinta2:#b8c2dc;--chao:#0f1730;--cartao:#1a2550;--linha:#2b3a63}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--chao);color:var(--tinta);font-family:var(--fc);font-size:17px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+body{background:radial-gradient(1200px 500px at 10% -10%,rgba(47,99,214,.10),transparent 60%),radial-gradient(900px 400px at 100% 0%,rgba(255,210,63,.12),transparent 55%),var(--chao);background-attachment:fixed;color:var(--tinta);font-family:var(--fc);font-size:17px;line-height:1.5;min-height:100vh;overflow-x:hidden}
 h1,h2,h3{font-family:var(--fd);font-weight:600;line-height:1.2;margin:0 0 8px}
 a{color:var(--azul)}
 button,input,select,textarea{font:inherit}
@@ -32,7 +32,7 @@ button,input,select,textarea{font:inherit}
 .topo a.marca span{color:var(--marca)}
 .topo a.voltar{color:#fff;text-decoration:none;font-weight:800;background:rgba(255,255,255,.14);padding:7px 12px;border-radius:999px;font-size:15px}
 main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
-.btn{display:inline-flex;align-items:center;gap:6px;justify-content:center;text-decoration:none;font-weight:800;border-radius:14px;padding:11px 18px;background:var(--marca);color:var(--tinta);border:2px solid #e0ad00;box-shadow:0 3px 0 #e0ad00;cursor:pointer;font-size:16px;min-height:44px}
+.btn{display:inline-flex;align-items:center;gap:6px;justify-content:center;text-decoration:none;font-weight:800;border-radius:14px;padding:11px 18px;background:var(--marca);color:#1d2b53;border:2px solid #e0ad00;box-shadow:0 3px 0 #e0ad00;cursor:pointer;font-size:16px;min-height:44px}
 .btn:active{transform:translateY(2px);box-shadow:0 1px 0 #e0ad00}
 .btn.sec{background:transparent;color:var(--tinta);border-color:var(--linha);box-shadow:0 3px 0 var(--linha)}
 .btn.azul{background:var(--azul);color:#fff;border-color:#2350b3;box-shadow:0 3px 0 #2350b3}
@@ -57,9 +57,9 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 .faixa h1{color:#fff;font-size:clamp(1.5rem,4vw,2.2rem);margin:0}
 .faixa p{margin:4px 0 0;opacity:.95}
 .acoes{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;align-items:center}
-.seg{display:inline-flex;background:var(--cartao);border:2px solid var(--linha);border-radius:14px;padding:3px;gap:3px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--cartao);border:2px solid var(--linha);border-radius:16px;padding:4px;gap:4px;flex-wrap:wrap;box-shadow:0 6px 16px rgba(29,43,83,.08)}
 .seg button{border:0;background:transparent;color:var(--tinta);font-weight:800;padding:7px 12px;border-radius:10px;cursor:pointer;min-height:36px}
-.seg button[aria-pressed="true"]{background:var(--tinta);color:#fff}
+.seg button[aria-pressed="true"]{background:var(--ativo);color:var(--ativo-texto);box-shadow:0 2px 0 rgba(0,0,0,.25)}
 .painel{background:var(--cartao);color:var(--tinta);border-radius:18px;padding:18px;border:2px solid var(--linha);margin-bottom:18px;box-shadow:0 8px 20px rgba(29,43,83,.08)}
 .painel label{display:block;font-weight:800;font-size:15px;margin:10px 0 4px}
 .painel input,.painel textarea,.painel select{width:100%;border:2px solid var(--linha);border-radius:12px;padding:10px 12px;background:var(--cartao);color:var(--tinta)}
@@ -92,7 +92,7 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 .pub .lk b{display:block;color:var(--azul);font-size:15px}
 .pub .apagar{position:absolute;top:8px;right:8px}
 .feed.colunas .pub .apagar{position:static;align-self:flex-end}
-.quadro{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:12px 18px;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.3);z-index:50;font-weight:800;max-width:92vw;text-align:center}
+.quadro{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#1d2b53;color:#fff;border:1px solid #2f63d6;padding:12px 18px;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.3);z-index:50;font-weight:800;max-width:92vw;text-align:center}
 .modal-fundo{position:fixed;inset:0;background:rgba(10,16,35,.6);display:grid;place-items:center;z-index:40;padding:16px}
 .modal{background:var(--chao);color:var(--tinta);border-radius:20px;padding:20px;max-width:520px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.35)}
 .modal .acoes{justify-content:flex-end}
@@ -119,7 +119,7 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 .zona{display:flex;flex-direction:column;gap:6px}
 .zona input[type=file]{width:100%;font:inherit;padding:10px;border:2px dashed var(--linha);border-radius:12px;background:var(--cartao);color:var(--tinta)}
 .reagir{display:flex;gap:6px;flex-wrap:wrap}
-.reagir button[aria-pressed="true"]{background:var(--tinta);color:#fff}
+.reagir button[aria-pressed="true"]{background:var(--ativo);color:var(--ativo-texto)}
 .interacao{display:flex;flex-direction:column;gap:8px;border-top:2px dashed var(--linha);padding-top:10px}
 .comentarios{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:15px}
 .comentario{background:var(--chao);color:var(--tinta);border-radius:10px;padding:6px 10px;overflow-wrap:anywhere}
