@@ -107,6 +107,13 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 @media(max-width:900px){.feed.colunas{column-count:2}}
 @media(max-width:600px){.feed.colunas{column-count:1}.feed.grade{grid-template-columns:1fr}.hero{padding:20px}.faixa{height:120px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.codigo{font-family:var(--fd);font-size:2rem;font-weight:700;letter-spacing:.25em;background:var(--cartao);color:var(--tinta);border:2px dashed var(--azul);border-radius:16px;padding:8px 16px;display:inline-block}
+.codigo-in{font-family:var(--fd);font-size:1.4rem;letter-spacing:.2em;text-transform:uppercase;text-align:center;width:100%;max-width:260px;border:2px solid var(--linha);border-radius:12px;padding:10px 12px;background:var(--cartao);color:var(--tinta)}
+.painel .opt{display:flex;align-items:flex-start;gap:10px;font-weight:700;margin:12px 0 4px;font-size:16px}
+.painel .opt input,.modal .opt input{width:auto;margin-top:5px;flex:none}
+.modal .opt{display:flex;align-items:flex-start;gap:10px;font-weight:700;margin:12px 0 4px}
+.pub.pendente{border-style:dashed;border-color:#e0ad00}
 </style>
 </head>
 <body>
@@ -124,6 +131,10 @@ const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 const CORES = ['#2f63d6','#12865f','#ff7a59','#8e44ad','#e0a800','#c2185b','#0f8ba8','#3d4a6b'];
 const LAYOUTS = [['grade','▦ Grade'],['colunas','▥ Colunas'],['linha','⏤ Linha do tempo'],['lista','☰ Lista']];
 const TIPOS = [['texto','📝 Texto'],['imagem','🖼️ Imagem'],['link','🔗 Link']];
+const PERMISSOES = [
+  ['leitura', '👀 Só leitura', 'A turma vê o mural, mas não publica.'],
+  ['publicar', '✍️ Pode publicar', 'A turma publica usando o código do mural.']
+];
 const app = document.getElementById('app');
 let timer = null;
 
@@ -154,24 +165,28 @@ function urlOk(u){
 function data(iso){
   return new Date(iso).toLocaleString('pt-BR', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
 }
-function lerMeus(){
-  try { return JSON.parse(localStorage.getItem('mural-turbo-meus') || '[]'); } catch(e){ return []; }
+function lerJSON(chave, padrao){
+  try { const v = JSON.parse(localStorage.getItem(chave)); return v == null ? padrao : v; } catch(e){ return padrao; }
 }
-function gravarMeus(lista){
-  try { localStorage.setItem('mural-turbo-meus', JSON.stringify(lista)); } catch(e){}
-}
+function gravarJSON(chave, v){ try { localStorage.setItem(chave, JSON.stringify(v)); } catch(e){} }
+function lerMeus(){ return lerJSON('mural-turbo-meus', []); }
 function meuMural(id){ return lerMeus().find(m => m.id === id) || null; }
-function salvarMeu(m){
-  const l = lerMeus().filter(x => x.id !== m.id); l.unshift(m); gravarMeus(l);
-}
-function removerMeu(id){ gravarMeus(lerMeus().filter(x => x.id !== id)); }
+function salvarMeu(m){ const l = lerMeus().filter(x => x.id !== m.id); l.unshift(m); gravarJSON('mural-turbo-meus', l); }
+function removerMeu(id){ gravarJSON('mural-turbo-meus', lerMeus().filter(x => x.id !== id)); }
+function codigoSalvo(id){ return lerJSON('mural-turbo-codigos', {})[id] || null; }
+function gravarCodigo(id, cod){ const c = lerJSON('mural-turbo-codigos', {}); c[id] = cod; gravarJSON('mural-turbo-codigos', c); }
+function removerCodigo(id){ const c = lerJSON('mural-turbo-codigos', {}); delete c[id]; gravarJSON('mural-turbo-codigos', c); }
 function nomeSalvo(){ try { return localStorage.getItem('mural-turbo-nome') || ''; } catch(e){ return ''; } }
 function gravarNome(n){ try { localStorage.setItem('mural-turbo-nome', n); } catch(e){} }
 function pararAtualizacao(){ if (timer){ clearInterval(timer); timer = null; } }
+
+/* Mensagens do servidor que já estão em português e podem ser mostradas como estão */
+const AVISOS = [/Código/, /Muitas publicações/, /endereço precisa/, /conteúdo deve/, /legenda pode/, /Informe seu nome/, /Tipo de publicação/, /Mural não encontrado/, /só para leitura/, /Permissão inválida/];
 function erroAmigavel(err){
   const m = (err && err.message) || '';
-  if (m.includes('Sem permissão')) return 'Você não tem permissão para isso neste navegador.';
-  if (m.includes('mural_') || m.includes('Failed to fetch')) return 'Não foi possível falar com o servidor agora. Tente de novo em instantes.';
+  if (/Sem permissão/.test(m)) return 'Você não tem permissão para isso neste navegador.';
+  if (AVISOS.some(r => r.test(m))) return m;
+  if (/Failed to fetch|network/i.test(m)) return 'Não foi possível falar com o servidor agora. Tente de novo em instantes.';
   return 'Algo deu errado. Tente novamente.';
 }
 
@@ -193,11 +208,31 @@ function vistaInicio(){
     el('div', {class:'c'},
       el('h3', {}, m.titulo),
       el('small', {}, 'Criado em ' + data(m.criado || new Date().toISOString())))));
+
+  const fbEntrada = el('div', {class:'fb erro', role:'alert'});
+  const campoCod = el('input', {id:'cod-entrada', class:'codigo-in', maxlength:'6', placeholder:'EX.: K7M2QX', autocomplete:'off', autocapitalize:'characters'});
+  const formEntrada = el('form', {class:'painel', onsubmit: async (e) => {
+    e.preventDefault(); fbEntrada.textContent = '';
+    const cod = campoCod.value.trim().toUpperCase();
+    if (cod.length !== 6){ fbEntrada.textContent = 'O código tem 6 letras ou números.'; campoCod.focus(); return; }
+    const { data: id, error } = await sb.rpc('mural_entrar', {p_codigo: cod});
+    if (error){ fbEntrada.textContent = erroAmigavel(error); return; }
+    if (!id){ fbEntrada.textContent = 'Código não encontrado. Confira com a professora.'; campoCod.focus(); return; }
+    gravarCodigo(id, cod);
+    location.hash = '#/m/' + id;
+  }},
+    el('h2', {style:'font-size:1.2rem'}, '🔑 Entrar em um mural'),
+    el('p', {class:'ajuda'}, 'Digite o código de 6 letras ou números que a professora passou.'),
+    el('label', {for:'cod-entrada'}, 'Código do mural'),
+    campoCod, fbEntrada,
+    el('div', {class:'acoes', style:'justify-content:flex-end;margin:12px 0 0'}, el('button', {type:'submit', class:'btn azul'}, 'Entrar no mural')));
+
   app.replaceChildren(
     el('section', {class:'hero'},
       el('h1', {}, 'Seus murais'),
-      el('p', {}, 'Crie um mural, compartilhe o link com a turma e acompanhe as publicações. Os alunos não precisam de conta.'),
+      el('p', {}, 'Crie um mural e compartilhe o código com a turma. Os alunos não precisam de conta.'),
       el('button', {class:'btn', onclick: abrirCriar}, '➕ Criar novo mural')),
+    formEntrada,
     meus.length
       ? el('div', {class:'grade-murais'}, cards)
       : el('div', {class:'vazio'},
@@ -205,29 +240,41 @@ function vistaInicio(){
           el('h2', {}, 'Crie o primeiro mural'),
           el('p', {}, 'Escolha um título, uma cor e um layout. Depois, publique a primeira contribuição.'),
           el('button', {class:'btn', onclick: abrirCriar}, '➕ Criar mural')),
-    el('p', {class:'ajuda', style:'margin-top:18px'}, 'Os murais aparecem só neste navegador. Para acessá-los de outro aparelho, guarde o link de cada mural.'));
+    el('p', {class:'ajuda', style:'margin-top:18px'}, 'Os seus murais aparecem só neste navegador. Para acessá-los de outro aparelho, guarde o link e o código de cada mural.'));
 }
 
 /* formulário de criar/editar mural */
-function formMural(valores, aoSalvar){
+function formMural(valores, aoSalvar, comAcesso = false){
   let cor = valores.cor || CORES[0];
   let layout = valores.layout || 'grade';
+  let permissao = valores.permissao || 'publicar';
   const titulo = el('input', {id:'mt', maxlength:'120', required:true, value: valores.titulo || '', placeholder:'Ex.: Conceitos de porcentagem'});
   const desc = el('textarea', {id:'md', maxlength:'500', placeholder:'Instruções para a turma (opcional)'}, valores.descricao || '');
   const feedback = el('div', {class:'fb erro', role:'alert'});
-  const botoesCor = CORES.map(c => el('button', {type:'button', 'aria-label':'Cor ' + c, 'aria-pressed': String(c === cor), style:'background:' + c, onclick(e){
+  const botoesCor = CORES.map(c => el('button', {type:'button', 'aria-label':'Cor ' + c, 'aria-pressed': String(c === cor), style:'background:' + c, onclick(){
     cor = c; botoesCor.forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute('aria-label') === 'Cor ' + c)));
   }}));
   const botoesLayout = LAYOUTS.map(([v, nome]) => el('button', {type:'button', 'aria-pressed': String(v === layout), onclick(){
     layout = v; botoesLayout.forEach((b, i) => b.setAttribute('aria-pressed', String(LAYOUTS[i][0] === v)));
   }}, nome));
+  const botoesPerm = PERMISSOES.map(([v, nome]) => el('button', {type:'button', 'aria-pressed': String(v === permissao), onclick(){
+    permissao = v; botoesPerm.forEach((b, i) => b.setAttribute('aria-pressed', String(PERMISSOES[i][0] === v)));
+  }}, nome));
+  const caixaMod = el('input', {type:'checkbox', id:'mm'});
+  caixaMod.checked = !!valores.moderar;
+  const acesso = comAcesso ? [
+    el('label', {}, 'Quem pode publicar'),
+    el('div', {class:'seg', role:'group', 'aria-label':'Permissão de publicação'}, botoesPerm),
+    el('p', {class:'ajuda'}, PERMISSOES.map(p => p[1].replace(/^\S+\s/, '') + ': ' + p[2]).join(' ')),
+    el('label', {class:'opt'}, caixaMod, 'Aprovar antes de publicar (eu libero cada publicação dos alunos)')
+  ] : [];
   const form = el('form', {class:'painel', onsubmit: async (e) => {
     e.preventDefault();
     feedback.textContent = '';
     const t = titulo.value.trim();
     if (!t){ feedback.textContent = 'Dê um título para o mural.'; titulo.focus(); return; }
     const botao = form.querySelector('[type=submit]'); botao.disabled = true;
-    try { await aoSalvar({titulo:t, descricao:desc.value.trim(), cor, layout}); }
+    try { await aoSalvar({titulo:t, descricao:desc.value.trim(), cor, layout, permissao, moderar: caixaMod.checked}); }
     catch(err){ feedback.textContent = erroAmigavel(err); botao.disabled = false; }
   }},
     el('label', {for:'mt'}, 'Título'), titulo,
@@ -235,6 +282,7 @@ function formMural(valores, aoSalvar){
     el('label', {}, 'Cor do mural'), el('div', {class:'cores'}, botoesCor),
     el('label', {}, 'Layout'), el('div', {class:'seg'}, botoesLayout),
     el('p', {class:'ajuda'}, 'Grade: cards organizados · Colunas: estilo mural · Linha do tempo: em ordem de publicação · Lista: uma por linha.'),
+    ...acesso,
     feedback,
     el('div', {class:'acoes', style:'justify-content:flex-end;margin-top:12px'},
       el('button', {type:'button', class:'btn sec', onclick: () => fecharModal()}, 'Cancelar'),
@@ -253,84 +301,167 @@ function fecharModal(){ if (modalAtual){ modalAtual.remove(); modalAtual = null;
 function abrirCriar(){
   abrirModal(el('div', {}, el('h2', {}, 'Novo mural'),
     formMural({}, async (v) => {
-      const { data: r, error } = await sb.rpc('mural_criar', {p_titulo: v.titulo, p_descricao: v.descricao, p_cor: v.cor, p_layout: v.layout});
+      const { data: r, error } = await sb.rpc('mural_criar', {p_titulo: v.titulo, p_descricao: v.descricao, p_cor: v.cor, p_layout: v.layout, p_permissao: v.permissao, p_moderar: v.moderar});
       if (error) throw error;
-      const id = r.id;
-      salvarMeu({id, token: r.token, titulo: v.titulo, cor: v.cor, criado: new Date().toISOString()});
+      salvarMeu({id: r.id, token: r.token, titulo: v.titulo, cor: v.cor, criado: new Date().toISOString()});
+      gravarCodigo(r.id, r.codigo);
       fecharModal();
-      toast('Mural criado! Compartilhe o link com a turma.');
-      location.hash = '#/m/' + id;
-    })));
+      toast('Mural criado! Código da turma: ' + r.codigo);
+      location.hash = '#/m/' + r.id;
+    }, true)));
+}
+
+/* ---------- pedir código de acesso ---------- */
+function pedirCodigo(id, aviso){
+  const fb = el('div', {class:'fb erro', role:'alert'}, aviso || '');
+  const campo = el('input', {id:'cod-pedido', class:'codigo-in', maxlength:'6', placeholder:'EX.: K7M2QX', autocomplete:'off', autocapitalize:'characters', 'aria-label':'Código de acesso'});
+  app.replaceChildren(
+    el('p', {}, el('a', {href:'#/', class:'ajuda'}, '← Todos os murais')),
+    el('section', {class:'painel', style:'text-align:center;padding:26px 18px'},
+      el('div', {class:'ico', 'aria-hidden':'true', style:'font-size:48px'}, '🔐'),
+      el('h2', {}, 'Este mural tem código de acesso'),
+      el('p', {class:'ajuda'}, 'Peça à professora o código de 6 letras ou números.'),
+      el('form', {style:'margin-top:14px', onsubmit: async (e) => {
+        e.preventDefault(); fb.textContent = '';
+        const cod = campo.value.trim().toUpperCase();
+        if (cod.length !== 6){ fb.textContent = 'O código tem 6 letras ou números.'; campo.focus(); return; }
+        const { error } = await sb.rpc('mural_ler', {p_mural: id, p_codigo: cod, p_token: null});
+        if (error){ fb.textContent = erroAmigavel(error); campo.focus(); return; }
+        gravarCodigo(id, cod); rota();
+      }},
+        campo, fb,
+        el('div', {class:'acoes', style:'justify-content:center;margin-top:12px'}, el('button', {type:'submit', class:'btn'}, 'Entrar no mural')))));
+  campo.focus();
 }
 
 /* ---------- mural ---------- */
 async function vistaMural(id){
   app.replaceChildren(el('p', {class:'ajuda'}, 'Carregando o mural…'));
-  const [{ data: mural, error: e1 }, { data: pubs, error: e2 }] = await Promise.all([
-    sb.from('mural_murais').select('*').eq('id', id).maybeSingle(),
-    sb.from('mural_publicacoes').select('*').eq('mural_id', id).order('criado_em', {ascending:false}).limit(300)
-  ]);
-  if (e1 || e2){ app.replaceChildren(el('div', {class:'vazio'}, el('h2', {}, 'Não foi possível abrir o mural'), el('p', {}, erroAmigavel(e1 || e2)), el('a', {class:'btn', href:'#/'}, '← Voltar'))); return; }
-  if (!mural){ app.replaceChildren(el('div', {class:'vazio'}, el('div', {class:'ico'}, '🔍'), el('h2', {}, 'Mural não encontrado'), el('p', {}, 'Confira o link ou peça um novo à professora.'), el('a', {class:'btn', href:'#/'}, '← Voltar'))); return; }
-
   const meu = meuMural(id);
-  const dono = !!meu;
+  const token = meu ? meu.token : null;
+  const codigoGuardado = codigoSalvo(id);
+
+  const { data: d, error } = await sb.rpc('mural_ler', {p_mural: id, p_codigo: codigoGuardado, p_token: token});
+  if (error){
+    if (/Código de acesso|não encontrado/.test(error.message || '')){
+      return pedirCodigo(id, codigoGuardado ? 'O código guardado não funciona mais. Digite o código atual.' : '');
+    }
+    app.replaceChildren(el('div', {class:'vazio'}, el('h2', {}, 'Não foi possível abrir o mural'), el('p', {}, erroAmigavel(error)), el('a', {class:'btn', href:'#/'}, '← Voltar')));
+    return;
+  }
+
+  const dono = !!d.dono;
+  const mural = d.mural;
+  let codigo = d.codigo || codigoGuardado;
   let layout = mural.layout;
-  let publicacoes = pubs || [];
+  let publicacoes = d.publicacoes || [];
+  let pendentes = d.pendentes || [];
+  const canPublicar = dono || mural.permissao === 'publicar';
 
   const faixa = el('section', {class:'faixa', style:'background:' + mural.cor},
     el('div', {class:'txt'}, el('h1', {}, mural.titulo), el('p', {}, mural.descricao || 'Publique a sua contribuição abaixo.')));
 
+  function msgWhatsApp(){
+    return 'Participe do nosso mural: ' + mural.titulo + '. Abra ' + location.href + (dono && codigo ? ' e use o código ' + codigo : '');
+  }
   const botoesCopiar = el('div', {class:'acoes'},
     el('button', {class:'btn sec peq', onclick: async () => {
       const url = location.href;
       try { await navigator.clipboard.writeText(url); toast('Link copiado!'); }
       catch(e){ toast(url); }
     }}, '🔗 Copiar link'),
-    el('a', {class:'btn sec peq', target:'_blank', rel:'noopener', href:'https://wa.me/?text=' + encodeURIComponent('Participe do nosso mural: ' + mural.titulo + ' ' + location.href)}, '💬 WhatsApp'));
+    el('button', {class:'btn sec peq', onclick(){ window.open('https://wa.me/?text=' + encodeURIComponent(msgWhatsApp()), '_blank', 'noopener'); }}, '💬 WhatsApp'));
 
   const seletorLayout = el('div', {class:'seg', role:'group', 'aria-label':'Layout do mural'});
   const botoesL = LAYOUTS.map(([v, nome]) => el('button', {'aria-pressed': String(v === layout), onclick: async () => {
     if (dono){
       try {
-        const { error } = await sb.rpc('mural_editar', {p_mural: id, p_token: meu.token, p_titulo: mural.titulo, p_descricao: mural.descricao || '', p_cor: mural.cor, p_layout: v});
-        if (error) throw error;
+        const { error: e2 } = await sb.rpc('mural_editar', {p_mural: id, p_token: token, p_titulo: mural.titulo, p_descricao: mural.descricao || '', p_cor: mural.cor, p_layout: v});
+        if (e2) throw e2;
         mural.layout = v; layout = v; toast('Layout alterado para ' + nome.replace(/^\S+\s/, ''));
-        desenharFeed();
+        desenharTudo();
         botoesL.forEach((b, i) => b.setAttribute('aria-pressed', String(LAYOUTS[i][0] === v)));
       } catch(err){ toast(erroAmigavel(err)); }
     } else {
-      layout = v; desenharFeed();
+      layout = v; desenharTudo();
       botoesL.forEach((b, i) => b.setAttribute('aria-pressed', String(LAYOUTS[i][0] === v)));
     }
   }}, nome));
   botoesL.forEach(b => seletorLayout.append(b));
 
-  const ferramentasDono = dono ? el('div', {class:'acoes'},
-    el('button', {class:'btn sec peq', onclick: () => abrirModal(el('div', {}, el('h2', {}, 'Editar mural'), formMural({titulo: mural.titulo, descricao: mural.descricao, cor: mural.cor, layout: mural.layout}, async (v) => {
-      const { error } = await sb.rpc('mural_editar', {p_mural: id, p_token: meu.token, p_titulo: v.titulo, p_descricao: v.descricao, p_cor: v.cor, p_layout: v.layout});
-      if (error) throw error;
-      fecharModal(); toast('Mural atualizado.'); rota();
-    })))}, '✏️ Editar mural'),
-    el('button', {class:'btn perigo peq', onclick: async () => {
-      if (!confirm('Excluir este mural e todas as publicações? Isso não pode ser desfeito.')) return;
-      const { error } = await sb.rpc('mural_excluir', {p_mural: id, p_token: meu.token});
-      if (error){ toast(erroAmigavel(error)); return; }
-      removerMeu(id); toast('Mural excluído.'); location.hash = '#/';
-    }}, '🗑️ Excluir mural'),
-    el('span', {class:'ajuda', style:'margin:0'}, '👩‍🏫 Você é o dono deste mural')) : null;
+  async function novoCodigo(){
+    if (!confirm('Gerar um novo código? O código atual deixa de funcionar para a turma.')) return;
+    const { data: novo, error: e3 } = await sb.rpc('mural_novo_codigo', {p_mural: id, p_token: token});
+    if (e3){ toast(erroAmigavel(e3)); return; }
+    codigo = novo; gravarCodigo(id, novo);
+    const box = document.getElementById('codigo-grande'); if (box) box.textContent = novo;
+    toast('Novo código gerado.');
+  }
+  const bloCodigo = el('section', {class:'painel', style:'display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between'},
+    el('div', {},
+      el('p', {class:'ajuda', style:'margin:0 0 6px'}, 'Código de acesso da turma'),
+      el('div', {class:'codigo', id:'codigo-grande'}, codigo || '------')),
+    el('div', {class:'acoes', style:'margin:0'},
+      el('button', {class:'btn sec peq', onclick: async () => {
+        try { await navigator.clipboard.writeText(codigo); toast('Código copiado!'); }
+        catch(e){ toast('Código: ' + codigo); }
+      }}, '📋 Copiar código'),
+      el('button', {class:'btn sec peq', onclick: novoCodigo}, '🔄 Novo código')));
 
+  function abrirEditar(){
+    abrirModal(el('div', {}, el('h2', {}, 'Editar mural'),
+      formMural({titulo: mural.titulo, descricao: mural.descricao, cor: mural.cor, layout: mural.layout}, async (v) => {
+        const { error: e4 } = await sb.rpc('mural_editar', {p_mural: id, p_token: token, p_titulo: v.titulo, p_descricao: v.descricao, p_cor: v.cor, p_layout: v.layout});
+        if (e4) throw e4;
+        fecharModal(); toast('Mural atualizado.'); rota();
+      })));
+  }
+  function abrirConfigurar(){
+    let perm = mural.permissao;
+    const botoes = PERMISSOES.map(([v, nome]) => el('button', {type:'button', 'aria-pressed': String(v === perm), onclick(){
+      perm = v; botoes.forEach((b, i) => b.setAttribute('aria-pressed', String(PERMISSOES[i][0] === v)));
+    }}, nome));
+    const caixa = el('input', {type:'checkbox'}); caixa.checked = !!mural.moderar;
+    const fb = el('div', {class:'fb erro', role:'alert'});
+    abrirModal(el('div', {},
+      el('h2', {}, 'Acesso e moderação'),
+      el('label', {}, 'Quem pode publicar'),
+      el('div', {class:'seg', role:'group', 'aria-label':'Permissão de publicação'}, botoes),
+      el('p', {class:'ajuda'}, PERMISSOES.map(p => p[1].replace(/^\S+\s/, '') + ': ' + p[2]).join(' ')),
+      el('label', {class:'opt'}, caixa, 'Aprovar antes de publicar (eu libero cada publicação dos alunos)'),
+      fb,
+      el('div', {class:'acoes', style:'justify-content:flex-end;margin-top:12px'},
+        el('button', {class:'btn sec', onclick: () => fecharModal()}, 'Cancelar'),
+        el('button', {class:'btn', onclick: async () => {
+          const { error: e5 } = await sb.rpc('mural_configurar', {p_mural: id, p_token: token, p_permissao: perm, p_moderar: caixa.checked});
+          if (e5){ fb.textContent = erroAmigavel(e5); return; }
+          fecharModal(); toast('Acesso atualizado.'); rota();
+        }}, 'Salvar'))));
+  }
+  async function excluirMural(){
+    if (!confirm('Excluir este mural e todas as publicações? Isso não pode ser desfeito.')) return;
+    const { error: e6 } = await sb.rpc('mural_excluir', {p_mural: id, p_token: token});
+    if (e6){ toast(erroAmigavel(e6)); return; }
+    removerMeu(id); removerCodigo(id); toast('Mural excluído.'); location.hash = '#/';
+  }
+
+  const ferramentasDono = el('div', {class:'acoes'},
+    el('button', {class:'btn sec peq', onclick: abrirEditar}, '✏️ Editar mural'),
+    el('button', {class:'btn sec peq', onclick: abrirConfigurar}, '⚙️ Acesso e moderação'),
+    el('button', {class:'btn perigo peq', onclick: excluirMural}, '🗑️ Excluir mural'),
+    el('span', {class:'ajuda', style:'margin:0'}, '👩‍🏫 Você é o dono deste mural'));
+
+  /* ----- formulário de publicação ----- */
   const campoNome = el('input', {id:'autor', maxlength:'60', placeholder:'Seu nome (ex.: Ana P.)', value: nomeSalvo(), 'aria-label':'Seu nome'});
   let tipo = 'texto';
   const botoesTipo = TIPOS.map(([v, nome]) => el('button', {type:'button', 'aria-pressed': String(v === tipo), onclick(){
     tipo = v; botoesTipo.forEach((b, i) => b.setAttribute('aria-pressed', String(TIPOS[i][0] === v)));
     conteudo.placeholder = v === 'texto' ? 'Escreva a sua contribuição…' : 'Cole o endereço (https://…)';
     conteudo.type = v === 'texto' ? 'text' : 'url';
-    conteudo.maxLength = v === 'texto' ? 2000 : 2000;
     if (v === 'texto'){ conteudo.replaceWith(areaTexto); } else { areaTexto.replaceWith(conteudo); }
     contador();
   }}, nome));
-  const conteudo = el('input', {type:'text', placeholder:'Escreva a sua contribuição…', 'aria-label':'Conteúdo'});
+  const conteudo = el('input', {type:'text', placeholder:'Escreva a sua contribuição…', 'aria-label':'Conteúdo', maxlength:'2000'});
   const areaTexto = el('textarea', {placeholder:'Escreva a sua contribuição…', 'aria-label':'Conteúdo', maxlength:'2000'});
   const contadorEl = el('span', {class:'ajuda', style:'margin:0'});
   function contador(){ const v = (tipo === 'texto' ? areaTexto : conteudo).value; contadorEl.textContent = v.length + ' / 2000'; }
@@ -348,11 +479,14 @@ async function vistaMural(id){
     const autor = campoNome.value.trim() || 'Anônimo';
     gravarNome(autor);
     const botao = formPub.querySelector('[type=submit]'); botao.disabled = true;
-    const { error } = await sb.from('mural_publicacoes').insert({mural_id: id, tipo, conteudo: valor, legenda: legenda.value.trim(), autor});
+    const { data: r, error: e7 } = await sb.rpc('mural_publicar', {
+      p_mural: id, p_codigo: dono ? null : codigo, p_token: token,
+      p_tipo: tipo, p_conteudo: valor, p_legenda: legenda.value.trim(), p_autor: autor
+    });
     botao.disabled = false;
-    if (error){ feedback.className = 'fb erro'; feedback.textContent = erroAmigavel(error); return; }
+    if (e7){ feedback.className = 'fb erro'; feedback.textContent = erroAmigavel(e7); return; }
     campo.value = ''; legenda.value = ''; contador();
-    toast('Publicado! 🎉');
+    toast(r && r.aprovada === false ? 'Enviado! A professora vai aprovar a sua publicação. ⏳' : 'Publicado! 🎉');
     await atualizarFeed();
   }},
     el('h2', {style:'font-size:1.2rem'}, '✍️ Publicar no mural'),
@@ -364,14 +498,43 @@ async function vistaMural(id){
     feedback,
     el('div', {class:'acoes', style:'justify-content:flex-end;margin:12px 0 0'}, el('button', {type:'submit', class:'btn'}, '📌 Publicar no mural')));
   contador();
+  const avisoLeitura = el('div', {class:'aviso', style:'margin-bottom:18px'}, '👀 Este mural está aberto só para leitura. Quem criou o mural pode liberar a publicação.');
 
+  /* ----- publicações ----- */
   const feed = el('div', {class:'feed ' + layout, 'aria-label':'Publicações'});
+  const areaPend = el('section', {class:'painel', 'aria-label':'Aguardando aprovação'});
+
+  function desenharPendentes(){
+    areaPend.replaceChildren();
+    if (!dono || !pendentes.length){ areaPend.style.display = 'none'; return; }
+    areaPend.style.display = '';
+    areaPend.append(
+      el('h2', {style:'font-size:1.2rem'}, '⏳ Aguardando sua aprovação (' + pendentes.length + ')'),
+      el('div', {class:'feed grade', style:'margin-top:12px'}, pendentes.map(p => cartao(p, true))));
+  }
   function desenharFeed(){
     feed.className = 'feed ' + layout;
     const itens = (layout === 'linha') ? [...publicacoes].reverse() : publicacoes;
-    feed.replaceChildren(...(itens.length ? itens.map(cartao) : [el('div', {class:'vazio', style:'grid-column:1/-1'}, el('div', {class:'ico'}, '✨'), el('h2', {}, 'Crie a primeira publicação'), el('p', {}, 'Use o formulário acima para começar o mural.'))]));
+    feed.replaceChildren(...(itens.length ? itens.map(p => cartao(p, false)) : [el('div', {class:'vazio', style:'grid-column:1/-1'}, el('div', {class:'ico'}, '✨'), el('h2', {}, 'Crie a primeira publicação'), el('p', {}, canPublicar ? 'Use o formulário acima para começar o mural.' : 'Ainda não há publicações neste mural.'))]));
   }
-  function cartao(p){
+  function desenharTudo(){ desenharPendentes(); desenharFeed(); }
+
+  async function aprovar(p){
+    const { error: e8 } = await sb.rpc('mural_aprovar', {p_publicacao: p.id, p_token: token});
+    if (e8){ toast(erroAmigavel(e8)); return; }
+    toast('Publicação aprovada ✅');
+    await atualizarFeed();
+  }
+  async function apagar(p){
+    if (!confirm('Excluir esta publicação?')) return;
+    const { error: e9 } = await sb.rpc('mural_excluir_publicacao', {p_publicacao: p.id, p_token: token});
+    if (e9){ toast(erroAmigavel(e9)); return; }
+    publicacoes = publicacoes.filter(x => x.id !== p.id);
+    pendentes = pendentes.filter(x => x.id !== p.id);
+    desenharTudo(); toast('Publicação excluída.');
+  }
+
+  function cartao(p, pendente){
     const corpo = [];
     if (p.tipo === 'texto'){
       corpo.push(el('div', {class:'texto'}, p.conteudo));
@@ -385,28 +548,36 @@ async function vistaMural(id){
     }
     if (p.legenda) corpo.push(el('div', {class:'legenda'}, p.legenda));
     const tipoNome = (TIPOS.find(t => t[0] === p.tipo) || ['', ''])[1].replace(/^\S+\s/, '');
-    return el('article', {class: 'pub tipo-' + p.tipo, 'aria-label': tipoNome + ' de ' + p.autor},
-      el('span', {class:'tipo'}, tipoNome),
+    const acoesDono = dono ? el('div', {class:'acoes', style:'margin:4px 0 0'},
+      pendente ? el('button', {class:'btn peq', onclick: () => aprovar(p)}, '✅ Aprovar') : null,
+      el('button', {class:'btn perigo peq', 'aria-label':'Excluir publicação', onclick: () => apagar(p)}, '🗑️ Excluir')) : null;
+    return el('article', {class: 'pub tipo-' + p.tipo + (pendente ? ' pendente' : ''), 'aria-label': tipoNome + ' de ' + p.autor},
+      el('span', {class:'tipo'}, pendente ? '⏳ ' + tipoNome : tipoNome),
       el('div', {class:'corpo', style:'display:flex;flex-direction:column;gap:8px'}, corpo),
       el('div', {class:'rodape'}, el('span', {}, '👤 ' + p.autor), el('span', {}, data(p.criado_em))),
-      dono ? el('button', {class:'btn perigo peq apagar', 'aria-label':'Excluir publicação', onclick: async () => {
-        if (!confirm('Excluir esta publicação?')) return;
-        const { error } = await sb.rpc('mural_excluir_publicacao', {p_publicacao: p.id, p_token: meu.token});
-        if (error){ toast(erroAmigavel(error)); return; }
-        publicacoes = publicacoes.filter(x => x.id !== p.id); desenharFeed(); toast('Publicação excluída.');
-      }}, '🗑️') : null);
+      acoesDono);
   }
+
   async function atualizarFeed(){
-    const { data: novas } = await sb.from('mural_publicacoes').select('*').eq('mural_id', id).order('criado_em', {ascending:false}).limit(300);
-    if (novas){ publicacoes = novas; desenharFeed(); }
+    const { data: d2, error: e10 } = await sb.rpc('mural_ler', {p_mural: id, p_codigo: dono ? null : codigo, p_token: token});
+    if (e10){
+      if (/Código de acesso/.test(e10.message || '')){ pararAtualizacao(); pedirCodigo(id, 'O código deste mural mudou. Digite o novo código.'); }
+      return;
+    }
+    publicacoes = d2.publicacoes || [];
+    pendentes = d2.pendentes || [];
+    desenharTudo();
   }
-  desenharFeed();
+
+  desenharTudo();
   app.replaceChildren(
     el('p', {}, el('a', {href:'#/', class:'ajuda'}, '← Todos os murais')),
     faixa,
+    ...(dono ? [bloCodigo] : []),
     el('div', {class:'cab'}, seletorLayout, botoesCopiar),
     ...(dono ? [ferramentasDono] : []),
-    formPub,
+    areaPend,
+    canPublicar ? formPub : avisoLeitura,
     feed);
   timer = setInterval(() => { if (!document.hidden) atualizarFeed(); }, 15000);
 }
