@@ -456,6 +456,18 @@ async function compartilharSite(){
   if(r.status === 403){ expulsar('outro_aparelho'); return; }
   if(!r.ok || !d.token){ app.prepend(msg('erro', d.erro || 'Não consegui gerar o link do site.')); return; }
   var url = new URL('index.html?convite=' + d.token, location.href).href;
+  // Copia direto, sem abrir outra tela. Se o navegador não deixar copiar, mostra o link para copiar à mão.
+  var copiado = false;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    try{ await navigator.clipboard.writeText(url); copiado = true; }catch(e){ copiado = false; }
+  }
+  if(copiado){
+    var confirma = msg('ok', '✅ Link copiado! Agora é só colar onde quiser. Quem abrir entra sem login e tem 1 hora de acesso, contada a partir do primeiro acesso.');
+    app.prepend(confirma);
+    window.scrollTo({top:0, behavior:'smooth'});
+    setTimeout(function(){ confirma.remove(); }, 8000);
+    return;
+  }
   var txt = el('input', {type:'text', readonly:true, value:url, style:'width:100%;margin:6px 0;padding:8px;border:1px solid #c7cfe3;border-radius:8px;font-size:13px'});
   txt.onclick = function(){ this.select(); };
   var aviso = el('p', {style:'margin:0 0 6px;font-size:14px'}, 'Quem abrir este link entra sem login e tem 1 hora de acesso, contada a partir do primeiro acesso. Depois disso, precisa de login e senha.');
