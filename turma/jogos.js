@@ -571,6 +571,14 @@ window.JOGOS = {
     desc: "Ligue colunas (potências, raízes, propriedades, bases negativas e frações) e arraste cartões para categorias (quadrado perfeito, mesmo valor, sinal, raiz exata). Com combo, estrelas e dicas. Tem editor para criar o seu jogo de qualquer matéria.",
     emoji: "🔗", cor: "lilas", ferramenta: false, conteudo: "Números e operações"
   },
+  "mural-eletronico": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
+    nome: "Mural Eletrônico",
+    tema: "Mural colaborativo",
+    desc: "Mural da turma no estilo Padlet: texto, imagem, áudio, vídeo, links e arquivos, com comentários, reações, código de acesso, QR Code, PDF e modo apresentação. Os alunos postam pelo celular, sem criar conta.",
+    emoji: "📌", cor: "amarelo", ferramenta: true,
+    tipo: "ferramenta", link: "/mural/"
+  },
   "planificacao-solidos": {
     bncc: ["EF04MA17", "EF05MA16", "EF06MA17", "EM13MAT309"],
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],

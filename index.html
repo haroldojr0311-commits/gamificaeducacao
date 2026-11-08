@@ -978,6 +978,7 @@ async function compartilharJogo(id, caixa){
 async function abrirJogo(id){
   var j = window.JOGOS[id];
   marcarRecente(id);
+  if(j.link){ window.open(j.link, '_blank', 'noopener'); return; }
   fecharPlayer();
   var miolo = el('div', {class:'carregando'}, '⏳ Abrindo ' + j.nome + '…');
   var quadro = null;

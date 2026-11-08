@@ -117,14 +117,9 @@ def cartao(k, v, pref=''):
             f'<div class="c"><h3>{e(v["nome"])}</h3><p>{e(v.get("desc", ""))}</p></div></a>')
 
 ordenados = sorted(J.items(), key=lambda kv: kv[1]['nome'].lower())
-# Páginas fora do turma/jogos.js (apps próprios com login/acesso próprio)
-MURAL_CARD = ('<a class="item" href="../mural/" data-tipo="ferramenta" data-nivel="Fundamental 1|Fundamental 2|Ensino Médio|Superior">'
-  '<div class="nota" style="background:#ffe27a"><small>Mural colaborativo</small>📌</div>'
-  '<div class="c"><h3>Mural Eletrônico</h3><p>Mural eletrônico para a turma: publicações com texto, imagem, áudio, vídeo, links e arquivos, com comentários, reações, código de acesso, QR Code e modo apresentação. Os alunos postam pelo celular, sem criar conta.</p></div></a>')
-
 os.makedirs(os.path.join(RAIZ, 'catalogo'), exist_ok=True)
-numeros = (f'<div class="numeros"><div><b>{TOTAL+1}</b>aplicações</div><div><b>{cont["jogo"]}</b>jogos</div>'
-           f'<div><b>{cont["simulador"]}</b>simuladores</div><div><b>{cont["ferramenta"]+1}</b>ferramentas do professor</div></div>')
+numeros = (f'<div class="numeros"><div><b>{TOTAL}</b>aplicações</div><div><b>{cont["jogo"]}</b>jogos</div>'
+           f'<div><b>{cont["simulador"]}</b>simuladores</div><div><b>{cont["ferramenta"]}</b>ferramentas do professor</div></div>')
 
 # ---------- catálogo ----------
 filtros = ('<div class="filtros" id="fTipo">' + ''.join(f'<button type="button" data-t="{t}" aria-pressed="{"true" if t == "todos" else "false"}">{n}</button>'
@@ -132,7 +127,7 @@ filtros = ('<div class="filtros" id="fTipo">' + ''.join(f'<button type="button" 
            '<div class="filtros" id="fNivel">' + ''.join(f'<button type="button" data-n="{n}" aria-pressed="{"true" if n == "todos" else "false"}">{"Todos os níveis" if n == "todos" else n}</button>'
            for n in ['todos'] + NIVEIS) + '</div>')
 corpo = (f'<div class="card hero"><h1>Catálogo de aplicações</h1><p class="sub">Jogos, simuladores e ferramentas para usar em sala de aula, no projetor ou no celular dos alunos.</p>{numeros}</div>'
-         f'<div class="card">{filtros}<div class="grade" id="grade">{"".join(cartao(k, v) for k, v in ordenados)}{MURAL_CARD}</div></div>'
+         f'<div class="card">{filtros}<div class="grade" id="grade">{"".join(cartao(k, v) for k, v in ordenados)}</div></div>'
          """<script>
 (function(){var t='todos',n='todos';function f(){document.querySelectorAll('#grade .item').forEach(function(a){var ok=(t==='todos'||a.dataset.tipo===t)&&(n==='todos'||a.dataset.nivel.split('|').indexOf(n)>=0);a.style.display=ok?'':'none';});}
 document.querySelectorAll('#fTipo button').forEach(function(b){b.onclick=function(){t=b.dataset.t;document.querySelectorAll('#fTipo button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});f();};});
@@ -160,7 +155,7 @@ for k, v in ordenados:
              + (f'<p style="margin:8px 0 0;font-size:15px"><b>Habilidades da BNCC:</b> {", ".join(e(c) for c in v["bncc"])}</p>' if v.get('bncc') else '') +
              '</div></div></div>'
              f'<div class="card"><h2>Como usar em aula</h2><ul>{"".join("<li>" + x + "</li>" for x in USO[t])}</ul>'
-             f'<p><a class="bt" href="../">🚀 Abrir no portal</a><a class="bt sec" href="../">⏱️ Fazer a degustação grátis</a></p>'
+             f'<p><a class="bt" href="{('..' + v['link']) if v.get('link') else '../'}">🚀 {'Abrir' if v.get('link') else 'Abrir no portal'}</a><a class="bt sec" href="../">⏱️ Fazer a degustação grátis</a></p>'
              f'<p class="sub" style="font-size:15px">O acesso completo é pelo Plano Pró. Alunos não precisam de login: usam o link que o professor envia.</p></div>'
              f'<div class="card"><h2>Veja também</h2><div class="grade">{"".join(cartao(a, b) for a, b in rel)}</div></div>')
     open(os.path.join(RAIZ, 'catalogo', k + '.html'), 'w').write(pagina(f'{v["nome"]} · {NOME_TIPO[t]} educacional · Gamifica Educação', v.get('desc', '')[:300], corpo, f'catalogo/{k}.html',
