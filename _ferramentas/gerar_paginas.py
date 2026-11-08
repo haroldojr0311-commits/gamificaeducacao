@@ -72,7 +72,7 @@ footer a{margin:0 6px}
 
 def pagina(titulo, desc, corpo, caminho, extra_head=''):
     url = SITE + '/' + caminho
-    prefixo = '../' * caminho.count('/')
+    prefixo = '../' * caminho.count('/') or './'
     # imagem de pré-visualização própria da aplicação (og/<slug>.png), se existir; senão, a capa do site
     slug = os.path.basename(caminho)[:-5]
     tem_og = caminho.startswith('catalogo/') and caminho != 'catalogo/index.html' and os.path.exists(os.path.join(RAIZ, 'og', slug + '.png'))
