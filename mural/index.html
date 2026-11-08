@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mural Turbo · Gamifica Educação</title>
+<meta name="description" content="Crie murais eletrônicos colaborativos para a sua turma: publique textos, imagens e links em um mural em grade, colunas, linha do tempo ou lista.">
+<link rel="icon" href="../favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../icone.svg?v=3">
+<link rel="apple-touch-icon" href="../icone-180.png?v=3">
+<meta name="theme-color" content="#1d2b53">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Gamifica Educação"><meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Mural Turbo · Gamifica Educação"><meta property="og:description" content="Murais eletrônicos colaborativos para a sua turma."><meta property="og:image" content="https://gamificaeducacao.com.br/capa.png?v=3">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://gamificaeducacao.com.br/capa.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+:root{--tinta:#1d2b53;--tinta2:#55627f;--chao:#f3f6fb;--cartao:#ffffff;--linha:#d9e1ee;--marca:#ffd23f;--azul:#2f63d6;--verde:#12865f;--perigo:#c62828;--fd:'Fredoka','Nunito',system-ui,sans-serif;--fc:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--tinta:#eef2ff;--tinta2:#b8c2dc;--chao:#0f1730;--cartao:#1a2550;--linha:#2b3a63}}
+:root[data-theme="dark"]{--tinta:#eef2ff;--tinta2:#b8c2dc;--chao:#0f1730;--cartao:#1a2550;--linha:#2b3a63}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--chao);color:var(--tinta);font-family:var(--fc);font-size:17px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+h1,h2,h3{font-family:var(--fd);font-weight:600;line-height:1.2;margin:0 0 8px}
+a{color:var(--azul)}
+button,input,select,textarea{font:inherit}
+.topo{background:linear-gradient(135deg,#1d2b53,#2f4aa0);color:#fff;padding:12px 16px}
+.topo .in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.topo a.marca{color:#fff;text-decoration:none;font-family:var(--fd);font-size:1.4rem;font-weight:700}
+.topo a.marca span{color:var(--marca)}
+.topo a.voltar{color:#fff;text-decoration:none;font-weight:800;background:rgba(255,255,255,.14);padding:7px 12px;border-radius:999px;font-size:15px}
+main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
+.btn{display:inline-flex;align-items:center;gap:6px;justify-content:center;text-decoration:none;font-weight:800;border-radius:14px;padding:11px 18px;background:var(--marca);color:var(--tinta);border:2px solid #e0ad00;box-shadow:0 3px 0 #e0ad00;cursor:pointer;font-size:16px;min-height:44px}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #e0ad00}
+.btn.sec{background:transparent;color:var(--tinta);border-color:var(--linha);box-shadow:0 3px 0 var(--linha)}
+.btn.azul{background:var(--azul);color:#fff;border-color:#2350b3;box-shadow:0 3px 0 #2350b3}
+.btn.perigo{background:var(--perigo);color:#fff;border-color:#9a1c1c;box-shadow:0 3px 0 #9a1c1c}
+.btn.peq{padding:6px 10px;font-size:14px;min-height:34px;border-radius:10px;box-shadow:0 2px 0 var(--linha)}
+.cab{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.hero{background:linear-gradient(135deg,#2f63d6,#12865f);color:#fff;border-radius:22px;padding:26px;margin-bottom:22px;box-shadow:0 12px 28px rgba(0,0,0,.18)}
+.hero h1{font-size:clamp(1.7rem,4vw,2.4rem);color:#fff}
+.hero p{margin:0 0 14px;opacity:.95}
+.grade-murais{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.mcard{background:var(--cartao);color:var(--tinta);border-radius:18px;overflow:hidden;text-decoration:none;box-shadow:0 8px 20px rgba(29,43,83,.12);transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;border:2px solid var(--linha)}
+.mcard:hover,.mcard:focus-visible{transform:translateY(-3px);box-shadow:0 14px 28px rgba(29,43,83,.18);outline:none}
+.mcard .capa{height:96px;position:relative}
+.mcard .capa::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.25))}
+.mcard .c{padding:12px 14px 14px}
+.mcard h3{font-size:1.15rem;margin:0 0 4px;color:var(--tinta)}
+.mcard small{color:var(--tinta2);font-size:14px}
+.vazio{text-align:center;background:var(--cartao);color:var(--tinta);border:2px dashed var(--linha);border-radius:22px;padding:34px 18px}
+.vazio .ico{font-size:52px;margin-bottom:6px}
+.faixa{height:150px;border-radius:22px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 10px 24px rgba(29,43,83,.18)}
+.faixa .txt{position:absolute;left:20px;bottom:16px;right:20px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+.faixa h1{color:#fff;font-size:clamp(1.5rem,4vw,2.2rem);margin:0}
+.faixa p{margin:4px 0 0;opacity:.95}
+.acoes{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;align-items:center}
+.seg{display:inline-flex;background:var(--cartao);border:2px solid var(--linha);border-radius:14px;padding:3px;gap:3px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;color:var(--tinta);font-weight:800;padding:7px 12px;border-radius:10px;cursor:pointer;min-height:36px}
+.seg button[aria-pressed="true"]{background:var(--tinta);color:#fff}
+.painel{background:var(--cartao);color:var(--tinta);border-radius:18px;padding:18px;border:2px solid var(--linha);margin-bottom:18px;box-shadow:0 8px 20px rgba(29,43,83,.08)}
+.painel label{display:block;font-weight:800;font-size:15px;margin:10px 0 4px}
+.painel input,.painel textarea,.painel select{width:100%;border:2px solid var(--linha);border-radius:12px;padding:10px 12px;background:var(--cartao);color:var(--tinta)}
+.painel textarea{min-height:110px;resize:vertical}
+.ajuda{font-size:14px;color:var(--tinta2);margin:4px 0 0}
+.cores{display:flex;gap:8px;flex-wrap:wrap}
+.cores button{width:38px;height:38px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--linha);cursor:pointer}
+.cores button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--tinta)}
+.feed{display:grid;gap:14px}
+.feed.grade{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.feed.colunas{display:block;column-count:3;column-gap:14px}
+.feed.colunas .pub{break-inside:avoid;margin-bottom:14px;display:block}
+.feed.linha{grid-template-columns:1fr;position:relative;padding-left:26px}
+.feed.linha::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:4px;background:var(--linha);border-radius:4px}
+.feed.linha .pub{position:relative}
+.feed.linha .pub::before{content:"";position:absolute;left:-23px;top:20px;width:14px;height:14px;border-radius:50%;background:var(--azul);border:3px solid var(--chao)}
+.feed.lista{grid-template-columns:1fr}
+.feed.lista .pub{flex-direction:row;align-items:center;gap:12px}
+.feed.lista .pub .corpo{flex:1}
+.pub{background:var(--cartao);color:var(--tinta);border-radius:16px;padding:14px;box-shadow:0 6px 16px rgba(29,43,83,.1);border:2px solid var(--linha);display:flex;flex-direction:column;gap:8px;min-width:0;position:relative;animation:surgir .35s ease}
+@keyframes surgir{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pub .tipo{align-self:flex-start;font-size:12px;font-weight:900;letter-spacing:.6px;text-transform:uppercase;border-radius:999px;padding:3px 10px;background:#eef2ff;color:#2f4aa0}
+.pub.tipo-imagem .tipo{background:var(--cartao)3c4;color:#8a6400}
+.pub.tipo-link .tipo{background:#e0f5ec;color:var(--verde)}
+.pub .texto{white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;font-size:16px}
+.pub img{width:100%;height:auto;border-radius:12px;display:block;background:#f3f6fb;cursor:zoom-in}
+.pub .legenda{font-size:15px;color:var(--tinta2)}
+.pub .rodape{font-size:13px;color:var(--tinta2);display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.pub .lk{display:block;text-decoration:none;color:var(--tinta);border:2px solid var(--linha);border-radius:12px;padding:10px 12px;overflow-wrap:anywhere}
+.pub .lk b{display:block;color:var(--azul);font-size:15px}
+.pub .apagar{position:absolute;top:8px;right:8px}
+.feed.colunas .pub .apagar{position:static;align-self:flex-end}
+.quadro{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:12px 18px;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.3);z-index:50;font-weight:800;max-width:92vw;text-align:center}
+.modal-fundo{position:fixed;inset:0;background:rgba(10,16,35,.6);display:grid;place-items:center;z-index:40;padding:16px}
+.modal{background:var(--chao);color:var(--tinta);border-radius:20px;padding:20px;max-width:520px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.modal .acoes{justify-content:flex-end}
+.aviso{background:var(--cartao)3c4;color:#5a4300;border-radius:12px;padding:10px 12px;font-size:14px;margin-top:10px}
+.lupa{position:fixed;inset:0;background:rgba(0,0,0,.85);display:grid;place-items:center;z-index:60;padding:14px;cursor:zoom-out}
+.lupa img{max-width:100%;max-height:100%;border-radius:12px}
+.fb{font-size:15px;font-weight:700;margin-top:8px;min-height:20px}
+.fb.erro{color:var(--perigo)}
+.fb.ok{color:var(--verde)}
+.rodape-site{text-align:center;color:var(--tinta2);font-size:14px;padding:20px 16px 30px}
+.rodape-site a{color:var(--azul)}
+:focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+@media(max-width:900px){.feed.colunas{column-count:2}}
+@media(max-width:600px){.feed.colunas{column-count:1}.feed.grade{grid-template-columns:1fr}.hero{padding:20px}.faixa{height:120px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topo"><div class="in">
+  <a class="marca" href="#/">Mural <span>Turbo</span></a>
+  <a class="voltar" href="../">← Gamifica Educação</a>
+</div></header>
+<main id="app" aria-live="polite"></main>
+<footer class="rodape-site">Mural Turbo · um recurso do <a href="../">Gamifica Educação</a> · <a href="../privacidade.html">Privacidade</a></footer>
+
+<script>
+const SUPA_URL = 'https://ujzmqpsxfxpxehasoxbq.supabase.co';
+const SUPA_KEY = 'sb_publishable_wEtFV7CnN28YKIAclZfPQg_QVkVJPVn';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+const CORES = ['#2f63d6','#12865f','#ff7a59','#8e44ad','#e0a800','#c2185b','#0f8ba8','#3d4a6b'];
+const LAYOUTS = [['grade','▦ Grade'],['colunas','▥ Colunas'],['linha','⏤ Linha do tempo'],['lista','☰ Lista']];
+const TIPOS = [['texto','📝 Texto'],['imagem','🖼️ Imagem'],['link','🔗 Link']];
+const app = document.getElementById('app');
+let timer = null;
+
+/* ---------- utilidades ---------- */
+function el(tag, attrs = {}, ...filhos){
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)){
+    if (v === false || v == null) continue;
+    if (k === 'class') n.className = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if (k === 'html') n.innerHTML = v;
+    else n.setAttribute(k, v === true ? '' : v);
+  }
+  for (const f of filhos.flat()){
+    if (f == null || f === false) continue;
+    n.append(f.nodeType ? f : document.createTextNode(String(f)));
+  }
+  return n;
+}
+function toast(msg){
+  const t = el('div', {class:'quadro', role:'status'}, msg);
+  document.body.append(t);
+  setTimeout(() => t.remove(), 2600);
+}
+function urlOk(u){
+  try { const x = new URL(u); return x.protocol === 'https:' || x.protocol === 'http:'; } catch(e){ return false; }
+}
+function data(iso){
+  return new Date(iso).toLocaleString('pt-BR', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
+}
+function lerMeus(){
+  try { return JSON.parse(localStorage.getItem('mural-turbo-meus') || '[]'); } catch(e){ return []; }
+}
+function gravarMeus(lista){
+  try { localStorage.setItem('mural-turbo-meus', JSON.stringify(lista)); } catch(e){}
+}
+function meuMural(id){ return lerMeus().find(m => m.id === id) || null; }
+function salvarMeu(m){
+  const l = lerMeus().filter(x => x.id !== m.id); l.unshift(m); gravarMeus(l);
+}
+function removerMeu(id){ gravarMeus(lerMeus().filter(x => x.id !== id)); }
+function nomeSalvo(){ try { return localStorage.getItem('mural-turbo-nome') || ''; } catch(e){ return ''; } }
+function gravarNome(n){ try { localStorage.setItem('mural-turbo-nome', n); } catch(e){} }
+function pararAtualizacao(){ if (timer){ clearInterval(timer); timer = null; } }
+function erroAmigavel(err){
+  const m = (err && err.message) || '';
+  if (m.includes('Sem permissão')) return 'Você não tem permissão para isso neste navegador.';
+  if (m.includes('mural_') || m.includes('Failed to fetch')) return 'Não foi possível falar com o servidor agora. Tente de novo em instantes.';
+  return 'Algo deu errado. Tente novamente.';
+}
+
+/* ---------- roteamento ---------- */
+function rota(){
+  pararAtualizacao();
+  const h = location.hash || '#/';
+  const m = h.match(/^#\/m\/([0-9a-f-]{36})$/i);
+  if (m) return vistaMural(m[1].toLowerCase());
+  vistaInicio();
+}
+window.addEventListener('hashchange', rota);
+
+/* ---------- tela inicial ---------- */
+function vistaInicio(){
+  const meus = lerMeus();
+  const cards = meus.map(m => el('a', {class:'mcard', href:'#/m/' + m.id},
+    el('div', {class:'capa', style:'background:' + m.cor}),
+    el('div', {class:'c'},
+      el('h3', {}, m.titulo),
+      el('small', {}, 'Criado em ' + data(m.criado || new Date().toISOString())))));
+  app.replaceChildren(
+    el('section', {class:'hero'},
+      el('h1', {}, 'Seus murais'),
+      el('p', {}, 'Crie um mural, compartilhe o link com a turma e acompanhe as publicações. Os alunos não precisam de conta.'),
+      el('button', {class:'btn', onclick: abrirCriar}, '➕ Criar novo mural')),
+    meus.length
+      ? el('div', {class:'grade-murais'}, cards)
+      : el('div', {class:'vazio'},
+          el('div', {class:'ico', 'aria-hidden':'true'}, '🧱'),
+          el('h2', {}, 'Crie o primeiro mural'),
+          el('p', {}, 'Escolha um título, uma cor e um layout. Depois, publique a primeira contribuição.'),
+          el('button', {class:'btn', onclick: abrirCriar}, '➕ Criar mural')),
+    el('p', {class:'ajuda', style:'margin-top:18px'}, 'Os murais aparecem só neste navegador. Para acessá-los de outro aparelho, guarde o link de cada mural.'));
+}
+
+/* formulário de criar/editar mural */
+function formMural(valores, aoSalvar){
+  let cor = valores.cor || CORES[0];
+  let layout = valores.layout || 'grade';
+  const titulo = el('input', {id:'mt', maxlength:'120', required:true, value: valores.titulo || '', placeholder:'Ex.: Conceitos de porcentagem'});
+  const desc = el('textarea', {id:'md', maxlength:'500', placeholder:'Instruções para a turma (opcional)'}, valores.descricao || '');
+  const feedback = el('div', {class:'fb erro', role:'alert'});
+  const botoesCor = CORES.map(c => el('button', {type:'button', 'aria-label':'Cor ' + c, 'aria-pressed': String(c === cor), style:'background:' + c, onclick(e){
+    cor = c; botoesCor.forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute('aria-label') === 'Cor ' + c)));
+  }}));
+  const botoesLayout = LAYOUTS.map(([v, nome]) => el('button', {type:'button', 'aria-pressed': String(v === layout), onclick(){
+    layout = v; botoesLayout.forEach((b, i) => b.setAttribute('aria-pressed', String(LAYOUTS[i][0] === v)));
+  }}, nome));
+  const form = el('form', {class:'painel', onsubmit: async (e) => {
+    e.preventDefault();
+    feedback.textContent = '';
+    const t = titulo.value.trim();
+    if (!t){ feedback.textContent = 'Dê um título para o mural.'; titulo.focus(); return; }
+    const botao = form.querySelector('[type=submit]'); botao.disabled = true;
+    try { await aoSalvar({titulo:t, descricao:desc.value.trim(), cor, layout}); }
+    catch(err){ feedback.textContent = erroAmigavel(err); botao.disabled = false; }
+  }},
+    el('label', {for:'mt'}, 'Título'), titulo,
+    el('label', {for:'md'}, 'Descrição'), desc,
+    el('label', {}, 'Cor do mural'), el('div', {class:'cores'}, botoesCor),
+    el('label', {}, 'Layout'), el('div', {class:'seg'}, botoesLayout),
+    el('p', {class:'ajuda'}, 'Grade: cards organizados · Colunas: estilo mural · Linha do tempo: em ordem de publicação · Lista: uma por linha.'),
+    feedback,
+    el('div', {class:'acoes', style:'justify-content:flex-end;margin-top:12px'},
+      el('button', {type:'button', class:'btn sec', onclick: () => fecharModal()}, 'Cancelar'),
+      el('button', {type:'submit', class:'btn'}, 'Salvar')));
+  return form;
+}
+let modalAtual = null;
+function abrirModal(conteudo){
+  fecharModal();
+  modalAtual = el('div', {class:'modal-fundo', onclick(e){ if (e.target === modalAtual) fecharModal(); }},
+    el('div', {class:'modal', role:'dialog', 'aria-modal':'true'}, conteudo));
+  document.body.append(modalAtual);
+  const primeiro = modalAtual.querySelector('input,textarea,button'); if (primeiro) primeiro.focus();
+}
+function fecharModal(){ if (modalAtual){ modalAtual.remove(); modalAtual = null; } }
+function abrirCriar(){
+  abrirModal(el('div', {}, el('h2', {}, 'Novo mural'),
+    formMural({}, async (v) => {
+      const { data: r, error } = await sb.rpc('mural_criar', {p_titulo: v.titulo, p_descricao: v.descricao, p_cor: v.cor, p_layout: v.layout});
+      if (error) throw error;
+      const id = r.id;
+      salvarMeu({id, token: r.token, titulo: v.titulo, cor: v.cor, criado: new Date().toISOString()});
+      fecharModal();
+      toast('Mural criado! Compartilhe o link com a turma.');
+      location.hash = '#/m/' + id;
+    })));
+}
+
+/* ---------- mural ---------- */
+async function vistaMural(id){
+  app.replaceChildren(el('p', {class:'ajuda'}, 'Carregando o mural…'));
+  const [{ data: mural, error: e1 }, { data: pubs, error: e2 }] = await Promise.all([
+    sb.from('mural_murais').select('*').eq('id', id).maybeSingle(),
+    sb.from('mural_publicacoes').select('*').eq('mural_id', id).order('criado_em', {ascending:false}).limit(300)
+  ]);
+  if (e1 || e2){ app.replaceChildren(el('div', {class:'vazio'}, el('h2', {}, 'Não foi possível abrir o mural'), el('p', {}, erroAmigavel(e1 || e2)), el('a', {class:'btn', href:'#/'}, '← Voltar'))); return; }
+  if (!mural){ app.replaceChildren(el('div', {class:'vazio'}, el('div', {class:'ico'}, '🔍'), el('h2', {}, 'Mural não encontrado'), el('p', {}, 'Confira o link ou peça um novo à professora.'), el('a', {class:'btn', href:'#/'}, '← Voltar'))); return; }
+
+  const meu = meuMural(id);
+  const dono = !!meu;
+  let layout = mural.layout;
+  let publicacoes = pubs || [];
+
+  const faixa = el('section', {class:'faixa', style:'background:' + mural.cor},
+    el('div', {class:'txt'}, el('h1', {}, mural.titulo), el('p', {}, mural.descricao || 'Publique a sua contribuição abaixo.')));
+
+  const botoesCopiar = el('div', {class:'acoes'},
+    el('button', {class:'btn sec peq', onclick: async () => {
+      const url = location.href;
+      try { await navigator.clipboard.writeText(url); toast('Link copiado!'); }
+      catch(e){ toast(url); }
+    }}, '🔗 Copiar link'),
+    el('a', {class:'btn sec peq', target:'_blank', rel:'noopener', href:'https://wa.me/?text=' + encodeURIComponent('Participe do nosso mural: ' + mural.titulo + ' ' + location.href)}, '💬 WhatsApp'));
+
+  const seletorLayout = el('div', {class:'seg', role:'group', 'aria-label':'Layout do mural'});
+  const botoesL = LAYOUTS.map(([v, nome]) => el('button', {'aria-pressed': String(v === layout), onclick: async () => {
+    if (dono){
+      try {
+        const { error } = await sb.rpc('mural_editar', {p_mural: id, p_token: meu.token, p_titulo: mural.titulo, p_descricao: mural.descricao || '', p_cor: mural.cor, p_layout: v});
+        if (error) throw error;
+        mural.layout = v; layout = v; toast('Layout alterado para ' + nome.replace(/^\S+\s/, ''));
+        desenharFeed();
+        botoesL.forEach((b, i) => b.setAttribute('aria-pressed', String(LAYOUTS[i][0] === v)));
+      } catch(err){ toast(erroAmigavel(err)); }
+    } else {
+      layout = v; desenharFeed();
+      botoesL.forEach((b, i) => b.setAttribute('aria-pressed', String(LAYOUTS[i][0] === v)));
+    }
+  }}, nome));
+  botoesL.forEach(b => seletorLayout.append(b));
+
+  const ferramentasDono = dono ? el('div', {class:'acoes'},
+    el('button', {class:'btn sec peq', onclick: () => abrirModal(el('div', {}, el('h2', {}, 'Editar mural'), formMural({titulo: mural.titulo, descricao: mural.descricao, cor: mural.cor, layout: mural.layout}, async (v) => {
+      const { error } = await sb.rpc('mural_editar', {p_mural: id, p_token: meu.token, p_titulo: v.titulo, p_descricao: v.descricao, p_cor: v.cor, p_layout: v.layout});
+      if (error) throw error;
+      fecharModal(); toast('Mural atualizado.'); rota();
+    })))}, '✏️ Editar mural'),
+    el('button', {class:'btn perigo peq', onclick: async () => {
+      if (!confirm('Excluir este mural e todas as publicações? Isso não pode ser desfeito.')) return;
+      const { error } = await sb.rpc('mural_excluir', {p_mural: id, p_token: meu.token});
+      if (error){ toast(erroAmigavel(error)); return; }
+      removerMeu(id); toast('Mural excluído.'); location.hash = '#/';
+    }}, '🗑️ Excluir mural'),
+    el('span', {class:'ajuda', style:'margin:0'}, '👩‍🏫 Você é o dono deste mural')) : null;
+
+  const campoNome = el('input', {id:'autor', maxlength:'60', placeholder:'Seu nome (ex.: Ana P.)', value: nomeSalvo(), 'aria-label':'Seu nome'});
+  let tipo = 'texto';
+  const botoesTipo = TIPOS.map(([v, nome]) => el('button', {type:'button', 'aria-pressed': String(v === tipo), onclick(){
+    tipo = v; botoesTipo.forEach((b, i) => b.setAttribute('aria-pressed', String(TIPOS[i][0] === v)));
+    conteudo.placeholder = v === 'texto' ? 'Escreva a sua contribuição…' : 'Cole o endereço (https://…)';
+    conteudo.type = v === 'texto' ? 'text' : 'url';
+    conteudo.maxLength = v === 'texto' ? 2000 : 2000;
+    if (v === 'texto'){ conteudo.replaceWith(areaTexto); } else { areaTexto.replaceWith(conteudo); }
+    contador();
+  }}, nome));
+  const conteudo = el('input', {type:'text', placeholder:'Escreva a sua contribuição…', 'aria-label':'Conteúdo'});
+  const areaTexto = el('textarea', {placeholder:'Escreva a sua contribuição…', 'aria-label':'Conteúdo', maxlength:'2000'});
+  const contadorEl = el('span', {class:'ajuda', style:'margin:0'});
+  function contador(){ const v = (tipo === 'texto' ? areaTexto : conteudo).value; contadorEl.textContent = v.length + ' / 2000'; }
+  areaTexto.addEventListener('input', contador);
+  conteudo.addEventListener('input', contador);
+  const legenda = el('input', {maxlength:'200', placeholder:'Legenda (opcional)', 'aria-label':'Legenda'});
+  const feedback = el('div', {class:'fb', role:'alert'});
+
+  const formPub = el('form', {class:'painel', novalidate:true, onsubmit: async (e) => {
+    e.preventDefault(); feedback.textContent = ''; feedback.className = 'fb';
+    const campo = tipo === 'texto' ? areaTexto : conteudo;
+    const valor = campo.value.trim();
+    if (!valor){ feedback.className = 'fb erro'; feedback.textContent = 'Escreva ou cole algo antes de publicar.'; campo.focus(); return; }
+    if (tipo !== 'texto' && !urlOk(valor)){ feedback.className = 'fb erro'; feedback.textContent = 'O endereço precisa começar com https:// (ou http://).'; campo.focus(); return; }
+    const autor = campoNome.value.trim() || 'Anônimo';
+    gravarNome(autor);
+    const botao = formPub.querySelector('[type=submit]'); botao.disabled = true;
+    const { error } = await sb.from('mural_publicacoes').insert({mural_id: id, tipo, conteudo: valor, legenda: legenda.value.trim(), autor});
+    botao.disabled = false;
+    if (error){ feedback.className = 'fb erro'; feedback.textContent = erroAmigavel(error); return; }
+    campo.value = ''; legenda.value = ''; contador();
+    toast('Publicado! 🎉');
+    await atualizarFeed();
+  }},
+    el('h2', {style:'font-size:1.2rem'}, '✍️ Publicar no mural'),
+    el('div', {class:'seg', role:'group', 'aria-label':'Tipo de publicação'}, botoesTipo),
+    el('label', {for:'autor'}, 'Seu nome'), campoNome,
+    el('label', {}, 'Conteúdo'), areaTexto,
+    el('div', {class:'rodape', style:'display:flex;justify-content:space-between;align-items:center'}, contadorEl),
+    el('label', {}, 'Legenda'), legenda,
+    feedback,
+    el('div', {class:'acoes', style:'justify-content:flex-end;margin:12px 0 0'}, el('button', {type:'submit', class:'btn'}, '📌 Publicar no mural')));
+  contador();
+
+  const feed = el('div', {class:'feed ' + layout, 'aria-label':'Publicações'});
+  function desenharFeed(){
+    feed.className = 'feed ' + layout;
+    const itens = (layout === 'linha') ? [...publicacoes].reverse() : publicacoes;
+    feed.replaceChildren(...(itens.length ? itens.map(cartao) : [el('div', {class:'vazio', style:'grid-column:1/-1'}, el('div', {class:'ico'}, '✨'), el('h2', {}, 'Crie a primeira publicação'), el('p', {}, 'Use o formulário acima para começar o mural.'))]));
+  }
+  function cartao(p){
+    const corpo = [];
+    if (p.tipo === 'texto'){
+      corpo.push(el('div', {class:'texto'}, p.conteudo));
+    } else if (p.tipo === 'imagem'){
+      const img = el('img', {src: p.conteudo, alt: p.legenda || 'Imagem enviada por ' + p.autor, loading:'lazy', referrerpolicy:'no-referrer', onclick(){ abrirLupa(p.conteudo, p.legenda); }});
+      img.onerror = () => { img.replaceWith(el('div', {class:'aviso'}, 'Não foi possível carregar esta imagem. Confira o endereço.')); };
+      corpo.push(img);
+    } else if (p.tipo === 'link'){
+      let host = p.conteudo; try { host = new URL(p.conteudo).hostname; } catch(e){}
+      corpo.push(el('a', {class:'lk', href: p.conteudo, target:'_blank', rel:'noopener noreferrer'}, el('b', {}, '🔗 ' + host), p.conteudo));
+    }
+    if (p.legenda) corpo.push(el('div', {class:'legenda'}, p.legenda));
+    const tipoNome = (TIPOS.find(t => t[0] === p.tipo) || ['', ''])[1].replace(/^\S+\s/, '');
+    return el('article', {class: 'pub tipo-' + p.tipo, 'aria-label': tipoNome + ' de ' + p.autor},
+      el('span', {class:'tipo'}, tipoNome),
+      el('div', {class:'corpo', style:'display:flex;flex-direction:column;gap:8px'}, corpo),
+      el('div', {class:'rodape'}, el('span', {}, '👤 ' + p.autor), el('span', {}, data(p.criado_em))),
+      dono ? el('button', {class:'btn perigo peq apagar', 'aria-label':'Excluir publicação', onclick: async () => {
+        if (!confirm('Excluir esta publicação?')) return;
+        const { error } = await sb.rpc('mural_excluir_publicacao', {p_publicacao: p.id, p_token: meu.token});
+        if (error){ toast(erroAmigavel(error)); return; }
+        publicacoes = publicacoes.filter(x => x.id !== p.id); desenharFeed(); toast('Publicação excluída.');
+      }}, '🗑️') : null);
+  }
+  async function atualizarFeed(){
+    const { data: novas } = await sb.from('mural_publicacoes').select('*').eq('mural_id', id).order('criado_em', {ascending:false}).limit(300);
+    if (novas){ publicacoes = novas; desenharFeed(); }
+  }
+  desenharFeed();
+  app.replaceChildren(
+    el('p', {}, el('a', {href:'#/', class:'ajuda'}, '← Todos os murais')),
+    faixa,
+    el('div', {class:'cab'}, seletorLayout, botoesCopiar),
+    ...(dono ? [ferramentasDono] : []),
+    formPub,
+    feed);
+  timer = setInterval(() => { if (!document.hidden) atualizarFeed(); }, 15000);
+}
+function abrirLupa(src, legenda){
+  const l = el('div', {class:'lupa', onclick(){ l.remove(); }}, el('img', {src, alt: legenda || 'Imagem ampliada'}));
+  document.body.append(l);
+}
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape'){ fecharModal(); document.querySelectorAll('.lupa').forEach(x => x.remove()); } });
+
+rota();
+</script>
+</body>
+</html>
