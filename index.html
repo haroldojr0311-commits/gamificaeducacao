@@ -820,6 +820,12 @@ function desenharLogin(aviso){
   var caixa = el('div');
   var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '🚀 Entrar');
   var ult = ler('gm_ultimo_login'); if(ult) login.value = ult;
+  var viaLink = lerAcessoDoLink();
+  if(viaLink){
+    login.value = viaLink.login; senha.value = viaLink.senha;
+    try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}   // tira os dados do endereço
+    caixa.append(msg('ok', '✅ Dados preenchidos pelo link. Toque em Entrar.'));
+  }
 
   var form = el('form', {onsubmit: async function(ev){
     ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Entrando…';
@@ -1479,6 +1485,51 @@ function situacao(c){
 }
 /* Abre o WhatsApp com o texto pronto (sem número: escolhe o contato na hora). */
 function linkWhatsApp(texto){ return 'https://wa.me/?text=' + encodeURIComponent(texto); }
+/* Link de acesso: leva o login e a senha no trecho depois do # (que não vai para o servidor).
+   Ao abrir, a tela de entrada vem preenchida e o endereço é limpo. */
+function linkDeAcesso(login, senha){
+  var b = btoa(unescape(encodeURIComponent(login + '\n' + senha))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  return location.origin + location.pathname.replace(/[^/]*$/, '') + '#acesso=' + b;
+}
+window.addEventListener('hashchange', function(){ if(!sessao && lerAcessoDoLink()) desenharLogin(); });
+function lerAcessoDoLink(){
+  var m = (location.hash || '').match(/^#acesso=([A-Za-z0-9_-]+)$/);
+  if(!m) return null;
+  try{
+    var t = decodeURIComponent(escape(atob(m[1].replace(/-/g, '+').replace(/_/g, '/'))));
+    var i = t.indexOf('\n'); if(i < 1) return null;
+    return {login: t.slice(0, i), senha: t.slice(i + 1)};
+  }catch(e){ return null; }
+}
+function mostrarQR(url, titulo, explica){
+  var cv;
+  try{ cv = window.QRMini.canvas(url, 520); }
+  catch(e){ window.alert('Login e senha muito longos para virar QR Code. Use o link de acesso ou escolha dados mais curtos.'); return; }
+  var img = cv.toDataURL('image/png');
+  var fundo = el('div', {class:'ma-fundo', role:'dialog', 'aria-modal':'true', 'aria-label':titulo, onclick: function(ev){ if(ev.target === fundo) fechar(); }});
+  var fechar = function(){ fundo.remove(); document.removeEventListener('keydown', esc); };
+  var esc = function(ev){ if(ev.key === 'Escape') fechar(); };
+  document.addEventListener('keydown', esc);
+  fundo.append(el('div', {class:'ma-caixa'},
+    el('h2', {}, titulo), el('p', {class:'sub2'}, explica || ''),
+    el('img', {src: img, alt:'QR Code de acesso', style:'width:100%;max-width:300px;display:block;margin:12px auto;background:#fff;padding:10px;border-radius:12px'}),
+    el('div', {class:'linha', style:'justify-content:center'},
+      el('button', {class:'peq', type:'button', onclick: function(){ var a = document.createElement('a'); a.href = img; a.download = 'qr-acesso.png'; a.click(); }}, '⬇️ Baixar imagem'),
+      el('button', {class:'peq sec', type:'button', onclick: fechar}, 'Fechar'))));
+  document.body.append(fundo);
+}
+/* Bloco de entrega: mensagem pronta + copiar + WhatsApp + link de acesso + QR Code */
+function blocoEntrega(texto, login, senha){
+  var btn = el('button', {class:'peq', type:'button'}, '📋 Copiar mensagem'); btn.addEventListener('click', function(){ copiar(texto, btn); });
+  var wa = el('a', {class:'peq', href: linkWhatsApp(texto), target:'_blank', rel:'noopener', style:'text-decoration:none'}, '💬 Enviar por WhatsApp');
+  var url = linkDeAcesso(login, senha);
+  var bl = el('button', {class:'peq sec', type:'button'}, '🔗 Copiar link de acesso'); bl.addEventListener('click', function(){ copiar(url, bl); });
+  var bq = el('button', {class:'peq sec', type:'button', onclick: function(){ mostrarQR(url, 'QR Code de acesso', 'Quem ler este QR Code abre o site com o login e a senha já preenchidos. Envie só para a pessoa certa.'); }}, '📱 Gerar QR Code');
+  return el('div', {},
+    el('div', {class:'entrega'}, texto),
+    el('div', {class:'linha', style:'margin-top:8px;gap:6px'}, btn, wa, bl, bq),
+    el('p', {class:'sub2'}, '🔒 O link e o QR Code levam o login e a senha dentro deles. Envie só para a pessoa certa.'));
+}
 var cartaoVis = null, cartaoVisEm = 0;
 function cartaoVisitas(){
   if(cartaoVis && Date.now() - cartaoVisEm < 60000) return cartaoVis;
@@ -1600,12 +1651,9 @@ function desenharAdmin(){
       '🌐 Site: ' + location.origin + location.pathname.replace(/[^/]*$/, '') + '\n👤 Login: ' + corpo.login + '\n🔑 Senha: ' + corpo.senha + '\n' +
       (corpo.validade ? '📅 Válido até: ' + fmtDia(corpo.validade) + '\n' : '') +
       '\nAtenção: o login funciona em um aparelho por vez. Não compartilhe sua senha.';
-    var btn = el('button', {class:'peq', type:'button'}, '📋 Copiar mensagem');
-    btn.addEventListener('click', function(){ copiar(texto, btn); });
-    var wa = el('a', {class:'peq', href: linkWhatsApp(texto), target:'_blank', rel:'noopener', style:'margin-left:6px;text-decoration:none'}, '💬 Enviar por WhatsApp');
     await carregarContas(); desenharAdmin();
     var area = document.getElementById('entrega');
-    if(area){ area.replaceChildren(msg('ok', '✅ Conta criada! Envie estes dados para a pessoa:'), el('div', {class:'entrega'}, texto), el('div', {style:'margin-top:8px'}, btn, wa)); area.scrollIntoView({behavior:'smooth', block:'center'}); }
+    if(area){ area.replaceChildren(msg('ok', '✅ Conta criada! Envie estes dados para a pessoa:'), blocoEntrega(texto, corpo.login, corpo.senha)); area.scrollIntoView({behavior:'smooth', block:'center'}); }
   }},
     el('div', {class:'duas'},
       el('div', {}, el('label', {for:'cNome'}, 'Nome da pessoa'), nome),
@@ -1677,9 +1725,7 @@ function cartaoConta(c){
     var d = await r.json().catch(function(){ return {}; });
     if(!r.ok){ extra.replaceChildren(msg('erro', d.erro || 'Erro ao trocar a senha.')); return; }
     var texto = 'Sua nova senha do Gamifica Educação:\n👤 Login: ' + loginMostrado + '\n🔑 Senha: ' + nova;
-    var btn = el('button', {class:'peq'}, '📋 Copiar'); btn.addEventListener('click', function(){ copiar(texto, btn); });
-    var wa = el('a', {class:'peq', href: linkWhatsApp(texto), target:'_blank', rel:'noopener', style:'margin-left:6px;text-decoration:none'}, '💬 Enviar por WhatsApp');
-    extra.replaceChildren(msg('ok', 'Senha trocada. Envie para a pessoa:'), el('div', {class:'entrega'}, texto), el('div', {style:'margin-top:8px'}, btn, wa));
+    extra.replaceChildren(msg('ok', 'Senha trocada. Envie para a pessoa:'), blocoEntrega(texto, c.login || c.email, nova));
   }}, '🔑 Nova senha'));
   if(!eu && c.online) botoes.push(el('button', {class:'peq sec', onclick: async function(){
     var r = await sb.rpc('admin_derrubar', {p_id: c.id});
