@@ -560,8 +560,7 @@ window.JOGOS = {
     nome: "Fichas de Tabuada e Cálculo Mental",
     tema: "Ferramenta do professor",
     desc: "Gere fichas para imprimir: tabuadas, número que falta, tabela pitagórica, adição e subtração mental, dobro e metade, ×÷ por 10/100/1000, porcentagem, expressões, potências e raízes. Várias versões, letra grande e gabarito separado.",
-    emoji: "🖨️", cor: "lilas", ferramenta: true,
-    tipo: "ferramenta"
+    emoji: "🖨️", cor: "lilas", ferramenta: false, conteudo: "Números e operações"
   },
   "ligar-classificar": {
     bncc: ["EF08MA01", "EF08MA02", "EF09MA03"],
