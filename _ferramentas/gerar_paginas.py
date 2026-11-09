@@ -163,7 +163,7 @@ filtros = ('<div class="filtros" id="fTipo">' + ''.join(f'<button type="button" 
            '<div class="filtros" id="fNivel">' + ''.join(f'<button type="button" data-n="{n}" aria-pressed="{"true" if n == "todos" else "false"}">{"Todos os níveis" if n == "todos" else n}</button>'
            for n in ['todos'] + NIVEIS) + '</div>')
 corpo = (f'<div class="card hero"><h1>Catálogo de aplicações</h1><p class="sub">Jogos, simuladores e ferramentas para usar em sala de aula, no projetor ou no celular dos alunos.</p>{numeros}<p style="margin-top:16px"><a class="bt" href="../#degustacao">⏱️ Experimentar grátis</a><a class="bt sec" href="../novidades.html">🆕 Novidades</a></p></div>'
-         '<div class="card" id="demos"><h2>▶️ Demonstrações grátis</h2><p class="sub">Jogue 3 minutos por dia em cada jogo, sem cadastro.</p><p>' + ''.join(f'<a class="bt" href="../demo/{d}.html">▶️ {e(J[d]["nome"])}</a>' for d in DEMOS) + '</p></div>'
+         '<div class="card" id="demos"><h2>▶️ Demonstrações grátis</h2><p class="sub">Jogue 5 minutos por dia em cada jogo, sem cadastro.</p><p>' + ''.join(f'<a class="bt" href="../demo/{d}.html">▶️ {e(J[d]["nome"])}</a>' for d in DEMOS) + '</p></div>'
          f'<div class="card">{filtros}<div class="grade" id="grade">{"".join(cartao(k, v) for k, v in ordenados)}</div></div>'
          """<script>
 (function(){var t='todos',n='todos';function f(){document.querySelectorAll('#grade .item').forEach(function(a){var ok=(t==='todos'||a.dataset.tipo===t)&&(n==='todos'||a.dataset.nivel.split('|').indexOf(n)>=0);a.style.display=ok?'':'none';});}
@@ -211,7 +211,7 @@ for k, v in ordenados:
              '</div></div></div>'
              f'<div class="card"><h2>Para quem é</h2><p><b>{e(v["nome"])}</b> é {art} {tipo_min}{tema_txt} {indic} para <b>{e(nivel_txt)}</b>. Funciona no celular, no tablet e no computador, direto no navegador, sem instalar nada.</p></div>'
              f'<div class="card"><h2>Como usar em aula</h2><ul>{"".join("<li>" + x + "</li>" for x in USO[t])}</ul>'
-             f'<p>{(f"<a class=\"bt\" href=\"../demo/{k}.html\">▶️ Jogar demonstração grátis (3 min)</a>") if k in DEMOS_SET else ""}<a class="bt" href="{('..' + v['link']) if v.get('link') else '../'}">🚀 {'Abrir' if v.get('link') else 'Abrir no portal'}</a><a class="bt sec" href="../#degustacao">⏱️ Fazer a degustação grátis</a></p>{compartilhar}'
+             f'<p>{(f"<a class=\"bt\" href=\"../demo/{k}.html\">▶️ Jogar demonstração grátis (5 min)</a>") if k in DEMOS_SET else ""}<a class="bt" href="{('..' + v['link']) if v.get('link') else '../'}">🚀 {'Abrir' if v.get('link') else 'Abrir no portal'}</a><a class="bt sec" href="../#degustacao">⏱️ Fazer a degustação grátis</a></p>{compartilhar}'
              f'<p class="sub" style="font-size:15px">O acesso completo é pelo Plano Pró. Alunos não precisam de login: usam o link que o professor envia.</p></div>'
              f'<div class="card"><h2>Veja também</h2><div class="grade">{"".join(cartao(a, b) for a, b in rel)}</div></div>')
     open(os.path.join(RAIZ, 'catalogo', k + '.html'), 'w').write(pagina(titulo_pag, desc_pag, corpo, f'catalogo/{k}.html',

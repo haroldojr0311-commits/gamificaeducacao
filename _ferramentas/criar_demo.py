@@ -1,4 +1,4 @@
-"""Cria a versão de demonstração aberta (3 min/dia) de um jogo.
+"""Cria a versão de demonstração aberta (5 min/dia) de um jogo.
 Uso: python3 _ferramentas/criar_demo.py <id-do-catalogo> <arquivo-do-jogo.html>
 Escreve demo/<id>.html (sem indexação) e confira se o id está em turma/demos.json."""
 import os, re, sys

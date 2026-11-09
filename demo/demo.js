@@ -1,8 +1,8 @@
-/* Demonstração gratuita: 3 minutos por dia em cada jogo, sem cadastro.
+/* Demonstração gratuita: 5 minutos por dia em cada jogo, sem cadastro.
    O tempo só conta com a página aberta e visível. Para liberar tudo: degustação ou Plano Pró. */
 (function(){
   var s = document.currentScript, id = (s && s.getAttribute('data-id')) || 'demo';
-  var TOTAL = 180, hoje = new Date().toISOString().slice(0, 10), chave = 'demo:' + id + ':' + hoje, usado = 0;
+  var TOTAL = 300, hoje = new Date().toISOString().slice(0, 10), chave = 'demo:' + id + ':' + hoje, usado = 0;
   try{ usado = parseInt(localStorage.getItem(chave) || '0', 10) || 0; }catch(e){}
   var fim = false;
   var selo = document.createElement('div');
