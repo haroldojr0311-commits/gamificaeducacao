@@ -100,6 +100,11 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 .pub .apagar{position:absolute;top:8px;right:8px}
 .pub.colorido{--tinta:#1d2b53;--tinta2:#4a5578;--cartao:rgba(255,255,255,.72);--linha:rgba(29,43,83,.2);color:#1d2b53}
 .pub.colorido .btn.sec{background:rgba(255,255,255,.75);color:#1d2b53;border-color:rgba(29,43,83,.22)}
+.nivel{border:2px solid var(--linha);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+.nivel-t{display:flex;align-items:center;gap:8px;font-family:var(--fd)}
+.nivel-visualizar{border-left:6px solid #2f63d6}
+.nivel-colaborar{border-left:6px solid #12865f}
+.nivel .codigo{font-size:1.35rem}
 .cores-card{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 6px}
 .cores-card .cc{width:30px;height:30px;border-radius:50%;border:2px solid rgba(29,43,83,.3);cursor:pointer;padding:0;font-size:10px;font-weight:900;color:#1d2b53;background:conic-gradient(#fff3b0,#ffd1e3,#cfe3ff,#c9f1e7,#fff3b0)}
 .cores-card .cc.auto{width:auto;min-width:44px;padding:0 8px;border-radius:999px}
@@ -335,8 +340,8 @@ function seletorTema(atual, aoEscolher){
 const LAYOUTS = [['grade','▦ Grade'],['colunas','▥ Colunas'],['linha','⏤ Linha do tempo'],['lista','☰ Lista']];
 const TIPOS = [['texto','📝 Texto'],['imagem','🖼️ Imagem'],['audio','🎙️ Áudio'],['video','🎬 Vídeo'],['arquivo','📄 Arquivo'],['link','🔗 Link']];
 const PERMISSOES = [
-  ['leitura', '👀 Só leitura', 'A turma vê o mural, mas não publica nem comenta.'],
-  ['publicar', '✍️ Pode publicar', 'A turma publica, comenta e reage usando o código do mural.']
+  ['leitura', '⏸️ Colaboração pausada', 'Só você publica. Quem tem o link de colaboração passa a só ver, curtir e comentar.'],
+  ['publicar', '✍️ Colaboração liberada', 'Quem tem o link de colaboração também publica no mural.']
 ];
 const REACOES = [['curtir','👍 Curtir']];
 const LIMITE_MB = {imagem: 5, audio: 20, video: 50, arquivo: 10};
@@ -407,7 +412,7 @@ function gravarReacao(pubId, tipo, marcado){
 function pararAtualizacao(){ if (timer){ clearInterval(timer); timer = null; } document.body.classList.remove('modo-tela'); document.querySelectorAll('.sair-tela').forEach(x => x.remove()); document.querySelectorAll('.fab').forEach(x => x.remove()); }
 
 /* Mensagens do servidor já em português que podem ser mostradas como estão */
-const AVISOS = [/Código/, /tentativas/, /Muitas publicações/, /endereço precisa/, /conteúdo deve/, /legenda pode/, /Informe seu nome/, /Tipo de publicação/, /Mural não encontrado/, /só para leitura/, /Permissão inválida/, /comentário deve/, /Reação inválida/, /Publicação não encontrada/, /tipo de arquivo não é aceito/, /muito grande/, /Não foi possível enviar o arquivo/, /Grave um áudio/, /Escolha um arquivo/];
+const AVISOS = [/Código/, /pausada/, /Este link/, /Tipo de código/, /tentativas/, /Muitas publicações/, /endereço precisa/, /conteúdo deve/, /legenda pode/, /Informe seu nome/, /Tipo de publicação/, /Mural não encontrado/, /só para leitura/, /Permissão inválida/, /comentário deve/, /Reação inválida/, /Publicação não encontrada/, /tipo de arquivo não é aceito/, /muito grande/, /Não foi possível enviar o arquivo/, /Grave um áudio/, /Escolha um arquivo/];
 function erroAmigavel(err){
   const m = (err && err.message) || '';
   if (/Sem permissão/.test(m)) return 'Você não tem permissão para isso neste navegador.';
@@ -469,8 +474,13 @@ function rota(){
   pararAtualizacao();
   app.classList.remove('larga');
   const h = location.hash || '#/';
-  const m = h.match(/^#\/m\/([0-9a-f-]{36})$/i);
-  if (m) return vistaMural(m[1].toLowerCase());
+  const m = h.match(/^#\/m\/([0-9a-f-]{36})(?:\?c=([A-Za-z0-9]{6}))?$/i);
+  if (m){
+    const idM = m[1].toLowerCase();
+    /* link com código (visualizar ou colaborar): guarda o código e limpa o endereço */
+    if (m[2]){ gravarCodigo(idM, m[2].toUpperCase()); history.replaceState(null, '', location.pathname + location.search + '#/m/' + idM); }
+    return vistaMural(idM);
+  }
   vistaInicio();
 }
 window.addEventListener('hashchange', rota);
@@ -535,7 +545,7 @@ function formMural(valores, aoSalvar, comAcesso = false){
   const caixaMod = el('input', {type:'checkbox', id:'mm'});
   caixaMod.checked = !!valores.moderar;
   const acesso = comAcesso ? [
-    el('label', {}, 'Quem pode publicar'),
+    el('label', {}, 'Colaboração (publicar junto)'),
     el('div', {class:'seg', role:'group', 'aria-label':'Permissão de publicação'}, botoesPerm),
     el('p', {class:'ajuda'}, PERMISSOES.map(p => p[1].replace(/^\S+\s/, '') + ': ' + p[2]).join(' ')),
     el('label', {class:'opt'}, caixaMod, 'Aprovar antes de publicar (eu libero cada publicação dos alunos)')
@@ -578,7 +588,7 @@ function abrirCriar(){
       salvarMeu({id: r.id, token: r.token, titulo: v.titulo, cor: v.cor, criado: new Date().toISOString()});
       gravarCodigo(r.id, r.codigo);
       fecharModal();
-      toast('Mural criado! Código da turma: ' + r.codigo);
+      toast('Mural criado! Use "Compartilhar" para enviar o link.');
       location.hash = '#/m/' + r.id;
     }, true)));
 }
@@ -632,11 +642,14 @@ async function vistaMural(id){
 
   const dono = !!d.dono;
   const mural = d.mural;
-  let codigo = d.codigo || codigoGuardado;
+  const nivel = d.nivel || (dono ? 'dono' : 'colaborar');       // dono | colaborar | visualizar
+  let codigo = d.codigo || codigoGuardado;                        // código de colaboração
+  let codigoVisual = d.codigo_visual || null;                     // código de só visualizar (só o dono vê)
   let layout = mural.layout;
   let publicacoes = d.publicacoes || [];
   let pendentes = d.pendentes || [];
-  const canPublicar = dono || mural.permissao === 'publicar';
+  const canPublicar = dono || (nivel === 'colaborar' && mural.permissao === 'publicar');
+  const canInteragir = true;   // quem entra com qualquer um dos links pode curtir e comentar
 
   const tema = temaDe(mural.cor);
   const aberto = !window.matchMedia('(max-width:900px)').matches;       // no celular, os grupos começam fechados
@@ -653,18 +666,43 @@ async function vistaMural(id){
   const faixa = el('section', {class:'faixa' + (tema.claro ? ' claro' : ''), style:'background:' + tema.fundo},
     el('div', {class:'txt'}, el('div', {class:'plate'}, el('h1', {}, mural.titulo), el('p', {}, mural.descricao || 'Publique a sua contribuição na coluna ao lado.'))));
 
-  function msgWhatsApp(){
-    return 'Participe do nosso mural: ' + mural.titulo + '. Abra ' + location.href + (dono && codigo ? ' e use o código ' + codigo : '');
+  const base = () => location.origin + location.pathname;
+  const linkCom = (cod) => base() + '#/m/' + id + (cod ? '?c=' + cod : '');
+  const NOMES_NIVEL = {visualizar: 'só para ver, curtir e comentar', colaborar: 'para colaborar (publicar junto)'};
+  function msgWhatsApp(tipoN){
+    const cod = tipoN === 'visualizar' ? codigoVisual : codigo;
+    return 'Participe do nosso mural: ' + mural.titulo + ' (' + NOMES_NIVEL[tipoN || 'colaborar'] + '). Abra ' + linkCom(dono ? cod : null);
   }
-  const botoesCopiar = el('div', {class:'acoes'},
-    el('button', {class:'btn sec peq', onclick: async () => {
-      const url = location.href;
-      try { await navigator.clipboard.writeText(url); toast('Link copiado!'); }
-      catch(e){ toast(url); }
-    }}, '🔗 Copiar link'),
-    el('button', {class:'btn sec peq', onclick(){ window.open('https://wa.me/?text=' + encodeURIComponent(msgWhatsApp()), '_blank', 'noopener'); }}, '💬 WhatsApp'),
+  async function copiar(texto, aviso){
+    try { await navigator.clipboard.writeText(texto); toast(aviso); } catch(e){ toast(texto); }
+  }
+  /* Bloco de compartilhamento de um nível: link direto, WhatsApp, QR Code e novo código */
+  function blocoNivel(tipoN, icone, titulo, explica){
+    const cod = () => (tipoN === 'visualizar' ? codigoVisual : codigo);
+    const mostra = el('div', {class:'codigo', style:'margin:6px 0 8px', 'data-nivel': tipoN}, cod() || '------');
+    return el('div', {class:'nivel nivel-' + tipoN},
+      el('div', {class:'nivel-t'}, el('span', {'aria-hidden':'true'}, icone), el('b', {}, titulo)),
+      el('p', {class:'ajuda', style:'margin:2px 0 0'}, explica),
+      mostra,
+      el('div', {class:'acoes', style:'margin:0'},
+        el('button', {class:'btn peq', onclick: () => copiar(linkCom(cod()), 'Link copiado! Quem abrir entra direto.')}, '🔗 Copiar link'),
+        el('button', {class:'btn sec peq', onclick(){ window.open('https://wa.me/?text=' + encodeURIComponent(msgWhatsApp(tipoN)), '_blank', 'noopener'); }}, '💬 WhatsApp'),
+        el('button', {class:'btn sec peq', onclick: () => abrirQR(tipoN)}, '📱 QR Code'),
+        el('button', {class:'btn sec peq', onclick: () => copiar(cod(), 'Código copiado!')}, '📋 Código'),
+        el('button', {class:'btn sec peq', onclick: () => novoCodigo(tipoN)}, '🔄 Novo')));
+  }
+  const botoesExtras = el('div', {class:'acoes', style:'margin-top:10px'},
     el('button', {class:'btn sec peq', onclick: () => abrirApresentacao()}, '▶️ Apresentar'),
     el('button', {class:'btn sec peq', onclick: () => window.print()}, '📄 Salvar em PDF'));
+  const botoesCopiar = el('div', {},
+    ...(dono ? [
+      blocoNivel('visualizar', '👀', 'Só visualizar', 'A pessoa vê o mural, curte e comenta, mas não publica.'),
+      blocoNivel('colaborar', '✍️', 'Colaborar', 'A pessoa também publica no mural, junto com você.')
+    ] : [
+      el('div', {class:'acoes', style:'margin:0'}, el('button', {class:'btn sec peq', onclick: () => copiar(linkCom(null), 'Link copiado!')}, '🔗 Copiar link'),
+        el('button', {class:'btn sec peq', onclick(){ window.open('https://wa.me/?text=' + encodeURIComponent('Veja o mural: ' + mural.titulo + '. Abra ' + linkCom(null)), '_blank', 'noopener'); }}, '💬 WhatsApp'))
+    ]),
+    botoesExtras);
 
   const seletorLayout = el('div', {class:'seg naoimprimir', role:'group', 'aria-label':'Layout do mural'});
   const botoesL = LAYOUTS.map(([v, nome]) => el('button', {'aria-pressed': String(v === layout), onclick: async () => {
@@ -683,35 +721,26 @@ async function vistaMural(id){
   }}, nome));
   botoesL.forEach(b => seletorLayout.append(b));
 
-  async function novoCodigo(){
-    if (!confirm('Gerar um novo código? O código atual deixa de funcionar para a turma.')) return;
-    const { data: novo, error: e3 } = await sb.rpc('mural_novo_codigo', {p_mural: id, p_token: token});
+  async function novoCodigo(tipoN){
+    if (!confirm('Gerar um novo código ' + (tipoN === 'visualizar' ? 'de visualização' : 'de colaboração') + '? O link e o código atuais deixam de funcionar.')) return;
+    const { data: novo, error: e3 } = await sb.rpc('mural_novo_codigo', {p_mural: id, p_token: token, p_tipo: tipoN});
     if (e3){ toast(erroAmigavel(e3)); return; }
-    codigo = novo; gravarCodigo(id, novo);
-    const box = document.getElementById('codigo-grande'); if (box) box.textContent = novo;
+    if (tipoN === 'visualizar') codigoVisual = novo; else { codigo = novo; gravarCodigo(id, novo); }
+    const box = document.querySelector('[data-nivel="' + tipoN + '"]'); if (box) box.textContent = novo;
     toast('Novo código gerado.');
   }
-  function abrirQR(){
-    const qr = qrcode(0, 'M'); qr.addData(location.href); qr.make();
+  function abrirQR(tipoN){
+    const cod = tipoN === 'visualizar' ? codigoVisual : codigo;
+    const qr = qrcode(0, 'M'); qr.addData(linkCom(cod)); qr.make();
     const imagem = qr.createDataURL(8, 16);
     abrirModal(el('div', {},
-      el('h2', {}, 'QR Code do mural'),
-      el('p', {class:'ajuda'}, 'Quem ler o QR Code abre o mural e precisa do código da turma (' + codigo + ').'),
+      el('h2', {}, 'QR Code · ' + (tipoN === 'visualizar' ? 'só visualizar' : 'colaborar')),
+      el('p', {class:'ajuda'}, 'Quem ler o QR Code entra direto no mural, ' + NOMES_NIVEL[tipoN] + '.'),
       el('img', {src: imagem, alt:'QR Code para abrir o mural', style:'width:100%;max-width:320px;display:block;margin:12px auto;background:#fff;padding:10px;border-radius:12px'}),
       el('div', {class:'acoes', style:'justify-content:flex-end'},
-        el('a', {class:'btn sec', href: imagem, download:'qr-mural.png'}, '⬇️ Baixar imagem'),
+        el('a', {class:'btn sec', href: imagem, download:'qr-mural-' + tipoN + '.png'}, '⬇️ Baixar imagem'),
         el('button', {class:'btn', onclick: () => fecharModal()}, 'Fechar'))));
   }
-  const bloCodigo = grupo('🔑 Código de acesso da turma', [
-    el('div', {class:'codigo', id:'codigo-grande', style:'margin-bottom:10px'}, codigo || '------'),
-    el('div', {class:'acoes', style:'margin:0'},
-      el('button', {class:'btn sec peq', onclick: async () => {
-        try { await navigator.clipboard.writeText(codigo); toast('Código copiado!'); }
-        catch(e){ toast('Código: ' + codigo); }
-      }}, '📋 Copiar código'),
-      el('button', {class:'btn sec peq', onclick: novoCodigo}, '🔄 Novo código'),
-      el('button', {class:'btn sec peq', onclick: abrirQR}, '📱 QR Code'))], aberto);
-
   function abrirEditar(){
     abrirModal(el('div', {}, el('h2', {}, 'Editar mural'),
       formMural({titulo: mural.titulo, descricao: mural.descricao, cor: mural.cor, layout: mural.layout}, async (v) => {
@@ -729,7 +758,7 @@ async function vistaMural(id){
     const fb = el('div', {class:'fb erro', role:'alert'});
     abrirModal(el('div', {},
       el('h2', {}, 'Acesso e moderação'),
-      el('label', {}, 'Quem pode publicar'),
+      el('label', {}, 'Colaboração (publicar junto)'),
       el('div', {class:'seg', role:'group', 'aria-label':'Permissão de publicação'}, botoes),
       el('p', {class:'ajuda'}, PERMISSOES.map(p => p[1].replace(/^\S+\s/, '') + ': ' + p[2]).join(' ')),
       el('label', {class:'opt'}, caixa, 'Aprovar antes de publicar (eu libero cada publicação dos alunos)'),
@@ -901,7 +930,12 @@ async function vistaMural(id){
     feedback,
     el('div', {class:'acoes', style:'justify-content:flex-end;margin:12px 0 0'}, botaoPub));
   montarZona();
-  const avisoLeitura = el('div', {class:'aviso naoimprimir', style:'margin-bottom:18px'}, '👀 Este mural está aberto só para leitura. Quem criou o mural pode liberar a publicação.');
+  const msgSoVer = nivel === 'visualizar'
+    ? '👀 Você está no modo de visualização: pode ver, curtir e comentar. Para publicar, peça o link de colaboração.'
+    : '⏸️ A colaboração está pausada neste mural. Você pode ver, curtir e comentar.';
+  /* o campo de nome só muda de lugar quando a pessoa não pode publicar (senão ele fica no formulário) */
+  const avisoLeitura = el('div', {class:'aviso naoimprimir', style:'margin-bottom:18px'}, msgSoVer,
+    ...(canPublicar ? [] : [el('label', {for:'autor', style:'display:block;font-weight:800;margin-top:10px'}, 'Seu nome (para comentar)'), campoNome]));
 
   /* ----- publicações ----- */
   const feed = el('div', {class:'feed ' + layout, 'aria-label':'Publicações'});
@@ -999,11 +1033,11 @@ async function vistaMural(id){
   function cartao(p, pendente){
     const corpo = conteudoPub(p);
     const tipoNome = (TIPOS.find(t => t[0] === p.tipo) || ['', ''])[1].replace(/^\S+\s/, '');
-    const meu = dono || (!!p.autor_eu && p.autor_eu === EU && canPublicar);
+    const meuCard = dono || (!!p.autor_eu && p.autor_eu === EU && canPublicar);
     const acoesDono = dono && pendente ? el('div', {class:'acoes naoimprimir', style:'margin:4px 0 0'},
       el('button', {class:'btn peq', onclick: () => aprovar(p)}, '✅ Aprovar')) : null;
     const corpoBox = el('div', {class:'corpo', style:'display:flex;flex-direction:column;gap:8px'}, corpo);
-    const cantoBtns = meu ? el('div', {class:'canto naoimprimir'},
+    const cantoBtns = meuCard ? el('div', {class:'canto naoimprimir'},
       el('button', {type:'button', class:'ic', title:'Trocar a cor do card', 'aria-label':'Trocar a cor do card', onclick: (e) => abrirCores(p, e.currentTarget)}, '🎨'),
       el('button', {type:'button', class:'ic', title:'Editar publicação', 'aria-label':'Editar publicação', onclick: () => editarPub(p, corpoBox, corpo)}, '✏️'),
       dono ? el('button', {type:'button', class:'ic', title:'Excluir publicação', 'aria-label':'Excluir publicação', onclick: () => apagar(p)}, '🗑️') : null) : null;
@@ -1013,14 +1047,14 @@ async function vistaMural(id){
       const marcadas = reacoesMarcadas(p.id);
       const botoes = REACOES.map(([t, nome]) => {
         const n = (p.reacoes && p.reacoes[t]) || 0;
-        const botao = el('button', {type:'button', class:'btn sec peq', 'aria-pressed': String(marcadas.includes(t)), disabled: !canPublicar, onclick: () => reagir(p, t, botoes)}, nome + ' ' + n);
+        const botao = el('button', {type:'button', class:'btn sec peq', 'aria-pressed': String(marcadas.includes(t)), disabled: !canInteragir, onclick: () => reagir(p, t, botoes)}, nome + ' ' + n);
         return {tipo: t, botao};
       });
       const linhaReacoes = el('div', {class:'reagir naoimprimir'}, botoes.map(b => b.botao));
       const listaCom = el('ul', {class:'comentarios', 'aria-label':'Comentários'},
         (p.comentarios || []).map(c => linhaComentario(c)));
       const campoCom = el('input', {maxlength:'300', placeholder:'Escreva um comentário…', 'aria-label':'Comentário'});
-      const formCom = canPublicar ? el('form', {class:'comentar naoimprimir', onsubmit: async (e) => {
+      const formCom = canInteragir ? el('form', {class:'comentar naoimprimir', onsubmit: async (e) => {
         e.preventDefault();
         const texto = campoCom.value.trim();
         if (!texto) return;
@@ -1148,9 +1182,8 @@ async function vistaMural(id){
   const grpPublicar = grupo('✍️ Publicar no mural', [formPub], aberto);
   const lateral = el('aside', {class:'lateral naoimprimir', 'aria-label':'Opções do mural'},
     canPublicar ? grpPublicar : avisoLeitura,
-    ...(dono ? [bloCodigo] : []),
     grupo('🧩 Layout do mural', [seletorLayout], aberto),
-    grupo('📤 Compartilhar', [botoesCopiar], aberto),
+    grupo('📤 Compartilhar', [botoesCopiar], true),
     ...(dono ? [ferramentasDono] : []));
   /* Botão para recolher/abrir o painel (mais espaço para o mural) */
   const grade = el('div', {class:'mural-grid'});
