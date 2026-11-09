@@ -604,5 +604,29 @@ window.JOGOS = {
     desc: "Digite valor, taxa (ao mês ou ao ano) e parcelas: veja lado a lado o SAC e a Price, com tabela de amortização, gráfico de juros e amortização, saldo devedor e planilha. Desafio de 8 questões que envia a nota.",
     emoji: "🏦", cor: "lilas", ferramenta: false,
     tipo: "simulador", conteudo: "Educação Financeira"
+  },
+  "calculadora-imc": {
+    nivel: ["Ensino Médio"],
+    nome: "Simulador de IMC",
+    tema: "Saúde e Educação Física",
+    desc: "Calcule o IMC, veja a classificação da OMS e a faixa de massa adequada. Tem passo a passo, desafio e atividade.",
+    emoji: "⚖️", cor: "azul", ferramenta: true,
+    tipo: "simulador"
+  },
+  "calculo-proteina": {
+    nivel: ["Ensino Médio"],
+    nome: "Simulador de Proteína Diária",
+    tema: "Saúde e Educação Física",
+    desc: "Descubra quantos gramas de proteína por dia e como dividir nas refeições, conforme massa e objetivo.",
+    emoji: "🥩", cor: "laranja", ferramenta: true,
+    tipo: "simulador"
+  },
+  "calculo-agua": {
+    nivel: ["Ensino Médio"],
+    nome: "Simulador de Hidratação",
+    tema: "Saúde e Educação Física",
+    desc: "Calcule quanta água beber por dia, com exercício e clima, e acompanhe os copos do seu dia.",
+    emoji: "💧", cor: "verde", ferramenta: true,
+    tipo: "simulador"
   }
 };
