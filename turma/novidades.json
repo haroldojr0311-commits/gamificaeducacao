@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Mapa da Sala: escolha onde fica a porta",
+    "texto": "Agora você escolhe se a porta da sala fica na frente, no lado esquerdo ou no direito. A mesa do professor vai para o lado oposto.",
+    "link": "catalogo/mapa-da-sala.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Sala simulada no Sorteador e no Leitor",
     "texto": "Agora o Sorteador de Alunos e o Leitor de Gabaritos têm o botão 🧪 Sala simulada: uma turma de mentira para você ver como funciona, sem mexer nas suas turmas reais.",
     "link": "catalogo/sorteador.html"
