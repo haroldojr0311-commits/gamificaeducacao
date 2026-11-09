@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Pitágoras em 3D",
+    "texto": "Demonstração animada em 3D: a água dos quadrados dos catetos enche o quadrado da hipotenusa. Gire, teste triângulos e resolva 8 desafios.",
+    "link": "catalogo/pitagoras-agua-3d.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Tesouro das Integrais",
     "texto": "Novo jogo de integrais definidas passo a passo: 10 fases, estrelas, nota, ranking e relatório em Word, PDF e Excel.",
     "link": "catalogo/tesouro-das-integrais.html"

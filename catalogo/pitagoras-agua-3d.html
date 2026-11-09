@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pitágoras em 3D: encha os quadrados: simulador educativo de Teorema de Pitágoras</title>
+<meta name="description" content="Veja em 3D a água dos quadrados dos catetos caber exatamente no quadrado da hipotenusa. Gire a cena, teste triângulos e vença 8 desafios. Simulador educativo indicado para Ensino Fundamental II e Ensino Médio. Funciona no celular, tablet e computador.">
+<link rel="canonical" href="https://gamificaeducacao.com.br/catalogo/pitagoras-agua-3d.html">
+<link rel="icon" href="../favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/svg+xml" href="../icone.svg?v=3">
+<link rel="apple-touch-icon" href="../icone-180.png?v=3">
+<link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#1d2b53">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Gamifica Educação"><meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Pitágoras em 3D: encha os quadrados: simulador educativo de Teorema de Pitágoras"><meta property="og:description" content="Veja em 3D a água dos quadrados dos catetos caber exatamente no quadrado da hipotenusa. Gire a cena, teste triângulos e vença 8 desafios. Simulador educativo indicado para Ensino Fundamental II e Ensino Médio. Funciona no celular, tablet e computador."><meta property="og:url" content="https://gamificaeducacao.com.br/catalogo/pitagoras-agua-3d.html">
+<meta property="og:image" content="https://gamificaeducacao.com.br/capa.png?v=3"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://gamificaeducacao.com.br/capa.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+:root{--chao:#f3f6fb;--q:rgba(47,91,170,.11);--tinta:#1d2b53;--tinta2:#55627f;--linha:#d9e1ee;--marca:#ffd23f;--azul:#2f63d6;--verde:#12865f;--fd:'Fredoka','Nunito',system-ui,sans-serif;--fc:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+*{box-sizing:border-box}html,body{margin:0}
+body{background-color:var(--chao);background-image:linear-gradient(var(--q) 1px,transparent 1px),linear-gradient(90deg,var(--q) 1px,transparent 1px);background-size:26px 26px;color:var(--tinta);font-family:var(--fc);font-size:17px;line-height:1.6}
+h1,h2,h3{font-family:var(--fd);font-weight:600;line-height:1.2;margin:0 0 10px}
+a{color:var(--azul)}
+.topo{background:linear-gradient(135deg,#1d2b53,#2f4aa0);color:#fff;padding:14px 16px}
+.topo .in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.topo a.marca{color:#fff;text-decoration:none;font-family:var(--fd);font-size:1.5rem;font-weight:700}.topo a.marca span{color:var(--marca)}
+.topo nav{display:flex;gap:6px;flex-wrap:wrap}
+.topo nav a{color:#fff;text-decoration:none;font-weight:800;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.12);font-size:15px}
+.topo nav a.cta{background:var(--marca);color:#1d2b53}
+main{max-width:1080px;margin:0 auto;padding:22px 16px 40px}
+.card{background:#fff;border:2px solid var(--linha);border-radius:18px;padding:22px;margin-bottom:18px}
+.hero{text-align:center;padding:30px 20px}
+.hero h1{font-size:clamp(1.8rem,4.5vw,2.8rem)}
+.sub{color:var(--tinta2)}
+.numeros{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0 0}
+.numeros div{background:#f7f9fd;border:2px solid var(--linha);border-radius:14px;padding:12px;text-align:center}
+.numeros b{display:block;font-family:var(--fd);font-size:2.2rem;line-height:1.1}
+.bt{display:inline-block;text-decoration:none;font-weight:800;border-radius:14px;padding:13px 20px;background:var(--marca);color:#1d2b53;border:2px solid #e0ad00;box-shadow:0 3px 0 #e0ad00;margin:4px}
+.bt.sec{background:#fff;border-color:var(--linha);box-shadow:0 3px 0 var(--linha)}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.item{position:relative;display:flex;flex-direction:column;background:#fff;border:2px solid var(--linha);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--tinta);transition:transform .15s}
+.item:hover{transform:translateY(-3px)}
+.item .nota{height:80px;display:grid;place-items:center;font-size:40px;position:relative}
+.item .nota small{position:absolute;left:8px;top:7px;font-size:12px;font-weight:800;background:rgba(255,255,255,.7);border-radius:99px;padding:1px 8px}
+.item .c{padding:10px 12px 14px}.item h3{font-size:1.05rem;margin:0 0 4px}.item p{margin:0;font-size:14px;color:var(--tinta2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.filtros{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.filtros button{font:inherit;font-weight:800;font-size:14px;border:2px solid var(--linha);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--tinta)}
+.filtros button[aria-pressed=true]{background:#1d2b53;color:#fff;border-color:#1d2b53}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.tag{background:#eef2ff;border-radius:999px;padding:3px 11px;font-weight:800;font-size:14px}
+.cab-app{display:grid;grid-template-columns:130px minmax(0,1fr);gap:20px;align-items:center}
+.cab-app .nota{height:130px;border-radius:16px;display:grid;place-items:center;font-size:64px}
+@media(max-width:600px){.cab-app{grid-template-columns:1fr}.cab-app .nota{height:100px}}
+details{border:2px solid var(--linha);border-radius:14px;padding:12px 16px;margin-bottom:10px;background:#fff}
+details summary{font-weight:800;cursor:pointer}
+details p{margin:8px 0 0}
+.passos{counter-reset:p;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.passos div{background:#f7f9fd;border:2px solid var(--linha);border-radius:14px;padding:14px;position:relative;padding-top:42px}
+.passos div::before{counter-increment:p;content:counter(p);position:absolute;left:14px;top:10px;width:28px;height:28px;border-radius:50%;background:var(--marca);font-weight:900;display:grid;place-items:center}
+.legal h2{font-size:1.25rem;margin-top:22px}.legal li{margin:4px 0}
+footer{text-align:center;color:var(--tinta2);font-size:14px;padding:20px 16px 30px}
+footer a{margin:0 6px}
+.pular{position:absolute;left:-9999px;top:8px;background:#ffd23f;color:#1d2b53;font-weight:800;padding:10px 16px;border-radius:12px;z-index:100;text-decoration:none}
+.pular:focus{left:8px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #2f63d6;outline-offset:2px}
+.topo a:focus-visible{outline-color:#ffd23f}
+button.bt{font:inherit;cursor:pointer}
+.selo-demo{position:absolute;top:8px;right:8px;z-index:2;background:#12865f;color:#fff;font-weight:800;font-size:.75rem;padding:4px 10px;border-radius:999px}
+.form label{display:block;font-weight:800;margin-top:12px}
+.form input[type=text],.form input[type=email],.form textarea{width:100%;font:inherit;padding:12px;border:2px solid var(--linha);border-radius:12px;background:#fff;color:var(--tinta)}
+.form textarea{min-height:110px;resize:vertical}
+.form .check{display:flex;gap:10px;align-items:flex-start;font-weight:600}
+.form .check input{margin-top:6px;width:20px;height:20px;flex:none}
+.form .hp{position:absolute;left:-9999px;height:0;overflow:hidden}
+.form .bt{margin-top:14px}
+.status{margin:10px 0 0;font-weight:700;min-height:1.4em}.status.ok{color:#0b6b4a}.status.erro{color:#b3261e}
+.compartilhar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.compartilhar .ok{font-weight:800;color:#0b6b4a}
+.novi{display:grid;gap:12px}.novi article{border:2px solid var(--linha);border-radius:16px;padding:14px 16px;background:#fff}
+.novi time{font-size:.85rem;font-weight:800;color:var(--tinta2)}.novi h3{margin:4px 0}.novi p{margin:6px 0 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "LearningResource", "name": "Pitágoras em 3D: encha os quadrados", "description": "Veja em 3D a água dos quadrados dos catetos caber exatamente no quadrado da hipotenusa. Gire a cena, teste triângulos e vença 8 desafios.", "inLanguage": "pt-BR", "learningResourceType": "Simulador", "educationalLevel": ["Ensino Fundamental II", "Ensino Médio"], "url": "https://gamificaeducacao.com.br/catalogo/pitagoras-agua-3d.html", "provider": {"@type": "Person", "name": "Prof. Dr. Haroldo Aleixo de Lima Junior"}, "about": "Teorema de Pitágoras"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Início", "item": "https://gamificaeducacao.com.br/"}, {"@type": "ListItem", "position": 2, "name": "Catálogo", "item": "https://gamificaeducacao.com.br/catalogo/"}, {"@type": "ListItem", "position": 3, "name": "Pitágoras em 3D", "item": "https://gamificaeducacao.com.br/catalogo/pitagoras-agua-3d.html"}]}</script>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo"><div class="in"><a class="marca" href="../">Gamifica <span>Educação</span></a>
+<nav><a href="../catalogo/">Catálogo</a><a href="../mural/">Mural</a><a href="../como-funciona.html">Como funciona</a><a class="cta" href="../">Entrar · degustação grátis</a></nav></div></header>
+<main id="conteudo">
+<p><a href="./">← Voltar ao catálogo</a></p><div class="card"><div class="cab-app"><div class="nota" style="background:#b9d4ff">🌊</div><div><div class="tags"><span class="tag">🔬 Simulador</span><span class=tag>Teorema de Pitágoras</span></div><h1>Pitágoras em 3D: encha os quadrados</h1><p>Veja em 3D a água dos quadrados dos catetos caber exatamente no quadrado da hipotenusa. Gire a cena, teste triângulos e vença 8 desafios.</p><div class="tags"><span class="tag">Ensino Fundamental II</span><span class="tag">Ensino Médio</span></div></div></div></div><div class="card"><h2>Para quem é</h2><p><b>Pitágoras em 3D: encha os quadrados</b> é um simulador educativo de Teorema de Pitágoras indicado para <b>Ensino Fundamental II e Ensino Médio</b>. Funciona no celular, no tablet e no computador, direto no navegador, sem instalar nada.</p></div><div class="card"><h2>Como usar em aula</h2><ul><li>Projete e explore com a turma: mude os valores e peça que os alunos façam previsões antes de ver o resultado.</li><li>Use como laboratório em duplas, no computador ou no celular.</li></ul><p><a class="bt" href="../">🚀 Abrir no portal</a><a class="bt sec" href="../#degustacao">⏱️ Fazer a degustação grátis</a></p><div class="compartilhar"><a class="bt sec" target="_blank" rel="noopener" href="https://wa.me/?text=Pit%C3%A1goras%20em%203D%3A%20encha%20os%20quadrados%3A%20Veja%20em%203D%20a%20%C3%A1gua%20dos%20quadrados%20dos%20catetos%20caber%20exatamente%20no%20quadrado%20da%20hipotenusa.%20Gire%20a%20cena%2C%20teste%20tri%20https%3A//gamificaeducacao.com.br/catalogo/pitagoras-agua-3d.html">📲 Compartilhar no WhatsApp</a><button type="button" class="bt sec" data-copiar="https://gamificaeducacao.com.br/catalogo/pitagoras-agua-3d.html">📋 Copiar link</button><span class="ok" role="status" aria-live="polite"></span></div><p class="sub" style="font-size:15px">O acesso completo é pelo Plano Pró. Alunos não precisam de login: usam o link que o professor envia.</p></div><div class="card"><h2>Veja também</h2><div class="grade"><a class="item" href="calculadora-grafica.html" data-tipo="simulador" data-nivel="Fundamental 2|Ensino Médio|Superior"><div class="nota" style="background:#b9d4ff"><small>Funções</small>📈</div><div class="c"><h3>Calculadora Gráfica</h3><p>Digite qualquer função e mexa nos controles deslizantes (a, b, c…) para ver o gráfico mudar. Modelos de afim, quadrática, cúbica, exponencial, logarítmica, modular, seno, cosseno, tangente, raiz e hipérbole, com raízes, vértice e tabela de valores.</p></div></a><a class="item" href="derivada-integral.html" data-tipo="simulador" data-nivel="Superior"><div class="nota" style="background:#b9d4ff"><small>Cálculo</small>∫</div><div class="c"><h3>Derivada e Integral</h3><p>Veja no gráfico a integral definida como área e a derivada como inclinação.</p></div></a><a class="item" href="fracoes-visuais.html" data-tipo="simulador" data-nivel="Fundamental 1|Fundamental 2"><span class="selo-demo">▶️ Demo grátis</span><div class="nota" style="background:#ffc88a"><small>Frações</small>🍕</div><div class="c"><h3>Frações Visuais</h3><p>Simulador com pizzas e barras: compare frações (com reta numérica), descubra equivalentes cortando os pedaços, some e subtraia passo a passo com MMC. Termina com um desafio de 10 questões.</p></div></a><a class="item" href="laboratorio-probabilidade.html" data-tipo="simulador" data-nivel="Ensino Médio"><div class="nota" style="background:#d8c9ff"><small>Probabilidade</small>🎲</div><div class="c"><h3>Laboratório de Probabilidade</h3><p>Lance dados e moedas, sorteie cartas e compare o observado com o teórico.</p></div></a></div></div>
+</main>
+<footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br>
+<a href="../catalogo/">Catálogo</a>·<a href="../mural/">Mural Eletrônico</a>·<a href="../novidades.html">Novidades</a>·<a href="../como-funciona.html">Como funciona</a>·<a href="../privacidade.html">Privacidade</a>·<a href="../termos.html">Termos de uso</a>·<a href="https://wa.me/5515988026805" target="_blank" rel="noopener">Contato</a></footer>
+<script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-copiar]');if(!b)return;var u=b.getAttribute('data-copiar'),ok=b.parentNode.querySelector('.ok');function f(){if(ok){ok.textContent='✅ Link copiado!';setTimeout(function(){ok.textContent='';},2500);}}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(f).catch(f);}else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);f();}});</script>
+<script src="../site.js" defer></script>
+<script src="../estat.js" defer></script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('../sw.js').catch(function(){});</script>
+</body>
+</html>

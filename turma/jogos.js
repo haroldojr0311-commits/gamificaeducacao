@@ -629,6 +629,14 @@ window.JOGOS = {
     emoji: "💧", cor: "verde", ferramenta: true,
     tipo: "simulador"
   },
+  "pitagoras-agua-3d": {
+    nivel: ["Ensino Fundamental II", "Ensino Médio"],
+    nome: "Pitágoras em 3D: encha os quadrados",
+    tema: "Teorema de Pitágoras",
+    desc: "Veja em 3D a água dos quadrados dos catetos caber exatamente no quadrado da hipotenusa. Gire a cena, teste triângulos e vença 8 desafios.",
+    emoji: "🌊", cor: "azul", ferramenta: true,
+    tipo: "simulador"
+  },
   "tesouro-das-integrais": {
     nivel: ["Ensino Médio", "Superior"],
     nome: "Tesouro das Integrais",
