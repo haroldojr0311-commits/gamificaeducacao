@@ -196,6 +196,14 @@ window.JOGOS = {
     emoji: "∫", cor: "azul", ferramenta: true,
     tipo: "simulador"
   },
+  "simulador-pitagoras-trigonometria": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Pitágoras e Trigonometria na Vida Real",
+    tema: "Geometria e Trigonometria",
+    desc: "Arraste um avião decolando, uma escada no muro e a escada do bombeiro e veja o triângulo retângulo, o teorema de Pitágoras e seno, cosseno e tangente.",
+    emoji: "✈️", cor: "azul",
+    tipo: "simulador"
+  },
   "sorteador": {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Sorteador de Alunos e Grupos",

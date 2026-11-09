@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Novo simulador: Pitágoras e Trigonometria na Vida Real",
+    "texto": "Avião decolando, escada no muro e escada do caminhão de bombeiros: arraste e veja o triângulo retângulo, Pitágoras, seno, cosseno e tangente. Tem atividade com 9 questões.",
+    "link": "catalogo/simulador-pitagoras-trigonometria.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Nova ferramenta: Roleta da Sala",
     "texto": "Gire a roleta para sortear alunos, perguntas ou palavras. Tem som, não repete quem já saiu e traz uma sala simulada para testar.",
     "link": "catalogo/roleta.html"
