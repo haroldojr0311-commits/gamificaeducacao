@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Novo simulador: Vetores no Plano e no Espaço",
+    "texto": "Arraste vetores no plano, gire o espaço em 3D e veja a soma, a subtração, o produto escalar e o produto vetorial acontecendo. Tem atividade com gabarito.",
+    "link": "catalogo/simulador-vetores.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Pitágoras e Trigonometria agora em 3D",
     "texto": "No simulador do avião, da escada no muro e da escada do bombeiro, toque em 🎥 Ver em 3D, gire a cena com o dedo ou o mouse e veja o triângulo retângulo no espaço.",
     "link": "catalogo/simulador-pitagoras-trigonometria.html"

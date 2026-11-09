@@ -204,6 +204,14 @@ window.JOGOS = {
     emoji: "✈️", cor: "azul",
     tipo: "simulador"
   },
+  "simulador-vetores": {
+    nivel: ["Ensino Médio", "Superior"],
+    nome: "Vetores no Plano e no Espaço",
+    tema: "Geometria Analítica",
+    desc: "Arraste vetores no plano, gire o espaço em 3D e veja soma, subtração, produto escalar e vetorial acontecendo. Tem atividade com 9 questões.",
+    emoji: "🧭", cor: "azul",
+    tipo: "simulador"
+  },
   "sorteador": {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Sorteador de Alunos e Grupos",
