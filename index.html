@@ -210,6 +210,53 @@
   .sug-texto{white-space:pre-wrap;margin:8px 0;line-height:1.5}
   .secao-titulo{display:flex;align-items:center;gap:10px;margin:6px 0 12px;font-family:var(--f-display);font-size:1.3rem;font-weight:600}
   .login-box{max-width:440px;margin:26px auto}
+  /* ---- página de apresentação (tela inicial sem login) ---- */
+  .lp-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,420px);gap:22px;align-items:start;margin-top:8px}
+  .lp-hero .login-box{margin:0;max-width:none}
+  .lp-hero .login-acoes{display:none!important}
+  .lp-hero{align-items:stretch}
+  .lp-esq{display:flex;flex-direction:column;justify-content:center}
+  .lp-hero .login-box .card{margin-bottom:0;height:100%}
+  .lp-esq{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--hero-bg),var(--hero-bg2));color:#fff;border-radius:22px;padding:30px 28px;box-shadow:var(--sombra)}
+  .lp-esq::after{content:"🧮 📐 🎲 🔬 🚀";position:absolute;right:-6px;bottom:-8px;font-size:2.4rem;letter-spacing:8px;opacity:.16;white-space:nowrap;transform:rotate(-6deg)}
+  .lp-pill{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 13px;font-weight:800;font-size:.85rem}
+  .lp-esq h2{font-size:clamp(1.8rem,4.4vw,2.7rem);line-height:1.08;margin:14px 0 10px;color:#fff}
+  .lp-esq h2 em{font-style:normal;color:var(--marca)}
+  .lp-esq p{font-size:1.1rem;font-weight:600;opacity:.93;margin:0 0 18px;max-width:34em}
+  .lp-cta{display:flex;gap:10px;flex-wrap:wrap}
+  .lp-cta a{display:inline-flex;text-decoration:none}
+  .lp-cta button.sec,.lp-cta a.sec{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.4);color:#fff;border-radius:12px;padding:13px 20px;font-weight:800}
+  .lp-chips{display:flex;gap:8px 16px;flex-wrap:wrap;margin:18px 0 0;padding:0;list-style:none;font-weight:700;font-size:.92rem;opacity:.95}
+  .lp-numeros{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:22px 0}
+  .lp-numeros div{background:var(--cartao);border:2px solid var(--linha);border-radius:16px;padding:14px;text-align:center;box-shadow:var(--sombra)}
+  .lp-numeros b{display:block;font-family:var(--f-display);font-size:2rem;color:var(--azul);line-height:1}
+  .lp-numeros span{font-weight:800;font-size:.9rem;color:var(--tinta2)}
+  .lp-sec{margin:30px 0 10px}
+  .lp-sec>h2{font-size:clamp(1.4rem,3vw,1.9rem);margin-bottom:4px}
+  .lp-sec>.sub{margin-bottom:16px}
+  .lp-vitrine{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+  .lp-vitrine a{display:flex;flex-direction:column;text-decoration:none;color:var(--tinta);background:var(--cartao);border:2px solid var(--linha);border-radius:var(--r);overflow:hidden;transition:transform .18s,box-shadow .18s}
+  .lp-vitrine a:hover,.lp-vitrine a:focus-visible{transform:translateY(-4px);box-shadow:var(--sombra)}
+  .lp-vitrine .nota{height:92px;font-size:44px}
+  .lp-vitrine .c{padding:10px 12px 12px}
+  .lp-vitrine h3{font-size:1.02rem}
+  .lp-vitrine small{display:block;color:var(--tinta2);font-weight:700;margin-top:2px}
+  .lp-passos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .lp-passos>div{background:var(--cartao);border:2px solid var(--linha);border-radius:var(--r);padding:16px;box-shadow:var(--sombra)}
+  .lp-passos .n{width:38px;height:38px;border-radius:50%;background:var(--marca);border:2px solid var(--marca-borda);display:grid;place-items:center;font-family:var(--f-display);font-weight:700;color:var(--tinta-nota);margin-bottom:8px}
+  .lp-passos h3{font-size:1.1rem;margin-bottom:4px}
+  .lp-passos p{margin:0;color:var(--tinta2);font-weight:600}
+  .lp-plano{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .lp-plano .card{margin:0}
+  .lp-plano ul{margin:8px 0 14px;padding-left:20px;font-weight:600}
+  .lp-plano .preco{font-family:var(--f-display);font-size:2.2rem;color:var(--azul);line-height:1}
+  .lp-faq details{background:var(--cartao);border:2px solid var(--linha);border-radius:12px;padding:0 14px;margin-bottom:8px}
+  .lp-faq summary{cursor:pointer;font-weight:800;padding:12px 0;list-style:none;display:flex;justify-content:space-between;gap:10px}
+  .lp-faq summary::after{content:"＋";color:var(--azul)}
+  .lp-faq details[open] summary::after{content:"－"}
+  .lp-faq p{margin:0 0 12px;color:var(--tinta2);font-weight:600}
+  @media(max-width:600px){.lp-vitrine{grid-template-columns:repeat(2,1fr);gap:10px}.lp-vitrine .nota{height:70px;font-size:34px}}
+  @media(max-width:900px){.lp-hero{grid-template-columns:1fr}.lp-hero.retorno .lp-login{order:-1}.lp-esq{padding:24px 20px}}
   .teste-gratis{margin:18px 20px 22px;padding:14px;border-radius:12px;background:#eef2ff;text-align:center}
   .teste-gratis p{margin:0 0 10px;font-weight:700}
   .teste-gratis a{display:inline-block;text-decoration:none}
@@ -807,16 +854,81 @@ function desenharLogin(aviso){
     botao, caixa,
     el('p', {class:'sub2'}, '🔒 Cada login funciona em um aparelho por vez. Se você entrar em outro aparelho, o anterior é desconectado.'),
     el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'),
-    el('div', {style:'padding:6px 20px 22px;display:grid;gap:8px'},
+    el('div', {class:'login-acoes', style:'padding:6px 20px 22px;display:grid;gap:8px'},
       el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, '💳 Comprar acesso ao Plano Pró por apenas R$ 10,00'),
       el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Degustação grátis · 5 minutos')),
     el('p', {class:'sub2', style:'text-align:center;padding:0 20px 20px;margin-top:0'},
       el('a', {href:'catalogo/'}, '📚 Catálogo'), ' · ', el('a', {href:'mural/'}, '📌 Mural Eletrônico'), ' · ',
       el('a', {href:'novidades.html'}, '🆕 Novidades'), ' · ', el('a', {href:'como-funciona.html'}, '❓ Como funciona')));
 
-  app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
-    el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form)));
-  setTimeout(function(){ (login.value ? senha : login).focus(); }, 50);
+  var cartaoLogin = el('div', {class:'login-box'}, el('div', {class:'card'},
+    el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form));
+  app.replaceChildren(montarApresentacao(cartaoLogin, !!login.value));
+  /* no computador o cursor já vai para o login; no celular não, para não pular a apresentação */
+  if(window.matchMedia('(min-width:901px)').matches || login.value) setTimeout(function(){ (login.value ? senha : login).focus({preventScroll:true}); }, 50);
+}
+
+/* ---------- apresentação do site (tela inicial sem login) ---------- */
+function montarApresentacao(cartaoLogin, retorno){
+  var ids = Object.keys(window.JOGOS).filter(function(k){ return k !== 'demo-porcentagem'; });
+  var tipos = {jogo:0, simulador:0, ferramenta:0};
+  ids.forEach(function(id){ var t = tipoDe(id); tipos[t] = (tipos[t] || 0) + 1; });
+  var destaque = ['aventura-do-pi','invasao-alienigena','tabuada-turbo','projeto-omega','fracoes-visuais','forca-financeira','tesouro-das-integrais','calculadora-imc']
+    .filter(function(id){ return window.JOGOS[id]; });
+  if(destaque.length < 8) ids.forEach(function(id){ if(destaque.length < 8 && destaque.indexOf(id) < 0 && tipoDe(id) === 'jogo') destaque.push(id); });
+  function num(n, rot){ return el('div', {}, el('b', {}, String(n)), el('span', {}, rot)); }
+  function faq(p, r){ return el('details', {}, el('summary', {}, p), el('p', {}, r)); }
+
+  var hero = el('section', {class:'lp-hero' + (retorno ? ' retorno' : ''), 'aria-label':'Apresentação'},
+    el('div', {class:'lp-esq'},
+      el('span', {class:'lp-pill'}, '🎓 Feito por professor, para a sala de aula'),
+      el('h2', {}, 'Jogos e simuladores para a turma aprender de forma ', el('em', {}, 'lúdica')),
+      el('p', {}, ids.length + ' atividades prontas para usar na aula, com ranking, pódio, notas e tabelas para imprimir. Os alunos entram por um link, sem cadastro.'),
+      el('div', {class:'lp-cta'},
+        el('button', {type:'button', class:'grande', onclick: desenharDegustacao}, '⏱️ Experimentar grátis · 5 min'),
+        el('a', {href:'catalogo/', class:'sec'}, '📚 Ver o catálogo')),
+      el('ul', {class:'lp-chips'},
+        el('li', {}, '✔ Sem instalar nada'), el('li', {}, '✔ Celular, tablet e computador'), el('li', {}, '✔ Habilidades da BNCC indicadas'))),
+    el('div', {class:'lp-login'}, cartaoLogin));
+
+  var numeros = el('section', {class:'lp-numeros', 'aria-label':'O site em números'},
+    num(ids.length, 'atividades'), num(tipos.jogo || 0, 'jogos'), num(tipos.simulador || 0, 'simuladores'), num(tipos.ferramenta || 0, 'ferramentas'));
+
+  var vitrine = el('section', {class:'lp-sec'},
+    el('h2', {}, '🎮 Conheça algumas atividades'),
+    el('p', {class:'sub'}, 'Clique para ver a descrição e os conteúdos de cada uma.'),
+    el('div', {class:'lp-vitrine'}, destaque.map(function(id){ var j = window.JOGOS[id];
+      return el('a', {href:'catalogo/' + id + '.html'},
+        el('div', {class:'nota', style:corDe(id)}, el('span', {class:'emoji', 'aria-hidden':'true'}, j.emoji || '🎮')),
+        el('div', {class:'c'}, el('h3', {}, j.nome), el('small', {}, j.tema || j.conteudo || '')));
+    })),
+    el('p', {style:'text-align:center;margin:14px 0 0'}, el('a', {href:'catalogo/', style:'font-weight:800'}, 'Ver todas as ' + ids.length + ' atividades →')));
+
+  var passos = el('section', {class:'lp-sec'},
+    el('h2', {}, '🚀 Como funciona'),
+    el('div', {class:'lp-passos', style:'margin-top:12px'},
+      el('div', {}, el('div', {class:'n'}, '1'), el('h3', {}, 'Escolha a atividade'), el('p', {}, 'Jogos, simuladores e ferramentas por conteúdo e nível de ensino.')),
+      el('div', {}, el('div', {class:'n'}, '2'), el('h3', {}, 'Envie o link para a turma'), el('p', {}, 'Os alunos abrem no celular, sem login e sem instalar.')),
+      el('div', {}, el('div', {class:'n'}, '3'), el('h3', {}, 'Acompanhe os resultados'), el('p', {}, 'Ranking, pódio e notas por aluno e por turma, prontos para imprimir.'))));
+
+  var plano = el('section', {class:'lp-sec'},
+    el('h2', {}, '💳 Para o professor'),
+    el('div', {class:'lp-plano', style:'margin-top:12px'},
+      el('div', {class:'card'}, el('h3', {}, 'Plano Pró'), el('div', {class:'preco'}, 'R$ 10,00'),
+        el('ul', {}, el('li', {}, 'Todas as atividades liberadas'), el('li', {}, 'Atribuir tarefas para as turmas'), el('li', {}, 'Notas e ranking por turma')),
+        el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, 'Comprar acesso ao Plano Pró')),
+      el('div', {class:'card'}, el('h3', {}, 'Quer testar antes?'), el('p', {class:'sub', style:'margin-top:8px'}, 'A degustação é grátis e dura 5 minutos: você abre as atividades e vê como funciona na prática.'),
+        el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Começar a degustação grátis'),
+        el('p', {class:'sub2'}, '🎓 Aluno? Use o link que o seu professor enviou. Você não precisa de login.'))));
+
+  var duvidas = el('section', {class:'lp-sec lp-faq'},
+    el('h2', {style:'margin-bottom:12px'}, '❓ Dúvidas frequentes'),
+    faq('O aluno precisa criar conta?', 'Não. O aluno entra pelo link enviado pelo professor e informa só o nome e a turma.'),
+    faq('Preciso instalar algum programa?', 'Não. Tudo abre direto no navegador, no celular, no tablet ou no computador.'),
+    faq('Para quais níveis de ensino?', 'Fundamental 2 e Ensino Médio, com atividades de Matemática, Educação Financeira, saúde e outras áreas.'),
+    faq('Posso testar antes de comprar?', 'Sim. Use a degustação grátis de 5 minutos.'));
+
+  return el('div', {class:'lp'}, hero, numeros, vitrine, passos, plano, duvidas);
 }
 
 /* ---------- abas ---------- */
