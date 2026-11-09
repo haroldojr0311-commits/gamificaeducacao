@@ -342,14 +342,6 @@ window.JOGOS = {
     emoji: "📄", cor: "azul", ferramenta: true,
     tipo: "ferramenta"
   },
-  "gerador-provas": {
-    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
-    nome: "Gerador de Provas",
-    tema: "Ferramenta do professor",
-    desc: "Monte provas e simulados de Matemática inspirados em Prova Paulista, Provão Paulista, SAEB e SARESP, com gabarito.",
-    emoji: "📝", cor: "lilas", ferramenta: true,
-    tipo: "ferramenta"
-  },
   "gerador-sudoku": {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Gerador de Sudoku",
