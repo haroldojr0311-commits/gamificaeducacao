@@ -209,7 +209,7 @@ window.JOGOS = {
     nome: "Roleta da Sala",
     tema: "Ferramenta do professor",
     desc: "Gire a roleta para sortear alunos, perguntas ou palavras. Com som, sem repetir e sala simulada.",
-    emoji: "🎡", cor: "roxo", ferramenta: true,
+    emoji: "🎡", cor: "lilas", ferramenta: true,
     tipo: "ferramenta"
   },
   "calculadora-notas": {
