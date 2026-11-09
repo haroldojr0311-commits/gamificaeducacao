@@ -98,6 +98,13 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 .pub .lk-previa b{padding-top:8px}
 .pub .lk-previa .url{display:block;padding-bottom:10px;font-size:13px;color:var(--tinta2)}
 .pub .apagar{position:absolute;top:8px;right:8px}
+.pub.colorido{--tinta:#1d2b53;--tinta2:#4a5578;--cartao:rgba(255,255,255,.72);--linha:rgba(29,43,83,.2);color:#1d2b53}
+.pub.colorido .btn.sec{background:rgba(255,255,255,.75);color:#1d2b53;border-color:rgba(29,43,83,.22)}
+.cores-card{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 6px}
+.cores-card .cc{width:30px;height:30px;border-radius:50%;border:2px solid rgba(29,43,83,.3);cursor:pointer;padding:0;font-size:10px;font-weight:900;color:#1d2b53;background:conic-gradient(#fff3b0,#ffd1e3,#cfe3ff,#c9f1e7,#fff3b0)}
+.cores-card .cc.auto{width:auto;min-width:44px;padding:0 8px;border-radius:999px}
+.cores-card .cc[aria-pressed="true"]{box-shadow:0 0 0 3px #1d2b53;transform:scale(1.08)}
+.pop-cores{position:absolute;top:50px;right:8px;z-index:5;background:#fff;border:2px solid var(--linha);border-radius:14px;padding:8px 10px;box-shadow:0 10px 26px rgba(0,0,0,.28);max-width:220px}
 .pub .canto{position:absolute;top:8px;right:8px;display:flex;gap:6px;z-index:2}
 .pub .ic{width:36px;height:36px;border-radius:50%;border:2px solid var(--linha);background:var(--cartao);cursor:pointer;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,.18);opacity:.92}
 .pub .ic:hover,.pub .ic:focus-visible{opacity:1;transform:scale(1.08)}
@@ -285,6 +292,22 @@ const TEMAS = [
   {id:'minimal-claro', nome:'Minimalista', grupo:'Diversos', claro:true, fundo:'#f1f4f9'},
   {id:'minimal-escuro', nome:'Escuro', grupo:'Diversos', claro:false, fundo:'#1b2030'}
 ];
+/* ---------- cores dos cards ---------- */
+const PALETA_CARD = ['#fff3b0','#ffd9c7','#ffd1e3','#e6d4ff','#cfe3ff','#c9f1e7','#d9f5b8','#ffe0a8','#ffc2c2','#ffffff'];
+const PALETA_AUTO = PALETA_CARD.slice(0, 9);   /* a automática não usa o branco */
+function corAutoDe(texto){ let h = 0; for (const c of String(texto)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return PALETA_AUTO[h % PALETA_AUTO.length]; }
+const corDoCard = (p) => (/^#[0-9a-f]{6}$/i.test(p.cor || '') ? p.cor : corAutoDe(p.id));
+function bolinhasCor(atual, aoEscolher, comAuto){
+  const caixa = el('div', {class:'cores-card', role:'group', 'aria-label':'Cor do card'});
+  const botoes = [];
+  const itens = [...(comAuto ? [['', 'Automática']] : []), ...PALETA_CARD.map(c => [c, c])];
+  itens.forEach(([valor, nome]) => {
+    const b = el('button', {type:'button', class:'cc' + (valor === '' ? ' auto' : ''), title: valor === '' ? 'Cor automática' : 'Cor ' + valor, 'aria-label': valor === '' ? 'Cor automática' : 'Cor do card ' + valor, 'aria-pressed': String(valor === atual),
+      style: valor ? 'background:' + valor : '', onclick(){ atual = valor; botoes.forEach(x => x.setAttribute('aria-pressed', String(x.dataset.v === atual))); aoEscolher(valor); }}, valor === '' ? 'Auto' : null);
+    b.dataset.v = valor; botoes.push(b); caixa.append(b);
+  });
+  return caixa;
+}
 const GRUPOS_TEMA = ['Cores', 'Disciplinas', 'Escola', 'Natureza', 'Diversos'];
 const TEMA_PADRAO = 'tema:ceu';
 /* Tema de um mural: "tema:<id>" ou uma cor hexadecimal (murais antigos) */
@@ -820,6 +843,7 @@ async function vistaMural(id){
     montarZona();
   }}, nome));
 
+  let corEscolhida = '';   /* vazio = automática (cada card novo ganha a próxima cor da paleta) */
   const formPub = el('form', {class:'naoimprimir', novalidate:true, onsubmit: async (e) => {
     e.preventDefault(); feedback.className = 'fb'; feedback.textContent = '';
     const autor = campoNome.value.trim() || 'Anônimo';
@@ -854,7 +878,8 @@ async function vistaMural(id){
       }
       const { data: r, error: e7 } = await sb.rpc('mural_publicar', {
         p_mural: id, p_codigo: dono ? null : codigo, p_token: token,
-        p_tipo: tipo, p_conteudo: conteudo, p_legenda: tipo === 'texto' ? '' : legenda.value.trim(), p_autor: autor, p_nome: nome, p_titulo: campoTitulo.value.trim(), p_eu: EU
+        p_tipo: tipo, p_conteudo: conteudo, p_legenda: tipo === 'texto' ? '' : legenda.value.trim(), p_autor: autor, p_nome: nome, p_titulo: campoTitulo.value.trim(), p_eu: EU,
+        p_cor: corEscolhida || PALETA_AUTO[(publicacoes.length + pendentes.length) % PALETA_AUTO.length]
       });
       if (e7) throw e7;
       if (r && r.erro) throw new Error(r.erro);
@@ -872,6 +897,7 @@ async function vistaMural(id){
     el('label', {for:'tit-pub'}, 'Título (acima da publicação)'), campoTitulo,
     el('label', {}, 'Conteúdo'), zona, contadorEl,
     descBox,
+    el('label', {}, 'Cor do card'), bolinhasCor('', (v) => { corEscolhida = v; }, true),
     feedback,
     el('div', {class:'acoes', style:'justify-content:flex-end;margin:12px 0 0'}, botaoPub));
   montarZona();
@@ -922,6 +948,21 @@ async function vistaMural(id){
     });
   }
 
+  /* Pequena caixa para trocar a cor do card na hora */
+  function abrirCores(p, ancora){
+    const ja = document.querySelector('.pop-cores'); if (ja){ const mesmo = ja.dataset.pub === p.id; ja.remove(); if (mesmo) return; }
+    const pop = el('div', {class:'pop-cores naoimprimir', role:'dialog', 'aria-label':'Escolha a cor do card'}, bolinhasCor(corDoCard(p), async (v) => {
+      const cor = v || corAutoDe(p.id);
+      const { data: r, error: eC } = await sb.rpc('mural_editar_publicacao', {p_publicacao: p.id, p_codigo: dono ? null : codigo, p_token: token, p_eu: EU, p_titulo: '', p_conteudo: '', p_legenda: '', p_cor: cor, p_so_cor: true});
+      if (eC || (r && r.erro)){ toast(eC ? erroAmigavel(eC) : r.erro); return; }
+      p.cor = cor; pop.remove(); ultimaChave = ''; desenharTudo();
+    }, false));
+    pop.dataset.pub = p.id;
+    ancora.closest('.pub').append(pop);
+    const fechar = (ev) => { if (!pop.contains(ev.target) && ev.target !== ancora){ pop.remove(); document.removeEventListener('click', fechar, true); } };
+    setTimeout(() => document.addEventListener('click', fechar, true), 0);
+  }
+
   /* Edição no próprio cartão: título, texto/endereço e descrição (a mídia enviada não muda) */
   function editarPub(p, corpoBox, corpoOriginal){
     const campoT = el('input', {maxlength:'120', value: p.titulo || '', placeholder:'Título (opcional)', 'aria-label':'Título'});
@@ -963,6 +1004,7 @@ async function vistaMural(id){
       el('button', {class:'btn peq', onclick: () => aprovar(p)}, '✅ Aprovar')) : null;
     const corpoBox = el('div', {class:'corpo', style:'display:flex;flex-direction:column;gap:8px'}, corpo);
     const cantoBtns = meu ? el('div', {class:'canto naoimprimir'},
+      el('button', {type:'button', class:'ic', title:'Trocar a cor do card', 'aria-label':'Trocar a cor do card', onclick: (e) => abrirCores(p, e.currentTarget)}, '🎨'),
       el('button', {type:'button', class:'ic', title:'Editar publicação', 'aria-label':'Editar publicação', onclick: () => editarPub(p, corpoBox, corpo)}, '✏️'),
       dono ? el('button', {type:'button', class:'ic', title:'Excluir publicação', 'aria-label':'Excluir publicação', onclick: () => apagar(p)}, '🗑️') : null) : null;
 
@@ -991,7 +1033,8 @@ async function vistaMural(id){
       interacao = el('div', {class:'interacao'}, linhaReacoes, listaCom, formCom);
     }
 
-    return el('article', {class: 'pub tipo-' + p.tipo + (pendente ? ' pendente' : ''), 'aria-label': tipoNome + ' de ' + p.autor},
+    const corCard = corDoCard(p);
+    return el('article', {class: 'pub colorido tipo-' + p.tipo + (pendente ? ' pendente' : ''), 'aria-label': tipoNome + ' de ' + p.autor, style:'background:' + corCard},
       pendente ? el('span', {class:'tipo'}, '⏳ Aguardando aprovação') : null,
       corpoBox,
       cantoBtns,
@@ -1052,7 +1095,7 @@ async function vistaMural(id){
     if (d2 && d2.erro){ pararAtualizacao(); pedirCodigo(id, 'O código deste mural mudou. Digite o novo código.'); return; }
     publicacoes = d2.publicacoes || [];
     pendentes = d2.pendentes || [];
-    const chave = JSON.stringify([publicacoes.map(p => [p.id, p.reacoes, (p.comentarios||[]).length, p.titulo, p.conteudo, p.legenda]), pendentes.map(p => p.id)]);
+    const chave = JSON.stringify([publicacoes.map(p => [p.id, p.reacoes, (p.comentarios||[]).length, p.titulo, p.conteudo, p.legenda, p.cor]), pendentes.map(p => p.id)]);
     const editando = !forcar && (
       [...feed.querySelectorAll('.comentar input'), ...areaPend.querySelectorAll('.comentar input')].some(i => i.value.trim()) ||
       feed.contains(document.activeElement) || areaPend.contains(document.activeElement) || botaoPub.disabled || !!document.querySelector('.editando'));
