@@ -1739,6 +1739,32 @@ function cartaoConta(c){
         }}, '💾 Salvar'),
         el('button', {class:'peq sec', onclick: function(){ extra.replaceChildren(); }}, 'Cancelar'))));
   }}, '✏️ Editar'));
+  /* Compartilhar: mensagem pronta (WhatsApp, copiar, link e QR Code). A senha não fica guardada no sistema; digite a que a pessoa usa ou gere uma nova. */
+  botoes.push(el('button', {class:'peq', onclick: function(){
+    var campoSenha = el('input', {type:'text', maxlength:'60', placeholder:'Digite a senha desta pessoa (opcional)', autocomplete:'off', style:'flex:1;min-width:200px'});
+    var saida = el('div', {style:'margin-top:10px'});
+    function montar(){
+      var sn = campoSenha.value.trim();
+      var texto = 'Olá, ' + String(c.nome || '').split(' ')[0] + '! Seu acesso ao Gamifica Educação está pronto 🎮\n\n' +
+        '🌐 Site: ' + location.origin + location.pathname.replace(/[^/]*$/, '') + '\n👤 Login: ' + loginMostrado + (sn ? '\n🔑 Senha: ' + sn : '') +
+        (c.validade ? '\n📅 Válido até: ' + fmtDia(c.validade) : '') +
+        '\n\nAtenção: o login funciona em um aparelho por vez. Não compartilhe sua senha.';
+      saida.replaceChildren(blocoEntrega(texto, c.login || c.email, sn));
+    }
+    campoSenha.addEventListener('input', montar);
+    var gerar = el('button', {class:'peq sec', type:'button', onclick: async function(){
+      if(!window.confirm('Gerar uma senha nova para ' + c.nome + '? A pessoa será desconectada e só entrará com a senha nova.')) return;
+      var nova = gerarSenha();
+      var r = await chamarFuncao('admin-contas', {acao:'senha', id: c.id, senha: nova});
+      var d = await r.json().catch(function(){ return {}; });
+      if(!r.ok){ saida.replaceChildren(msg('erro', d.erro || 'Erro ao trocar a senha.')); return; }
+      campoSenha.value = nova; montar();
+    }}, '🎲 Gerar senha nova');
+    extra.replaceChildren(el('div', {class:'card', style:'margin:0'},
+      el('p', {class:'sub2', style:'margin-top:0'}, '🔒 Por segurança o sistema não guarda a senha. Digite a senha que a pessoa usa ou gere uma nova.'),
+      el('div', {class:'linha', style:'gap:6px'}, campoSenha, gerar), saida));
+    montar();
+  }}, '📤 Compartilhar'));
   if(!eu) botoes.push(el('button', {class:'peq sec', onclick: async function(){
     var nova = gerarSenha();
     if(!window.confirm('Trocar a senha de ' + c.nome + '? A pessoa será desconectada e só entrará com a senha nova.')) return;
