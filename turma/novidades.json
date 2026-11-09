@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Pitágoras e Trigonometria agora em 3D",
+    "texto": "No simulador do avião, da escada no muro e da escada do bombeiro, toque em 🎥 Ver em 3D, gire a cena com o dedo ou o mouse e veja o triângulo retângulo no espaço.",
+    "link": "catalogo/simulador-pitagoras-trigonometria.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Novo simulador: Pitágoras e Trigonometria na Vida Real",
     "texto": "Avião decolando, escada no muro e escada do caminhão de bombeiros: arraste e veja o triângulo retângulo, Pitágoras, seno, cosseno e tangente. Tem atividade com 9 questões.",
     "link": "catalogo/simulador-pitagoras-trigonometria.html"
