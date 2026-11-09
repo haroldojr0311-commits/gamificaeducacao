@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Nova ferramenta: Roleta da Sala",
+    "texto": "Gire a roleta para sortear alunos, perguntas ou palavras. Tem som, não repete quem já saiu e traz uma sala simulada para testar.",
+    "link": "catalogo/roleta.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Mapa da Sala: escolha onde fica a porta",
     "texto": "Agora você escolhe se a porta da sala fica na frente, no lado esquerdo ou no direito. A mesa do professor vai para o lado oposto.",
     "link": "catalogo/mapa-da-sala.html"

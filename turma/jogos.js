@@ -204,6 +204,14 @@ window.JOGOS = {
     emoji: "🎲", cor: "verde", ferramenta: true,
     tipo: "ferramenta"
   },
+  "roleta": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
+    nome: "Roleta da Sala",
+    tema: "Ferramenta do professor",
+    desc: "Gire a roleta para sortear alunos, perguntas ou palavras. Com som, sem repetir e sala simulada.",
+    emoji: "🎡", cor: "roxo", ferramenta: true,
+    tipo: "ferramenta"
+  },
   "calculadora-notas": {
     nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Calculadora de Notas e Médias",
