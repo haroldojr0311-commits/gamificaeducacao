@@ -46,7 +46,7 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 40px}
 .bt{display:inline-block;text-decoration:none;font-weight:800;border-radius:14px;padding:13px 20px;background:var(--marca);color:#1d2b53;border:2px solid #e0ad00;box-shadow:0 3px 0 #e0ad00;margin:4px}
 .bt.sec{background:#fff;border-color:var(--linha);box-shadow:0 3px 0 var(--linha)}
 .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
-.item{display:flex;flex-direction:column;background:#fff;border:2px solid var(--linha);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--tinta);transition:transform .15s}
+.item{position:relative;display:flex;flex-direction:column;background:#fff;border:2px solid var(--linha);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--tinta);transition:transform .15s}
 .item:hover{transform:translateY(-3px)}
 .item .nota{height:80px;display:grid;place-items:center;font-size:40px;position:relative}
 .item .nota small{position:absolute;left:8px;top:7px;font-size:12px;font-weight:800;background:rgba(255,255,255,.7);border-radius:99px;padding:1px 8px}
@@ -73,6 +73,15 @@ footer a{margin:0 6px}
 a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #2f63d6;outline-offset:2px}
 .topo a:focus-visible{outline-color:#ffd23f}
 button.bt{font:inherit;cursor:pointer}
+.selo-demo{position:absolute;top:8px;right:8px;z-index:2;background:#12865f;color:#fff;font-weight:800;font-size:.75rem;padding:4px 10px;border-radius:999px}
+.form label{display:block;font-weight:800;margin-top:12px}
+.form input[type=text],.form input[type=email],.form textarea{width:100%;font:inherit;padding:12px;border:2px solid var(--linha);border-radius:12px;background:#fff;color:var(--tinta)}
+.form textarea{min-height:110px;resize:vertical}
+.form .check{display:flex;gap:10px;align-items:flex-start;font-weight:600}
+.form .check input{margin-top:6px;width:20px;height:20px;flex:none}
+.form .hp{position:absolute;left:-9999px;height:0;overflow:hidden}
+.form .bt{margin-top:14px}
+.status{margin:10px 0 0;font-weight:700;min-height:1.4em}.status.ok{color:#0b6b4a}.status.erro{color:#b3261e}
 .compartilhar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
 .compartilhar .ok{font-weight:800;color:#0b6b4a}
 .novi{display:grid;gap:12px}.novi article{border:2px solid var(--linha);border-radius:16px;padding:14px 16px;background:#fff}
@@ -124,20 +133,25 @@ def pagina(titulo, desc, corpo, caminho, extra_head='', absoluto=False):
 <footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br>
 <a href="{prefixo}catalogo/">Catálogo</a>·<a href="{prefixo}mural/">Mural Eletrônico</a>·<a href="{prefixo}novidades.html">Novidades</a>·<a href="{prefixo}como-funciona.html">Como funciona</a>·<a href="{prefixo}privacidade.html">Privacidade</a>·<a href="{prefixo}termos.html">Termos de uso</a>·<a href="https://wa.me/{ZAP}" target="_blank" rel="noopener">Contato</a></footer>
 {COPIAR_JS}
+<script src="{prefixo}site.js" defer></script>
 <script src="{prefixo}estat.js" defer></script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('{prefixo}sw.js').catch(function(){{}});</script>
 </body>
 </html>
 """
 
+DEMOS_SET = set(json.load(open(os.path.join(RAIZ, 'turma', 'demos.json'), encoding='utf-8')))
 def cartao(k, v, pref=''):
-    return (f'<a class="item" href="{pref}{e(k)}.html" data-tipo="{tipo(v)}" data-nivel="{e("|".join(v.get("nivel", [])))}">'
+    selo = '<span class="selo-demo">▶️ Demo grátis</span>' if k in DEMOS_SET else ''
+    return (f'<a class="item" href="{pref}{e(k)}.html" data-tipo="{tipo(v)}" data-nivel="{e("|".join(v.get("nivel", [])))}">{selo}'
             f'<div class="nota" style="background:{COR.get(v.get("cor"), "#ffe27a")}"><small>{e(v.get("tema", ""))}</small>{e(v.get("emoji", "🎲"))}</div>'
             f'<div class="c"><h3>{e(v["nome"])}</h3><p>{e(v.get("desc", ""))}</p></div></a>')
 
 COPIAR_JS = """<script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-copiar]');if(!b)return;var u=b.getAttribute('data-copiar'),ok=b.parentNode.querySelector('.ok');function f(){if(ok){ok.textContent='✅ Link copiado!';setTimeout(function(){ok.textContent='';},2500);}}
 if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(f).catch(f);}else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);f();}});</script>"""
 
+DEMOS = json.load(open(os.path.join(RAIZ, 'turma', 'demos.json'), encoding='utf-8'))
+for _d in DEMOS: assert _d in J and os.path.exists(os.path.join(RAIZ, 'demo', _d + '.html')), 'demo inexistente: ' + _d
 ordenados = sorted(J.items(), key=lambda kv: kv[1]['nome'].lower())
 os.makedirs(os.path.join(RAIZ, 'catalogo'), exist_ok=True)
 numeros = (f'<div class="numeros"><div><b>{TOTAL}</b>aplicações</div><div><b>{cont["jogo"]}</b>jogos</div>'
@@ -149,6 +163,7 @@ filtros = ('<div class="filtros" id="fTipo">' + ''.join(f'<button type="button" 
            '<div class="filtros" id="fNivel">' + ''.join(f'<button type="button" data-n="{n}" aria-pressed="{"true" if n == "todos" else "false"}">{"Todos os níveis" if n == "todos" else n}</button>'
            for n in ['todos'] + NIVEIS) + '</div>')
 corpo = (f'<div class="card hero"><h1>Catálogo de aplicações</h1><p class="sub">Jogos, simuladores e ferramentas para usar em sala de aula, no projetor ou no celular dos alunos.</p>{numeros}<p style="margin-top:16px"><a class="bt" href="../#degustacao">⏱️ Experimentar grátis</a><a class="bt sec" href="../novidades.html">🆕 Novidades</a></p></div>'
+         '<div class="card" id="demos"><h2>▶️ Demonstrações grátis</h2><p class="sub">Jogue 3 minutos por dia em cada jogo, sem cadastro.</p><p>' + ''.join(f'<a class="bt" href="../demo/{d}.html">▶️ {e(J[d]["nome"])}</a>' for d in DEMOS) + '</p></div>'
          f'<div class="card">{filtros}<div class="grade" id="grade">{"".join(cartao(k, v) for k, v in ordenados)}</div></div>'
          """<script>
 (function(){var t='todos',n='todos';function f(){document.querySelectorAll('#grade .item').forEach(function(a){var ok=(t==='todos'||a.dataset.tipo===t)&&(n==='todos'||a.dataset.nivel.split('|').indexOf(n)>=0);a.style.display=ok?'':'none';});}
@@ -157,12 +172,7 @@ document.querySelectorAll('#fNivel button').forEach(function(b){b.onclick=functi
 </script>
 <div class="card" id="depCat" hidden><h2>O que dizem os professores</h2><div id="listaDepCat"></div></div>
 <script>
-fetch('../depoimentos.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(L){
-  if(!Array.isArray(L)||!L.length) return;
-  var e=function(s){return String(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
-  document.getElementById('listaDepCat').innerHTML='<div class="grade">'+L.slice(0,6).map(function(d){return '<div class="item" style="padding:14px"><p style="-webkit-line-clamp:unset;color:#1d2b53">“'+e(d.texto)+'”</p><p style="margin-top:8px"><b>'+e(d.nome)+'</b>'+(d.funcao?'<br>'+e(d.funcao):'')+'</p></div>';}).join('')+'</div>';
-  document.getElementById('depCat').hidden=false;
-}).catch(function(){});
+window.addEventListener('DOMContentLoaded',function(){GamificaDep.mostrar('listaDepCat','depCat',6,'../depoimentos.json');});
 </script>""")
 open(os.path.join(RAIZ, 'catalogo', 'index.html'), 'w').write(pagina(f'Catálogo: {TOTAL} jogos, simuladores e ferramentas educacionais · Gamifica Educação',
     f'{TOTAL} aplicações educacionais: {cont["jogo"]} jogos, {cont["simulador"]} simuladores e {cont["ferramenta"]} ferramentas para o professor, do Fundamental ao Superior.', corpo, 'catalogo/'))
@@ -201,7 +211,7 @@ for k, v in ordenados:
              '</div></div></div>'
              f'<div class="card"><h2>Para quem é</h2><p><b>{e(v["nome"])}</b> é {art} {tipo_min}{tema_txt} {indic} para <b>{e(nivel_txt)}</b>. Funciona no celular, no tablet e no computador, direto no navegador, sem instalar nada.</p></div>'
              f'<div class="card"><h2>Como usar em aula</h2><ul>{"".join("<li>" + x + "</li>" for x in USO[t])}</ul>'
-             f'<p><a class="bt" href="{('..' + v['link']) if v.get('link') else '../'}">🚀 {'Abrir' if v.get('link') else 'Abrir no portal'}</a><a class="bt sec" href="../#degustacao">⏱️ Fazer a degustação grátis</a></p>{compartilhar}'
+             f'<p>{(f"<a class=\"bt\" href=\"../demo/{k}.html\">▶️ Jogar demonstração grátis (3 min)</a>") if k in DEMOS_SET else ""}<a class="bt" href="{('..' + v['link']) if v.get('link') else '../'}">🚀 {'Abrir' if v.get('link') else 'Abrir no portal'}</a><a class="bt sec" href="../#degustacao">⏱️ Fazer a degustação grátis</a></p>{compartilhar}'
              f'<p class="sub" style="font-size:15px">O acesso completo é pelo Plano Pró. Alunos não precisam de login: usam o link que o professor envia.</p></div>'
              f'<div class="card"><h2>Veja também</h2><div class="grade">{"".join(cartao(a, b) for a, b in rel)}</div></div>')
     open(os.path.join(RAIZ, 'catalogo', k + '.html'), 'w').write(pagina(titulo_pag, desc_pag, corpo, f'catalogo/{k}.html',
@@ -231,13 +241,15 @@ corpo = (f'<div class="card hero"><h1>Como funciona</h1><p class="sub">Aprender 
          '</div></div>'
          '<div class="card"><h2>Perguntas frequentes</h2>' + ''.join(f'<details><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in FAQ) + '</div>'
          '<div class="card" id="depoimentos"><h2>Depoimentos de professores</h2><div id="listaDep"></div>'
-         f'<p>Usou o Gamifica Educação com a sua turma? <b>Conte como foi!</b> Seu depoimento pode aparecer aqui.</p><p><a class="bt" target="_blank" rel="noopener" href="https://wa.me/{ZAP}?text={html.escape("Olá! Quero deixar um depoimento sobre o Gamifica Educação:", quote=True).replace(" ", "%20")}">💬 Enviar meu depoimento</a></p></div>'
+         '<p>Usou o Gamifica Educação com a sua turma? <b>Conte como foi!</b> Seu depoimento aparece aqui depois de aprovado.</p>'
+         '<form class="form" id="fDep" novalidate><label for="dnome">Seu nome</label><input id="dnome" name="nome" type="text" maxlength="80" required autocomplete="name">'
+         '<label for="dfun">Sua função (opcional)</label><input id="dfun" name="funcao" type="text" maxlength="80" placeholder="Ex.: Professora de Matemática, Ensino Médio">'
+         '<label for="dtxt">Seu depoimento (até 500 letras, sem links)</label><textarea id="dtxt" name="texto" maxlength="500" required></textarea>'
+         '<div class="hp" aria-hidden="true"><label>Não preencha<input name="site" type="text" tabindex="-1" autocomplete="off"></label></div>'
+         '<label class="check"><input type="checkbox" name="ok" required> <span>Autorizo publicar meu nome, minha função e este texto no site. Posso pedir a remoção quando quiser.</span></label>'
+         '<button class="bt" type="submit">💬 Enviar meu depoimento</button><p class="status" role="status" aria-live="polite"></p></form></div>'
          """<script>
-fetch('depoimentos.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(L){
-  if(!Array.isArray(L)||!L.length) return;
-  var box=document.getElementById('listaDep'),e=function(s){return String(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
-  box.innerHTML='<div class="grade">'+L.map(function(d){return '<div class="item" style="padding:14px"><p style="-webkit-line-clamp:unset;color:#1d2b53">“'+e(d.texto)+'”</p><p style="margin-top:8px"><b>'+e(d.nome)+'</b>'+(d.funcao?'<br>'+e(d.funcao):'')+'</p></div>';}).join('')+'</div>';
-}).catch(function(){});
+window.addEventListener('DOMContentLoaded',function(){GamificaDep.mostrar('listaDep',null,12,'depoimentos.json');GamificaForms.depoimento('fDep');});
 </script>""")
 open(os.path.join(RAIZ, 'como-funciona.html'), 'w').write(pagina('Como funciona · Gamifica Educação', 'Como usar o Gamifica Educação: degustação grátis, Plano Pró, tarefas por link sem login para os alunos, notas e perguntas frequentes.', corpo, 'como-funciona.html',
     '<script type="application/ld+json">' + json.dumps(ld_faq, ensure_ascii=False) + '</script>'))
@@ -253,8 +265,16 @@ itens = ''.join(f'<article><time datetime="{e(n["data"])}">{dt(n["data"])}</time
 zap_novi = urllib.parse.quote('Olá! Quero receber o aviso quando sair jogo novo no Gamifica Educação.')
 corpo = (f'<div class="card hero"><h1>Novidades</h1><p class="sub">Jogos, simuladores e ferramentas que chegaram ao Gamifica Educação.</p></div>'
          f'<div class="card"><div class="novi">{itens}</div></div>'
-         f'<div class="card"><h2>Quer ser avisado?</h2><p>Fale com o professor Haroldo pelo WhatsApp e peça para receber o aviso quando sair novidade. Você também pode assinar o <a href="feed.xml">feed RSS</a>.</p>'
-         f'<p><a class="bt" target="_blank" rel="noopener" href="https://wa.me/{ZAP}?text={zap_novi}">📲 Quero receber os avisos</a></p></div>')
+         '<div class="card" id="avisos"><h2>📧 Receba um aviso por e-mail</h2><p>Quando sair jogo ou ferramenta nova, você recebe um e-mail curto com o link. Sem propaganda e sem repassar seu e-mail a ninguém.</p>'
+         '<form class="form" id="fAvisos" novalidate><label for="aemail">Seu e-mail</label><input id="aemail" name="email" type="email" maxlength="120" required autocomplete="email">'
+         '<div class="hp" aria-hidden="true"><label>Não preencha<input name="site" type="text" tabindex="-1" autocomplete="off"></label></div>'
+         '<label class="check"><input type="checkbox" name="ok" required> <span>Concordo em receber avisos de novidades neste e-mail e posso cancelar quando quiser. Veja a <a href="privacidade.html">Política de Privacidade</a>.</span></label>'
+         '<button class="bt" type="submit">📧 Quero receber os avisos</button><p class="status" role="status" aria-live="polite"></p></form>'
+         f'<p>Prefere pelo WhatsApp? <a target="_blank" rel="noopener" href="https://wa.me/{ZAP}?text={zap_novi}">Peça aqui</a>. Também há o <a href="feed.xml">feed RSS</a>.</p></div>'
+         '<div class="card" id="cancelar"><h2>Cancelar os avisos</h2><form class="form" id="fCancelar" novalidate><label for="cemail">E-mail cadastrado</label><input id="cemail" name="email" type="email" maxlength="120" required>'
+         '<div class="hp" aria-hidden="true"><label>Não preencha<input name="site" type="text" tabindex="-1" autocomplete="off"></label></div>'
+         '<button class="bt sec" type="submit">Cancelar meu cadastro</button><p class="status" role="status" aria-live="polite"></p></form></div>'
+         '<script>window.addEventListener("DOMContentLoaded",function(){GamificaForms.avisos("fAvisos");GamificaForms.cancelar("fCancelar");});</script>')
 open(os.path.join(RAIZ, 'novidades.html'), 'w').write(pagina('Novidades · Gamifica Educação', 'Últimos jogos, simuladores e ferramentas que chegaram ao Gamifica Educação.', corpo, 'novidades.html',
     f'<link rel="alternate" type="application/rss+xml" title="Novidades do Gamifica Educação" href="{SITE}/feed.xml">'))
 def rfc(d): return datetime.datetime.strptime(d, '%Y-%m-%d').strftime('%a, %d %b %Y 12:00:00 -0300')
@@ -269,7 +289,7 @@ corpo = ('<div class="card hero" style="text-align:center"><div style="font-size
          '<p class="sub">O endereço pode estar errado ou a página mudou de lugar. Vamos voltar para um lugar conhecido?</p>'
          '<p><a class="bt" href="/">🏠 Voltar ao início</a><a class="bt sec" href="/catalogo/">📚 Ver o catálogo</a><a class="bt sec" href="/mural/">📌 Mural Eletrônico</a></p></div>')
 open(os.path.join(RAIZ, '404.html'), 'w').write(pagina('Página não encontrada · Gamifica Educação', 'A página procurada não foi encontrada. Volte ao início ou veja o catálogo de jogos, simuladores e ferramentas.', corpo, '404.html',
-    '<meta name="robots" content="noindex">', absoluto=True))
+    '<meta name="robots" content="noindex"><meta name="estat" content="off">', absoluto=True))
 
 # ---------- privacidade e termos ----------
 ATUAL = '8 de novembro de 2026'
@@ -287,12 +307,12 @@ priv = f"""<div class="card legal"><h1>Política de Privacidade</h1><p class="su
 <li>No Quiz Ao Vivo e na Enquete, as respostas passam pelo canal em tempo real e não são gravadas no servidor do site. A enquete é anônima.</li>
 <li>Recomendamos que o professor oriente os alunos a usar apenas o primeiro nome e a turma.</li></ul>
 <h2>4. Dados guardados no seu aparelho</h2><p>Para conveniência, o navegador guarda no próprio aparelho informações como favoritos, aplicações usadas recentemente, recordes dos jogos, preferências e o andamento de uma tarefa. Esses dados não são enviados ao servidor e podem ser apagados limpando os dados do navegador.</p>
-<h2>5. Estatísticas de visitas (anônimas)</h2><p>Para saber quais páginas são mais úteis, registramos de forma anônima: a página aberta, o site de origem (por exemplo, o Google), o tipo de aparelho (celular, tablet ou computador) e a data. <b>Não usamos cookies, não guardamos o endereço IP e não identificamos pessoas.</b> O sinal “Não rastrear” do navegador é respeitado.</p>\n<h2>6. Para que usamos os dados</h2><ul><li>Dar acesso ao portal e às aplicações contratadas;</li><li>Mostrar ao professor as notas das tarefas que ele criou;</li><li>Confirmar pagamentos e o período de acesso;</li><li>Atender pedidos de suporte;</li><li>Entender quais páginas são mais usadas, para melhorar o site.</li></ul>
+<h2>5. Estatísticas de visitas (anônimas)</h2><p>Para saber quais páginas são mais úteis, registramos de forma anônima: a página aberta, o site de origem (por exemplo, o Google), o tipo de aparelho (celular, tablet ou computador) e a data. <b>Não usamos cookies, não guardamos o endereço IP e não identificamos pessoas.</b> O sinal “Não rastrear” do navegador é respeitado.</p>\n<h2>6. Avisos de novidades e depoimentos (opcionais)</h2><p><b>Avisos:</b> se você se cadastrar na página de <a href="novidades.html">Novidades</a>, guardamos seu e-mail só para avisar quando sair novidade. Você cancela quando quiser na mesma página. <b>Depoimentos:</b> se você enviar um, guardamos o nome, a função e o texto que escrever, e só publicamos depois de aprovar. Para remover, fale conosco pelo WhatsApp.</p>\n<h2>7. Para que usamos os dados</h2><ul><li>Dar acesso ao portal e às aplicações contratadas;</li><li>Mostrar ao professor as notas das tarefas que ele criou;</li><li>Confirmar pagamentos e o período de acesso;</li><li>Atender pedidos de suporte;</li><li>Entender quais páginas são mais usadas, para melhorar o site.</li></ul>
 <p>Não vendemos dados, não exibimos anúncios e não usamos os dados para publicidade.</p>
-<h2>7. Onde os dados ficam</h2><p>O site é hospedado no GitHub Pages. O banco de dados e a autenticação usam o Supabase, e os pagamentos, o Mercado Pago. Esses serviços seguem padrões de segurança próprios e podem armazenar dados fora do Brasil.</p>
-<h2>8. Por quanto tempo</h2><p>Os dados da conta ficam guardados enquanto a conta existir. O professor pode excluir a qualquer momento as tarefas e as notas que criou. Para excluir a conta e os dados ligados a ela, entre em contato.</p>
-<h2>9. Seus direitos</h2><p>Você pode pedir a confirmação, o acesso, a correção ou a exclusão dos seus dados, e tirar dúvidas sobre esta política, pelo <a href="https://wa.me/{ZAP}" target="_blank" rel="noopener">WhatsApp</a>. Pedidos sobre dados de alunos podem ser feitos pelo responsável ou pelo professor da turma.</p>
-<h2>10. Mudanças</h2><p>Esta política pode ser atualizada. A data da última atualização aparece no início da página.</p></div>"""
+<h2>8. Onde os dados ficam</h2><p>O site é hospedado no GitHub Pages. O banco de dados e a autenticação usam o Supabase, e os pagamentos, o Mercado Pago. Esses serviços seguem padrões de segurança próprios e podem armazenar dados fora do Brasil.</p>
+<h2>9. Por quanto tempo</h2><p>Os dados da conta ficam guardados enquanto a conta existir. O professor pode excluir a qualquer momento as tarefas e as notas que criou. Para excluir a conta e os dados ligados a ela, entre em contato.</p>
+<h2>10. Seus direitos</h2><p>Você pode pedir a confirmação, o acesso, a correção ou a exclusão dos seus dados, e tirar dúvidas sobre esta política, pelo <a href="https://wa.me/{ZAP}" target="_blank" rel="noopener">WhatsApp</a>. Pedidos sobre dados de alunos podem ser feitos pelo responsável ou pelo professor da turma.</p>
+<h2>11. Mudanças</h2><p>Esta política pode ser atualizada. A data da última atualização aparece no início da página.</p></div>"""
 open(os.path.join(RAIZ, 'privacidade.html'), 'w').write(pagina('Política de Privacidade · Gamifica Educação', 'Quais dados o Gamifica Educação usa, para quê e como exercer seus direitos pela LGPD.', priv, 'privacidade.html'))
 termos = f"""<div class="card legal"><h1>Termos de Uso</h1><p class="sub">Última atualização: {ATUAL}</p>
 <p>Ao usar o <b>Gamifica Educação</b> (gamificaeducacao.com.br), você concorda com estes termos.</p>

@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Frações Visuais</title>
+<style>
+:root{--bg:#fff8ef;--card:#fff;--ink:#2a2140;--muted:#6b6283;--line:#efe4d6;--A:#ff7a45;--Ad:#d9531c;--B:#3b82f6;--Bd:#1d5fd1;--R:#16a34a;--vazio:#fff;--borda:#3a2f52}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Roboto,Arial,sans-serif;font-size:16px}
+button{font:inherit;cursor:pointer}
+header{background:linear-gradient(120deg,#ff7a45,#ffb347);color:#fff;padding:14px 16px 0}
+.topo{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.topo h1{margin:0;font-size:24px;flex:1}
+.topo h1 small{display:block;font-size:14px;font-weight:500;opacity:.95}
+.forma{display:flex;background:#ffffff33;border-radius:999px;padding:3px}
+.forma button{border:0;background:none;color:#fff;font-weight:800;padding:7px 14px;border-radius:999px}
+.forma button.on{background:#fff;color:var(--Ad)}
+nav{max-width:1100px;margin:12px auto 0;display:flex;gap:4px;overflow-x:auto}
+nav button{border:0;background:#ffffff2e;color:#fff;font-weight:800;padding:10px 16px;border-radius:14px 14px 0 0;white-space:nowrap}
+nav button.on{background:var(--bg);color:var(--Ad)}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 6px 18px #ff7a4512;margin-bottom:16px}
+.oculto{display:none!important}
+.linha{display:flex;gap:16px;flex-wrap:wrap;align-items:stretch;justify-content:center}
+.col{flex:1 1 280px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:10px}
+.editor{display:inline-flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border-radius:16px;background:#fff6ee;border:2px solid var(--line)}
+.editor.A{border-color:#ffc3a8}.editor.B{border-color:#b9d3ff;background:#f1f6ff}
+.step{display:flex;align-items:center;gap:6px}
+.step button{width:38px;height:38px;border-radius:12px;border:0;background:#fff;box-shadow:0 2px 0 #0002;font-size:22px;font-weight:900;color:var(--ink)}
+.step button:active{transform:translateY(2px);box-shadow:none}
+.step .n{min-width:44px;text-align:center;font-size:30px;font-weight:900;font-variant-numeric:tabular-nums}
+.traco{width:70px;height:4px;border-radius:2px;background:var(--ink)}
+.editor .rot{font-size:12px;color:var(--muted);font-weight:700}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.05;font-weight:800;margin:0 3px}
+.fr span:first-child{border-bottom:3px solid currentColor;padding:0 4px}
+.fr span:last-child{padding:0 4px}
+.fr.g{font-size:30px}
+.cA{color:var(--Ad)}.cB{color:var(--Bd)}.cR{color:var(--R)}
+.figura{width:100%;display:flex;justify-content:center}
+.figura svg{max-width:100%;height:auto}
+.sinal{font-size:64px;font-weight:900;align-self:center;color:var(--ink);min-width:60px;text-align:center}
+.expl{background:#fff6ee;border-left:6px solid var(--A);border-radius:12px;padding:12px 14px;line-height:1.7;font-size:17px}
+.expl p{margin:4px 0}
+.dica{background:#eefbf1;border-left:6px solid var(--R);border-radius:12px;padding:10px 14px;line-height:1.6;margin-top:10px}
+.slider{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;font-weight:700}
+.slider input{width:220px;accent-color:var(--A)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.bt{border:0;border-radius:14px;padding:11px 18px;font-weight:800;background:var(--A);color:#fff;box-shadow:0 3px 0 var(--Ad)}
+.bt.sec{background:#fff;color:var(--ink);box-shadow:0 3px 0 #d9cbb8;border:1px solid var(--line)}
+.bt.azul{background:var(--B);box-shadow:0 3px 0 var(--Bd)}
+.bt:active{transform:translateY(3px);box-shadow:none}
+.op{display:flex;gap:6px;justify-content:center}
+.op button{width:52px;height:52px;border-radius:50%;border:3px solid var(--line);background:#fff;font-size:30px;font-weight:900}
+.op button.on{border-color:var(--A);background:var(--A);color:#fff}
+.passos{counter-reset:p;display:flex;flex-direction:column;gap:12px}
+.passo{border:2px solid var(--line);border-radius:16px;padding:12px;position:relative}
+.passo h3{margin:0 0 8px;font-size:17px;display:flex;align-items:center;gap:8px}
+.passo h3::before{counter-increment:p;content:counter(p);width:28px;height:28px;border-radius:50%;background:var(--A);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+.legenda{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:14px;color:var(--muted);font-weight:700}
+.legenda i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+/* desafio */
+.placar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-weight:800}
+.barra-prog{height:12px;background:#f3e6d6;border-radius:6px;overflow:hidden;flex:1;min-width:120px}
+.barra-prog div{height:100%;background:linear-gradient(90deg,#ffb347,#ff7a45);width:0;transition:width .4s}
+.pergunta{font-size:21px;font-weight:800;text-align:center;margin:10px 0}
+.resp{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center}
+.resp input{width:74px;height:54px;font-size:28px;font-weight:900;text-align:center;border:3px solid var(--line);border-radius:12px}
+.resp .fr input{width:64px;height:46px;margin:3px 0}
+.fb{min-height:30px;text-align:center;font-weight:800;font-size:18px;margin-top:10px}
+.fb.ok{color:var(--R)}.fb.erro{color:#dc2626}
+.tremer{animation:tremer .35s}
+@keyframes tremer{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pop{animation:pop .4s}
+@keyframes pop{50%{transform:scale(1.12)}}
+.fim{text-align:center}
+.fim .estrelas{font-size:48px;letter-spacing:6px}
+canvas#conf{position:fixed;inset:0;pointer-events:none;z-index:50}
+.reta{width:100%}
+@media(max-width:600px){.topo h1{font-size:20px}.sinal{font-size:44px}.fr.g{font-size:26px}.step .n{font-size:26px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="topo">
+    <h1>🍕 Frações Visuais<small>Veja, compare e some frações com pizzas e barras</small></h1>
+    <div class="forma" role="group" aria-label="Forma de desenhar">
+      <button type="button" data-forma="pizza" class="on">🍕 Pizza</button>
+      <button type="button" data-forma="barra">🍫 Barra</button>
+    </div>
+  </div>
+  <nav>
+    <button type="button" data-aba="comparar" class="on">⚖️ Comparar</button>
+    <button type="button" data-aba="equiv">🔁 Equivalentes</button>
+    <button type="button" data-aba="somar">➕ Somar e subtrair</button>
+    <button type="button" data-aba="desafio">🏆 Desafio</button>
+  </nav>
+</header>
+<main>
+  <!-- COMPARAR -->
+  <section id="aba-comparar">
+    <div class="card">
+      <div class="linha">
+        <div class="col"><div class="editor A" data-ed="cA"></div><div class="figura" id="figCA"></div></div>
+        <div class="sinal" id="sinalC">?</div>
+        <div class="col"><div class="editor B" data-ed="cB"></div><div class="figura" id="figCB"></div></div>
+      </div>
+    </div>
+    <div class="card"><svg class="reta" id="retaC" viewBox="0 0 700 110" role="img" aria-label="Reta numérica com as duas frações"></svg></div>
+    <div class="card"><div class="expl" id="explC"></div></div>
+  </section>
+
+  <!-- EQUIVALENTES -->
+  <section id="aba-equiv" class="oculto">
+    <div class="card">
+      <div class="linha">
+        <div class="col"><div class="editor A" data-ed="eA"></div><div class="figura" id="figEA"></div></div>
+        <div class="sinal">=</div>
+        <div class="col"><div style="height:118px;display:flex;align-items:center" id="frE"></div><div class="figura" id="figEB"></div></div>
+      </div>
+      <div class="slider" style="margin-top:14px">✂️ Cortar cada pedaço em <input type="range" id="kE" min="1" max="6" value="2" aria-label="Cortar cada pedaço em quantas partes"> <span id="kEv">2</span> partes</div>
+      <div class="btns" style="margin-top:12px"><button class="bt azul" type="button" id="btSimpl">🔍 Simplificar ao máximo</button></div>
+    </div>
+    <div class="card"><div class="expl" id="explE"></div></div>
+  </section>
+
+  <!-- SOMAR -->
+  <section id="aba-somar" class="oculto">
+    <div class="card">
+      <div class="linha" style="align-items:center">
+        <div class="editor A" data-ed="sA"></div>
+        <div class="op" role="group" aria-label="Operação"><button type="button" data-op="+" class="on">+</button><button type="button" data-op="-">−</button></div>
+        <div class="editor B" data-ed="sB"></div>
+        <div class="sinal">=</div>
+        <div id="frS" style="font-size:30px">?</div>
+      </div>
+    </div>
+    <div class="card"><div class="passos" id="passosS"></div></div>
+  </section>
+
+  <!-- DESAFIO -->
+  <section id="aba-desafio" class="oculto">
+    <div class="card" id="desafioBox"></div>
+  </section>
+
+  <div class="card dicas" style="font-size:15px;line-height:1.6;color:var(--muted)">
+    <b style="color:var(--ink)">Lembre:</b> na fração <span class="fr"><span>a</span><span>b</span></span>, o <b>denominador b</b> (embaixo) diz em quantas partes iguais o inteiro foi dividido, e o <b>numerador a</b> (em cima) diz quantas dessas partes foram pegas.
+  </div>
+</main>
+<canvas id="conf"></canvas>
+<script>
+'use strict';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const mdc = (a, b) => b ? mdc(b, a % b) : Math.abs(a);
+const mmc = (a, b) => a / mdc(a, b) * b;
+const FR = (n, d, cls = '') => `<span class="fr ${cls}"><span>${n}</span><span>${d}</span></span>`;
+const decimal = (n, d) => (n / d).toLocaleString('pt-BR', {maximumFractionDigits: 3});
+
+/* ---------- sons ---------- */
+let AC = null;
+function tom(f, d = .12, tipo = 'sine', v = .15){ try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const o = AC.createOscillator(), g = AC.createGain(); o.type = tipo; o.frequency.value = f; g.gain.setValueAtTime(v, AC.currentTime); g.gain.exponentialRampToValueAtTime(.001, AC.currentTime + d); o.connect(g).connect(AC.destination); o.start(); o.stop(AC.currentTime + d); } catch(e){} }
+const clique = () => tom(660, .05, 'triangle', .08);
+const somOk = () => { tom(660, .1); setTimeout(() => tom(880, .16), 90); };
+const somErro = () => tom(180, .25, 'square', .08);
+const somVitoria = () => [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => tom(f, .2), i * 120));
+
+/* ---------- confete ---------- */
+function confete(){
+  const c = $('#conf'), g = c.getContext('2d'); c.width = innerWidth; c.height = innerHeight;
+  const P = Array.from({length: 120}, () => ({x: Math.random() * c.width, y: -20 - Math.random() * c.height / 2, v: 2 + Math.random() * 4, r: Math.random() * 6.28, cor: ['#ff7a45', '#3b82f6', '#16a34a', '#ffb347', '#a855f7'][Math.floor(Math.random() * 5)]}));
+  let t = 0; (function f(){ g.clearRect(0, 0, c.width, c.height); P.forEach(p => { p.y += p.v; p.r += .1; g.save(); g.translate(p.x + Math.sin(p.r) * 10, p.y); g.rotate(p.r); g.fillStyle = p.cor; g.fillRect(-5, -3, 10, 6); g.restore(); }); if (++t < 180) requestAnimationFrame(f); else g.clearRect(0, 0, c.width, c.height); })();
+}
+
+/* ---------- desenho ---------- */
+let FORMA = 'pizza';
+try { FORMA = localStorage.getItem('fracoes-forma') || 'pizza'; } catch(e){}
+/* pedacos: lista de cores para os pedaços pintados (em ordem). d = partes por inteiro.
+   grossa = a cada quantos pedaços desenhar linha grossa (para mostrar o corte original). riscados = índices riscados. */
+function figura(d, pedacos, op = {}){
+  const inteiros = Math.max(op.minInteiros || 1, Math.ceil(pedacos.length / d) || 1);
+  const grossa = op.grossa || 1, risc = op.riscados || new Set();
+  let svg = '';
+  if (FORMA === 'pizza'){
+    const R = 70, L = 2 * R + 16, W = inteiros * L;
+    for (let w = 0; w < inteiros; w++){
+      const cx = w * L + L / 2, cy = L / 2;
+      svg += `<circle cx="${cx}" cy="${cy}" r="${R + 5}" fill="#f2c27b"/>`;
+      for (let i = 0; i < d; i++){
+        const k = w * d + i, cor = pedacos[k] || 'var(--vazio)';
+        if (d === 1){ svg += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="${cor}" stroke="#3a2f52" stroke-width="2.5"/>`; }
+        else {
+          const a0 = -Math.PI / 2 + i * 2 * Math.PI / d, a1 = a0 + 2 * Math.PI / d;
+          const p = (a) => `${(cx + R * Math.cos(a)).toFixed(2)},${(cy + R * Math.sin(a)).toFixed(2)}`;
+          svg += `<path d="M${cx},${cy} L${p(a0)} A${R},${R} 0 ${2 * Math.PI / d > Math.PI ? 1 : 0} 1 ${p(a1)} Z" fill="${cor}" stroke="#3a2f52" stroke-width="1.2"/>`;
+          if (risc.has(k)){ const am = (a0 + a1) / 2, mx = cx + R * .6 * Math.cos(am), my = cy + R * .6 * Math.sin(am); svg += `<text x="${mx}" y="${my + 7}" text-anchor="middle" font-size="${Math.max(12, 26 - d)}" font-weight="900" fill="#7f1d1d">✕</text>`; }
+        }
+      }
+      if (d > 1) for (let i = 0; i < d; i += grossa){ const a = -Math.PI / 2 + i * 2 * Math.PI / d; svg += `<line x1="${cx}" y1="${cy}" x2="${cx + R * Math.cos(a)}" y2="${cy + R * Math.sin(a)}" stroke="#3a2f52" stroke-width="${grossa > 1 ? 3.6 : 2.5}" stroke-linecap="round"/>`; }
+      svg += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#3a2f52" stroke-width="3"/>`;
+    }
+    return `<svg viewBox="0 0 ${W} ${L}" width="${Math.min(W, 172 * inteiros)}" role="img" aria-label="Figura com ${pedacos.length} de ${d} pedaços por inteiro">${svg}</svg>`;
+  }
+  const BW = 300, BH = 54, gap = 14, W = BW + 4, H = inteiros * (BH + gap);
+  for (let w = 0; w < inteiros; w++){
+    const y = w * (BH + gap) + 2, cw = BW / d;
+    for (let i = 0; i < d; i++){
+      const k = w * d + i, cor = pedacos[k] || 'var(--vazio)';
+      svg += `<rect x="${2 + i * cw}" y="${y}" width="${cw}" height="${BH}" fill="${cor}" stroke="#3a2f52" stroke-width="1.2"/>`;
+      if (risc.has(k)) svg += `<text x="${2 + i * cw + cw / 2}" y="${y + BH / 2 + 8}" text-anchor="middle" font-size="${Math.min(26, cw * .8)}" font-weight="900" fill="#7f1d1d">✕</text>`;
+    }
+    for (let i = 0; i <= d; i += grossa) svg += `<line x1="${2 + i * cw}" y1="${y}" x2="${2 + i * cw}" y2="${y + BH}" stroke="#3a2f52" stroke-width="${grossa > 1 ? 3.6 : 2.5}"/>`;
+    svg += `<rect x="2" y="${y}" width="${BW}" height="${BH}" rx="4" fill="none" stroke="#3a2f52" stroke-width="3"/>`;
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="Barra com ${pedacos.length} de ${d} partes por inteiro">${svg}</svg>`;
+}
+const pint = (n, cor) => Array(n).fill(cor);
+
+/* ---------- editores de fração ---------- */
+const F = {cA: [1, 2], cB: [2, 3], eA: [2, 3], sA: [1, 2], sB: [1, 3]};
+const LIM = {n: [0, 24], d: [1, 12]};
+function montarEditor(el){
+  const id = el.dataset.ed;
+  el.innerHTML = `<span class="rot">numerador (partes pegas)</span>
+    <div class="step"><button type="button" data-q="n" data-s="-1" aria-label="Diminuir numerador">−</button><span class="n" data-v="n"></span><button type="button" data-q="n" data-s="1" aria-label="Aumentar numerador">+</button></div>
+    <div class="traco"></div>
+    <div class="step"><button type="button" data-q="d" data-s="-1" aria-label="Diminuir denominador">−</button><span class="n" data-v="d"></span><button type="button" data-q="d" data-s="1" aria-label="Aumentar denominador">+</button></div>
+    <span class="rot">denominador (partes do inteiro)</span>`;
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const f = F[id], i = b.dataset.q === 'n' ? 0 : 1, [mi, ma] = LIM[b.dataset.q];
+    const v = f[i] + +b.dataset.s; if (v < mi || v > ma) { somErro(); return; }
+    f[i] = v; clique(); atualizar();
+  });
+}
+function mostrarEditores(){ $$('[data-ed]').forEach(el => { const f = F[el.dataset.ed]; el.querySelector('[data-v=n]').textContent = f[0]; el.querySelector('[data-v=d]').textContent = f[1]; }); }
+
+/* ---------- COMPARAR ---------- */
+function comparar(){
+  const [a, b] = F.cA, [c, d] = F.cB;
+  $('#figCA').innerHTML = figura(b, pint(a, 'var(--A)'), {minInteiros: Math.max(1, Math.ceil(c / d))});
+  $('#figCB').innerHTML = figura(d, pint(c, 'var(--B)'), {minInteiros: Math.max(1, Math.ceil(a / b))});
+  const x = a * d, y = c * b, s = x > y ? '>' : x < y ? '<' : '=';
+  $('#sinalC').textContent = s;
+  const m = mmc(b, d), xa = a * m / b, yc = c * m / d;
+  const palavra = s === '>' ? 'maior que' : s === '<' ? 'menor que' : 'igual a';
+  let h = `<p><b>Resposta:</b> ${FR(a, b, 'cA')} é <b>${palavra}</b> ${FR(c, d, 'cB')}.</p>`;
+  if (b === d) h += `<p>Os denominadores são iguais (os pedaços têm o mesmo tamanho). Então basta comparar os numeradores: ${a} ${s} ${c}.</p>`;
+  else if (a === c && a > 0) h += `<p>Os numeradores são iguais (pegamos a mesma quantidade de pedaços). Ganha quem tem os pedaços <b>maiores</b>, ou seja, o <b>menor denominador</b>.</p>`;
+  else h += `<p>Os pedaços têm tamanhos diferentes. Para comparar, deixamos os dois com o mesmo denominador, o MMC(${b}, ${d}) = <b>${m}</b>:</p>
+    <p>${FR(a, b, 'cA')} = ${FR(`${a} × ${m / b}`, `${b} × ${m / b}`)} = ${FR(xa, m, 'cA')} &nbsp; e &nbsp; ${FR(c, d, 'cB')} = ${FR(`${c} × ${m / d}`, `${d} × ${m / d}`)} = ${FR(yc, m, 'cB')}</p>
+    <p>Agora os pedaços são do mesmo tamanho: ${xa} ${s} ${yc}.</p>`;
+  h += `<p>Em decimal: ${decimal(a, b)} ${s} ${decimal(c, d)}.</p>`;
+  $('#explC').innerHTML = h;
+  // reta numérica
+  const max = Math.max(1, Math.ceil(Math.max(a / b, c / d))), x0 = 40, x1 = 660, X = v => x0 + (x1 - x0) * v / max;
+  let r = `<line x1="${x0}" y1="60" x2="${x1}" y2="60" stroke="#3a2f52" stroke-width="3"/>`;
+  for (let i = 0; i <= max; i++) r += `<line x1="${X(i)}" y1="50" x2="${X(i)}" y2="70" stroke="#3a2f52" stroke-width="3"/><text x="${X(i)}" y="92" text-anchor="middle" font-size="18" font-weight="800" fill="#3a2f52">${i}</text>`;
+  const pin = (v, cor, rot, cima) => `<circle cx="${X(v)}" cy="60" r="9" fill="${cor}" stroke="#fff" stroke-width="3"/><text x="${X(v)}" y="${cima ? 30 : 106}" text-anchor="middle" font-size="17" font-weight="900" fill="${cor}">${rot}</text>`;
+  r += pin(a / b, 'var(--Ad)', `${a}/${b}`, true) + pin(c / d, 'var(--Bd)', `${c}/${d}`, a / b === c / d ? false : Math.abs(a / b - c / d) * (x1 - x0) / max < 50 ? false : true);
+  $('#retaC').innerHTML = r;
+}
+
+/* ---------- EQUIVALENTES ---------- */
+function equivalentes(){
+  const [a, b] = F.eA, k = +$('#kE').value; $('#kEv').textContent = k;
+  $('#figEA').innerHTML = figura(b, pint(a, 'var(--A)'));
+  $('#figEB').innerHTML = figura(b * k, pint(a * k, 'var(--B)'), {grossa: k});
+  $('#frE').innerHTML = FR(a * k, b * k, 'g cB');
+  const g = mdc(a, b);
+  $('#explE').innerHTML = `<p>Cortamos cada pedaço em <b>${k}</b> partes. O inteiro passa a ter ${b} × ${k} = <b>${b * k}</b> pedaços, e a parte pintada passa a ter ${a} × ${k} = <b>${a * k}</b> pedaços.</p>
+    <p>${FR(a, b, 'cA')} = ${FR(`${a} × ${k}`, `${b} × ${k}`)} = ${FR(a * k, b * k, 'cB')}</p>
+    <p>A <b>quantidade pintada não mudou</b>! Por isso as frações são <b>equivalentes</b>: representam a mesma parte do inteiro.</p>
+    <div class="dica">💡 <b>Regra:</b> multiplicar (ou dividir) o numerador <b>e</b> o denominador pelo mesmo número dá uma fração equivalente. ${a === 0 ? '' : g > 1 ? `Esta fração pode ser simplificada: dividindo por ${g}, fica ${FR(a / g, b / g)}.` : `${FR(a, b)} já está na forma mais simples (irredutível).`}</div>`;
+}
+$('#kE').oninput = () => { clique(); equivalentes(); };
+$('#btSimpl').onclick = () => {
+  const [a, b] = F.eA, g = mdc(a, b);
+  if (a === 0 || g === 1){ somErro(); $('#explE').querySelector('.dica').classList.add('pop'); setTimeout(() => $('#explE .dica') && $('#explE .dica').classList.remove('pop'), 500); return; }
+  F.eA = [a / g, b / g]; $('#kE').value = g; somOk(); atualizar();
+  $('#explE').insertAdjacentHTML('afterbegin', `<p class="cR"><b>Simplificamos ${FR(a, b)} dividindo em cima e embaixo por ${g} (o MDC): ficou ${FR(a / g, b / g)}. Veja à direita que ${FR(a, b)} é a mesma coisa.</b></p>`);
+};
+
+/* ---------- SOMAR ---------- */
+let OP = '+';
+$$('.op button').forEach(b => b.onclick = () => { OP = b.dataset.op; $$('.op button').forEach(x => x.classList.toggle('on', x === b)); clique(); atualizar(); });
+function somar(){
+  const [a, b] = F.sA, [c, d] = F.sB, m = mmc(b, d), A = a * m / b, C = c * m / d;
+  const R = OP === '+' ? A + C : A - C, P = [];
+  const leg = `<div class="legenda"><span><i style="background:var(--A)"></i>primeira fração</span><span><i style="background:var(--B)"></i>segunda fração</span>${OP === '-' ? '<span>✕ = pedaços tirados</span>' : ''}</div>`;
+  if (OP === '-' && R < 0){
+    $('#frS').innerHTML = '<span style="font-size:18px;color:#dc2626;font-weight:800">negativo</span>';
+    $('#passosS').innerHTML = `<div class="expl"><p>${FR(a, b, 'cA')} é <b>menor</b> que ${FR(c, d, 'cB')}, então não dá para tirar essa quantidade das pizzas. O resultado seria negativo: ${FR(R, m)}.</p><p>Troque as frações de lugar ou aumente a primeira.</p></div>`;
+    return;
+  }
+  P.push(`<div class="passo"><h3>Veja as duas frações</h3><div class="linha"><div class="col">${FR(a, b, 'g cA')}<div class="figura">${figura(b, pint(a, 'var(--A)'))}</div></div><div class="col">${FR(c, d, 'g cB')}<div class="figura">${figura(d, pint(c, 'var(--B)'))}</div></div></div></div>`);
+  if (b !== d){
+    P.push(`<div class="passo"><h3>Deixe os pedaços do mesmo tamanho</h3><p style="margin:0 0 8px">Os denominadores são diferentes (${b} e ${d}), então os pedaços têm tamanhos diferentes e <b>não dá para ${OP === '+' ? 'juntar' : 'tirar'} direto</b>. Usamos o MMC(${b}, ${d}) = <b>${m}</b>:</p>
+      <div class="linha"><div class="col"><div>${FR(a, b, 'g cA')} = ${FR(A, m, 'g cA')}</div><div class="figura">${figura(m, pint(A, 'var(--A)'), {grossa: m / b})}</div></div><div class="col"><div>${FR(c, d, 'g cB')} = ${FR(C, m, 'g cB')}</div><div class="figura">${figura(m, pint(C, 'var(--B)'), {grossa: m / d})}</div></div></div></div>`);
+  } else P.push(`<div class="passo"><h3>Os denominadores já são iguais</h3><p style="margin:0">Os dois têm denominador <b>${b}</b>: os pedaços já são do mesmo tamanho. Pode ${OP === '+' ? 'juntar' : 'tirar'} direto!</p></div>`);
+  let fig;
+  if (OP === '+') fig = figura(m, [...pint(A, 'var(--A)'), ...pint(C, 'var(--B)')]);
+  else { const pz = [...pint(R, 'var(--A)'), ...pint(C, '#ffd9c7')], rs = new Set(); for (let i = R; i < A; i++) rs.add(i); fig = figura(m, pz, {riscados: rs}); }
+  P.push(`<div class="passo"><h3>${OP === '+' ? 'Junte os pedaços' : 'Tire os pedaços'}</h3><p style="margin:0 0 8px">${OP === '+' ? 'Somamos' : 'Subtraímos'} só os <b>numeradores</b>; o denominador (tamanho do pedaço) continua <b>${m}</b>:</p>
+    <p style="text-align:center;font-size:20px">${FR(A, m, 'cA')} ${OP === '+' ? '+' : '−'} ${FR(C, m, 'cB')} = ${FR(`${A} ${OP === '+' ? '+' : '−'} ${C}`, m)} = ${FR(R, m, 'g cR')}</p>${leg}<div class="figura">${fig}</div></div>`);
+  const g = mdc(R, m);
+  let fim = `<p style="margin:0">Resultado: ${FR(R, m, 'g cR')}`;
+  if (R && g > 1) fim += ` &nbsp;=&nbsp; ${FR(R / g, m / g, 'g cR')} <span style="font-size:15px">(simplificada, dividindo por ${g})</span>`;
+  const rs = R / g, ms = m / g;
+  if (R > m && R % m) fim += ` &nbsp;=&nbsp; <b>${Math.floor(rs / ms)} inteiro${Math.floor(rs / ms) > 1 ? 's' : ''} e ${FR(rs % ms, ms)}</b>`;
+  if (R && R % m === 0) fim += ` &nbsp;=&nbsp; <b>${R / m} inteiro${R / m > 1 ? 's' : ''}</b>`;
+  fim += `</p><div class="dica">⚠️ <b>Erro comum:</b> ${OP === '+' ? `somar os denominadores! ${FR(a, b)} + ${FR(c, d)} <b>não</b> é ${FR(a + c, b + d)}.` : `subtrair os denominadores!`} O denominador só diz o tamanho do pedaço.</div>`;
+  P.push(`<div class="passo"><h3>Resposta</h3>${fim}</div>`);
+  $('#passosS').innerHTML = P.join('');
+  $('#frS').innerHTML = FR(R / (g || 1), m / (g || 1), 'g cR');
+}
+
+/* ---------- DESAFIO ---------- */
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+let D = null;
+function gerarQuestoes(){
+  const Q = [];
+  const tipos = ['ler', 'ler', 'comparar', 'comparar', 'equiv', 'equiv', 'somaIgual', 'somaIgual', 'somaDif', 'simpl'];
+  for (const t of tipos){
+    if (t === 'ler'){ const d = rnd(2, 10), n = rnd(1, d - 1); Q.push({t, n, d}); }
+    else if (t === 'comparar'){ let a, b, c, d; do { b = rnd(2, 8); d = rnd(2, 8); a = rnd(1, b - 1); c = rnd(1, d - 1); } while (a === c && b === d); Q.push({t, a, b, c, d}); }
+    else if (t === 'equiv'){ const d = rnd(2, 6), n = rnd(1, d - 1), k = rnd(2, 4); Q.push({t, n, d, k}); }
+    else if (t === 'somaIgual'){ const d = rnd(3, 10), a = rnd(1, d - 2), c = rnd(1, d - a - 0); Q.push({t, a, c, d}); }
+    else if (t === 'somaDif'){ const pares = [[2, 4], [2, 6], [3, 6], [2, 8], [4, 8], [3, 9], [5, 10], [2, 10]]; const [b, d] = pares[rnd(0, pares.length - 1)]; const a = rnd(1, b - 1), c = rnd(1, d - 1); Q.push({t, a, b, c, d}); }
+    else { const k = rnd(2, 4), d = rnd(2, 5); let n = rnd(1, d - 1); while (mdc(n, d) > 1) n = rnd(1, d - 1); Q.push({t, n: n * k, d: d * k, rn: n, rd: d}); }
+  }
+  return Q;
+}
+function novoDesafio(){ D = {Q: gerarQuestoes(), i: 0, pts: 0, tent: 0}; mostrarQuestao(); }
+function mostrarQuestao(){
+  const q = D.Q[D.i], box = $('#desafioBox'); D.tent = 0;
+  let h = `<div class="placar"><span>Questão ${D.i + 1} de ${D.Q.length}</span><div class="barra-prog"><div style="width:${D.i / D.Q.length * 100}%"></div></div><span>⭐ ${D.pts}</span></div>`;
+  const inN = `<input type="number" inputmode="numeric" id="rN" aria-label="Numerador">`, inD = `<input type="number" inputmode="numeric" id="rD" aria-label="Denominador">`;
+  const caixa = `<span class="fr">${inN}${inD}</span>`;
+  if (q.t === 'ler') h += `<p class="pergunta">Que fração está pintada?</p><div class="figura">${figura(q.d, pint(q.n, 'var(--A)'))}</div><div class="resp">${caixa}<button class="bt" type="button" id="btOk">Conferir</button></div>`;
+  else if (q.t === 'comparar') h += `<p class="pergunta">Qual sinal completa? ${FR(q.a, q.b, 'g cA')} &nbsp;?&nbsp; ${FR(q.c, q.d, 'g cB')}</p><div class="linha"><div class="figura" style="flex:1">${figura(q.b, pint(q.a, 'var(--A)'))}</div><div class="figura" style="flex:1">${figura(q.d, pint(q.c, 'var(--B)'))}</div></div><div class="resp" style="margin-top:10px">${['<', '=', '>'].map(s => `<button class="bt sec" type="button" data-s="${s}" style="font-size:28px;width:70px">${s}</button>`).join('')}</div>`;
+  else if (q.t === 'equiv') h += `<p class="pergunta">Complete para que as frações sejam equivalentes:</p><div class="resp" style="font-size:28px">${FR(q.n, q.d, 'g cA')} = <span class="fr g">${inN}<span>${q.d * q.k}</span></span><button class="bt" type="button" id="btOk">Conferir</button></div>`;
+  else if (q.t === 'somaIgual') h += `<p class="pergunta">Quanto é a soma?</p><div class="resp" style="font-size:28px">${FR(q.a, q.d, 'g cA')} + ${FR(q.c, q.d, 'g cB')} = ${caixa}<button class="bt" type="button" id="btOk">Conferir</button></div><div class="figura" style="margin-top:10px">${figura(q.d, [...pint(q.a, 'var(--A)'), ...pint(q.c, 'var(--B)')])}</div>`;
+  else if (q.t === 'somaDif') h += `<p class="pergunta">Quanto é a soma? <small style="font-weight:600;color:var(--muted)">(pode deixar sem simplificar)</small></p><div class="resp" style="font-size:28px">${FR(q.a, q.b, 'g cA')} + ${FR(q.c, q.d, 'g cB')} = ${caixa}<button class="bt" type="button" id="btOk">Conferir</button></div>`;
+  else h += `<p class="pergunta">Simplifique ao máximo (forma irredutível):</p><div class="resp" style="font-size:28px">${FR(q.n, q.d, 'g cA')} = ${caixa}<button class="bt" type="button" id="btOk">Conferir</button></div>`;
+  h += `<div class="fb" id="fb" aria-live="polite"></div>`;
+  box.innerHTML = h;
+  const f = box.querySelector('input'); if (f) f.focus({preventScroll: true});
+  box.querySelectorAll('input').forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') conferir(); }));
+  const ok = $('#btOk'); if (ok) ok.onclick = () => conferir();
+  box.querySelectorAll('[data-s]').forEach(b => b.onclick = () => conferir(b.dataset.s));
+}
+function conferir(sinal){
+  const q = D.Q[D.i], n = $('#rN') ? parseInt($('#rN').value) : NaN, d = $('#rD') ? parseInt($('#rD').value) : NaN;
+  let certo = false, dica = '';
+  if (q.t === 'ler'){ certo = n === q.n && d === q.d; dica = `Conte em quantas partes o inteiro foi dividido (denominador) e quantas estão pintadas (numerador).`; }
+  else if (q.t === 'comparar'){ const s = q.a * q.d > q.c * q.b ? '>' : q.a * q.d < q.c * q.b ? '<' : '='; certo = sinal === s; dica = `Olhe as figuras: qual tem mais área pintada? Ou deixe os denominadores iguais (MMC).`; }
+  else if (q.t === 'equiv'){ certo = n === q.n * q.k; dica = `O denominador foi multiplicado por ${q.k}. Faça o mesmo com o numerador.`; }
+  else if (q.t === 'somaIgual'){ certo = d > 0 && n * q.d === (q.a + q.c) * d; dica = `Denominadores iguais: some só os numeradores e mantenha o denominador ${q.d}.`; }
+  else if (q.t === 'somaDif'){ certo = d > 0 && n * q.b * q.d === (q.a * q.d + q.c * q.b) * d; const m = mmc(q.b, q.d); dica = `Primeiro deixe os dois com denominador ${m} (o MMC). Depois some os numeradores.`; }
+  else { certo = n === q.rn && d === q.rd; dica = mdc(n, d) > 1 && n * q.d === q.n * d ? `Está equivalente, mas ainda dá para simplificar mais! Divida por ${mdc(n, d)}.` : `Procure um número que divida o ${q.n} e o ${q.d} ao mesmo tempo.`; }
+  const fb = $('#fb');
+  if (certo){
+    const g = D.tent === 0 ? 10 : 5; D.pts += g; somOk();
+    fb.className = 'fb ok pop'; fb.textContent = `✅ Muito bem! +${g} pontos`;
+    $('#desafioBox').querySelectorAll('button,input').forEach(x => x.disabled = true);
+    setTimeout(() => { D.i++; if (D.i < D.Q.length) mostrarQuestao(); else fimDesafio(); }, 1200);
+  } else {
+    D.tent++; somErro(); fb.className = 'fb erro'; fb.textContent = '';
+    void fb.offsetWidth; fb.classList.add('tremer');
+    fb.innerHTML = D.tent < 2 ? `❌ Ainda não. 💡 ${dica}` : `❌ ${dica} <br><button class="bt sec" type="button" id="btPula" style="margin-top:8px">Ver resposta e seguir ➜</button>`;
+    const p = $('#btPula'); if (p) p.onclick = () => { fb.className = 'fb'; fb.innerHTML = 'Resposta: ' + resposta(q); setTimeout(() => { D.i++; if (D.i < D.Q.length) mostrarQuestao(); else fimDesafio(); }, 2200); };
+  }
+}
+function resposta(q){
+  if (q.t === 'ler') return FR(q.n, q.d);
+  if (q.t === 'comparar') return q.a * q.d > q.c * q.b ? '>' : q.a * q.d < q.c * q.b ? '<' : '=';
+  if (q.t === 'equiv') return FR(q.n * q.k, q.d * q.k);
+  if (q.t === 'somaIgual') return FR(q.a + q.c, q.d);
+  if (q.t === 'somaDif'){ const m = mmc(q.b, q.d); return FR(q.a * m / q.b + q.c * m / q.d, m); }
+  return FR(q.rn, q.rd);
+}
+function fimDesafio(){
+  const max = D.Q.length * 10, est = D.pts >= max * .9 ? 3 : D.pts >= max * .6 ? 2 : D.pts > 0 ? 1 : 0;
+  let rec = 0; try { rec = +localStorage.getItem('fracoes-recorde') || 0; if (D.pts > rec) localStorage.setItem('fracoes-recorde', D.pts); } catch(e){}
+  somVitoria(); if (est >= 2) confete();
+  try { if (window.GAMIFICA && typeof GAMIFICA.enviar === 'function') GAMIFICA.enviar(Math.round(D.pts / 10), D.Q.length, D.pts); } catch(e){}
+  $('#desafioBox').innerHTML = `<div class="fim"><h2>🏁 Desafio concluído!</h2><div class="estrelas">${'★'.repeat(est)}${'☆'.repeat(3 - est)}</div><p style="font-size:22px;font-weight:800">${D.pts} de ${max} pontos</p><p>${D.pts > rec ? '🎉 Novo recorde!' : 'Recorde: ' + Math.max(rec, D.pts) + ' pontos'}</p><p>${est === 3 ? 'Você é fera em frações!' : est === 2 ? 'Muito bom! Treine mais um pouco nas outras abas.' : 'Use as abas Comparar, Equivalentes e Somar para treinar e tente de novo!'}</p><button class="bt" type="button" id="btNovo">🔄 Novo desafio</button></div>`;
+  $('#btNovo').onclick = novoDesafio;
+}
+
+/* ---------- navegação ---------- */
+let ABA = 'comparar';
+function atualizar(){ mostrarEditores(); if (ABA === 'comparar') comparar(); else if (ABA === 'equiv') equivalentes(); else if (ABA === 'somar') somar(); }
+$$('nav button').forEach(b => b.onclick = () => {
+  ABA = b.dataset.aba; $$('nav button').forEach(x => x.classList.toggle('on', x === b));
+  $$('main > section').forEach(s => s.classList.toggle('oculto', s.id !== 'aba-' + ABA));
+  clique(); if (ABA === 'desafio' && !D) novoDesafio(); atualizar();
+});
+$$('.forma button').forEach(b => b.onclick = () => {
+  FORMA = b.dataset.forma; try { localStorage.setItem('fracoes-forma', FORMA); } catch(e){}
+  $$('.forma button').forEach(x => x.classList.toggle('on', x === b)); clique(); atualizar();
+  if (ABA === 'desafio' && D && D.i < D.Q.length) mostrarQuestao();
+});
+$$('.forma button').forEach(x => x.classList.toggle('on', x.dataset.forma === FORMA));
+$$('[data-ed]').forEach(montarEditor);
+atualizar();
+window.__fr = {F, atualizar, D: () => D, conferir, resposta};
+</script>
+<script src="demo.js" data-id="fracoes-visuais"></script>
+<script src="../estat.js" defer></script>
+</body>
+</html>

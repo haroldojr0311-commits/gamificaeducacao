@@ -39,7 +39,7 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 40px}
 .bt{display:inline-block;text-decoration:none;font-weight:800;border-radius:14px;padding:13px 20px;background:var(--marca);color:#1d2b53;border:2px solid #e0ad00;box-shadow:0 3px 0 #e0ad00;margin:4px}
 .bt.sec{background:#fff;border-color:var(--linha);box-shadow:0 3px 0 var(--linha)}
 .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
-.item{display:flex;flex-direction:column;background:#fff;border:2px solid var(--linha);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--tinta);transition:transform .15s}
+.item{position:relative;display:flex;flex-direction:column;background:#fff;border:2px solid var(--linha);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--tinta);transition:transform .15s}
 .item:hover{transform:translateY(-3px)}
 .item .nota{height:80px;display:grid;place-items:center;font-size:40px;position:relative}
 .item .nota small{position:absolute;left:8px;top:7px;font-size:12px;font-weight:800;background:rgba(255,255,255,.7);border-radius:99px;padding:1px 8px}
@@ -66,6 +66,15 @@ footer a{margin:0 6px}
 a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #2f63d6;outline-offset:2px}
 .topo a:focus-visible{outline-color:#ffd23f}
 button.bt{font:inherit;cursor:pointer}
+.selo-demo{position:absolute;top:8px;right:8px;z-index:2;background:#12865f;color:#fff;font-weight:800;font-size:.75rem;padding:4px 10px;border-radius:999px}
+.form label{display:block;font-weight:800;margin-top:12px}
+.form input[type=text],.form input[type=email],.form textarea{width:100%;font:inherit;padding:12px;border:2px solid var(--linha);border-radius:12px;background:#fff;color:var(--tinta)}
+.form textarea{min-height:110px;resize:vertical}
+.form .check{display:flex;gap:10px;align-items:flex-start;font-weight:600}
+.form .check input{margin-top:6px;width:20px;height:20px;flex:none}
+.form .hp{position:absolute;left:-9999px;height:0;overflow:hidden}
+.form .bt{margin-top:14px}
+.status{margin:10px 0 0;font-weight:700;min-height:1.4em}.status.ok{color:#0b6b4a}.status.erro{color:#b3261e}
 .compartilhar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
 .compartilhar .ok{font-weight:800;color:#0b6b4a}
 .novi{display:grid;gap:12px}.novi article{border:2px solid var(--linha);border-radius:16px;padding:14px 16px;background:#fff}
@@ -94,17 +103,19 @@ button.bt{font:inherit;cursor:pointer}
 <li>Recomendamos que o professor oriente os alunos a usar apenas o primeiro nome e a turma.</li></ul>
 <h2>4. Dados guardados no seu aparelho</h2><p>Para conveniência, o navegador guarda no próprio aparelho informações como favoritos, aplicações usadas recentemente, recordes dos jogos, preferências e o andamento de uma tarefa. Esses dados não são enviados ao servidor e podem ser apagados limpando os dados do navegador.</p>
 <h2>5. Estatísticas de visitas (anônimas)</h2><p>Para saber quais páginas são mais úteis, registramos de forma anônima: a página aberta, o site de origem (por exemplo, o Google), o tipo de aparelho (celular, tablet ou computador) e a data. <b>Não usamos cookies, não guardamos o endereço IP e não identificamos pessoas.</b> O sinal “Não rastrear” do navegador é respeitado.</p>
-<h2>6. Para que usamos os dados</h2><ul><li>Dar acesso ao portal e às aplicações contratadas;</li><li>Mostrar ao professor as notas das tarefas que ele criou;</li><li>Confirmar pagamentos e o período de acesso;</li><li>Atender pedidos de suporte;</li><li>Entender quais páginas são mais usadas, para melhorar o site.</li></ul>
+<h2>6. Avisos de novidades e depoimentos (opcionais)</h2><p><b>Avisos:</b> se você se cadastrar na página de <a href="novidades.html">Novidades</a>, guardamos seu e-mail só para avisar quando sair novidade. Você cancela quando quiser na mesma página. <b>Depoimentos:</b> se você enviar um, guardamos o nome, a função e o texto que escrever, e só publicamos depois de aprovar. Para remover, fale conosco pelo WhatsApp.</p>
+<h2>7. Para que usamos os dados</h2><ul><li>Dar acesso ao portal e às aplicações contratadas;</li><li>Mostrar ao professor as notas das tarefas que ele criou;</li><li>Confirmar pagamentos e o período de acesso;</li><li>Atender pedidos de suporte;</li><li>Entender quais páginas são mais usadas, para melhorar o site.</li></ul>
 <p>Não vendemos dados, não exibimos anúncios e não usamos os dados para publicidade.</p>
-<h2>7. Onde os dados ficam</h2><p>O site é hospedado no GitHub Pages. O banco de dados e a autenticação usam o Supabase, e os pagamentos, o Mercado Pago. Esses serviços seguem padrões de segurança próprios e podem armazenar dados fora do Brasil.</p>
-<h2>8. Por quanto tempo</h2><p>Os dados da conta ficam guardados enquanto a conta existir. O professor pode excluir a qualquer momento as tarefas e as notas que criou. Para excluir a conta e os dados ligados a ela, entre em contato.</p>
-<h2>9. Seus direitos</h2><p>Você pode pedir a confirmação, o acesso, a correção ou a exclusão dos seus dados, e tirar dúvidas sobre esta política, pelo <a href="https://wa.me/5515988026805" target="_blank" rel="noopener">WhatsApp</a>. Pedidos sobre dados de alunos podem ser feitos pelo responsável ou pelo professor da turma.</p>
-<h2>10. Mudanças</h2><p>Esta política pode ser atualizada. A data da última atualização aparece no início da página.</p></div>
+<h2>8. Onde os dados ficam</h2><p>O site é hospedado no GitHub Pages. O banco de dados e a autenticação usam o Supabase, e os pagamentos, o Mercado Pago. Esses serviços seguem padrões de segurança próprios e podem armazenar dados fora do Brasil.</p>
+<h2>9. Por quanto tempo</h2><p>Os dados da conta ficam guardados enquanto a conta existir. O professor pode excluir a qualquer momento as tarefas e as notas que criou. Para excluir a conta e os dados ligados a ela, entre em contato.</p>
+<h2>10. Seus direitos</h2><p>Você pode pedir a confirmação, o acesso, a correção ou a exclusão dos seus dados, e tirar dúvidas sobre esta política, pelo <a href="https://wa.me/5515988026805" target="_blank" rel="noopener">WhatsApp</a>. Pedidos sobre dados de alunos podem ser feitos pelo responsável ou pelo professor da turma.</p>
+<h2>11. Mudanças</h2><p>Esta política pode ser atualizada. A data da última atualização aparece no início da página.</p></div>
 </main>
 <footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br>
 <a href="./catalogo/">Catálogo</a>·<a href="./mural/">Mural Eletrônico</a>·<a href="./novidades.html">Novidades</a>·<a href="./como-funciona.html">Como funciona</a>·<a href="./privacidade.html">Privacidade</a>·<a href="./termos.html">Termos de uso</a>·<a href="https://wa.me/5515988026805" target="_blank" rel="noopener">Contato</a></footer>
 <script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-copiar]');if(!b)return;var u=b.getAttribute('data-copiar'),ok=b.parentNode.querySelector('.ok');function f(){if(ok){ok.textContent='✅ Link copiado!';setTimeout(function(){ok.textContent='';},2500);}}
 if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(f).catch(f);}else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);f();}});</script>
+<script src="./site.js" defer></script>
 <script src="./estat.js" defer></script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(function(){});</script>
 </body>

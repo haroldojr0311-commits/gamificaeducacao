@@ -5,7 +5,7 @@
 (function(){
   try{
     if(navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
-    if(document.querySelector('meta[name="robots"][content*="noindex"]')) return;
+    if(document.querySelector('meta[name="estat"][content="off"]')) return;
     if(location.protocol === 'file:' || /^(localhost|127\.|\[::1\])/.test(location.hostname)) return;
     var pag = location.pathname.replace(/index\.html$/, '').replace(/\/{2,}/g, '/') || '/';
     var chave = 'gv:' + pag;

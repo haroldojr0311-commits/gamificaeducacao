@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Torre de Hanói · Jogo, história e matemática</title>
+<style>
+  :root{--tinta:#1d1636;--ouro:#ffd23f;--ouro2:#b8860b;--verde:#00d68f;--rosa:#ff3d7f;--azul:#3d8bff}
+  *{box-sizing:border-box}
+  html,body{overflow-x:hidden}
+  body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:#fff;padding:14px 12px 40px;
+    background:radial-gradient(circle at 15% 0%,#3b2a8a 0,transparent 45%),radial-gradient(circle at 90% 10%,#0f7a6b88 0,transparent 40%),linear-gradient(170deg,#120c2e,#1e1247 60%,#2a1040)}
+  .wrap{max-width:900px;margin:0 auto}
+  h1{text-align:center;margin:8px 0 2px;font-size:clamp(26px,6vw,40px);text-shadow:0 4px 0 #0008}
+  .sub{text-align:center;opacity:.9;margin:0 0 14px;line-height:1.4}
+  .oculto{display:none!important}
+  button,select{font:inherit;font-weight:900;border:0;border-radius:14px;padding:11px 16px;cursor:pointer;background:var(--ouro);color:var(--tinta);box-shadow:0 5px 0 var(--ouro2);transition:transform .08s}
+  button:active{transform:translateY(3px);box-shadow:0 2px 0 var(--ouro2)}
+  button.sec{background:#fff;box-shadow:0 5px 0 #b9b9c9}
+  button.azul{background:var(--azul);color:#fff;box-shadow:0 5px 0 #1f5fc4}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  select{padding:9px 12px;box-shadow:none;border:2px solid #fff6}
+  .abas{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0 18px}
+  .aba{background:#ffffff1f;color:#fff;box-shadow:none;border:2px solid #ffffff44}
+  .aba.ativa{background:var(--ouro);color:var(--tinta);border-color:var(--ouro)}
+
+  /* painel */
+  .painel{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin-bottom:10px}
+  .stat{background:#ffffff18;border:2px solid #ffffff2a;border-radius:14px;padding:8px 14px;text-align:center;min-width:110px}
+  .stat small{display:block;opacity:.8;font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase}
+  .stat b{font-size:22px;font-variant-numeric:tabular-nums}
+  .controles{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+  .controles label{font-weight:800;align-self:center}
+
+  /* cena 3D */
+  .cena{perspective:1000px;width:min(96vw,760px);margin:6px auto 0}
+  .palco{position:relative;height:310px;transform:rotateX(16deg);transform-style:preserve-3d;transition:transform .5s}
+  @media(max-width:640px){.palco{transform:rotateX(10deg)}}
+  .fundo{position:absolute;left:0;right:0;bottom:0;height:40px;border-radius:20px / 14px;
+    background:linear-gradient(180deg,#e0a86a,#a8662e 55%,#6b3a16);box-shadow:0 22px 30px #000a,inset 0 3px 0 #ffffff55}
+  .pino{position:absolute;bottom:40px;width:14px;height:250px;margin-left:-7px;border-radius:8px 8px 4px 4px;
+    background:linear-gradient(90deg,#6b3a16,#c98a4b 45%,#8a4f22);box-shadow:inset -2px 0 0 #0005,0 6px 8px #0006}
+  .pino::before{content:'';position:absolute;left:50%;top:-8px;width:26px;height:26px;margin-left:-13px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#ffe9b0,#c98a4b 60%,#7a4418)}
+  .coluna{position:absolute;top:0;bottom:0;cursor:pointer;border-radius:18px;transition:background .2s}
+  .coluna:hover{background:#ffffff0d}
+  .coluna.sel{background:radial-gradient(ellipse at 50% 90%,#ffd23f44,transparent 70%)}
+  .disco{position:absolute;height:20px;pointer-events:none;border-radius:0 0 50% 50% / 0 0 6px 6px;
+    background:linear-gradient(90deg,hsl(var(--h) 70% 28%) 0%,hsl(var(--h) 78% 46%) 14%,hsl(var(--h) 88% 60%) 38%,hsl(var(--h) 80% 50%) 62%,hsl(var(--h) 72% 34%) 90%,hsl(var(--h) 70% 26%) 100%);
+    box-shadow:0 7px 9px #0006;
+    transition:left .34s cubic-bezier(.3,1.2,.5,1),bottom .34s cubic-bezier(.3,1.2,.5,1),width .3s}
+  .disco::before{content:'';position:absolute;left:0;right:0;top:-6px;height:12px;border-radius:50%;
+    background:radial-gradient(ellipse at 38% 35%,hsl(var(--h) 95% 82%),hsl(var(--h) 85% 64%) 55%,hsl(var(--h) 78% 54%));
+    box-shadow:inset 0 -1px 0 hsl(var(--h) 60% 38%),inset 0 1px 0 #ffffff66}
+  .disco::after{content:'';position:absolute;left:50%;top:-10px;width:14px;height:11px;margin-left:-7px;border-radius:0 0 50% 50% / 0 0 3px 3px;
+    background:linear-gradient(90deg,#6b3a16,#c98a4b 45%,#8a4f22);box-shadow:0 1px 1px rgba(0,0,0,.45)}
+  .disco.coberto::after{display:none}
+  .disco.topo{animation:flutua 1.2s ease-in-out infinite alternate}
+  @keyframes flutua{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+  .tremer{animation:tremer .4s}
+  @keyframes tremer{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+  #dica{text-align:center;font-weight:700;margin:12px auto 0;min-height:44px;max-width:640px;line-height:1.4}
+  .ok{color:#7dffc2}.erro{color:#ff9ab5}
+
+  /* cartões de conteúdo */
+  .cartao{background:#fffdf7;color:var(--tinta);border-radius:20px;padding:20px;margin:0 auto 16px;max-width:760px;box-shadow:0 14px 34px #0008;line-height:1.55}
+  .cartao h2{margin:0 0 8px;color:#5b2dbf;font-size:clamp(20px,4vw,26px)}
+  .cartao h3{margin:14px 0 6px;color:#0d6b5c}
+  .cartao p{margin:8px 0}
+  .destaque{background:#f1ecff;border-left:6px solid #7c4dff;border-radius:12px;padding:12px 14px;margin:12px 0}
+  .formula{font-family:'Times New Roman',Georgia,serif;font-size:clamp(20px,4vw,26px);text-align:center;background:#fff;border:2px dashed #7c4dff;border-radius:14px;padding:12px;margin:12px 0}
+  .formula sup,.formula sub{font-size:.65em}
+  .alerta{background:#fff1f5;border-left:6px solid var(--rosa);border-radius:12px;padding:12px 14px;margin:12px 0}
+  .var{background:#eef8f5;border-radius:12px;padding:10px 14px;margin:10px 0}
+  .var li{margin:4px 0}
+  .grafico{display:flex;align-items:flex-end;gap:8px;height:240px;padding:10px 6px 0;border-bottom:3px solid #5b2dbf;margin-top:14px}
+  .barra{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .barra .v{background:linear-gradient(180deg,#b388ff,#5b2dbf);border-radius:10px 10px 4px 4px;width:100%;min-height:4px;position:relative;transition:height .8s}
+  .barra .num{font-weight:900;font-size:12px;margin-bottom:4px;color:var(--tinta)}
+  .barra .lab{font-weight:800;font-size:13px;margin-top:6px}
+  .legenda{text-align:center;font-size:14px;opacity:.85;margin-top:6px}
+
+  /* quiz */
+  .placar-q{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+  .placar-q span{background:#5b2dbf;color:#fff;border-radius:12px;padding:8px 14px;font-weight:900}
+  .q{background:#fff;color:var(--tinta);border-radius:18px;padding:16px;margin:0 auto 14px;max-width:760px;box-shadow:0 10px 24px #0007}
+  .q h3{margin:0 0 10px;color:var(--tinta);font-size:17px}
+  .q .ops{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+  .q .ops button{background:#f4f1ff;color:var(--tinta);box-shadow:0 4px 0 #cfc4f0;text-align:left;font-weight:800;font-size:15px;padding:12px}
+  .q .ops button.certa{background:#c8ffe6;box-shadow:0 4px 0 #3fc78f}
+  .q .ops button.errada{background:#ffd6e3;box-shadow:0 4px 0 #e0608a;animation:tremer .4s}
+  .q .ops button:disabled{opacity:1;cursor:default}
+  .q .feedback{margin-top:10px;font-weight:700;min-height:24px}
+  .q .feedback.ok{color:#0a8a5f}.q .feedback.erro{color:#c2185b}
+  .final{text-align:center;background:linear-gradient(135deg,#ffe066,#ffb300);color:var(--tinta);border-radius:18px;padding:16px;max-width:760px;margin:0 auto;font-weight:900;font-size:18px;box-shadow:0 10px 24px #0007}
+
+  /* modal */
+  #modal{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;padding:16px;z-index:70}
+  .cartao-modal{background:#fffdf7;color:var(--tinta);border-radius:22px;padding:22px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 50px #000;animation:entra .35s cubic-bezier(.2,1.4,.4,1)}
+  .cartao-modal h2{margin:0 0 6px;color:#5b2dbf}
+  .cartao-modal p{margin:8px 0;line-height:1.5}
+  .estrelas{font-size:38px;letter-spacing:4px;margin:6px 0}
+  .linha-b{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+  @keyframes entra{from{opacity:0;transform:scale(.85) translateY(20px)}to{opacity:1;transform:none}}
+  .conf{position:fixed;top:-20px;width:10px;height:14px;z-index:90;pointer-events:none;animation:cair 2.8s linear forwards;border-radius:2px}
+  @keyframes cair{to{transform:translateY(110vh) rotate(720deg)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🗼 Torre de Hanói</h1>
+  <p class="sub">Leve todos os discos do <b>primeiro pino</b> até o <b>último</b>.<br>Só um disco por vez, e nunca um disco maior em cima de um menor.</p>
+
+  <nav class="abas">
+    <button class="aba ativa" data-aba="jogar">🎮 Jogar</button>
+    <button class="aba" data-aba="historia">📜 História</button>
+    <button class="aba" data-aba="matematica">🧮 Matemática</button>
+    <button class="aba" data-aba="desafios">🏅 Desafios</button>
+  </nav>
+
+  <!-- JOGAR -->
+  <section id="aba-jogar">
+    <div class="painel">
+      <div class="stat"><small>Movimentos</small><b id="mov">0</b></div>
+      <div class="stat"><small>Mínimo possível</small><b id="min">7</b></div>
+      <div class="stat"><small>Tempo</small><b id="tempo">0:00</b></div>
+      <div class="stat"><small>Seu recorde</small><b id="recorde">—</b></div>
+    </div>
+    <div class="controles">
+      <label for="nDiscos">Discos:</label>
+      <select id="nDiscos">
+        <option value="3">3 discos</option><option value="4">4 discos</option><option value="5" selected>5 discos</option>
+        <option value="6">6 discos</option><option value="7">7 discos</option>
+      </select>
+      <button id="btnReiniciar" class="azul">🔄 Novo jogo</button>
+      <button id="btnDemo" class="sec">🤖 Ver a solução</button>
+    </div>
+    <div class="cena"><div class="palco" id="palco"><div class="fundo"></div></div></div>
+    <p id="dica">Toque num pino para pegar o disco de cima. Depois toque no pino onde quer colocá-lo.</p>
+  </section>
+
+  <!-- HISTÓRIA -->
+  <section id="aba-historia" class="oculto">
+    <div class="cartao">
+      <h2>📜 De onde vem a Torre de Hanói?</h2>
+      <p>O quebra-cabeça foi apresentado em <b>1883</b> pelo matemático francês <b>Édouard Lucas</b>. Ele criou uma lenda para torná-lo mais interessante: um templo, em Hanói (no Vietnã), onde monges moviam <b>64 discos de ouro</b> de uma torre para outra.</p>
+      <div class="destaque">
+        <b>A lenda diz:</b> quando os monges terminassem de mover todos os discos, o mundo acabaria.
+      </div>
+      <p>A lenda é invenção de Lucas. Mas a pergunta matemática é real: <b>quantos movimentos são necessários</b> para mover 64 discos?</p>
+      <h3>Quanto tempo levaria?</h3>
+      <p>Para 64 discos, o número mínimo de movimentos é:</p>
+      <div class="formula">2<sup>64</sup> − 1 = 18 446 744 073 709 551 615</div>
+      <p>Se cada movimento levasse <b>1 segundo</b> (sem parar, dia e noite), o total seria de cerca de <b>585 bilhões de anos</b>. A idade estimada do universo é de cerca de 13,8 bilhões de anos. Ou seja, a lenda não acabaria tão cedo!</p>
+      <div class="alerta"><b>Curiosidade:</b> esse quebra-cabeça é um exemplo clássico de <b>problema recursivo</b>: para resolver um caso grande, resolvemos casos menores dentro dele. Vamos ver isso na próxima aba.</div>
+    </div>
+  </section>
+
+  <!-- MATEMÁTICA -->
+  <section id="aba-matematica" class="oculto">
+    <div class="cartao">
+      <h2>🧮 A matemática por trás do jogo</h2>
+      <h3>Passo 1: as variáveis</h3>
+      <div class="var"><ul>
+        <li><b>n</b> = número de discos na torre.</li>
+        <li><b>T(n)</b> = número <b>mínimo</b> de movimentos necessários para mover <b>n</b> discos. Lemos “T de n”.</li>
+      </ul></div>
+
+      <h3>Passo 2: os casos mais simples</h3>
+      <ul>
+        <li><b>1 disco:</b> basta 1 movimento. Então T(1) = 1.</li>
+        <li><b>2 discos:</b> mova o pequeno para o pino auxiliar, mova o grande para o destino, depois mova o pequeno para cima dele. São 3 movimentos. Então T(2) = 3.</li>
+      </ul>
+
+      <h3>Passo 3: a ideia principal (recursão)</h3>
+      <p>Para mover <b>n</b> discos, pense assim:</p>
+      <ol>
+        <li>Mova os <b>n − 1</b> discos de cima para o pino auxiliar. (Isso custa T(n − 1) movimentos.)</li>
+        <li>Mova o disco maior, que sobrou embaixo, para o pino de destino. (1 movimento.)</li>
+        <li>Mova os <b>n − 1</b> discos do auxiliar para o destino, por cima do maior. (Mais T(n − 1) movimentos.)</li>
+      </ol>
+      <p>Por isso, a regra geral é:</p>
+      <div class="formula">T(n) = 2 · T(n − 1) + 1</div>
+      <p>Essa é uma <b>relação de recorrência</b>: o valor para <b>n</b> depende do valor para <b>n − 1</b>.</p>
+
+      <h3>Passo 4: encontrando a fórmula</h3>
+      <p>Calculando alguns valores: T(1) = 1, T(2) = 3, T(3) = 7, T(4) = 15, T(5) = 31…</p>
+      <p>Repare que cada valor é <b>o dobro do anterior mais 1</b>, e que sempre é uma unidade a menos que uma potência de 2. Isso leva à fórmula:</p>
+      <div class="formula">T(n) = 2<sup>n</sup> − 1</div>
+      <div class="destaque">
+        <b>Verificando com a recorrência:</b> se T(n − 1) = 2<sup>n−1</sup> − 1, então<br>
+        T(n) = 2 · (2<sup>n−1</sup> − 1) + 1 = 2<sup>n</sup> − 2 + 1 = 2<sup>n</sup> − 1. ✔
+      </div>
+
+      <h3>Passo 5: o gráfico do crescimento</h3>
+      <p>Veja como o número de movimentos explode quando aumentamos os discos:</p>
+      <div class="grafico" id="grafico"></div>
+      <p class="legenda">Altura das barras = T(n) = 2<sup>n</sup> − 1, para n de 1 a 10. Cada disco a mais <b>quase dobra</b> o trabalho!</p>
+
+      <h3>Atenção aos erros comuns</h3>
+      <div class="alerta">
+        ❌ “Com 4 discos são 4 · 2 − 1 = 7 movimentos.” <br>
+        ✅ A conta correta é 2<sup>4</sup> − 1 = 15. O crescimento é <b>exponencial</b>, não linear.<br><br>
+        ❌ “Com 3 discos, o disco maior precisa se mexer 3 vezes.” <br>
+        ✅ O disco maior se move <b>uma única vez</b> nessa solução ótima.
+      </div>
+    </div>
+  </section>
+
+  <!-- DESAFIOS -->
+  <section id="aba-desafios" class="oculto">
+    <div class="placar-q">
+      <span>⭐ Pontos: <b id="pontos">0</b></span>
+      <span>🎯 Acertos: <b id="acertos">0</b>/<b id="total">0</b></span>
+    </div>
+    <div id="quiz"></div>
+    <div id="final-q" class="final oculto"></div>
+  </section>
+</div>
+<div id="modal" class="oculto"></div>
+
+<script>
+// ============ utilidades ============
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function tom(f, d, tipo){
+  try{
+    window._ac = window._ac || new (window.AudioContext || window.webkitAudioContext)();
+    const o = _ac.createOscillator(), g = _ac.createGain();
+    o.type = tipo || 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.12, _ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, _ac.currentTime + d);
+    o.connect(g); g.connect(_ac.destination); o.start(); o.stop(_ac.currentTime + d);
+  }catch(e){}
+}
+const somMover = () => tom(330, .1, 'triangle');
+const somErro = () => { tom(180,.18,'sawtooth'); setTimeout(() => tom(140,.2,'sawtooth'), 120); };
+const somAcerto = () => [660,880].forEach((f,i) => setTimeout(() => tom(f,.18), i*110));
+const somVitoria = () => [523,659,784,1046].forEach((f,i) => setTimeout(() => tom(f,.25), i*150));
+function confete(){
+  const cores = ['#ffd23f','#ff3d7f','#00d68f','#3d8bff','#b388ff','#ff8a00'];
+  for(let i=0;i<90;i++){
+    const p = document.createElement('i'); p.className = 'conf';
+    p.style.left = Math.random()*100 + 'vw'; p.style.background = cores[i % cores.length];
+    p.style.animationDelay = Math.random()*0.7 + 's';
+    document.body.appendChild(p); setTimeout(() => p.remove(), 3800);
+  }
+}
+function lerRecorde(n){ try{ return JSON.parse(localStorage.getItem('hanoi-recordes')||'{}')[n] ?? null; }catch(e){ return null; } }
+function gravarRecorde(n, mov){
+  try{
+    const r = JSON.parse(localStorage.getItem('hanoi-recordes')||'{}');
+    if(r[n] == null || mov < r[n]) r[n] = mov;
+    localStorage.setItem('hanoi-recordes', JSON.stringify(r));
+  }catch(e){}
+}
+const fmtT = s => Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+
+// ============ abas ============
+document.querySelectorAll('.aba').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.aba').forEach(x => x.classList.toggle('ativa', x === b));
+  ['jogar','historia','matematica','desafios'].forEach(id => $('#aba-'+id).classList.toggle('oculto', b.dataset.aba !== id));
+  window.scrollTo(0,0);
+}));
+
+// ============ jogo ============
+const BASE = 40, DH = 19, LIFT = 262;
+let N = 5, pinos = [[],[],[]], movs = 0, sel = null, animando = false, demo = false, timers = [], inicio = 0, relogio = null, venceu = false;
+const palco = $('#palco');
+const COR_H = s => (s * 47) % 360;
+
+function minimo(){ return Math.pow(2, N) - 1; }
+
+function criarCena(){
+  palco.querySelectorAll('.pino,.coluna').forEach(e => e.remove());
+  for(let p=0;p<3;p++){
+    const pino = document.createElement('div'); pino.className = 'pino'; pino.dataset.p = p;
+    palco.appendChild(pino);
+    const col = document.createElement('div'); col.className = 'coluna'; col.dataset.p = p;
+    col.addEventListener('click', () => clicouPino(p));
+    palco.appendChild(col);
+  }
+  posicionar();
+}
+function posicionar(){
+  const W = palco.clientWidth, sp = W/3;
+  palco.querySelectorAll('.pino').forEach(el => { el.style.left = (sp*(+el.dataset.p+0.5))+'px'; });
+  palco.querySelectorAll('.coluna').forEach(el => { const p=+el.dataset.p; el.style.left = (sp*p+sp*0.04)+'px'; el.style.width = (sp*0.92)+'px'; el.style.top = '0px'; el.style.bottom = '40px'; });
+}
+function render(levantado){
+  palco.querySelectorAll('.disco').forEach(e => e.remove());
+  const W = palco.clientWidth, sp = W/3;
+  const maxW = Math.min(sp*0.92, 230), minW = Math.max(42, maxW*0.3);
+  pinos.forEach((pilha, p) => {
+    pilha.forEach((s, i) => {
+      const d = document.createElement('div'); d.className = 'disco';
+      const topo = i === pilha.length-1;
+      if(!topo) d.classList.add('coberto');
+      const w = N > 1 ? minW + (s-1)/(N-1)*(maxW-minW) : maxW;
+      d.style.setProperty('--h', COR_H(s));
+      d.style.width = w + 'px';
+      d.style.left = (sp*(p+0.5) - w/2) + 'px';
+      const elevado = levantado && levantado.p === p && topo;
+      d.style.bottom = (elevado ? LIFT : BASE + i*DH) + 'px';
+      if(topo && !levantado && !venceu && !demo && sel === p) d.classList.add('topo');
+      palco.appendChild(d);
+    });
+  });
+  palco.querySelectorAll('.coluna').forEach(c => c.classList.toggle('sel', sel !== null && +c.dataset.p === sel));
+}
+
+function atualizarPainel(){
+  $('#mov').textContent = movs;
+  $('#min').textContent = minimo();
+  const r = lerRecorde(N);
+  $('#recorde').textContent = r == null ? '—' : r;
+}
+function mensagem(txt, tipo){
+  const d = $('#dica'); d.textContent = txt; d.className = tipo || '';
+}
+function tempoDecorrido(){ return inicio ? Math.floor((Date.now() - inicio)/1000) : 0; }
+function atualizarTempo(){ $('#tempo').textContent = fmtT(tempoDecorrido()); }
+
+function novoJogo(){
+  limparDemo();
+  N = +$('#nDiscos').value;
+  pinos = [Array.from({length:N}, (_,i) => N - i), [], []];
+  movs = 0; sel = null; animando = false; venceu = false; inicio = 0;
+  clearInterval(relogio); relogio = null;
+  $('#tempo').textContent = '0:00';
+  criarCena(); render(); atualizarPainel();
+  mensagem(`Você tem ${N} discos. Mínimo possível: ${minimo()} movimentos. Boa sorte!`);
+}
+
+function clicouPino(p){
+  if(animando || demo || venceu) return;
+  if(sel === null){
+    if(!pinos[p].length){ somErro(); mensagem('Esse pino está vazio. Escolha um pino com disco.', 'erro'); palco.classList.add('tremer'); setTimeout(()=>palco.classList.remove('tremer'),400); return; }
+    sel = p; render(); mensagem('Agora toque no pino onde quer colocar este disco.'); return;
+  }
+  if(sel === p){ sel = null; render(); mensagem('Disco solto. Escolha outro pino.'); return; }
+  const origem = sel; sel = null;
+  tentarMover(origem, p);
+}
+
+async function tentarMover(a, b){
+  const origem = pinos[a], destino = pinos[b];
+  const s = origem[origem.length-1];
+  if(destino.length && destino[destino.length-1] < s){
+    somErro(); mensagem(`❌ Não pode! O disco ${s} é maior que o disco de cima do pino de destino (${destino[destino.length-1]}).`, 'erro');
+    palco.classList.add('tremer'); setTimeout(()=>palco.classList.remove('tremer'),400);
+    render(); return;
+  }
+  if(!inicio){ inicio = Date.now(); relogio = setInterval(atualizarTempo, 500); }
+  animando = true;
+  render({p:a});
+  somMover();
+  await sleep(300);
+  origem.pop(); destino.push(s); movs++;
+  render(); atualizarPainel();
+  await sleep(340);
+  animando = false;
+  if(!demo){
+    mensagem(`Movimento ${movs} feito. Continue!`, 'ok');
+  }
+  if(pinos[2].length === N && !demo) vitoria();
+  if(pinos[2].length === N && demo) { mensagem('🤖 A máquina resolveu a torre usando o mínimo de movimentos.', 'ok'); demo = false; $('#btnDemo').disabled = false; clearInterval(relogio); }
+}
+
+function vitoria(){
+  venceu = true; clearInterval(relogio);
+  const tempo = tempoDecorrido(), m = movs, min = minimo();
+  const est = m === min ? 3 : (m <= min*1.5 ? 2 : 1);
+  const antes = lerRecorde(N);
+  gravarRecorde(N, m); atualizarPainel();
+  const novoRec = antes == null || m < antes;
+  mensagem(`🏆 Você resolveu com ${m} movimentos!`, 'ok');
+  setTimeout(() => {
+    confete(); somVitoria();
+    const m2 = $('#modal'); m2.innerHTML = '';
+    const card = document.createElement('div'); card.className = 'cartao-modal';
+    card.innerHTML = `<h2>🎉 Torre resolvida!</h2>
+      <div class="estrelas">${'⭐'.repeat(est)}${'☆'.repeat(3-est)}</div>
+      <p>Movimentos: <b>${m}</b> (mínimo possível: <b>${min}</b>)<br>Tempo: <b>${fmtT(tempo)}</b></p>
+      <p>${m === min ? '🧠 Perfeito! Você encontrou o caminho mais curto.' : 'Ótimo trabalho! Tente de novo para chegar aos ' + min + ' movimentos.'}
+      ${novoRec ? '<br><b>🏅 Novo recorde!</b>' : ''}</p>
+      <div class="linha-b"></div>`;
+    const linha = card.querySelector('.linha-b');
+    const bt = (txt, fn, cls) => { const b = document.createElement('button'); b.textContent = txt; if(cls) b.className = cls; b.onclick = () => { m2.classList.add('oculto'); fn(); }; linha.appendChild(b); };
+    bt('🔁 Jogar de novo', novoJogo, 'azul');
+    if(N < 7) bt('⬆️ Mais discos', () => { $('#nDiscos').value = N+1; novoJogo(); });
+    m2.appendChild(card); m2.classList.remove('oculto');
+  }, 400);
+}
+
+// solução ótima (recursiva): mover n discos de a para c, usando b como auxiliar
+function gerarSolucao(n, a, c, b, lista){
+  if(n === 0) return;
+  gerarSolucao(n-1, a, b, c, lista);
+  lista.push([a, c]);
+  gerarSolucao(n-1, b, c, a, lista);
+}
+function limparDemo(){ timers.forEach(clearTimeout); timers = []; demo = false; $('#btnDemo').disabled = false; }
+
+async function verSolucao(){
+  novoJogo();
+  demo = true; $('#btnDemo').disabled = true;
+  const lista = []; gerarSolucao(N, 0, 2, 1, lista);
+  mensagem(`🤖 Vendo a solução: ${lista.length} movimentos, o mínimo possível. Observe o padrão!`);
+  for(const [a, b] of lista){
+    await new Promise(res => { const t = setTimeout(res, 40); timers.push(t); });
+    if(!demo) return;
+    await tentarMover(a, b);
+    await new Promise(res => { const t = setTimeout(res, 380); timers.push(t); });
+    if(!demo) return;
+  }
+  demo = false; $('#btnDemo').disabled = false;
+}
+
+$('#btnReiniciar').addEventListener('click', novoJogo);
+$('#nDiscos').addEventListener('change', novoJogo);
+$('#btnDemo').addEventListener('click', verSolucao);
+window.addEventListener('resize', () => { posicionar(); render(sel !== null ? {p: sel} : null); });
+
+// ============ gráfico ============
+(function(){
+  const g = $('#grafico'), max = Math.pow(2,10)-1;
+  for(let n=1;n<=10;n++){
+    const T = Math.pow(2,n)-1;
+    const b = document.createElement('div'); b.className = 'barra';
+    b.innerHTML = `<span class="num">${T}</span><div class="v" style="height:0%"></div><span class="lab">n=${n}</span>`;
+    g.appendChild(b);
+    setTimeout(() => { b.querySelector('.v').style.height = Math.max(2, T/max*100) + '%'; }, 120*n);
+  }
+})();
+
+// ============ quiz ============
+const PERG = [
+  {p:'Com 3 discos, qual é o número mínimo de movimentos? (Lembre: T(n) = 2ⁿ − 1, e n é o número de discos.)',
+   ops:['6','7','8','9'], c:1, exp:'T(3) = 2³ − 1 = 8 − 1 = 7. Os movimentos são: 1 → 3, 1 → 2, 3 → 2, 1 → 3, 2 → 1, 2 → 3, 1 → 3.'},
+  {p:'Qual fórmula dá o número mínimo de movimentos para n discos?',
+   ops:['T(n) = 2n − 1','T(n) = n²','T(n) = 2ⁿ − 1','T(n) = n · 2'], c:2, exp:'Use n = 3 para testar: 2n − 1 daria 5, n² daria 9 e n · 2 daria 6. Só 2ⁿ − 1 dá 7, que é o valor certo.'},
+  {p:'Quantos movimentos são necessários para 4 discos?',
+   ops:['7','8','15','16'], c:2, exp:'T(4) = 2⁴ − 1 = 16 − 1 = 15. Note que a sequência é 1, 3, 7, 15, 31…'},
+  {p:'Se cada movimento leva 1 segundo, quanto tempo leva para resolver 10 discos?',
+   ops:['10 segundos','100 segundos','1 023 segundos (cerca de 17 minutos)','1 024 minutos'], c:2, exp:'T(10) = 2¹⁰ − 1 = 1 024 − 1 = 1 023 movimentos. Como cada um leva 1 segundo, o tempo é 1 023 segundos, ou seja, 17 minutos e 3 segundos.'},
+  {p:'Quantos movimentos a mais são necessários ao passar de 4 para 5 discos?',
+   ops:['1','15','16','31'], c:2, exp:'Pela recorrência, T(5) = 2 · T(4) + 1 = 2 · 15 + 1 = 31. Então T(5) − T(4) = 31 − 15 = 16.'},
+  {p:'Desafio final: quantos movimentos são necessários para 8 discos?',
+   ops:['128','255','256','511'], c:1, exp:'T(8) = 2⁸ − 1 = 256 − 1 = 255. Como cada disco a mais quase dobra o número de movimentos, a torre fica bem mais trabalhosa.'}
+];
+let pontos = 0, acertos = 0, respondidas = 0;
+function montarQuiz(){
+  const box = $('#quiz'); box.innerHTML = '';
+  $('#total').textContent = PERG.length;
+  PERG.forEach((q, qi) => {
+    const card = document.createElement('div'); card.className = 'q';
+    card.innerHTML = `<h3>${qi+1}. ${q.p}</h3><div class="ops"></div><div class="feedback"></div>`;
+    const ops = card.querySelector('.ops');
+    q.ops.forEach((txt, oi) => {
+      const b = document.createElement('button'); b.textContent = txt;
+      b.onclick = () => responder(card, q, qi, oi, ops);
+      ops.appendChild(b);
+    });
+    box.appendChild(card);
+  });
+}
+function responder(card, q, qi, oi, ops){
+  if(card.dataset.feito) return;
+  card.dataset.feito = '1';
+  const btns = ops.querySelectorAll('button');
+  btns.forEach(b => b.disabled = true);
+  const fb = card.querySelector('.feedback');
+  respondidas++;
+  if(oi === q.c){
+    btns[oi].classList.add('certa'); acertos++; pontos += 10;
+    fb.className = 'feedback ok'; fb.innerHTML = '✅ Isso mesmo! +10 pontos. ' + q.exp;
+    somAcerto();
+  } else {
+    btns[oi].classList.add('errada'); btns[q.c].classList.add('certa');
+    fb.className = 'feedback erro'; fb.innerHTML = '❌ Quase! A resposta certa está em verde. ' + q.exp;
+    somErro();
+  }
+  $('#pontos').textContent = pontos; $('#acertos').textContent = acertos;
+  if(respondidas === PERG.length){
+    const f = $('#final-q'); f.classList.remove('oculto');
+    const titulo = acertos === PERG.length ? '🏅 Mestre das Torres! Você acertou tudo!' : acertos >= PERG.length*0.6 ? '👏 Muito bem! Revise as questões em vermelho.' : '📚 Releia a aba Matemática e tente de novo.';
+    f.innerHTML = `${titulo}<br><span style="font-size:15px">Pontuação final: ${pontos} pontos</span>`;
+    if(acertos === PERG.length) { confete(); somVitoria(); }
+  }
+}
+
+montarQuiz();
+novoJogo();
+</script>
+<script src="demo.js" data-id="jogo-hanoi"></script>
+<script src="../estat.js" defer></script>
+</body>
+</html>

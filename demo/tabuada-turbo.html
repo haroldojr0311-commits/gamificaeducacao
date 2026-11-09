@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tabuada Turbo</title>
+<style>
+
+:root{--tinta:#1d1636;--ouro:#ffd23f;--ouro2:#b8860b;--verde:#00d68f;--rosa:#ff3d7f;--azul:#3d8bff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:#fff;padding:14px 12px 40px;background:radial-gradient(circle at 15% 0%,#3b2a8a 0,transparent 45%),radial-gradient(circle at 90% 10%,#0f7a6b88 0,transparent 40%),linear-gradient(170deg,#120c2e,#1e1247 60%,#2a1040)}
+.wrap{max-width:820px;margin:0 auto}
+h1{text-align:center;font-size:clamp(26px,6vw,38px);margin:6px 0 4px;text-shadow:0 4px 0 #0008}
+.sub{text-align:center;opacity:.92;margin:0 0 12px;line-height:1.4;font-size:17px}
+.painel{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.stat{background:#ffffff18;border:2px solid #ffffff2a;border-radius:14px;padding:8px 14px;text-align:center;min-width:110px}
+.stat small{display:block;opacity:.85;font-weight:700;font-size:12px;text-transform:uppercase}
+.stat b{font-size:22px}
+.cartao{background:#fffdf7;color:var(--tinta);border-radius:20px;padding:18px;margin:12px auto;box-shadow:0 14px 34px #0008;text-align:center}
+.cartao h2{margin:0 0 8px;color:#5b2dbf}
+.grande{font:inherit;font-weight:900;font-size:20px;border:0;border-radius:16px;padding:14px 20px;background:var(--ouro);color:var(--tinta);box-shadow:0 6px 0 var(--ouro2);cursor:pointer;margin:6px;touch-action:manipulation}
+.grande:active{transform:translateY(3px);box-shadow:0 3px 0 var(--ouro2)}
+.grande.azul{background:var(--azul);color:#fff;box-shadow:0 6px 0 #1f5fc4}
+.grande.verde{background:var(--verde);box-shadow:0 6px 0 #0a9c6a}
+.grande.sec{background:#fff;box-shadow:0 6px 0 #b9b9c9}
+.grande:disabled{opacity:.5;cursor:not-allowed}
+.fb{min-height:56px;font-size:20px;font-weight:900;margin-top:8px;line-height:1.3}
+.ok{color:#0a8a5f}.erro{color:#c2185b}
+.tremer{animation:tremer .4s}
+@keyframes tremer{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+.pop{animation:pop .45s cubic-bezier(.2,1.5,.4,1)}
+@keyframes pop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+.certa{background:#c8ffe6!important;box-shadow:0 5px 0 #3fc78f!important}
+.errada{background:#ffd6e3!important;box-shadow:0 5px 0 #e0608a!important}
+.conf{position:fixed;top:-20px;width:10px;height:14px;z-index:90;pointer-events:none;animation:cair 2.8s linear forwards;border-radius:2px}
+@keyframes cair{to{transform:translateY(110vh) rotate(720deg)}}
+#modal{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;padding:16px;z-index:70}
+.cartao-modal{background:#fffdf7;color:var(--tinta);border-radius:22px;padding:22px;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 50px #000;animation:pop .35s}
+.cartao-modal h2{margin:0 0 6px;color:#5b2dbf}
+.cartao-modal p{margin:8px 0;line-height:1.5;font-size:17px}
+.estrelas{font-size:38px;letter-spacing:4px;margin:6px 0}
+.linha-b{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+.oculto{display:none!important}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+
+.wrap{max-width:980px}
+.tela{display:none}.tela.on{display:block}
+.bloco{background:#fff;color:var(--tinta);border-radius:22px;padding:20px;box-shadow:0 12px 28px #0007;margin-bottom:14px}
+.rot{font-size:14px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase;color:#6b6290;margin:0 0 10px}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.tabs button{font:inherit;font-weight:900;font-size:24px;border:3px solid #e2dcf7;background:#f7f5ff;color:var(--tinta);border-radius:16px;padding:12px 0;cursor:pointer}
+.tabs button[aria-pressed=true]{background:#5b2dbf;border-color:#5b2dbf;color:#fff}
+.linha{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.op{font:inherit;font-weight:800;font-size:17px;border:3px solid #e2dcf7;background:#f7f5ff;color:var(--tinta);border-radius:999px;padding:9px 16px;cursor:pointer}
+.op[aria-pressed=true]{background:#ffd23f;border-color:#c99a00}
+.modos{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+@media(max-width:700px){.modos{grid-template-columns:1fr}}
+.modo{font:inherit;text-align:left;border:3px solid #e2dcf7;background:#fff;color:var(--tinta);border-radius:18px;padding:14px;cursor:pointer}
+.modo b{display:block;font-size:20px}
+.modo span{font-size:15px;color:#4a4369}
+.modo[aria-pressed=true]{border-color:#00b878;background:#e9fff6}
+.nomes{display:block;width:100%;font:inherit;font-size:18px;padding:10px 12px;border:3px solid #e2dcf7;border-radius:14px;min-height:130px;margin-top:14px;resize:vertical;color:var(--tinta);box-sizing:border-box}
+.comecar{display:flex;justify-content:center;margin-top:8px}
+.comecar .grande{min-width:280px;font-size:22px}
+.recorde{text-align:center;font-weight:800;margin-top:10px;opacity:.9}
+.hud{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.hud div{background:#fff;color:var(--tinta);border-radius:16px;padding:8px 12px;text-align:center;box-shadow:0 6px 16px #0005}
+.hud small{display:block;font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#6b6290}
+.hud b{font-size:26px;font-variant-numeric:tabular-nums}
+.cab-aluno{text-align:center;font-weight:900;font-size:18px;margin-bottom:10px;background:#ffffff1f;border-radius:14px;padding:8px 10px}
+.tempo{height:12px;background:#ffffff22;border-radius:999px;overflow:hidden;margin-bottom:12px}
+.tempo i{display:block;height:100%;width:100%;background:#00d68f;transition:width .25s linear}
+.conta{background:#fff;color:var(--tinta);border-radius:24px;padding:18px;text-align:center;box-shadow:0 12px 28px #0007}
+.expr{font-size:clamp(54px,12vw,92px);font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums}
+.resp{display:inline-block;min-width:2.2ch;border-bottom:6px solid #5b2dbf;color:#5b2dbf}
+.teclado{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:420px;margin:14px auto 0}
+.teclado button{font:inherit;font-weight:900;font-size:30px;padding:14px 0;border:0;border-radius:16px;background:#f4f1ff;color:var(--tinta);box-shadow:0 6px 0 #cfc4f0;cursor:pointer;touch-action:manipulation}
+.teclado button:active{transform:translateY(4px);box-shadow:none}
+.teclado .ok{background:#00d68f;color:#fff;box-shadow:0 6px 0 #0a9c6a}
+.teclado .apaga{background:#ffe1ea;color:#c2185b;box-shadow:0 6px 0 #f3a6bd}
+.dica{margin-top:12px}
+.grade{display:inline-grid;gap:4px;padding:10px;background:#fff8e1;border-radius:14px;margin:6px 0}
+.grade i{width:14px;height:14px;border-radius:50%;background:#ff7a59;display:block}
+.pulos{font-weight:800;color:#4a4369}
+.acoes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+/* duelo */
+.duelo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:700px){.duelo{grid-template-columns:1fr}}
+.jog{background:#fff;color:var(--tinta);border-radius:22px;padding:14px;box-shadow:0 12px 28px #0007;border:5px solid transparent;transition:border-color .2s}
+.jog.j1{border-color:#3d8bff}.jog.j2{border-color:#ff3d7f}
+.jog h3{margin:0;display:flex;justify-content:space-between;align-items:center;font-size:20px}
+.jog h3 b{font-size:30px}
+.jog .expr{font-size:clamp(40px,8vw,64px)}
+.jog .teclado{max-width:none;gap:8px}
+.jog .teclado button{font-size:24px;padding:10px 0}
+.jog.bloq{opacity:.45}
+.jog.ganhou{box-shadow:0 0 0 6px #00d68f,0 12px 28px #0007}
+.lista-erros{columns:2;font-weight:800;font-size:18px}
+@media(max-width:560px){.lista-erros{columns:1}}
+/* ranking da turma */
+.so-print{display:none;text-align:center;margin:0 0 8px;color:#000}
+.nota{font-size:14px;color:#4a4369;margin:10px 0 0}
+.tabela-wrap{overflow-x:auto}
+.rank{width:100%;border-collapse:collapse;font-size:18px;color:var(--tinta)}
+.rank th,.rank td{padding:10px 8px;border-bottom:2px solid #eee;text-align:left}
+.rank th{font-size:13px;text-transform:uppercase;color:#6b6290;letter-spacing:1px}
+.rank .c{text-align:center}
+.rank tr.l1 td{background:#fff3c4}.rank tr.l2 td{background:#eef2f7}.rank tr.l3 td{background:#fbe3cf}
+.podio{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:14px 0 4px}
+.pod{flex:1;max-width:240px;border-radius:18px 18px 8px 8px;text-align:center;padding:12px 8px;display:flex;flex-direction:column;box-shadow:0 10px 20px #0004}
+.pod.p1{background:linear-gradient(#ffe066,#ffb703);color:#3a2a00;height:250px;order:2}
+.pod.p2{background:linear-gradient(#e6edf5,#9fb3c8);color:#1f2a37;height:200px;order:1}
+.pod.p3{background:linear-gradient(#f7c59f,#c8702a);color:#2b1400;height:165px;order:3}
+.medalha{font-size:30px;line-height:1}
+.pn{font-weight:900;font-size:17px;line-height:1.2;margin-top:6px;word-break:break-word}
+.pb{font-size:13px;font-weight:800;margin-top:6px;display:flex;flex-direction:column;gap:2px}
+.deg{font-size:30px;font-weight:900;opacity:.4;margin-top:auto}
+.projetar h1,.projetar .sub,.projetar .semProj{display:none!important}
+.projetar .wrap{max-width:1100px}
+.projetar .pod.p1{height:380px}.projetar .pod.p2{height:310px}.projetar .pod.p3{height:250px}
+.projetar .pn{font-size:30px}.projetar .medalha{font-size:56px}.projetar .pb{font-size:20px}
+.projetar .rank{font-size:24px}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff!important;color:#000;padding:0}
+  #tConfig,#tJogo,#tDuelo,.acoes,#modal,.conf,h1,.sub,.semProj{display:none!important}
+  #tRanking{display:block!important}
+  .so-print{display:block!important}
+  .bloco{box-shadow:none;margin-bottom:8px}
+  .pod{box-shadow:none}
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>✖️ Tabuada Turbo</h1>
+<p class="sub">Escolha as tabuadas, a operação e o modo de jogo. Treine até ficar craque!</p>
+
+<section class="tela on" id="tConfig">
+  <div class="bloco">
+    <p class="rot">1. Quais tabuadas?</p>
+    <div class="tabs" id="tabs"></div>
+    <div class="linha"><button class="op" type="button" id="todas">Todas</button><button class="op" type="button" id="nenhuma">Limpar</button></div>
+  </div>
+  <div class="bloco">
+    <p class="rot">2. Operação</p>
+    <div class="linha" id="ops">
+      <button class="op" type="button" data-op="x" aria-pressed="true">× Multiplicação</button>
+      <button class="op" type="button" data-op="d" aria-pressed="false">÷ Divisão</button>
+      <button class="op" type="button" data-op="m" aria-pressed="false">× e ÷ misturadas</button>
+    </div>
+  </div>
+  <div class="bloco">
+    <p class="rot">3. Modo de jogo</p>
+    <div class="modos" id="modos">
+      <button class="modo" type="button" data-m="treino" aria-pressed="true"><b>🧠 Treino</b><span>20 contas, sem pressa, com dica de bolinhas.</span></button>
+      <button class="modo" type="button" data-m="relogio" aria-pressed="false"><b>⏱️ Contra o relógio</b><span>Quantas você acerta em 60 segundos?</span></button>
+      <button class="modo" type="button" data-m="duelo" aria-pressed="false"><b>⚔️ Duelo</b><span>Dois jogadores no mesmo aparelho: quem acertar primeiro pontua.</span></button>
+      <button class="modo" type="button" data-m="turma" aria-pressed="false"><b>🏫 Ranking da turma</b><span>Cada aluno faz 10 contas com cronômetro. No fim: pódio e ranking.</span></button>
+    </div>
+    <textarea class="nomes oculto" id="nomes" rows="6" maxlength="400" placeholder="Digite o nome de cada aluno, um por linha (até 12 alunos)"></textarea>
+    <div class="comecar"><button class="grande verde" type="button" id="btnComecar">▶ Começar</button></div>
+    <p class="recorde" id="recorde"></p>
+    <div class="fb" id="fbCfg"></div>
+  </div>
+</section>
+
+<section class="tela" id="tJogo">
+  <div class="cab-aluno oculto" id="cabAluno"></div>
+  <div class="hud"><div><small id="hRot1">Conta</small><b id="h1">1/20</b></div><div><small>Acertos</small><b id="h2">0</b></div><div><small>Sequência</small><b id="h3">0</b></div></div>
+  <div class="tempo" id="barraTempo"><i id="tempoI"></i></div>
+  <div class="conta">
+    <div class="expr"><span id="expr">7 × 8</span> = <span class="resp" id="resp">&nbsp;</span></div>
+    <div class="teclado" id="teclado"></div>
+    <div class="fb" id="fb"></div>
+    <div class="dica oculto" id="dica"></div>
+  </div>
+  <div class="acoes"><button class="grande sec" type="button" id="btnDica">💡 Dica</button><button class="grande sec" type="button" id="btnSair">← Sair</button></div>
+</section>
+
+<section class="tela" id="tDuelo">
+  <div class="hud"><div><small>Conta</small><b id="dN">1/15</b></div><div><small>Azul</small><b id="dP1">0</b></div><div><small>Rosa</small><b id="dP2">0</b></div></div>
+  <div class="duelo">
+    <div class="jog j1" id="jog1"><h3>🔵 Jogador Azul <b id="dPts1">0</b></h3><div class="expr"><span class="dExpr">7 × 8</span> = <span class="resp" id="dR1">&nbsp;</span></div><div class="teclado" data-j="1"></div><div class="fb" id="dF1"></div></div>
+    <div class="jog j2" id="jog2"><h3>🩷 Jogador Rosa <b id="dPts2">0</b></h3><div class="expr"><span class="dExpr">7 × 8</span> = <span class="resp" id="dR2">&nbsp;</span></div><div class="teclado" data-j="2"></div><div class="fb" id="dF2"></div></div>
+  </div>
+  <div class="acoes"><button class="grande sec" type="button" id="btnSairD">← Sair</button></div>
+</section>
+
+<section class="tela" id="tRanking">
+  <h2 class="so-print">✖️ Tabuada Turbo · Resultado da turma</h2>
+  <p class="rot" id="dataRes" style="text-align:center"></p>
+  <div class="bloco">
+    <p class="rot" style="text-align:center">🏆 Pódio</p>
+    <div class="podio" id="podio"></div>
+  </div>
+  <div class="bloco">
+    <p class="rot">Classificação geral</p>
+    <div class="tabela-wrap"><table class="rank" id="tabRank"></table></div>
+    <p class="nota">Quem tem mais acertos fica na frente. Em caso de empate, vence quem terminou em menos tempo.</p>
+  </div>
+  <div class="acoes">
+    <button class="grande verde semProj" type="button" id="btnImprimir">🖨️ Imprimir</button>
+    <button class="grande azul" type="button" id="btnProj">📺 Mostrar em tela cheia</button>
+    <button class="grande sec semProj" type="button" id="btnNovaRodada">🔁 Nova rodada</button>
+    <button class="grande sec semProj" type="button" id="btnVoltarCfg">⚙️ Configurações</button>
+  </div>
+</section>
+
+</div>
+<div id="modal" class="oculto"></div>
+<script>
+
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let _ac = null;
+function tom(f, d, tipo){
+  try{
+    _ac = _ac || new (window.AudioContext || window.webkitAudioContext)();
+    const o = _ac.createOscillator(), g = _ac.createGain();
+    o.type = tipo || 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.12, _ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, _ac.currentTime + d);
+    o.connect(g); g.connect(_ac.destination); o.start(); o.stop(_ac.currentTime + d);
+  }catch(e){}
+}
+const somOk = () => [660, 880].forEach((f, i) => setTimeout(() => tom(f, .18), i*110));
+const somErro = () => tom(180, .22, 'sawtooth');
+const somVitoria = () => [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => tom(f, .25), i*150));
+function confete(){
+  const cores = ['#ffd23f','#ff3d7f','#00d68f','#3d8bff','#b388ff','#ff8a00'];
+  for(let i=0;i<90;i++){
+    const p = document.createElement('i'); p.className = 'conf';
+    p.style.left = Math.random()*100 + 'vw'; p.style.background = cores[i % cores.length];
+    p.style.animationDelay = Math.random()*0.7 + 's';
+    document.body.appendChild(p); setTimeout(() => p.remove(), 3800);
+  }
+}
+function tremer(el){ el.classList.remove('tremer'); void el.offsetWidth; el.classList.add('tremer'); }
+function modal(titulo, html, botoes){
+  const m = $('#modal'); m.innerHTML = '';
+  const card = document.createElement('div'); card.className = 'cartao-modal';
+  card.innerHTML = `<h2>${titulo}</h2>${html}<div class="linha-b"></div>`;
+  const linha = card.querySelector('.linha-b');
+  botoes.forEach(b => {
+    const bt = document.createElement('button'); bt.className = 'grande' + (b.cls ? ' ' + b.cls : ''); bt.textContent = b.txt;
+    bt.onclick = () => { m.classList.add('oculto'); b.fn(); };
+    linha.appendChild(bt);
+  });
+  m.appendChild(card); m.classList.remove('oculto');
+  confete(); somVitoria();
+}
+const estrelasTxt = (n, tot) => { const k = n >= tot*0.85 ? 3 : n >= tot*0.6 ? 2 : 1; return '⭐'.repeat(k) + '☆'.repeat(3-k); };
+function embaralhar(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const fmt = ms => { const t = Math.max(0, Math.floor(ms / 100)), s = Math.floor(t / 10); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0') + ',' + (t % 10); };
+const TOTAL_TREINO = 20, TEMPO_RELOGIO = 60, TOTAL_DUELO = 15, TOTAL_RODADA = 10;
+const CFG = { tabs: new Set([2,3,4,5]), op: 'x', modo: 'treino' };
+let J = null;
+const tabsBox = $('#tabs');
+for (let t = 1; t <= 10; t++){ const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.dataset.t = t; b.setAttribute('aria-label', 'Tabuada do ' + t); tabsBox.appendChild(b); }
+function desenharCfg(){
+  tabsBox.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(CFG.tabs.has(+b.dataset.t))));
+  document.querySelectorAll('#ops .op').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.op === CFG.op)));
+  document.querySelectorAll('#modos .modo').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === CFG.modo)));
+  $('#nomes').classList.toggle('oculto', CFG.modo !== 'turma');
+  const r = CFG.modo === 'turma' ? 0 : lerRec(); $('#recorde').textContent = r ? '🏆 Recorde neste modo e tabuadas: ' + r + (CFG.modo === 'relogio' ? ' acertos em 60 s' : CFG.modo === 'treino' ? ' de 20 acertos' : '') : '';
+}
+tabsBox.onclick = e => { const b = e.target.closest('button'); if (!b) return; const t = +b.dataset.t; CFG.tabs.has(t) ? CFG.tabs.delete(t) : CFG.tabs.add(t); tom(520, .05); desenharCfg(); };
+$('#todas').onclick = () => { for (let t = 1; t <= 10; t++) CFG.tabs.add(t); desenharCfg(); };
+$('#nenhuma').onclick = () => { CFG.tabs.clear(); desenharCfg(); };
+$('#ops').onclick = e => { const b = e.target.closest('[data-op]'); if (b){ CFG.op = b.dataset.op; desenharCfg(); } };
+$('#modos').onclick = e => { const b = e.target.closest('[data-m]'); if (b){ CFG.modo = b.dataset.m; desenharCfg(); } };
+const chaveRec = () => 'tabuada-rec-' + CFG.modo + '-' + CFG.op + '-' + [...CFG.tabs].sort((a, b) => a - b).join('.');
+function lerRec(){ try { return +localStorage.getItem(chaveRec()) || 0; } catch(e){ return 0; } }
+function gravarRec(v){ try { localStorage.setItem(chaveRec(), String(v)); } catch(e){} }
+try { $('#nomes').value = localStorage.getItem('tabuada-turma-nomes') || ''; } catch(e){}
+desenharCfg();
+
+function mostrar(id){
+  document.querySelectorAll('.tela').forEach(t => t.classList.toggle('on', t.id === id)); window.scrollTo(0, 0);
+  if (id !== 'tRanking') projetar(false);
+}
+function montarTeclado(el, fn){
+  el.innerHTML = [1,2,3,4,5,6,7,8,9].map(n => `<button type="button" data-k="${n}">${n}</button>`).join('') + '<button type="button" class="apaga" data-k="⌫" aria-label="Apagar">⌫</button><button type="button" data-k="0">0</button><button type="button" class="ok" data-k="ok" aria-label="Confirmar">✔</button>';
+  el.onclick = e => { const b = e.target.closest('button'); if (b) fn(b.dataset.k); };
+}
+function novaConta(ant){
+  const tabs = [...CFG.tabs];
+  let c;
+  for (let k = 0; k < 20; k++){
+    const a = tabs[Math.floor(Math.random() * tabs.length)], b = 1 + Math.floor(Math.random() * 10);
+    const op = CFG.op === 'm' ? (Math.random() < .5 ? 'x' : 'd') : CFG.op;
+    c = op === 'x' ? (Math.random() < .5 ? {a, b, op, r: a * b, txt: `${a} × ${b}`} : {a: b, b: a, op, r: a * b, txt: `${b} × ${a}`, t: a})
+                   : {a: a * b, b: a, op, r: b, txt: `${a * b} ÷ ${a}`};
+    c.tab = a;
+    if (!ant || c.txt !== ant.txt) break;
+  }
+  return c;
+}
+
+/* ---------- modo individual ---------- */
+function comecar(){
+  if (!CFG.tabs.size){ $('#fbCfg').textContent = 'Escolha pelo menos uma tabuada.'; $('#fbCfg').className = 'fb erro'; somErro(); return; }
+  if (CFG.modo === 'duelo') return comecarDuelo();
+  if (CFG.modo === 'turma') return comecarTurma();
+  J = { n: 0, ac: 0, seq: 0, maxSeq: 0, digit: '', conta: null, erros: [], fim: false, t0: Date.now(), timer: null, errouEsta: false };
+  $('#hRot1').textContent = CFG.modo === 'relogio' ? 'Tempo' : 'Conta';
+  $('#barraTempo').classList.toggle('oculto', CFG.modo !== 'relogio');
+  $('#btnDica').classList.toggle('oculto', CFG.modo !== 'treino');
+  $('#cabAluno').classList.add('oculto');
+  montarTeclado($('#teclado'), tecla);
+  mostrar('tJogo');
+  if (CFG.modo === 'relogio'){
+    const fimEm = Date.now() + TEMPO_RELOGIO * 1000;
+    J.timer = setInterval(() => {
+      const resta = Math.max(0, fimEm - Date.now());
+      $('#h1').textContent = Math.ceil(resta / 1000) + ' s';
+      $('#tempoI').style.width = (resta / (TEMPO_RELOGIO * 1000) * 100) + '%';
+      $('#tempoI').style.background = resta < 10000 ? '#ff3d7f' : '#00d68f';
+      if (resta <= 0) terminar();
+    }, 200);
+  }
+  proxima();
+}
+function proxima(){
+  J.conta = novaConta(J.conta); J.digit = ''; J.errouEsta = false;
+  if (CFG.modo === 'treino') $('#h1').textContent = (J.n + 1) + '/' + TOTAL_TREINO;
+  if (CFG.modo === 'turma') $('#cabAluno').textContent = '👤 ' + J.nome + ' · conta ' + (J.n + 1) + '/' + TOTAL_RODADA + ' · aluno ' + (T.i + 1) + ' de ' + T.alunos.length;
+  $('#expr').textContent = J.conta.txt; $('#resp').innerHTML = '&nbsp;';
+  $('#fb').textContent = ''; $('#fb').className = 'fb'; $('#dica').classList.add('oculto');
+}
+function tecla(k){
+  if (!J || J.fim) return;
+  if (k === '⌫'){ J.digit = J.digit.slice(0, -1); }
+  else if (k === 'ok'){ return conferir(); }
+  else if (J.digit.length < 3){ J.digit += k; tom(600, .03); }
+  $('#resp').innerHTML = J.digit || '&nbsp;';
+}
+function conferir(){
+  if (!J.digit) return;
+  const v = +J.digit, c = J.conta;
+  if (v === c.r){
+    if (!J.errouEsta){ J.ac++; J.seq++; J.maxSeq = Math.max(J.maxSeq, J.seq); }
+    $('#h2').textContent = J.ac; $('#h3').textContent = J.seq;
+    $('#fb').textContent = J.seq >= 5 && !J.errouEsta ? `🔥 ${J.seq} seguidas! ${c.txt} = ${c.r}` : `✅ Isso! ${c.txt} = ${c.r}`; $('#fb').className = 'fb ok'; somOk();
+    J.n++;
+    if (CFG.modo === 'treino' && J.n >= TOTAL_TREINO) return setTimeout(terminar, 700);
+    if (CFG.modo === 'turma' && J.n >= TOTAL_RODADA){
+      J.fim = true; J.tFim = Date.now(); clearInterval(J.timer);
+      $('#h1').textContent = fmt(J.tFim - J.t0);
+      return setTimeout(fimAluno, 700);
+    }
+    setTimeout(proxima, CFG.modo === 'relogio' ? 350 : 800);
+  } else {
+    somErro(); tremer($('.conta'));
+    if (!J.errouEsta){ J.erros.push(c); J.errouEsta = true; J.seq = 0; $('#h3').textContent = 0; }
+    if (CFG.modo === 'relogio'){ $('#fb').textContent = `❌ ${c.txt} = ${c.r}`; $('#fb').className = 'fb erro'; J.n++; setTimeout(proxima, 900); return; }
+    $('#fb').textContent = '❌ Ainda não. Tente de novo ou use a dica.'; $('#fb').className = 'fb erro';
+    J.digit = ''; $('#resp').innerHTML = '&nbsp;';
+  }
+}
+function dica(){
+  if (!J || !J.conta) return;
+  const c = J.conta;
+  const linhas = c.op === 'x' ? c.a : c.b, cols = c.op === 'x' ? c.b : c.r;
+  const pulos = Array.from({length: linhas}, (_, i) => (i + 1) * cols);
+  const txt = c.op === 'x'
+    ? `${c.a} fileiras com ${c.b} bolinhas. Conte de ${c.b} em ${c.b}: ${pulos.join(', ')}.`
+    : `Quantos grupos de ${c.b} cabem em ${c.a}? Pense: ${c.b} × ? = ${c.a}. Conte de ${c.b} em ${c.b}: ${Array.from({length: c.r}, (_, i) => (i + 1) * c.b).join(', ')}.`;
+  const g = c.op === 'x' ? `<div class="grade" style="grid-template-columns:repeat(${c.b},14px)">${'<i></i>'.repeat(c.a * c.b)}</div>` : `<div class="grade" style="grid-template-columns:repeat(${c.b},14px)">${'<i></i>'.repeat(c.a)}</div>`;
+  $('#dica').innerHTML = g + `<p class="pulos">${txt}</p>`; $('#dica').classList.remove('oculto');
+  if (!J.errouEsta){ J.errouEsta = true; J.erros.push(c); J.seq = 0; $('#h3').textContent = 0; }
+}
+$('#btnDica').onclick = dica;
+function terminar(){
+  if (J.fim) return; J.fim = true; clearInterval(J.timer);
+  const total = CFG.modo === 'relogio' ? Math.max(J.n, 1) : TOTAL_TREINO;
+  const rec = lerRec(), novo = J.ac > rec; if (novo) gravarRec(J.ac);
+  const vistos = new Set(), lista = J.erros.filter(c => !vistos.has(c.txt) && vistos.add(c.txt));
+  somVitoria(); if (J.ac >= total * .8) confete();
+  modal(CFG.modo === 'relogio' ? '⏱️ Tempo esgotado!' : '🏁 Treino concluído!',
+    `<div class="estrelas">${estrelasTxt(J.ac, total)}</div>
+     <p>Você acertou <b>${J.ac}</b> ${CFG.modo === 'relogio' ? 'contas em 60 segundos' : 'de ' + total + ' de primeira'}. Maior sequência: <b>${J.maxSeq}</b>.</p>
+     <p>${novo ? '🏆 Novo recorde!' : rec ? 'Recorde: ' + rec : ''}</p>
+     ${lista.length ? `<p><b>Para treinar:</b></p><div class="lista-erros">${lista.map(c => `<div>${c.txt} = ${c.r}</div>`).join('')}</div>` : '<p>Nenhum erro. Parabéns! 👑</p>'}`,
+    [{txt:'🔁 Jogar de novo', fn: comecar}, {txt:'⚙️ Mudar tabuadas', fn: () => { mostrar('tConfig'); desenharCfg(); }}]);
+  try { if (window.GAMIFICA && typeof GAMIFICA.enviar === 'function') GAMIFICA.enviar(J.ac, total, J.ac * 10); } catch(e){}
+}
+$('#btnSair').onclick = () => {
+  if (CFG.modo === 'turma' && J && !J.fim && !window.confirm('Sair agora? O aluno que está jogando não será registrado.')) return;
+  if (J){ J.fim = true; clearInterval(J.timer); }
+  if (CFG.modo === 'turma' && T && T.res.length) return mostrarRanking();
+  mostrar('tConfig'); desenharCfg();
+};
+document.addEventListener('keydown', e => {
+  if ($('#tJogo').classList.contains('on')){
+    if (/^[0-9]$/.test(e.key)) tecla(e.key); else if (e.key === 'Backspace') tecla('⌫'); else if (e.key === 'Enter') tecla('ok');
+  }
+});
+$('#btnComecar').onclick = comecar;
+
+/* ---------- ranking da turma ---------- */
+let T = null;
+function nomesDigitados(){
+  const vistos = new Set();
+  return $('#nomes').value.split(/[\n,;]/).map(s => s.trim().replace(/\s+/g, ' ')).filter(s => {
+    const k = s.toLowerCase(); if (!s || vistos.has(k)) return false; vistos.add(k); return true;
+  }).slice(0, 12);
+}
+function comecarTurma(){
+  const alunos = nomesDigitados();
+  if (!alunos.length){ $('#fbCfg').textContent = 'Digite o nome de pelo menos um aluno.'; $('#fbCfg').className = 'fb erro'; somErro(); return; }
+  try { localStorage.setItem('tabuada-turma-nomes', $('#nomes').value); } catch(e){}
+  $('#nomes').value = alunos.join('\n');
+  iniciarTurma(alunos);
+}
+function iniciarTurma(alunos){
+  T = { alunos, i: 0, res: [] };
+  $('#fbCfg').textContent = ''; $('#fbCfg').className = 'fb';
+  iniciarAluno();
+}
+function iniciarAluno(){
+  J = { n: 0, ac: 0, seq: 0, maxSeq: 0, digit: '', conta: null, erros: [], fim: false, t0: Date.now(), tFim: 0, timer: null, errouEsta: false, nome: T.alunos[T.i] };
+  $('#hRot1').textContent = 'Tempo'; $('#h1').textContent = fmt(0); $('#h2').textContent = '0'; $('#h3').textContent = '0';
+  $('#barraTempo').classList.add('oculto'); $('#btnDica').classList.add('oculto');
+  $('#cabAluno').classList.remove('oculto');
+  montarTeclado($('#teclado'), tecla);
+  mostrar('tJogo');
+  J.timer = setInterval(() => { $('#h1').textContent = fmt(Date.now() - J.t0); }, 100);
+  proxima();
+}
+function fimAluno(){
+  const tempo = (J.tFim || Date.now()) - J.t0;
+  T.res.push({ nome: J.nome, ac: J.ac, tempo, maxSeq: J.maxSeq });
+  const ultimo = T.i >= T.alunos.length - 1;
+  modal('✅ ' + esc(J.nome) + ' terminou!',
+    `<div class="estrelas">${estrelasTxt(J.ac, TOTAL_RODADA)}</div>
+     <p>Acertos de primeira: <b>${J.ac}</b> de ${TOTAL_RODADA}</p>
+     <p>Tempo: <b>${fmt(tempo)}</b></p>`,
+    [ultimo ? {txt:'🏆 Ver resultado da turma', cls:'verde', fn: mostrarRanking}
+            : {txt:'▶ Próximo aluno', cls:'verde', fn: () => { T.i++; iniciarAluno(); }}]);
+}
+function mostrarRanking(){
+  if (!T) return;
+  const res = T.res.slice().sort((a, b) => b.ac - a.ac || a.tempo - b.tempo);
+  res.forEach(r => { r.lugar = 1 + res.filter(o => o.ac > r.ac || (o.ac === r.ac && o.tempo < r.tempo)).length; });
+  const faltam = T.alunos.length - res.length;
+  $('#dataRes').textContent = new Date().toLocaleDateString('pt-BR') + (faltam > 0 ? ' · ranking parcial (faltam ' + faltam + ' aluno(s))' : '');
+  const pod = [2, 1, 3].map(l => {
+    const g = res.filter(r => r.lugar === l);
+    if (!g.length) return '';
+    return `<div class="pod p${l}"><div class="medalha">${['🥇','🥈','🥉'][l - 1]}</div><div class="pn">${g.map(r => esc(r.nome)).join('<br>')}</div><div class="pb"><span>${g[0].ac} de ${TOTAL_RODADA} acertos</span><span>⏱️ ${fmt(g[0].tempo)}</span></div><div class="deg">${l}º</div></div>`;
+  }).join('');
+  $('#podio').innerHTML = pod || '<p class="nota">Nenhum aluno terminou ainda.</p>';
+  $('#tabRank').innerHTML = '<thead><tr><th class="c">Lugar</th><th>Aluno</th><th class="c">Acertos</th><th class="c">Tempo</th></tr></thead><tbody>' +
+    res.map(r => `<tr class="${r.lugar <= 3 ? 'l' + r.lugar : ''}"><td class="c"><b>${r.lugar}º</b></td><td>${esc(r.nome)}</td><td class="c">${r.ac} de ${TOTAL_RODADA}</td><td class="c">${fmt(r.tempo)}</td></tr>`).join('') + '</tbody>';
+  mostrar('tRanking');
+}
+function projetar(on){
+  document.body.classList.toggle('projetar', on);
+  $('#btnProj').textContent = on ? '✖ Sair da tela cheia' : '📺 Mostrar em tela cheia';
+  try {
+    if (on && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
+    else if (!on && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  } catch(e){}
+}
+$('#btnProj').onclick = () => projetar(!document.body.classList.contains('projetar'));
+$('#btnImprimir').onclick = () => window.print();
+$('#btnNovaRodada').onclick = () => { if (T) iniciarTurma(T.alunos.slice()); };
+$('#btnVoltarCfg').onclick = () => { mostrar('tConfig'); desenharCfg(); };
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.body.classList.contains('projetar')) projetar(false); });
+
+/* ---------- duelo ---------- */
+let D = null;
+function comecarDuelo(){
+  D = { n: 0, p: [0, 0, 0], dig: ['', '', ''], bloq: [false, false, false], conta: null, fim: false, travado: false };
+  montarTeclado(document.querySelector('.teclado[data-j="1"]'), k => teclaD(1, k));
+  montarTeclado(document.querySelector('.teclado[data-j="2"]'), k => teclaD(2, k));
+  mostrar('tDuelo'); proximaD();
+}
+function proximaD(){
+  D.conta = novaConta(D.conta); D.dig = ['', '', '']; D.bloq = [false, false, false]; D.travado = false;
+  $('#dN').textContent = (D.n + 1) + '/' + TOTAL_DUELO;
+  document.querySelectorAll('.dExpr').forEach(e => e.textContent = D.conta.txt);
+  [1, 2].forEach(j => { $('#dR' + j).innerHTML = '&nbsp;'; $('#dF' + j).textContent = ''; $('#dF' + j).className = 'fb'; $('#jog' + j).classList.remove('bloq', 'ganhou'); });
+}
+function teclaD(j, k){
+  if (!D || D.fim || D.travado || D.bloq[j]) return;
+  if (k === '⌫') D.dig[j] = D.dig[j].slice(0, -1);
+  else if (k === 'ok'){
+    if (!D.dig[j]) return;
+    if (+D.dig[j] === D.conta.r){
+      D.travado = true; D.p[j]++; somOk();
+      $('#dPts' + j).textContent = D.p[j]; $('#dP' + j).textContent = D.p[j];
+      $('#jog' + j).classList.add('ganhou'); $('#dF' + j).textContent = `✅ Ponto! ${D.conta.txt} = ${D.conta.r}`; $('#dF' + j).className = 'fb ok';
+      return setTimeout(avancarD, 1100);
+    }
+    somErro(); D.bloq[j] = true; $('#jog' + j).classList.add('bloq'); $('#dF' + j).textContent = '❌ Errou! Espere a próxima.'; $('#dF' + j).className = 'fb erro';
+    if (D.bloq[1] && D.bloq[2]){ D.travado = true; $('#dF1').textContent = $('#dF2').textContent = `Os dois erraram: ${D.conta.txt} = ${D.conta.r}`; setTimeout(avancarD, 1500); }
+    return;
+  } else if (D.dig[j].length < 3){ D.dig[j] += k; tom(j === 1 ? 600 : 700, .03); }
+  $('#dR' + j).innerHTML = D.dig[j] || '&nbsp;';
+}
+function avancarD(){
+  D.n++;
+  if (D.n < TOTAL_DUELO) return proximaD();
+  D.fim = true; somVitoria(); confete();
+  const [a, b] = [D.p[1], D.p[2]];
+  modal(a === b ? '🤝 Empate!' : a > b ? '🔵 Jogador Azul venceu!' : '🩷 Jogador Rosa venceu!', `<p>Placar final: <b>Azul ${a} × ${b} Rosa</b></p>`,
+    [{txt:'🔁 Revanche', fn: comecarDuelo}, {txt:'⚙️ Mudar tabuadas', fn: () => { mostrar('tConfig'); desenharCfg(); }}]);
+}
+$('#btnSairD').onclick = () => { if (D) D.fim = true; mostrar('tConfig'); desenharCfg(); };
+
+</script>
+<script src="demo.js" data-id="tabuada-turbo"></script>
+<script src="../estat.js" defer></script>
+</body>
+</html>

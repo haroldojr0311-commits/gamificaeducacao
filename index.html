@@ -1402,6 +1402,65 @@ function cartaoVisitas(){
   carregar();
   return caixa;
 }
+var cartaoDep = null, cartaoDepEm = 0;
+function cartaoDepoimentos(){
+  if(cartaoDep && Date.now() - cartaoDepEm < 60000) return cartaoDep;
+  var caixa = el('div', {class:'card'}); cartaoDep = caixa; cartaoDepEm = Date.now();
+  async function agir(id, acao){
+    var r = await sb.rpc('moderar_depoimento', {p_id: id, p_acao: acao});
+    if(r.error){ window.alert('Não foi possível concluir: ' + r.error.message); return; }
+    carregar();
+  }
+  async function carregar(){
+    caixa.replaceChildren(el('h2', {}, '💬 Depoimentos'), el('p', {class:'sub'}, 'Carregando…'));
+    var r = await sb.rpc('listar_depoimentos');
+    if(r.error){ caixa.replaceChildren(el('h2', {}, '💬 Depoimentos'), msg('erro', 'Não foi possível carregar os depoimentos.')); return; }
+    var L = r.data || [], pend = L.filter(function(x){ return !x.aprovado; }).length;
+    caixa.replaceChildren(el('h2', {}, '💬 Depoimentos'),
+      el('p', {class:'sub'}, pend ? pend + (pend === 1 ? ' depoimento aguarda' : ' depoimentos aguardam') + ' a sua aprovação. Só os aprovados aparecem no site.' : 'Nenhum depoimento aguardando aprovação. Os professores enviam em “Como funciona”.'),
+      L.length ? el('div', {}, L.map(function(x){
+        return el('div', {style:'border:2px solid ' + (x.aprovado ? 'var(--linha)' : 'var(--marca)') + ';border-radius:14px;padding:12px;margin:10px 0'},
+          el('p', {style:'margin:0 0 6px'}, '“' + x.texto + '”'),
+          el('p', {class:'sub2', style:'margin:0 0 8px'}, x.nome + (x.funcao ? ' · ' + x.funcao : '') + (x.aprovado ? ' · ✅ publicado' : ' · ⏳ pendente')),
+          el('div', {class:'linha'},
+            x.aprovado ? el('button', {class:'peq sec', onclick: function(){ agir(x.id, 'ocultar'); }}, 'Ocultar do site')
+                       : el('button', {class:'peq', onclick: function(){ agir(x.id, 'aprovar'); }}, '✅ Aprovar e publicar'),
+            el('button', {class:'peq sec', onclick: function(){ if(window.confirm('Excluir este depoimento de vez?')) agir(x.id, 'excluir'); }}, '🗑️ Excluir')));
+      })) : el('p', {class:'sub2'}, 'Ainda não há depoimentos.'));
+  }
+  carregar();
+  return caixa;
+}
+var cartaoAv = null, cartaoAvEm = 0;
+function cartaoAvisos(){
+  if(cartaoAv && Date.now() - cartaoAvEm < 60000) return cartaoAv;
+  var caixa = el('div', {class:'card'}); cartaoAv = caixa; cartaoAvEm = Date.now();
+  var ASSUNTO = 'Novidade no Gamifica Educação';
+  var CORPO = 'Olá!\n\nChegou novidade no Gamifica Educação. Veja aqui: https://gamificaeducacao.com.br/novidades.html\n\nPara não receber mais estes avisos: https://gamificaeducacao.com.br/novidades.html#cancelar\n\nProf. Dr. Haroldo Aleixo de Lima Junior';
+  async function carregar(){
+    caixa.replaceChildren(el('h2', {}, '📧 Avisos de novidades'), el('p', {class:'sub'}, 'Carregando…'));
+    var r = await sb.rpc('listar_assinantes_novidades');
+    if(r.error || !r.data){ caixa.replaceChildren(el('h2', {}, '📧 Avisos de novidades'), msg('erro', 'Não foi possível carregar a lista.')); return; }
+    var d = r.data, emails = d.emails || [], partes = [];
+    for(var i = 0; i < emails.length; i += 40) partes.push(emails.slice(i, i + 40));
+    var botoes = partes.map(function(grupo, n){
+      return el('button', {class:'peq', onclick: function(){
+        window.location.href = 'mailto:?bcc=' + encodeURIComponent(grupo.join(',')) + '&subject=' + encodeURIComponent(ASSUNTO) + '&body=' + encodeURIComponent(CORPO);
+      }}, '✉️ Escrever aviso' + (partes.length > 1 ? ' (parte ' + (n + 1) + ' de ' + partes.length + ')' : ''));
+    });
+    var aviso = el('p', {class:'sub2', role:'status', 'aria-live':'polite'});
+    caixa.replaceChildren(el('h2', {}, '📧 Avisos de novidades'),
+      el('p', {class:'sub'}, 'Quem se cadastra em “Novidades” entra nesta lista. Ao clicar em “Escrever aviso”, seu programa de e-mail abre com todos em cópia oculta, pronto para enviar.'),
+      el('div', {class:'resumo'}, el('div', {}, el('b', {}, d.ativos), 'cadastrados ativos'), el('div', {}, el('b', {}, d.cancelados), 'cancelaram')),
+      emails.length ? el('div', {class:'linha', style:'margin-top:10px'}, botoes.concat([
+        el('button', {class:'peq sec', onclick: function(){
+          (navigator.clipboard ? navigator.clipboard.writeText(emails.join(', ')) : Promise.reject()).then(function(){ aviso.textContent = '✅ E-mails copiados.'; }).catch(function(){ aviso.textContent = 'Não consegui copiar automaticamente.'; });
+        }}, '📋 Copiar e-mails')])) : el('p', {class:'sub2'}, 'Ainda não há cadastrados.'),
+      aviso);
+  }
+  carregar();
+  return caixa;
+}
 function desenharAdmin(){
   var nome = el('input', {type:'text', id:'cNome', maxlength:'80', placeholder:'Ex.: Maria da Silva'});
   var login = el('input', {type:'text', id:'cLogin', maxlength:'80', autocapitalize:'none', spellcheck:'false', placeholder:'Ex.: maria.silva'});
@@ -1458,7 +1517,7 @@ function desenharAdmin(){
   }, id:'buscaC'});
 
   app.replaceChildren(
-    cartaoVisitas(),
+    cartaoVisitas(), cartaoDepoimentos(), cartaoAvisos(),
     el('div', {class:'card'}, el('h2', {}, '👥 Contas'),
       contas.erro ? msg('erro', 'Erro ao carregar: ' + contas.erro) : null,
       el('div', {class:'resumo'},
