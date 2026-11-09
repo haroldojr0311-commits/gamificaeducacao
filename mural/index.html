@@ -92,7 +92,18 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 .pub .rodape{font-size:13px;color:var(--tinta2);display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
 .pub .lk{display:block;text-decoration:none;color:var(--tinta);border:2px solid var(--linha);border-radius:12px;padding:10px 12px;overflow-wrap:anywhere}
 .pub .lk b{display:block;color:var(--azul);font-size:15px}
+.pub .lk-previa{padding:0;overflow:hidden}
+.pub .lk-previa .previa{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:0;cursor:pointer;background:#e9eef8;display:block}
+.pub .lk-previa b,.pub .lk-previa .url{padding:0 12px}
+.pub .lk-previa b{padding-top:8px}
+.pub .lk-previa .url{display:block;padding-bottom:10px;font-size:13px;color:var(--tinta2)}
 .pub .apagar{position:absolute;top:8px;right:8px}
+.pub .canto{position:absolute;top:8px;right:8px;display:flex;gap:6px;z-index:2}
+.pub .ic{width:36px;height:36px;border-radius:50%;border:2px solid var(--linha);background:var(--cartao);cursor:pointer;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,.18);opacity:.92}
+.pub .ic:hover,.pub .ic:focus-visible{opacity:1;transform:scale(1.08)}
+.pub .editando label{display:block;font-weight:800;font-size:14px;margin:8px 0 3px}
+.pub .editando input,.pub .editando textarea{width:100%;border:2px solid var(--linha);border-radius:10px;padding:8px 10px;background:var(--cartao);color:var(--tinta);font:inherit}
+.pub .editando textarea{min-height:90px;resize:vertical}
 .feed.colunas .pub .apagar{position:static;align-self:flex-end}
 .quadro{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#1d2b53;color:#fff;border:1px solid #2f63d6;padding:12px 18px;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.3);z-index:50;font-weight:800;max-width:92vw;text-align:center}
 .modal-fundo{position:fixed;inset:0;background:rgba(10,16,35,.6);display:grid;place-items:center;z-index:40;padding:16px}
@@ -114,6 +125,15 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 /* ===== Mural no estilo Padlet: coluna lateral + quadro com tema ===== */
 main.larga{max-width:1320px}
 .mural-grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px;align-items:start}
+.mural-grid.sem-painel{grid-template-columns:minmax(0,1fr)}
+.mural-grid.sem-painel .lateral{display:none}
+.barra-painel{display:flex;justify-content:flex-end;margin:0 0 8px}
+.alt-painel{flex:0 0 auto}
+.fab{display:none;position:fixed;right:16px;bottom:18px;width:58px;height:58px;border-radius:50%;border:0;background:#ffd23f;color:#1d2b53;font-size:30px;font-weight:900;box-shadow:0 8px 22px rgba(0,0,0,.35);cursor:pointer;z-index:40}
+.grp>summary .gi{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--fundo-chip,#eef2ff);margin-right:10px;font-size:16px}
+.grp>summary .gt{flex:1}
+.lateral{scrollbar-width:thin}
+.lateral>.grp:first-child{border-color:#ffd23f}
 .lateral{position:sticky;top:10px;max-height:calc(100vh - 20px);overflow:auto;display:flex;flex-direction:column;gap:10px;padding:2px}
 .grp{background:var(--cartao);color:var(--tinta);border:2px solid var(--linha);border-radius:16px;box-shadow:0 6px 16px rgba(29,43,83,.08)}
 .grp>summary{cursor:pointer;font-family:var(--fd);font-weight:600;padding:11px 14px;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:46px}
@@ -145,8 +165,8 @@ main.larga{max-width:1320px}
 .sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--tinta)}
 .sw[aria-pressed="true"]::after{content:"✔";position:absolute;top:2px;right:4px;color:#fff;background:#12865f;border-radius:50%;width:18px;height:18px;font-size:12px;line-height:18px;text-align:center}
 .sw span{position:absolute;left:0;right:0;bottom:0;background:rgba(10,16,35,.7);color:#fff;font-size:11px;font-weight:800;padding:1px 2px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:900px){.mural-grid{grid-template-columns:1fr}.lateral{position:static;max-height:none;overflow:visible}}
-@media print{.lateral{display:none!important}.mural-grid{display:block}.quadro-mural{background:none!important;padding:0;box-shadow:none;min-height:0}}
+@media(max-width:900px){.barra-painel{display:none}.fab{display:block}.mural-grid,.mural-grid.sem-painel{grid-template-columns:1fr}.mural-grid.sem-painel .lateral{display:flex}.lateral{position:static;max-height:none;overflow:visible}}
+@media print{.fab,.barra-painel,.canto{display:none!important}.lateral{display:none!important}.mural-grid{display:block}.quadro-mural{background:none!important;padding:0;box-shadow:none;min-height:0}}
 
 .codigo{font-family:var(--fd);font-size:2rem;font-weight:700;letter-spacing:.25em;background:var(--cartao);color:var(--tinta);border:2px dashed var(--azul);border-radius:16px;padding:8px 16px;display:inline-block}
 .codigo-in{font-family:var(--fd);font-size:1.4rem;letter-spacing:.2em;text-transform:uppercase;text-align:center;width:100%;max-width:260px;border:2px solid var(--linha);border-radius:12px;padding:10px 12px;background:var(--cartao);color:var(--tinta)}
@@ -207,11 +227,37 @@ const TEMAS = [
   {id:'milimetrado', nome:'Milimetrado', grupo:'Escola', claro:true, fundo:'linear-gradient(#e58a8a 1px,transparent 1px) 0 0/60px 60px,linear-gradient(90deg,#e58a8a 1px,transparent 1px) 0 0/60px 60px,linear-gradient(#f3c3c3 1px,transparent 1px) 0 0/12px 12px,linear-gradient(90deg,#f3c3c3 1px,transparent 1px) 0 0/12px 12px,#fff8f8'},
   {id:'lousa', nome:'Lousa verde', grupo:'Escola', claro:false, fundo:'radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.12),transparent 55%),radial-gradient(ellipse at 80% 90%,rgba(255,255,255,.08),transparent 50%),#2d4a3e'},
   {id:'lousa-preta', nome:'Lousa preta', grupo:'Escola', claro:false, fundo:'radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.10),transparent 55%),#20242b'},
-  {id:'matematica', nome:'Matemática', grupo:'Escola', claro:true, fundo:svgBg(190, 190, simb(14, 44, '∑', '#1d4ed8', .16, 38) + simb(110, 36, 'π', '#1d4ed8', .16, 38) + simb(58, 110, '∫', '#1d4ed8', .16, 44) + simb(135, 120, '√', '#1d4ed8', .16, 38) + simb(14, 170, '≠', '#1d4ed8', .16, 34) + simb(104, 176, '÷', '#1d4ed8', .16, 36) + simb(158, 70, '%', '#1d4ed8', .16, 28)) + ' 0 0/190px 190px,#eef4ff'},
-  {id:'letras', nome:'Letras', grupo:'Escola', claro:true, fundo:svgBg(180, 180, simb(12, 48, 'A', '#e67e22', .2, 42, 'Comic Sans MS,cursive') + simb(96, 40, 'b', '#e67e22', .2, 40, 'Comic Sans MS,cursive') + simb(52, 112, 'C', '#e67e22', .2, 42, 'Comic Sans MS,cursive') + simb(124, 130, 'd', '#e67e22', .2, 40, 'Comic Sans MS,cursive') + simb(14, 168, 'e', '#e67e22', .2, 38, 'Comic Sans MS,cursive')) + ' 0 0/180px 180px,#fff8e1'},
-  {id:'ciencias', nome:'Ciências', grupo:'Escola', claro:true, fundo:svgBg(180, 180, simb(10, 46, '🧪', '#000', .3, 34, 'sans-serif') + simb(100, 40, '🔬', '#000', .3, 34, 'sans-serif') + simb(50, 118, '⚛️', '#000', .3, 34, 'sans-serif') + simb(126, 138, '🧬', '#000', .3, 34, 'sans-serif')) + ' 0 0/180px 180px,#effaf3'},
+  {id:'matematica', nome:'Matemática', grupo:'Disciplinas', claro:true, fundo:svgBg(190, 190, simb(14, 44, '∑', '#1d4ed8', .16, 38) + simb(110, 36, 'π', '#1d4ed8', .16, 38) + simb(58, 110, '∫', '#1d4ed8', .16, 44) + simb(135, 120, '√', '#1d4ed8', .16, 38) + simb(14, 170, '≠', '#1d4ed8', .16, 34) + simb(104, 176, '÷', '#1d4ed8', .16, 36) + simb(158, 70, '%', '#1d4ed8', .16, 28)) + ' 0 0/190px 190px,#eef4ff'},
+  {id:'letras', nome:'Letras', grupo:'Disciplinas', claro:true, fundo:svgBg(180, 180, simb(12, 48, 'A', '#e67e22', .2, 42, 'Comic Sans MS,cursive') + simb(96, 40, 'b', '#e67e22', .2, 40, 'Comic Sans MS,cursive') + simb(52, 112, 'C', '#e67e22', .2, 42, 'Comic Sans MS,cursive') + simb(124, 130, 'd', '#e67e22', .2, 40, 'Comic Sans MS,cursive') + simb(14, 168, 'e', '#e67e22', .2, 38, 'Comic Sans MS,cursive')) + ' 0 0/180px 180px,#fff8e1'},
+  {id:'ciencias', nome:'Ciências', grupo:'Disciplinas', claro:true, fundo:svgBg(180, 180, simb(10, 46, '🧪', '#000', .3, 34, 'sans-serif') + simb(100, 40, '🔬', '#000', .3, 34, 'sans-serif') + simb(50, 118, '⚛️', '#000', .3, 34, 'sans-serif') + simb(126, 138, '🧬', '#000', .3, 34, 'sans-serif')) + ' 0 0/180px 180px,#effaf3'},
   {id:'pontilhado', nome:'Pontilhado', grupo:'Escola', claro:true, fundo:'radial-gradient(#9fb2d8 1.5px,transparent 1.8px) 0 0/22px 22px,#f7f9fe'},
   {id:'kraft', nome:'Papel kraft', grupo:'Escola', claro:true, fundo:'linear-gradient(135deg,rgba(255,255,255,.14),rgba(0,0,0,.06)),#d6b88b'},
+  /* Disciplinas */
+  ...[
+    ['portugues','Língua Portuguesa',['“','¶','!','?','…'],'#c2410c','#fff4ec','Georgia,serif',40],
+    ['literatura','Literatura',['📚','🖋️','📖','🪶','📜'],'#000','#fbf5ea'],
+    ['historia','História',['🏛️','⚔️','📜','🗿','⏳'],'#000','#fbf3e4'],
+    ['geografia','Geografia',['🌍','🧭','🗺️','⛰️','🌋'],'#000','#e8f6ff'],
+    ['biologia','Biologia',['🧬','🌱','🦋','🐾','🍃'],'#000','#effaf0'],
+    ['fisica','Física',['⚡','🔭','⚙️','🧲','🚀'],'#000','#eef2ff'],
+    ['quimica','Química',['⚗️','🧪','🔥','💧','⚛️'],'#000','#f6f0ff'],
+    ['ingles','Inglês',['Hi!','ABC','Yes','Go','No'],'#1e40af','#eef6ff','Comic Sans MS,cursive',30],
+    ['espanhol','Espanhol',['¡Hola!','¿?','Sí','ñ','Ay'],'#b91c1c','#fff1f0','Comic Sans MS,cursive',30],
+    ['artes','Arte',['🎨','🖌️','🎭','✏️','🖼️'],'#000','#fff0f7'],
+    ['musica','Música',['🎵','🎶','🎸','🥁','🎹'],'#000','#f3f0ff'],
+    ['edfisica','Educação Física',['⚽','🏀','🏐','🏃','🥇'],'#000','#fff7e6'],
+    ['filosofia','Filosofia',['🦉','💭','❓','🏺','⚖️'],'#000','#f2f2f7'],
+    ['sociologia','Sociologia',['👥','🤝','🏙️','📊','🗳️'],'#000','#f0f9f4'],
+    ['financeira','Educação Financeira',['💰','💵','📈','🪙','🏦'],'#000','#effbea'],
+    ['estudos','Orientação de Estudos',['⏰','📝','🎯','💡','📖'],'#000','#fffbe6'],
+    ['vida','Projeto de Vida',['🌟','🧭','🎯','🚀','🌈'],'#000','#fdf2ff'],
+    ['tecnologia','Tecnologia e Robótica',['🤖','⚙️','🔌','💡','📡'],'#000','#eef7ff'],
+    ['ambiental','Meio Ambiente',['♻️','🌳','💧','☀️','🌎'],'#000','#ecfaf1'],
+    ['religioso','Ensino Religioso',['🕊️','🌍','🤲','🕯️','❤️'],'#000','#fffaf0'],
+    ['engenharia','Engenharia e Cálculo',['∫','Δ','∞','∂','Σ'],'#334155','#f1f5f9','Georgia,serif',40]
+  ].map(([id, nome, sim, cor, bg, fam, tam]) => ({id, nome, grupo:'Disciplinas', claro:true,
+    fundo: svgBg(180, 180, [[12,48],[98,40],[50,114],[122,138],[14,168]].map((p, i) => simb(p[0], p[1], sim[i], cor, cor === '#000' ? .3 : .2, tam || 34, fam || 'sans-serif')).join('')) + ' 0 0/180px 180px,' + bg})),
+  {id:'informatica', nome:'Informática', grupo:'Disciplinas', claro:false, fundo:svgBg(180, 180, simb(10, 44, '01', '#22c55e', .28, 30, 'monospace') + simb(90, 38, '&lt;/&gt;', '#22c55e', .28, 26, 'monospace') + simb(40, 112, '{ }', '#22c55e', .28, 32, 'monospace') + simb(118, 134, '#', '#22c55e', .28, 36, 'monospace') + simb(12, 166, 'λ', '#22c55e', .28, 34, 'monospace')) + ' 0 0/180px 180px,#0b1220'},
   /* Natureza */
   {id:'floresta', nome:'Floresta', grupo:'Natureza', claro:false, fundo:'linear-gradient(160deg,#0f3d2e,#2f8f5b 60%,#9bd77c)'},
   {id:'oceano', nome:'Oceano', grupo:'Natureza', claro:false, fundo:'linear-gradient(180deg,#38bdf8,#0369a1 60%,#082f49)'},
@@ -232,7 +278,7 @@ const TEMAS = [
   {id:'minimal-claro', nome:'Minimalista', grupo:'Diversos', claro:true, fundo:'#f1f4f9'},
   {id:'minimal-escuro', nome:'Escuro', grupo:'Diversos', claro:false, fundo:'#1b2030'}
 ];
-const GRUPOS_TEMA = ['Cores', 'Escola', 'Natureza', 'Diversos'];
+const GRUPOS_TEMA = ['Cores', 'Disciplinas', 'Escola', 'Natureza', 'Diversos'];
 const TEMA_PADRAO = 'tema:ceu';
 /* Tema de um mural: "tema:<id>" ou uma cor hexadecimal (murais antigos) */
 function temaDe(cor){
@@ -262,7 +308,7 @@ const PERMISSOES = [
   ['leitura', '👀 Só leitura', 'A turma vê o mural, mas não publica nem comenta.'],
   ['publicar', '✍️ Pode publicar', 'A turma publica, comenta e reage usando o código do mural.']
 ];
-const REACOES = [['curtir','👍 Curtir'],['aplaudir','👏 Aplaudir'],['duvida','❓ Dúvida']];
+const REACOES = [['curtir','👍 Curtir']];
 const LIMITE_MB = {imagem: 5, audio: 20, video: 50, arquivo: 10};
 const MIME_OK = {
   imagem: ['image/jpeg','image/png','image/gif','image/webp'],
@@ -328,7 +374,7 @@ function gravarReacao(pubId, tipo, marcado){
   if (marcado) lista.push(tipo);
   m[pubId] = lista; gravarJSON('mural-turbo-reacoes', m);
 }
-function pararAtualizacao(){ if (timer){ clearInterval(timer); timer = null; } }
+function pararAtualizacao(){ if (timer){ clearInterval(timer); timer = null; } document.querySelectorAll('.fab').forEach(x => x.remove()); }
 
 /* Mensagens do servidor já em português que podem ser mostradas como estão */
 const AVISOS = [/Código/, /tentativas/, /Muitas publicações/, /endereço precisa/, /conteúdo deve/, /legenda pode/, /Informe seu nome/, /Tipo de publicação/, /Mural não encontrado/, /só para leitura/, /Permissão inválida/, /comentário deve/, /Reação inválida/, /Publicação não encontrada/, /tipo de arquivo não é aceito/, /muito grande/, /Não foi possível enviar o arquivo/, /Grave um áudio/, /Escolha um arquivo/];
@@ -565,7 +611,14 @@ async function vistaMural(id){
   const tema = temaDe(mural.cor);
   const aberto = !window.matchMedia('(max-width:900px)').matches;       // no celular, os grupos começam fechados
   function grupo(titulo, filhos, abrir){
-    return el('details', {class:'grp', open: abrir}, el('summary', {}, titulo), el('div', {class:'gc'}, filhos));
+    /* No computador o painel lembra quais grupos o professor deixou abertos */
+    const chaveG = 'mural-grp-' + titulo;
+    let lembrado = null; try { lembrado = localStorage.getItem(chaveG); } catch(e){}
+    const aberta = (lembrado !== null && !window.matchMedia('(max-width:900px)').matches) ? lembrado === '1' : abrir;
+    const partes = titulo.match(/^(\S+)\s+(.*)$/) || ['', '', titulo];
+    const g = el('details', {class:'grp', open: aberta}, el('summary', {}, el('span', {class:'gi', 'aria-hidden':'true'}, partes[1]), el('span', {class:'gt'}, partes[2])), el('div', {class:'gc'}, filhos));
+    g.addEventListener('toggle', () => { try { localStorage.setItem(chaveG, g.open ? '1' : '0'); } catch(e){} });
+    return g;
   }
   const faixa = el('section', {class:'faixa' + (tema.claro ? ' claro' : ''), style:'background:' + tema.fundo},
     el('div', {class:'txt'}, el('div', {class:'plate'}, el('h1', {}, mural.titulo), el('p', {}, mural.descricao || 'Publique a sua contribuição na coluna ao lado.'))));
@@ -794,7 +847,7 @@ async function vistaMural(id){
       }
       const { data: r, error: e7 } = await sb.rpc('mural_publicar', {
         p_mural: id, p_codigo: dono ? null : codigo, p_token: token,
-        p_tipo: tipo, p_conteudo: conteudo, p_legenda: tipo === 'texto' ? '' : legenda.value.trim(), p_autor: autor, p_nome: nome, p_titulo: campoTitulo.value.trim()
+        p_tipo: tipo, p_conteudo: conteudo, p_legenda: tipo === 'texto' ? '' : legenda.value.trim(), p_autor: autor, p_nome: nome, p_titulo: campoTitulo.value.trim(), p_eu: EU
       });
       if (e7) throw e7;
       if (r && r.erro) throw new Error(r.erro);
@@ -862,12 +915,49 @@ async function vistaMural(id){
     });
   }
 
+  /* Edição no próprio cartão: título, texto/endereço e descrição (a mídia enviada não muda) */
+  function editarPub(p, corpoBox, corpoOriginal){
+    const campoT = el('input', {maxlength:'120', value: p.titulo || '', placeholder:'Título (opcional)', 'aria-label':'Título'});
+    const ehTexto = p.tipo === 'texto', ehLink = p.tipo === 'link';
+    const campoC = ehTexto ? el('textarea', {maxlength:'2000', 'aria-label':'Texto'}, p.conteudo) : ehLink ? el('input', {type:'url', value: p.conteudo, 'aria-label':'Endereço do site'}) : null;
+    if (ehTexto) campoC.value = p.conteudo;
+    const campoD = ehTexto ? null : el('textarea', {maxlength:'500', placeholder:'Descrição (opcional)', 'aria-label':'Descrição'}, p.legenda || '');
+    if (campoD) campoD.value = p.legenda || '';
+    const aviso = el('div', {class:'fb', role:'status'});
+    const salvar = el('button', {type:'submit', class:'btn peq'}, '💾 Salvar');
+    const form = el('form', {class:'editando naoimprimir', novalidate:true, onsubmit: async (e) => {
+      e.preventDefault(); aviso.className = 'fb'; aviso.textContent = '';
+      const cont = campoC ? campoC.value.trim() : p.conteudo;
+      if (campoC && !cont){ aviso.className = 'fb erro'; aviso.textContent = 'O conteúdo não pode ficar vazio.'; return; }
+      if (ehLink && !urlOk(cont)){ aviso.className = 'fb erro'; aviso.textContent = 'O endereço precisa começar com https:// (ou http://).'; return; }
+      salvar.disabled = true;
+      const { data: r, error: eE } = await sb.rpc('mural_editar_publicacao', {p_publicacao: p.id, p_codigo: dono ? null : codigo, p_token: token, p_eu: EU, p_titulo: campoT.value.trim(), p_conteudo: cont, p_legenda: campoD ? campoD.value.trim() : ''});
+      salvar.disabled = false;
+      if (eE || (r && r.erro)){ aviso.className = 'fb erro'; aviso.textContent = eE ? erroAmigavel(eE) : r.erro; return; }
+      toast(r && r.aprovada === false ? 'Salvo! A professora vai aprovar de novo. ⏳' : 'Publicação atualizada ✅');
+      Object.assign(p, {titulo: campoT.value.trim(), conteudo: cont, legenda: campoD ? campoD.value.trim() : ''});
+      ultimaChave = ''; desenharTudo();
+      await atualizarFeed(true);
+    }},
+      el('label', {}, 'Título'), campoT,
+      campoC ? el('label', {}, ehTexto ? 'Texto' : 'Endereço do site') : null, campoC,
+      campoD ? el('label', {}, 'Descrição') : null, campoD,
+      aviso,
+      el('div', {class:'acoes', style:'margin:8px 0 0'}, salvar,
+        el('button', {type:'button', class:'btn sec peq', onclick: () => corpoBox.replaceChildren(...corpoOriginal)}, 'Cancelar')));
+    corpoBox.replaceChildren(form); campoT.focus();
+  }
+
   function cartao(p, pendente){
     const corpo = conteudoPub(p);
     const tipoNome = (TIPOS.find(t => t[0] === p.tipo) || ['', ''])[1].replace(/^\S+\s/, '');
-    const acoesDono = dono ? el('div', {class:'acoes naoimprimir', style:'margin:4px 0 0'},
-      pendente ? el('button', {class:'btn peq', onclick: () => aprovar(p)}, '✅ Aprovar') : null,
-      el('button', {class:'btn perigo peq', 'aria-label':'Excluir publicação', onclick: () => apagar(p)}, '🗑️ Excluir')) : null;
+    const meu = dono || (!!p.autor_eu && p.autor_eu === EU && canPublicar);
+    const acoesDono = dono && pendente ? el('div', {class:'acoes naoimprimir', style:'margin:4px 0 0'},
+      el('button', {class:'btn peq', onclick: () => aprovar(p)}, '✅ Aprovar')) : null;
+    const corpoBox = el('div', {class:'corpo', style:'display:flex;flex-direction:column;gap:8px'}, corpo);
+    const cantoBtns = meu ? el('div', {class:'canto naoimprimir'},
+      el('button', {type:'button', class:'ic', title:'Editar publicação', 'aria-label':'Editar publicação', onclick: () => editarPub(p, corpoBox, corpo)}, '✏️'),
+      dono ? el('button', {type:'button', class:'ic', title:'Excluir publicação', 'aria-label':'Excluir publicação', onclick: () => apagar(p)}, '🗑️') : null) : null;
 
     let interacao = null;
     if (!pendente){
@@ -896,7 +986,8 @@ async function vistaMural(id){
 
     return el('article', {class: 'pub tipo-' + p.tipo + (pendente ? ' pendente' : ''), 'aria-label': tipoNome + ' de ' + p.autor},
       pendente ? el('span', {class:'tipo'}, '⏳ Aguardando aprovação') : null,
-      el('div', {class:'corpo', style:'display:flex;flex-direction:column;gap:8px'}, corpo),
+      corpoBox,
+      cantoBtns,
       el('div', {class:'rodape'}, el('span', {}, '👤 ' + p.autor), el('span', {}, data(p.criado_em))),
       interacao,
       acoesDono);
@@ -934,7 +1025,14 @@ async function vistaMural(id){
         el('b', {}, '📄 ' + (p.nome_arquivo || 'Arquivo para baixar')), 'Toque para abrir ou baixar'));
     } else if (p.tipo === 'link'){
       let host = p.conteudo; try { host = new URL(p.conteudo).hostname; } catch(e){}
-      corpo.push(el('a', {class:'lk', href: p.conteudo, target:'_blank', rel:'noopener noreferrer'}, el('b', {}, '🔗 ' + host), p.conteudo));
+      /* Prévia do site: miniatura do YouTube ou imagem da tela da página */
+      const yt = p.conteudo.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/);
+      const fonteImg = yt ? 'https://i.ytimg.com/vi/' + yt[1] + '/hqdefault.jpg'
+        : 'https://image.thum.io/get/width/700/crop/440/noanimate/' + p.conteudo;
+      const previa = el('img', {class:'previa', src: fonteImg, alt:'Prévia do site ' + host, loading:'lazy', referrerpolicy:'no-referrer'});
+      previa.onerror = () => { previa.remove(); };
+      corpo.push(el('a', {class:'lk lk-previa', href: p.conteudo, target:'_blank', rel:'noopener noreferrer', 'aria-label':'Abrir o site ' + host},
+        previa, el('b', {}, '🔗 ' + host), el('span', {class:'url'}, p.conteudo)));
     }
     if (p.legenda) corpo.push(el('div', {class:'legenda'}, p.legenda));
     return corpo;
@@ -947,10 +1045,10 @@ async function vistaMural(id){
     if (d2 && d2.erro){ pararAtualizacao(); pedirCodigo(id, 'O código deste mural mudou. Digite o novo código.'); return; }
     publicacoes = d2.publicacoes || [];
     pendentes = d2.pendentes || [];
-    const chave = JSON.stringify([publicacoes.map(p => [p.id, p.reacoes, (p.comentarios||[]).length]), pendentes.map(p => p.id)]);
+    const chave = JSON.stringify([publicacoes.map(p => [p.id, p.reacoes, (p.comentarios||[]).length, p.titulo, p.conteudo, p.legenda]), pendentes.map(p => p.id)]);
     const editando = !forcar && (
       [...feed.querySelectorAll('.comentar input'), ...areaPend.querySelectorAll('.comentar input')].some(i => i.value.trim()) ||
-      feed.contains(document.activeElement) || areaPend.contains(document.activeElement) || botaoPub.disabled);
+      feed.contains(document.activeElement) || areaPend.contains(document.activeElement) || botaoPub.disabled || !!document.querySelector('.editando'));
     if (editando || chave === ultimaChave) return;
     ultimaChave = chave;
     desenharTudo();
@@ -1004,12 +1102,29 @@ async function vistaMural(id){
     grupo('🧩 Layout do mural', [seletorLayout], aberto),
     grupo('📤 Compartilhar', [botoesCopiar], aberto),
     ...(dono ? [ferramentasDono] : []));
+  /* Botão para recolher/abrir o painel (mais espaço para o mural) */
+  const grade = el('div', {class:'mural-grid'});
+  let painelFechado = false; try { painelFechado = localStorage.getItem('mural-painel') === '0'; } catch(e){}
+  const botaoPainel = el('button', {type:'button', class:'btn sec peq alt-painel naoimprimir', 'aria-expanded': String(!painelFechado), onclick(){
+    painelFechado = !painelFechado; grade.classList.toggle('sem-painel', painelFechado);
+    botaoPainel.setAttribute('aria-expanded', String(!painelFechado)); botaoPainel.textContent = painelFechado ? '☰ Mostrar painel' : '« Recolher painel';
+    try { localStorage.setItem('mural-painel', painelFechado ? '0' : '1'); } catch(e){}
+  }}, painelFechado ? '☰ Mostrar painel' : '« Recolher painel');
+  grade.classList.toggle('sem-painel', painelFechado);
+  /* Botão flutuante "+" no celular: abre e leva ao formulário de publicar */
+  const botaoFlutuante = canPublicar ? el('button', {type:'button', class:'fab naoimprimir', 'aria-label':'Nova publicação', onclick(){
+    grpPublicar.open = true; grpPublicar.scrollIntoView({behavior:'smooth', block:'start'});
+    setTimeout(() => { const c = document.getElementById('autor'); if (c) c.focus({preventScroll:true}); }, 350);
+  }}, '＋') : null;
   const quadro = el('div', {class:'quadro-mural', style:'background:' + (tema.quadro || tema.fundo)}, areaPend, feed);
   app.classList.add('larga');
   app.replaceChildren(
     el('p', {class:'naoimprimir'}, el('a', {href:'#/', class:'ajuda'}, '← Todos os murais')),
     faixa,
-    el('div', {class:'mural-grid'}, lateral, quadro));
+    el('div', {class:'barra-painel naoimprimir'}, botaoPainel),
+    grade);
+  grade.append(lateral, quadro);
+  if (botaoFlutuante) document.body.append(botaoFlutuante);
   timer = setInterval(() => { if (!document.hidden) atualizarFeed(false); }, 15000);
 }
 function abrirLupa(src, legenda){
