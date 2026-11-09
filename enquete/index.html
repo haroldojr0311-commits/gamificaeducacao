@@ -213,5 +213,6 @@ function enviar(){
 }
 setInterval(() => { if (A.conectado && Date.now() - A.ultimo > 9000 && A.est && A.est.fase !== 'fim') $('#topoInfo').textContent = '⚠️ reconectando…'; else if (A.conectado) $('#topoInfo').textContent = '🔢 ' + A.codigo; }, 3000);
 </script>
+<script src="../estat.js" defer></script>
 </body>
 </html>

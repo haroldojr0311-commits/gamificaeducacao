@@ -4,7 +4,7 @@
    termos.html, sitemap.xml e robots.txt.  Rode sempre que o catálogo mudar:
        python3 _ferramentas/gerar_paginas.py
 """
-import json, os, subprocess, html, datetime
+import json, os, re, subprocess, html, datetime, urllib.parse
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = 'https://gamificaeducacao.com.br'
@@ -68,15 +68,31 @@ details p{margin:8px 0 0}
 .legal h2{font-size:1.25rem;margin-top:22px}.legal li{margin:4px 0}
 footer{text-align:center;color:var(--tinta2);font-size:14px;padding:20px 16px 30px}
 footer a{margin:0 6px}
+.pular{position:absolute;left:-9999px;top:8px;background:#ffd23f;color:#1d2b53;font-weight:800;padding:10px 16px;border-radius:12px;z-index:100;text-decoration:none}
+.pular:focus{left:8px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #2f63d6;outline-offset:2px}
+.topo a:focus-visible{outline-color:#ffd23f}
+button.bt{font:inherit;cursor:pointer}
+.compartilhar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.compartilhar .ok{font-weight:800;color:#0b6b4a}
+.novi{display:grid;gap:12px}.novi article{border:2px solid var(--linha);border-radius:16px;padding:14px 16px;background:#fff}
+.novi time{font-size:.85rem;font-weight:800;color:var(--tinta2)}.novi h3{margin:4px 0}.novi p{margin:6px 0 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 """
 
-def pagina(titulo, desc, corpo, caminho, extra_head=''):
+def pagina(titulo, desc, corpo, caminho, extra_head='', absoluto=False):
     url = SITE + '/' + caminho
-    prefixo = '../' * caminho.count('/') or './'
+    prefixo = '/' if absoluto else ('../' * caminho.count('/') or './')
     # imagem de pré-visualização própria da aplicação (og/<slug>.png), se existir; senão, a capa do site
     slug = os.path.basename(caminho)[:-5]
     tem_og = caminho.startswith('catalogo/') and caminho != 'catalogo/index.html' and os.path.exists(os.path.join(RAIZ, 'og', slug + '.png'))
     imagem = f'{SITE}/og/{slug}.png' if tem_og else f'{SITE}/capa.png?v=3'
+    trilha = [('Início', SITE + '/')]
+    if caminho.startswith('catalogo/') and caminho != 'catalogo/': trilha += [('Catálogo', SITE + '/catalogo/'), (titulo.split(' · ')[0].split(':')[0], url)]
+    elif caminho not in ('', '404.html'): trilha += [(titulo.split(' · ')[0], url)]
+    migalhas = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": n + 1, "name": nome, "item": link} for n, (nome, link) in enumerate(trilha)]}
+    extra_head += '<script type="application/ld+json">' + json.dumps(migalhas, ensure_ascii=False) + '</script>'
     return f"""<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -99,13 +115,16 @@ def pagina(titulo, desc, corpo, caminho, extra_head=''):
 {extra_head}
 </head>
 <body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
 <header class="topo"><div class="in"><a class="marca" href="{prefixo}">Gamifica <span>Educação</span></a>
-<nav><a href="{prefixo}catalogo/">Catálogo</a><a href="{prefixo}como-funciona.html">Como funciona</a><a class="cta" href="{prefixo}">Entrar · degustação grátis</a></nav></div></header>
-<main>
+<nav><a href="{prefixo}catalogo/">Catálogo</a><a href="{prefixo}mural/">Mural</a><a href="{prefixo}como-funciona.html">Como funciona</a><a class="cta" href="{prefixo}">Entrar · degustação grátis</a></nav></div></header>
+<main id="conteudo">
 {corpo}
 </main>
 <footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br>
-<a href="{prefixo}catalogo/">Catálogo</a>·<a href="{prefixo}como-funciona.html">Como funciona</a>·<a href="{prefixo}privacidade.html">Privacidade</a>·<a href="{prefixo}termos.html">Termos de uso</a>·<a href="https://wa.me/{ZAP}" target="_blank" rel="noopener">Contato</a></footer>
+<a href="{prefixo}catalogo/">Catálogo</a>·<a href="{prefixo}mural/">Mural Eletrônico</a>·<a href="{prefixo}novidades.html">Novidades</a>·<a href="{prefixo}como-funciona.html">Como funciona</a>·<a href="{prefixo}privacidade.html">Privacidade</a>·<a href="{prefixo}termos.html">Termos de uso</a>·<a href="https://wa.me/{ZAP}" target="_blank" rel="noopener">Contato</a></footer>
+{COPIAR_JS}
+<script src="{prefixo}estat.js" defer></script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('{prefixo}sw.js').catch(function(){{}});</script>
 </body>
 </html>
@@ -115,6 +134,9 @@ def cartao(k, v, pref=''):
     return (f'<a class="item" href="{pref}{e(k)}.html" data-tipo="{tipo(v)}" data-nivel="{e("|".join(v.get("nivel", [])))}">'
             f'<div class="nota" style="background:{COR.get(v.get("cor"), "#ffe27a")}"><small>{e(v.get("tema", ""))}</small>{e(v.get("emoji", "🎲"))}</div>'
             f'<div class="c"><h3>{e(v["nome"])}</h3><p>{e(v.get("desc", ""))}</p></div></a>')
+
+COPIAR_JS = """<script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-copiar]');if(!b)return;var u=b.getAttribute('data-copiar'),ok=b.parentNode.querySelector('.ok');function f(){if(ok){ok.textContent='✅ Link copiado!';setTimeout(function(){ok.textContent='';},2500);}}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(f).catch(f);}else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);f();}});</script>"""
 
 ordenados = sorted(J.items(), key=lambda kv: kv[1]['nome'].lower())
 os.makedirs(os.path.join(RAIZ, 'catalogo'), exist_ok=True)
@@ -126,12 +148,21 @@ filtros = ('<div class="filtros" id="fTipo">' + ''.join(f'<button type="button" 
            for t, n in [('todos', 'Todos'), ('jogo', '🎮 Jogos'), ('simulador', '🔬 Simuladores'), ('ferramenta', '🧰 Ferramentas')]) + '</div>'
            '<div class="filtros" id="fNivel">' + ''.join(f'<button type="button" data-n="{n}" aria-pressed="{"true" if n == "todos" else "false"}">{"Todos os níveis" if n == "todos" else n}</button>'
            for n in ['todos'] + NIVEIS) + '</div>')
-corpo = (f'<div class="card hero"><h1>Catálogo de aplicações</h1><p class="sub">Jogos, simuladores e ferramentas para usar em sala de aula, no projetor ou no celular dos alunos.</p>{numeros}</div>'
+corpo = (f'<div class="card hero"><h1>Catálogo de aplicações</h1><p class="sub">Jogos, simuladores e ferramentas para usar em sala de aula, no projetor ou no celular dos alunos.</p>{numeros}<p style="margin-top:16px"><a class="bt" href="../#degustacao">⏱️ Experimentar grátis</a><a class="bt sec" href="../novidades.html">🆕 Novidades</a></p></div>'
          f'<div class="card">{filtros}<div class="grade" id="grade">{"".join(cartao(k, v) for k, v in ordenados)}</div></div>'
          """<script>
 (function(){var t='todos',n='todos';function f(){document.querySelectorAll('#grade .item').forEach(function(a){var ok=(t==='todos'||a.dataset.tipo===t)&&(n==='todos'||a.dataset.nivel.split('|').indexOf(n)>=0);a.style.display=ok?'':'none';});}
 document.querySelectorAll('#fTipo button').forEach(function(b){b.onclick=function(){t=b.dataset.t;document.querySelectorAll('#fTipo button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});f();};});
 document.querySelectorAll('#fNivel button').forEach(function(b){b.onclick=function(){n=b.dataset.n;document.querySelectorAll('#fNivel button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});f();};});})();
+</script>
+<div class="card" id="depCat" hidden><h2>O que dizem os professores</h2><div id="listaDepCat"></div></div>
+<script>
+fetch('../depoimentos.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(L){
+  if(!Array.isArray(L)||!L.length) return;
+  var e=function(s){return String(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
+  document.getElementById('listaDepCat').innerHTML='<div class="grade">'+L.slice(0,6).map(function(d){return '<div class="item" style="padding:14px"><p style="-webkit-line-clamp:unset;color:#1d2b53">“'+e(d.texto)+'”</p><p style="margin-top:8px"><b>'+e(d.nome)+'</b>'+(d.funcao?'<br>'+e(d.funcao):'')+'</p></div>';}).join('')+'</div>';
+  document.getElementById('depCat').hidden=false;
+}).catch(function(){});
 </script>""")
 open(os.path.join(RAIZ, 'catalogo', 'index.html'), 'w').write(pagina(f'Catálogo: {TOTAL} jogos, simuladores e ferramentas educacionais · Gamifica Educação',
     f'{TOTAL} aplicações educacionais: {cont["jogo"]} jogos, {cont["simulador"]} simuladores e {cont["ferramenta"]} ferramentas para o professor, do Fundamental ao Superior.', corpo, 'catalogo/'))
@@ -144,6 +175,20 @@ for k, v in ordenados:
     rel = [kv for kv in ordenados if kv[0] != k and (kv[1].get('conteudo') == v.get('conteudo') or kv[1].get('tema') == v.get('tema')) and tipo(kv[1]) == t][:4]
     if len(rel) < 4: rel += [kv for kv in ordenados if kv[0] != k and tipo(kv[1]) == t and kv not in rel][:4 - len(rel)]
     niveis = ''.join(f'<span class="tag">{e(n)}</span>' for n in v.get('nivel', []))
+    nivs = v.get('nivel', [])
+    nivel_txt = (' e '.join(nivs) if len(nivs) <= 2 else ', '.join(nivs[:-1]) + ' e ' + nivs[-1]) or 'todos os níveis'
+    tipo_min = {'jogo': 'jogo educativo', 'simulador': 'simulador educativo', 'ferramenta': 'ferramenta para professores'}[t]
+    art, indic = {'jogo': ('um', 'indicado'), 'simulador': ('um', 'indicado'), 'ferramenta': ('uma', 'indicada')}[t]
+    tema_ok = v.get('tema') and 'ferramenta' not in v['tema'].lower()
+    base_t = f'{v["nome"]}: {tipo_min}' + ((f' de {v["tema"]}' if t != 'ferramenta' else f' · {v["tema"]}') if tema_ok else '')
+    titulo_pag = base_t + ' · Gamifica Educação' if len(base_t) <= 48 else base_t
+    cauda = f' {tipo_min.capitalize()} {indic} para {nivel_txt}. Funciona no celular, tablet e computador.'
+    desc_pag = (v.get('desc', '') + cauda) if len(v.get('desc', '') + cauda) <= 300 else v.get('desc', '')[:300]
+    tema_txt = ((f' de {e(v["tema"])}' if t != 'ferramenta' else f' ({e(v["tema"])})') if tema_ok else '')
+    url_pag = f'{SITE}/catalogo/{k}.html'
+    zap_txt = urllib.parse.quote(f'{v["nome"]}: {v.get("desc", "")[:110]} {url_pag}')
+    compartilhar = (f'<div class="compartilhar"><a class="bt sec" target="_blank" rel="noopener" href="https://wa.me/?text={zap_txt}">📲 Compartilhar no WhatsApp</a>'
+                    f'<button type="button" class="bt sec" data-copiar="{url_pag}">📋 Copiar link</button><span class="ok" role="status" aria-live="polite"></span></div>')
     ld = {"@context": "https://schema.org", "@type": "LearningResource", "name": v['nome'], "description": v.get('desc', ''), "inLanguage": "pt-BR",
           "learningResourceType": NOME_TIPO[t], "educationalLevel": v.get('nivel', []), "url": f"{SITE}/catalogo/{k}.html",
           "provider": {"@type": "Person", "name": "Prof. Dr. Haroldo Aleixo de Lima Junior"}}
@@ -154,11 +199,12 @@ for k, v in ordenados:
              f'<div class="tags">{niveis}</div>'
              + (f'<p style="margin:8px 0 0;font-size:15px"><b>Habilidades da BNCC:</b> {", ".join(e(c) for c in v["bncc"])}</p>' if v.get('bncc') else '') +
              '</div></div></div>'
+             f'<div class="card"><h2>Para quem é</h2><p><b>{e(v["nome"])}</b> é {art} {tipo_min}{tema_txt} {indic} para <b>{e(nivel_txt)}</b>. Funciona no celular, no tablet e no computador, direto no navegador, sem instalar nada.</p></div>'
              f'<div class="card"><h2>Como usar em aula</h2><ul>{"".join("<li>" + x + "</li>" for x in USO[t])}</ul>'
-             f'<p><a class="bt" href="{('..' + v['link']) if v.get('link') else '../'}">🚀 {'Abrir' if v.get('link') else 'Abrir no portal'}</a><a class="bt sec" href="../">⏱️ Fazer a degustação grátis</a></p>'
+             f'<p><a class="bt" href="{('..' + v['link']) if v.get('link') else '../'}">🚀 {'Abrir' if v.get('link') else 'Abrir no portal'}</a><a class="bt sec" href="../#degustacao">⏱️ Fazer a degustação grátis</a></p>{compartilhar}'
              f'<p class="sub" style="font-size:15px">O acesso completo é pelo Plano Pró. Alunos não precisam de login: usam o link que o professor envia.</p></div>'
              f'<div class="card"><h2>Veja também</h2><div class="grade">{"".join(cartao(a, b) for a, b in rel)}</div></div>')
-    open(os.path.join(RAIZ, 'catalogo', k + '.html'), 'w').write(pagina(f'{v["nome"]} · {NOME_TIPO[t]} educacional · Gamifica Educação', v.get('desc', '')[:300], corpo, f'catalogo/{k}.html',
+    open(os.path.join(RAIZ, 'catalogo', k + '.html'), 'w').write(pagina(titulo_pag, desc_pag, corpo, f'catalogo/{k}.html',
         '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + '</script>'))
 
 # ---------- como funciona ----------
@@ -176,7 +222,7 @@ FAQ = [
 ]
 ld_faq = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ]}
 corpo = (f'<div class="card hero"><h1>Como funciona</h1><p class="sub">Aprender de um jeito lúdico, com jogos, simuladores e ferramentas prontos para a sala de aula.</p>{numeros}'
-         f'<p style="margin-top:18px"><a class="bt" href="./">⏱️ Fazer a degustação grátis</a><a class="bt sec" href="catalogo/">Ver o catálogo</a></p></div>'
+         f'<p style="margin-top:18px"><a class="bt" href="./#degustacao">⏱️ Fazer a degustação grátis</a><a class="bt sec" href="catalogo/">Ver o catálogo</a></p></div>'
          '<div class="card"><h2>Em 4 passos</h2><div class="passos">'
          '<div><b>Entre no portal</b><br>Faça a degustação grátis ou entre com o seu login do Plano Pró.</div>'
          '<div><b>Escolha a aplicação</b><br>Filtre por nível (Fundamental 1 ao Superior) e por conteúdo, ou busque pelo nome. Guarde as preferidas na ⭐.</div>'
@@ -198,8 +244,35 @@ open(os.path.join(RAIZ, 'como-funciona.html'), 'w').write(pagina('Como funciona 
 if not os.path.exists(os.path.join(RAIZ, 'depoimentos.json')):
     open(os.path.join(RAIZ, 'depoimentos.json'), 'w').write('[]\n')
 
+# ---------- novidades e feed ----------
+NOVI = json.load(open(os.path.join(RAIZ, 'turma', 'novidades.json'), encoding='utf-8'))
+def dt(d): a, m, dd = d.split('-'); return f'{dd}/{m}/{a}'
+def link_novi(n): return (f'catalogo/{n["id"]}.html' if n.get('id') else n.get('link', 'catalogo/'))
+itens = ''.join(f'<article><time datetime="{e(n["data"])}">{dt(n["data"])}</time><h3>{e(n["titulo"])}</h3><p>{e(n["texto"])}</p>'
+                f'<p><a class="bt" href="{e(link_novi(n))}">Ver</a></p></article>' for n in NOVI)
+zap_novi = urllib.parse.quote('Olá! Quero receber o aviso quando sair jogo novo no Gamifica Educação.')
+corpo = (f'<div class="card hero"><h1>Novidades</h1><p class="sub">Jogos, simuladores e ferramentas que chegaram ao Gamifica Educação.</p></div>'
+         f'<div class="card"><div class="novi">{itens}</div></div>'
+         f'<div class="card"><h2>Quer ser avisado?</h2><p>Fale com o professor Haroldo pelo WhatsApp e peça para receber o aviso quando sair novidade. Você também pode assinar o <a href="feed.xml">feed RSS</a>.</p>'
+         f'<p><a class="bt" target="_blank" rel="noopener" href="https://wa.me/{ZAP}?text={zap_novi}">📲 Quero receber os avisos</a></p></div>')
+open(os.path.join(RAIZ, 'novidades.html'), 'w').write(pagina('Novidades · Gamifica Educação', 'Últimos jogos, simuladores e ferramentas que chegaram ao Gamifica Educação.', corpo, 'novidades.html',
+    f'<link rel="alternate" type="application/rss+xml" title="Novidades do Gamifica Educação" href="{SITE}/feed.xml">'))
+def rfc(d): return datetime.datetime.strptime(d, '%Y-%m-%d').strftime('%a, %d %b %Y 12:00:00 -0300')
+feed = ('<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Novidades · Gamifica Educação</title>'
+        f'<link>{SITE}/novidades.html</link><description>Jogos, simuladores e ferramentas novas do Gamifica Educação.</description><language>pt-BR</language>\n'
+        + ''.join(f'<item><title>{e(n["titulo"])}</title><link>{SITE}/{link_novi(n)}</link><guid isPermaLink="true">{SITE}/{link_novi(n)}</guid><pubDate>{rfc(n["data"])}</pubDate><description>{e(n["texto"])}</description></item>\n' for n in NOVI)
+        + '</channel></rss>\n')
+open(os.path.join(RAIZ, 'feed.xml'), 'w').write(feed)
+
+# ---------- página 404 (o GitHub Pages usa este arquivo para endereços que não existem) ----------
+corpo = ('<div class="card hero" style="text-align:center"><div style="font-size:64px" aria-hidden="true">🧭</div><h1>Ops! Não achamos esta página</h1>'
+         '<p class="sub">O endereço pode estar errado ou a página mudou de lugar. Vamos voltar para um lugar conhecido?</p>'
+         '<p><a class="bt" href="/">🏠 Voltar ao início</a><a class="bt sec" href="/catalogo/">📚 Ver o catálogo</a><a class="bt sec" href="/mural/">📌 Mural Eletrônico</a></p></div>')
+open(os.path.join(RAIZ, '404.html'), 'w').write(pagina('Página não encontrada · Gamifica Educação', 'A página procurada não foi encontrada. Volte ao início ou veja o catálogo de jogos, simuladores e ferramentas.', corpo, '404.html',
+    '<meta name="robots" content="noindex">', absoluto=True))
+
 # ---------- privacidade e termos ----------
-ATUAL = '6 de novembro de 2026'
+ATUAL = '8 de novembro de 2026'
 priv = f"""<div class="card legal"><h1>Política de Privacidade</h1><p class="sub">Última atualização: {ATUAL}</p>
 <p>Esta política explica quais dados o <b>Gamifica Educação</b> (gamificaeducacao.com.br) usa, para quê e como você pode exercer seus direitos, conforme a Lei Geral de Proteção de Dados (LGPD, Lei nº 13.709/2018).</p>
 <h2>1. Quem é o responsável</h2><p>O site é mantido pelo Prof. Dr. Haroldo Aleixo de Lima Junior. Contato: <a href="https://wa.me/{ZAP}" target="_blank" rel="noopener">WhatsApp</a>.</p>
@@ -214,12 +287,12 @@ priv = f"""<div class="card legal"><h1>Política de Privacidade</h1><p class="su
 <li>No Quiz Ao Vivo e na Enquete, as respostas passam pelo canal em tempo real e não são gravadas no servidor do site. A enquete é anônima.</li>
 <li>Recomendamos que o professor oriente os alunos a usar apenas o primeiro nome e a turma.</li></ul>
 <h2>4. Dados guardados no seu aparelho</h2><p>Para conveniência, o navegador guarda no próprio aparelho informações como favoritos, aplicações usadas recentemente, recordes dos jogos, preferências e o andamento de uma tarefa. Esses dados não são enviados ao servidor e podem ser apagados limpando os dados do navegador.</p>
-<h2>5. Para que usamos os dados</h2><ul><li>Dar acesso ao portal e às aplicações contratadas;</li><li>Mostrar ao professor as notas das tarefas que ele criou;</li><li>Confirmar pagamentos e o período de acesso;</li><li>Atender pedidos de suporte.</li></ul>
+<h2>5. Estatísticas de visitas (anônimas)</h2><p>Para saber quais páginas são mais úteis, registramos de forma anônima: a página aberta, o site de origem (por exemplo, o Google), o tipo de aparelho (celular, tablet ou computador) e a data. <b>Não usamos cookies, não guardamos o endereço IP e não identificamos pessoas.</b> O sinal “Não rastrear” do navegador é respeitado.</p>\n<h2>6. Para que usamos os dados</h2><ul><li>Dar acesso ao portal e às aplicações contratadas;</li><li>Mostrar ao professor as notas das tarefas que ele criou;</li><li>Confirmar pagamentos e o período de acesso;</li><li>Atender pedidos de suporte;</li><li>Entender quais páginas são mais usadas, para melhorar o site.</li></ul>
 <p>Não vendemos dados, não exibimos anúncios e não usamos os dados para publicidade.</p>
-<h2>6. Onde os dados ficam</h2><p>O site é hospedado no GitHub Pages. O banco de dados e a autenticação usam o Supabase, e os pagamentos, o Mercado Pago. Esses serviços seguem padrões de segurança próprios e podem armazenar dados fora do Brasil.</p>
-<h2>7. Por quanto tempo</h2><p>Os dados da conta ficam guardados enquanto a conta existir. O professor pode excluir a qualquer momento as tarefas e as notas que criou. Para excluir a conta e os dados ligados a ela, entre em contato.</p>
-<h2>8. Seus direitos</h2><p>Você pode pedir a confirmação, o acesso, a correção ou a exclusão dos seus dados, e tirar dúvidas sobre esta política, pelo <a href="https://wa.me/{ZAP}" target="_blank" rel="noopener">WhatsApp</a>. Pedidos sobre dados de alunos podem ser feitos pelo responsável ou pelo professor da turma.</p>
-<h2>9. Mudanças</h2><p>Esta política pode ser atualizada. A data da última atualização aparece no início da página.</p></div>"""
+<h2>7. Onde os dados ficam</h2><p>O site é hospedado no GitHub Pages. O banco de dados e a autenticação usam o Supabase, e os pagamentos, o Mercado Pago. Esses serviços seguem padrões de segurança próprios e podem armazenar dados fora do Brasil.</p>
+<h2>8. Por quanto tempo</h2><p>Os dados da conta ficam guardados enquanto a conta existir. O professor pode excluir a qualquer momento as tarefas e as notas que criou. Para excluir a conta e os dados ligados a ela, entre em contato.</p>
+<h2>9. Seus direitos</h2><p>Você pode pedir a confirmação, o acesso, a correção ou a exclusão dos seus dados, e tirar dúvidas sobre esta política, pelo <a href="https://wa.me/{ZAP}" target="_blank" rel="noopener">WhatsApp</a>. Pedidos sobre dados de alunos podem ser feitos pelo responsável ou pelo professor da turma.</p>
+<h2>10. Mudanças</h2><p>Esta política pode ser atualizada. A data da última atualização aparece no início da página.</p></div>"""
 open(os.path.join(RAIZ, 'privacidade.html'), 'w').write(pagina('Política de Privacidade · Gamifica Educação', 'Quais dados o Gamifica Educação usa, para quê e como exercer seus direitos pela LGPD.', priv, 'privacidade.html'))
 termos = f"""<div class="card legal"><h1>Termos de Uso</h1><p class="sub">Última atualização: {ATUAL}</p>
 <p>Ao usar o <b>Gamifica Educação</b> (gamificaeducacao.com.br), você concorda com estes termos.</p>
@@ -239,9 +312,13 @@ termos = f"""<div class="card legal"><h1>Termos de Uso</h1><p class="sub">Últim
 open(os.path.join(RAIZ, 'termos.html'), 'w').write(pagina('Termos de Uso · Gamifica Educação', 'Termos de uso do Gamifica Educação: degustação, Plano Pró, uso adequado e direito de arrependimento.', termos, 'termos.html'))
 
 # ---------- sitemap e robots ----------
-urls = ['', 'catalogo/', 'como-funciona.html', 'privacidade.html', 'termos.html', 'vivo/', 'enquete/'] + [f'catalogo/{k}.html' for k, _ in ordenados]
+urls = ['', 'catalogo/', 'mural/', 'novidades.html', 'como-funciona.html', 'privacidade.html', 'termos.html', 'vivo/', 'enquete/'] + [f'catalogo/{k}.html' for k, _ in ordenados]
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(
     f'  <url><loc>{SITE}/{u}</loc><lastmod>{HOJE}</lastmod></url>\n' for u in urls) + '</urlset>\n'
 open(os.path.join(RAIZ, 'sitemap.xml'), 'w').write(sm)
 open(os.path.join(RAIZ, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\nDisallow: /protegido/\nDisallow: /_ferramentas/\nDisallow: /turma/\n\nSitemap: {SITE}/sitemap.xml\n')
+# mantém o número de aplicações da página inicial (descrição e redes sociais) sempre igual ao do catálogo
+_h = open(os.path.join(RAIZ, 'index.html'), encoding='utf-8').read()
+_n = re.sub(r'\b\d+ jogos, simuladores e ferramentas educacionais', f'{TOTAL} jogos, simuladores e ferramentas educacionais', _h)
+if _n != _h: open(os.path.join(RAIZ, 'index.html'), 'w', encoding='utf-8').write(_n)
 print(f'{TOTAL} aplicações · {len(urls)} URLs no sitemap')

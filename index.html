@@ -10,11 +10,11 @@
 <link rel="apple-touch-icon" href="icone-180.png?v=3">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#1d2b53">
-<meta name="description" content="70 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
+<meta name="description" content="72 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gamifica Educação">
 <meta property="og:title" content="Gamifica Educação: jogos e ferramentas para sala de aula">
-<meta property="og:description" content="70 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
+<meta property="og:description" content="72 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
 <meta property="og:url" content="https://gamificaeducacao.com.br/">
 <meta property="og:image" content="https://gamificaeducacao.com.br/capa.png?v=3">
 <meta property="og:image:width" content="1200">
@@ -22,8 +22,11 @@
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Gamifica Educação: jogos e ferramentas para sala de aula">
-<meta name="twitter:description" content="70 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
+<meta name="twitter:description" content="72 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
 <meta name="twitter:image" content="https://gamificaeducacao.com.br/capa.png?v=3">
+<link rel="canonical" href="https://gamificaeducacao.com.br/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://gamificaeducacao.com.br/#site", "name": "Gamifica Educação", "url": "https://gamificaeducacao.com.br/", "inLanguage": "pt-BR", "description": "Jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico."}, {"@type": "Organization", "@id": "https://gamificaeducacao.com.br/#org", "name": "Gamifica Educação", "url": "https://gamificaeducacao.com.br/", "logo": "https://gamificaeducacao.com.br/icone-512.png", "founder": {"@type": "Person", "name": "Prof. Dr. Haroldo Aleixo de Lima Junior"}}]}</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
@@ -46,6 +49,10 @@
   h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.15;margin:0}
   button,input,select{font:inherit;color:inherit}
   :focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+  .pular{position:absolute;left:-9999px;top:8px;background:var(--marca);color:#1d2b53;font-weight:800;padding:10px 16px;border-radius:12px;z-index:100;text-decoration:none}
+  .pular:focus{left:8px}
+  .marca-link{color:inherit;text-decoration:none}
+  .marca-link:focus-visible{outline-color:var(--marca)}
 
   header.topo{background:linear-gradient(135deg,var(--hero-bg),var(--hero-bg2));color:#fff;padding:18px 16px 18px}
   header.topo .in{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
@@ -242,17 +249,17 @@
 </style>
 </head>
 <body>
+<a class="pular" href="#app">Pular para o conteúdo</a>
 <header class="topo"><div class="in">
-  <div><h1>🎮 Gamifica <span>Educação</span></h1><small>Jogos, simuladores e ferramentas educacionais para aprender brincando</small></div>
+  <div><h1><a class="marca-link" href="./" title="Voltar ao início">🎮 Gamifica <span>Educação</span></a></h1><small>Jogos, simuladores e ferramentas educacionais para aprender brincando</small></div>
   <div id="usuario"></div>
 </div></header>
 <nav class="abas" id="abas" hidden></nav>
 <main id="app"><div class="card">Carregando…</div></main>
-<footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br><span class="links-rodape"><a href="catalogo/">Catálogo (<span id="totalApps">mais de 60</span> aplicações)</a> · <a href="como-funciona.html">Como funciona</a> · <a href="privacidade.html">Privacidade</a> · <a href="termos.html">Termos de uso</a></span></footer>
+<footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br><span class="links-rodape"><a href="catalogo/">Catálogo (<span id="totalApps">mais de 60</span> aplicações)</a> · <a href="mural/">Mural Eletrônico</a> · <a href="novidades.html">Novidades</a> · <a href="como-funciona.html">Como funciona</a> · <a href="privacidade.html">Privacidade</a> · <a href="termos.html">Termos de uso</a></span></footer>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/docx@9.8.1/dist/index.iife.js"></script>
 <script src="turma/supabase-config.js"></script>
 <script src="turma/jogos.js?v=20261107023500"></script>
 <script src="turma/qr.js"></script>
@@ -668,7 +675,7 @@ async function iniciar(){
   var pagTok = new URLSearchParams(location.search).get('pagamento');
   if(pagTok && !sessao){ desenharAcompanhar(pagTok); return; }
   if(!pegaConvite()) limparVisitante();
-  if(!sessao){ var conv = pegaConvite(); if(conv && await entrarVisitante(conv)) return; desenharLogin(); return; }
+  if(!sessao){ var conv = pegaConvite(); if(conv && await entrarVisitante(conv)) return; desenharLogin(); if(location.hash === '#degustacao') desenharDegustacao(); return; }
   SID = ler('gm_sid_' + sessao.user.id);
   if(!SID){ await sb.auth.signOut({scope:'local'}); sessao = null; desenharLogin(); return; }
   var v = await sb.rpc('verificar_sessao', {p_sessao: SID});
@@ -802,7 +809,10 @@ function desenharLogin(aviso){
     el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'),
     el('div', {style:'padding:6px 20px 22px;display:grid;gap:8px'},
       el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, '💳 Comprar acesso ao Plano Pró por apenas R$ 10,00'),
-      el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Degustação grátis · 5 minutos')));
+      el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Degustação grátis · 5 minutos')),
+    el('p', {class:'sub2', style:'text-align:center;padding:0 20px 20px;margin-top:0'},
+      el('a', {href:'catalogo/'}, '📚 Catálogo'), ' · ', el('a', {href:'mural/'}, '📌 Mural Eletrônico'), ' · ',
+      el('a', {href:'novidades.html'}, '🆕 Novidades'), ' · ', el('a', {href:'como-funciona.html'}, '❓ Como funciona')));
 
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🧮')), form)));
@@ -1267,7 +1277,17 @@ function baixarCsv(a, linhas){
   baixar(new Blob([csv], {type:'text/csv;charset=utf-8'}), 'resultados-' + slug(a.titulo) + '.csv');
 }
 
+/* A biblioteca do Word é grande: só é baixada quando alguém pede o relatório (deixa a tela de entrada mais leve). */
+function carregarDocx(){
+  if(window.docx) return Promise.resolve();
+  return new Promise(function(ok, falha){
+    var t = document.createElement('script');
+    t.src = 'https://cdn.jsdelivr.net/npm/docx@9.8.1/dist/index.iife.js';
+    t.onload = ok; t.onerror = falha; document.head.appendChild(t);
+  });
+}
 async function baixarWord(a, linhas, media){
+  try{ await carregarDocx(); }catch(e){}
   if(!window.docx){ window.alert('A biblioteca do Word não carregou. Verifique a internet e tente de novo.'); return; }
   var D = window.docx;
   var nomeProf = (sessao.user.user_metadata && sessao.user.user_metadata.nome) || sessao.user.email;
@@ -1347,6 +1367,41 @@ function situacao(c){
 }
 /* Abre o WhatsApp com o texto pronto (sem número: escolhe o contato na hora). */
 function linkWhatsApp(texto){ return 'https://wa.me/?text=' + encodeURIComponent(texto); }
+var cartaoVis = null, cartaoVisEm = 0;
+function cartaoVisitas(){
+  if(cartaoVis && Date.now() - cartaoVisEm < 60000) return cartaoVis;
+  var dias = 30, caixa = el('div', {class:'card'});
+  cartaoVis = caixa; cartaoVisEm = Date.now();
+  function barras(d){
+    var max = Math.max.apply(null, d.por_dia.map(function(x){ return x.visitas; }).concat([1]));
+    return el('div', {role:'img', 'aria-label':'Gráfico de visitas por dia', style:'display:flex;align-items:flex-end;gap:2px;height:96px;margin:12px 0 4px'},
+      d.por_dia.map(function(x){
+        var dia = x.dia.slice(8, 10) + '/' + x.dia.slice(5, 7);
+        return el('div', {title: dia + ': ' + x.visitas + (x.visitas === 1 ? ' visita' : ' visitas'),
+          style:'flex:1;min-width:2px;border-radius:3px 3px 0 0;background:var(--azul);height:' + Math.max(3, Math.round(x.visitas / max * 100)) + '%'});
+      }));
+  }
+  function lista(titulo, itens, campo){
+    return el('div', {}, el('h3', {style:'margin:14px 0 6px;font-size:1rem'}, titulo),
+      itens.length ? el('ul', {style:'margin:0;padding-left:18px'}, itens.map(function(i){ return el('li', {}, (i[campo] || 'direto') + ' — ', el('b', {}, i.visitas)); })) : el('p', {class:'sub2'}, 'Sem dados ainda.'));
+  }
+  async function carregar(){
+    caixa.replaceChildren(el('h2', {}, '📊 Visitas do site'), el('p', {class:'sub'}, 'Carregando…'));
+    var r = await sb.rpc('estatisticas_site', {p_dias: dias});
+    if(r.error || !r.data){ caixa.replaceChildren(el('h2', {}, '📊 Visitas do site'), msg('erro', 'Não foi possível carregar as visitas.')); return; }
+    var d = r.data;
+    caixa.replaceChildren(el('h2', {}, '📊 Visitas do site'),
+      el('p', {class:'sub'}, 'Contagem anônima: sem cookies, sem IP e sem dados pessoais. Robôs e o sinal “Não rastrear” ficam de fora.'),
+      el('div', {class:'linha', style:'margin-bottom:8px'}, [7, 30, 90].map(function(n){
+        return el('button', {class: 'peq' + (n === dias ? '' : ' sec'), 'aria-pressed': n === dias ? 'true' : 'false', onclick: function(){ dias = n; carregar(); }}, 'Últimos ' + n + ' dias'); })),
+      el('div', {class:'resumo'}, el('div', {}, el('b', {}, d.total), 'visitas em ' + d.dias + ' dias'), el('div', {}, el('b', {}, d.hoje), 'visitas hoje')),
+      barras(d), el('p', {class:'sub2', style:'margin-top:0'}, 'Cada barra é um dia (passe o mouse ou toque para ver o número).'),
+      el('div', {style:'display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 24px'},
+        lista('Páginas mais vistas', d.paginas, 'pagina'), lista('De onde vêm', d.origens, 'origem'), lista('Aparelhos', d.aparelhos, 'aparelho')));
+  }
+  carregar();
+  return caixa;
+}
 function desenharAdmin(){
   var nome = el('input', {type:'text', id:'cNome', maxlength:'80', placeholder:'Ex.: Maria da Silva'});
   var login = el('input', {type:'text', id:'cLogin', maxlength:'80', autocapitalize:'none', spellcheck:'false', placeholder:'Ex.: maria.silva'});
@@ -1403,6 +1458,7 @@ function desenharAdmin(){
   }, id:'buscaC'});
 
   app.replaceChildren(
+    cartaoVisitas(),
     el('div', {class:'card'}, el('h2', {}, '👥 Contas'),
       contas.erro ? msg('erro', 'Erro ao carregar: ' + contas.erro) : null,
       el('div', {class:'resumo'},
@@ -1494,5 +1550,6 @@ try{ var nApps = Object.keys(window.JOGOS).filter(function(k){ return k !== 'dem
 iniciar();
 })();
 </script>
+<script src="estat.js" defer></script>
 </body>
 </html>
