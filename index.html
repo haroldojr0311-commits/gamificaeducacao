@@ -960,8 +960,18 @@ function mostrarAba(){
 /* ---------- favoritos e usados recentemente (ficam neste aparelho) ---------- */
 function lerLista(k){ try{ var v = JSON.parse(ler(k) || '[]'); return Array.isArray(v) ? v.filter(function(id){ return window.JOGOS[id]; }) : []; }catch(e){ return []; } }
 function favoritos(){ return lerLista('gam-favoritos'); }
-function recentes(){ return lerLista('gam-recentes'); }
-function marcarRecente(id){ var r = recentes().filter(function(x){ return x !== id; }); r.unshift(id); guardar('gam-recentes', JSON.stringify(r.slice(0, 8))); }
+/* Recentes guardam o dia/hora do uso; só valem os últimos 7 dias (itens antigos, sem data, saem da lista) */
+var DIAS_RECENTE = 7;
+function lerRecentesBrutos(){ try{ var v = JSON.parse(ler('gam-recentes') || '[]'); return Array.isArray(v) ? v.filter(function(x){ return x && typeof x === 'object' && window.JOGOS[x.i] && x.t; }) : []; }catch(e){ return []; } }
+function recentes(){
+  var limite = Date.now() - DIAS_RECENTE * 86400000;
+  return lerRecentesBrutos().filter(function(x){ return x.t >= limite; }).sort(function(a, b){ return b.t - a.t; }).map(function(x){ return x.i; });
+}
+function marcarRecente(id){
+  var r = lerRecentesBrutos().filter(function(x){ return x.i !== id; });
+  r.unshift({i: id, t: Date.now()});
+  guardar('gam-recentes', JSON.stringify(r.slice(0, 12)));
+}
 function botaoFav(id){
   var on = favoritos().indexOf(id) >= 0;
   var b = el('span', {class:'fav' + (on ? ' on' : ''), role:'button', tabindex:'0', title: on ? 'Tirar dos favoritos' : 'Adicionar aos favoritos', 'aria-label': on ? 'Tirar dos favoritos' : 'Adicionar aos favoritos', 'aria-pressed': String(on)}, on ? '★' : '☆');
