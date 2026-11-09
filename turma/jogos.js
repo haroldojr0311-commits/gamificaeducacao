@@ -151,7 +151,7 @@ window.JOGOS = {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Mapa da Sala",
     tema: "Ferramenta do professor",
-    desc: "Organize os grupos da sala por nível e imprima o mapa.",
+    desc: "Coloque os nomes dos alunos da turma e monte o mapa da sala: carteiras individuais, duplas produtivas ou grupos (por nível ou mistos). Troque de lugar com um toque, baixe a imagem com os nomes ou imprima.",
     emoji: "🗺️", cor: "verde", ferramenta: true,
     tipo: "ferramenta"
   },

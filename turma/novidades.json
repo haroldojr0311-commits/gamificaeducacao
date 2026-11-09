@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Mapa da Sala renovado",
+    "texto": "Agora você coloca os nomes da turma e monta o mapa em carteiras individuais, duplas produtivas ou grupos, com imagem para baixar e imprimir.",
+    "link": "catalogo/mapa-da-sala.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Montador de Provas",
     "texto": "Digite as questões e a prova sai formatada: cabeçalho, 2 colunas, alternativas, linhas de resposta, folha de respostas e gabarito.",
     "link": "catalogo/montador-de-provas.html"
