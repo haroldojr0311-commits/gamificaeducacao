@@ -127,7 +127,14 @@ main.larga{max-width:1320px}
 .mural-grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px;align-items:start}
 .mural-grid.sem-painel{grid-template-columns:minmax(0,1fr)}
 .mural-grid.sem-painel .lateral{display:none}
-.barra-painel{display:flex;justify-content:flex-end;margin:0 0 8px}
+.barra-painel{display:flex;justify-content:flex-end;gap:8px;margin:0 0 8px;flex-wrap:wrap}
+.sair-tela{position:fixed;top:10px;right:10px;z-index:60;border:0;border-radius:999px;padding:9px 16px;font:800 14px var(--fd,inherit);background:rgba(10,16,35,.72);color:#fff;cursor:pointer;opacity:.55;transition:opacity .2s}
+.sair-tela:hover,.sair-tela:focus-visible{opacity:1}
+body.modo-tela .topo,body.modo-tela .rodape-site,body.modo-tela .lateral,body.modo-tela .barra-painel,body.modo-tela .fab,body.modo-tela main>p,body.modo-tela .comentar,body.modo-tela .canto,body.modo-tela .interacao .reagir button[disabled]{display:none!important}
+body.modo-tela main.larga{max-width:none;padding:12px 18px}
+body.modo-tela .mural-grid,body.modo-tela .mural-grid.sem-painel{grid-template-columns:minmax(0,1fr)}
+body.modo-tela .quadro-mural{min-height:calc(100vh - 190px)}
+body.modo-tela .pub{font-size:1.06em}
 .alt-painel{flex:0 0 auto}
 .fab{display:none;position:fixed;right:16px;bottom:18px;width:58px;height:58px;border-radius:50%;border:0;background:#ffd23f;color:#1d2b53;font-size:30px;font-weight:900;box-shadow:0 8px 22px rgba(0,0,0,.35);cursor:pointer;z-index:40}
 .grp>summary .gi{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--fundo-chip,#eef2ff);margin-right:10px;font-size:16px}
@@ -165,7 +172,7 @@ main.larga{max-width:1320px}
 .sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--tinta)}
 .sw[aria-pressed="true"]::after{content:"✔";position:absolute;top:2px;right:4px;color:#fff;background:#12865f;border-radius:50%;width:18px;height:18px;font-size:12px;line-height:18px;text-align:center}
 .sw span{position:absolute;left:0;right:0;bottom:0;background:rgba(10,16,35,.7);color:#fff;font-size:11px;font-weight:800;padding:1px 2px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:900px){.barra-painel{display:none}.fab{display:block}.mural-grid,.mural-grid.sem-painel{grid-template-columns:1fr}.mural-grid.sem-painel .lateral{display:flex}.lateral{position:static;max-height:none;overflow:visible}}
+@media(max-width:900px){.alt-painel:not(.btn.peq:first-child){display:none}.fab{display:block}.mural-grid,.mural-grid.sem-painel{grid-template-columns:1fr}.mural-grid.sem-painel .lateral{display:flex}.lateral{position:static;max-height:none;overflow:visible}}
 @media print{.fab,.barra-painel,.canto{display:none!important}.lateral{display:none!important}.mural-grid{display:block}.quadro-mural{background:none!important;padding:0;box-shadow:none;min-height:0}}
 
 .codigo{font-family:var(--fd);font-size:2rem;font-weight:700;letter-spacing:.25em;background:var(--cartao);color:var(--tinta);border:2px dashed var(--azul);border-radius:16px;padding:8px 16px;display:inline-block}
@@ -374,7 +381,7 @@ function gravarReacao(pubId, tipo, marcado){
   if (marcado) lista.push(tipo);
   m[pubId] = lista; gravarJSON('mural-turbo-reacoes', m);
 }
-function pararAtualizacao(){ if (timer){ clearInterval(timer); timer = null; } document.querySelectorAll('.fab').forEach(x => x.remove()); }
+function pararAtualizacao(){ if (timer){ clearInterval(timer); timer = null; } document.body.classList.remove('modo-tela'); document.querySelectorAll('.sair-tela').forEach(x => x.remove()); document.querySelectorAll('.fab').forEach(x => x.remove()); }
 
 /* Mensagens do servidor já em português que podem ser mostradas como estão */
 const AVISOS = [/Código/, /tentativas/, /Muitas publicações/, /endereço precisa/, /conteúdo deve/, /legenda pode/, /Informe seu nome/, /Tipo de publicação/, /Mural não encontrado/, /só para leitura/, /Permissão inválida/, /comentário deve/, /Reação inválida/, /Publicação não encontrada/, /tipo de arquivo não é aceito/, /muito grande/, /Não foi possível enviar o arquivo/, /Grave um áudio/, /Escolha um arquivo/];
@@ -1111,6 +1118,21 @@ async function vistaMural(id){
     try { localStorage.setItem('mural-painel', painelFechado ? '0' : '1'); } catch(e){}
   }}, painelFechado ? '☰ Mostrar painel' : '« Recolher painel');
   grade.classList.toggle('sem-painel', painelFechado);
+  /* Tela cheia: só o mural pronto, sem a coluna de edição (Esc para sair) */
+  function sairTela(){
+    document.body.classList.remove('modo-tela');
+    document.querySelectorAll('.sair-tela').forEach(x => x.remove());
+    if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+  }
+  function entrarTela(){
+    document.body.classList.add('modo-tela');
+    document.body.append(el('button', {type:'button', class:'sair-tela naoimprimir', onclick: sairTela}, '✕ Sair da tela cheia'));
+    try { if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {}); } catch(e){}
+    window.scrollTo(0, 0);
+  }
+  const botaoTela = el('button', {type:'button', class:'btn peq alt-painel naoimprimir', onclick: entrarTela}, '🖥️ Tela cheia');
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.body.classList.contains('modo-tela')) sairTela(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('modo-tela')) sairTela(); });
   /* Botão flutuante "+" no celular: abre e leva ao formulário de publicar */
   const botaoFlutuante = canPublicar ? el('button', {type:'button', class:'fab naoimprimir', 'aria-label':'Nova publicação', onclick(){
     grpPublicar.open = true; grpPublicar.scrollIntoView({behavior:'smooth', block:'start'});
@@ -1121,7 +1143,7 @@ async function vistaMural(id){
   app.replaceChildren(
     el('p', {class:'naoimprimir'}, el('a', {href:'#/', class:'ajuda'}, '← Todos os murais')),
     faixa,
-    el('div', {class:'barra-painel naoimprimir'}, botaoPainel),
+    el('div', {class:'barra-painel naoimprimir'}, botaoTela, botaoPainel),
     grade);
   grade.append(lateral, quadro);
   if (botaoFlutuante) document.body.append(botaoFlutuante);
