@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Gerador de Provas corrigido pelo Leitor",
+    "texto": "O Gerador de Provas agora imprime o cartão-resposta idêntico ao do Leitor de Gabaritos, cria versões A a D e mostra o gabarito pronto para o Leitor.",
+    "link": "catalogo/montador-de-provas.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Mapa da Sala renovado",
     "texto": "Agora você coloca os nomes da turma e monta o mapa em carteiras individuais, duplas produtivas ou grupos, com imagem para baixar e imprimir.",
     "link": "catalogo/mapa-da-sala.html"

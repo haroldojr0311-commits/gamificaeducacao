@@ -338,7 +338,7 @@ window.JOGOS = {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Gerador de Provas",
     tema: "Ferramenta do professor",
-    desc: "Digite ou cole as questões e o programa monta a prova no formato padrão: cabeçalho, 2 colunas para economizar papel, alternativas, linhas de resposta, folha de respostas e gabarito. Imprime ou salva em PDF.",
+    desc: "Digite ou cole as questões e a prova sai formatada em 2 colunas, com cabeçalho, versões A, B, C e D (alternativas embaralhadas), gabarito e o cartão-resposta idêntico ao do Leitor de Gabaritos, para corrigir a prova pelo Leitor.",
     emoji: "📄", cor: "azul", ferramenta: true,
     tipo: "ferramenta"
   },
