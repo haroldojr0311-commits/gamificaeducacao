@@ -1075,6 +1075,17 @@ function fecharPlayer(){
   if(urlJogo){ URL.revokeObjectURL(urlJogo); urlJogo = null; }
   document.body.style.overflow = '';
 }
+/* Ao voltar do jogo, a lista é redesenhada: "Usados recentemente" e favoritos aparecem atualizados */
+function voltarDoJogo(){
+  fecharPlayer();
+  try{
+    if(!perfil && !visitante) return;
+    if(['jogos', 'simuladores', 'ferramentas'].indexOf(aba) < 0 || !document.querySelector('.grade-jogos')) return;
+    var y = window.scrollY;
+    desenharJogos(qualAtual);
+    window.scrollTo(0, y);
+  }catch(e){}
+}
 var somMudo = false;
 async function compartilharJogo(id, caixa){
   if(!caixa) return;
@@ -1112,7 +1123,7 @@ async function abrirJogo(id){
   var quadro = null;
   var p = el('div', {class:'player', id:'player', role:'dialog', 'aria-label': j.nome},
     el('div', {class:'player-barra'},
-      el('button', {class:'peq', onclick: fecharPlayer}, '← Voltar'),
+      el('button', {class:'peq', onclick: voltarDoJogo}, '← Voltar'),
       el('h2', {}, j.emoji + ' ' + j.nome),
       (visitante || perfil.papel !== 'admin') ? null : el('button', {class:'peq', title:'Compartilhar um link de teste (1 hora)', onclick: function(){
         compartilharJogo(id, document.getElementById('partilha'));
@@ -1143,7 +1154,7 @@ async function abrirJogo(id){
     miolo.textContent = '😕 ' + (e.message || 'Não foi possível abrir o jogo.') + ' Tente de novo.';
   }
 }
-document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && document.getElementById('player') && !document.fullscreenElement) fecharPlayer(); });
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && document.getElementById('player') && !document.fullscreenElement) voltarDoJogo(); });
 /* Setas, Page Up/Down, Início e Fim rolam a página mesmo depois de clicar em qualquer ponto do site */
 document.addEventListener('keydown', function(e){
   if(e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
