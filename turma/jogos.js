@@ -628,5 +628,13 @@ window.JOGOS = {
     desc: "Calcule quanta água beber por dia, com exercício e clima, e acompanhe os copos do seu dia.",
     emoji: "💧", cor: "verde", ferramenta: true,
     tipo: "simulador"
+  },
+  "tesouro-das-integrais": {
+    nivel: ["Ensino Médio", "Superior"],
+    nome: "Tesouro das Integrais",
+    tema: "Integral definida",
+    desc: "Aventura em 10 fases: resolva integrais definidas passo a passo, ganhe estrelas e suba no ranking. Gera relatório em Word, PDF e Excel.",
+    emoji: "🧭", cor: "lilas",
+    conteudo: "Cálculo"
   }
 };

@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Tesouro das Integrais",
+    "texto": "Novo jogo de integrais definidas passo a passo: 10 fases, estrelas, nota, ranking e relatório em Word, PDF e Excel.",
+    "link": "catalogo/tesouro-das-integrais.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Simuladores de Saúde e Educação Física",
     "texto": "Três novos simuladores: IMC, proteína diária e hidratação. Com passo a passo, desafio com medalhas e atividade de fixação.",
     "link": "catalogo/"
