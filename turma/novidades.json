@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Sala simulada no Sorteador e no Leitor",
+    "texto": "Agora o Sorteador de Alunos e o Leitor de Gabaritos têm o botão 🧪 Sala simulada: uma turma de mentira para você ver como funciona, sem mexer nas suas turmas reais.",
+    "link": "catalogo/sorteador.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Leitor de Gabaritos: importar gabarito",
     "texto": "Agora dá para importar o gabarito no Leitor (colando o texto ou abrindo um arquivo), vindo direto do Gerador de Provas. Também há uma sala simulada no Mapa da Sala.",
     "link": "catalogo/leitor-gabaritos.html"
