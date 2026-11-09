@@ -334,6 +334,14 @@ window.JOGOS = {
     emoji: "🧪", cor: "azul",
     conteudo: "Proporção e porcentagem"
   },
+  "montador-de-provas": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
+    nome: "Montador de Provas",
+    tema: "Ferramenta do professor",
+    desc: "Digite ou cole as questões e o programa monta a prova no formato padrão: cabeçalho, 2 colunas para economizar papel, alternativas, linhas de resposta, folha de respostas e gabarito. Imprime ou salva em PDF.",
+    emoji: "📄", cor: "azul", ferramenta: true,
+    tipo: "ferramenta"
+  },
   "gerador-provas": {
     nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Gerador de Provas",
