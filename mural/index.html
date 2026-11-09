@@ -184,7 +184,7 @@ body.modo-tela .pub{font-size:1.06em}
 .sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--tinta)}
 .sw[aria-pressed="true"]::after{content:"✔";position:absolute;top:2px;right:4px;color:#fff;background:#12865f;border-radius:50%;width:18px;height:18px;font-size:12px;line-height:18px;text-align:center}
 .sw span{position:absolute;left:0;right:0;bottom:0;background:rgba(10,16,35,.7);color:#fff;font-size:11px;font-weight:800;padding:1px 2px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:900px){.alt-painel:not(.btn.peq:first-child){display:none}.fab{display:block}.mural-grid,.mural-grid.sem-painel{grid-template-columns:1fr}.mural-grid.sem-painel .lateral{display:flex}.lateral{position:static;max-height:none;overflow:visible}}
+@media(max-width:900px){.alt-painel:not(.btn.peq:first-child){display:none}.fab{display:block}.mural-grid,.mural-grid.sem-painel{grid-template-columns:1fr}.mural-grid.sem-painel .lateral{display:flex}.lateral{position:static;max-height:none;overflow:visible;order:2}.quadro-mural{order:1;min-height:40vh}}
 @media print{.fab,.barra-painel,.canto{display:none!important}.lateral{display:none!important}.mural-grid{display:block}.quadro-mural{background:none!important;padding:0;box-shadow:none;min-height:0}}
 
 .codigo{font-family:var(--fd);font-size:2rem;font-weight:700;letter-spacing:.25em;background:var(--cartao);color:var(--tinta);border:2px dashed var(--azul);border-radius:16px;padding:8px 16px;display:inline-block}
@@ -664,7 +664,7 @@ async function vistaMural(id){
     return g;
   }
   const faixa = el('section', {class:'faixa' + (tema.claro ? ' claro' : ''), style:'background:' + tema.fundo},
-    el('div', {class:'txt'}, el('div', {class:'plate'}, el('h1', {}, mural.titulo), el('p', {}, mural.descricao || 'Publique a sua contribuição na coluna ao lado.'))));
+    el('div', {class:'txt'}, el('div', {class:'plate'}, el('h1', {}, mural.titulo), el('p', {}, mural.descricao || 'Publique a sua contribuição no painel de publicar.'))));
 
   const base = () => location.origin + location.pathname;
   const linkCom = (cod) => base() + '#/m/' + id + (cod ? '?c=' + cod : '');
@@ -952,7 +952,7 @@ async function vistaMural(id){
   function desenharFeed(){
     feed.className = 'feed ' + layout;
     const itens = (layout === 'linha') ? [...publicacoes].reverse() : publicacoes;
-    feed.replaceChildren(...(itens.length ? itens.map(p => cartao(p, false)) : [el('div', {class:'vazio', style:'grid-column:1/-1'}, el('div', {class:'ico'}, '✨'), el('h2', {}, 'Crie a primeira publicação'), el('p', {}, canPublicar ? 'Use a coluna ao lado para começar o mural.' : 'Ainda não há publicações neste mural.'))]));
+    feed.replaceChildren(...(itens.length ? itens.map(p => cartao(p, false)) : [el('div', {class:'vazio', style:'grid-column:1/-1'}, el('div', {class:'ico'}, '✨'), el('h2', {}, 'Crie a primeira publicação'), el('p', {}, canPublicar ? 'Toque no botão ＋ (ou use o painel) para começar o mural.' : 'Ainda não há publicações neste mural.'))]));
   }
   function desenharTudo(){ desenharPendentes(); desenharFeed(); }
 
