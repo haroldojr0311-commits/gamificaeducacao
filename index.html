@@ -105,9 +105,9 @@
   .marcado{position:absolute;right:9px;top:9px;width:30px;height:30px;border-radius:50%;background:var(--azul);color:#fff;display:none;place-items:center;font-size:16px;font-weight:900;font-family:var(--f-corpo);box-shadow:0 2px 6px rgba(0,0,0,.25)}
   .cartao-jogo[aria-pressed="true"] .marcado{display:grid}
   .bncc{margin-top:6px;font-size:11.5px;font-weight:800;color:#3b4a8a;letter-spacing:.2px}
-  .fav{position:absolute;right:8px;top:7px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.75);display:grid;place-items:center;font-size:19px;line-height:1;cursor:pointer;color:#94a3b8;transition:transform .15s,background .15s}
+  .fav{position:absolute;right:8px;top:7px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;font-size:19px;line-height:1;cursor:pointer;color:#475569;border:1px solid #94a3b8;transition:transform .15s,background .15s}
   .fav:hover{transform:scale(1.15);background:#fff}
-  .fav.on{color:#f59e0b;background:#fff}
+  .fav.on{color:#b45309;background:#fff;border-color:#f59e0b}
   .faixa-rapida{margin-bottom:6px}
   .faixa-rapida .grade-jogos{margin-bottom:8px}
   .corpo{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px;flex:1;width:100%}
@@ -259,7 +259,7 @@
 <footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br><span class="links-rodape"><a href="catalogo/">Catálogo (<span id="totalApps">mais de 60</span> aplicações)</a> · <a href="mural/">Mural Eletrônico</a> · <a href="novidades.html">Novidades</a> · <a href="como-funciona.html">Como funciona</a> · <a href="privacidade.html">Privacidade</a> · <a href="termos.html">Termos de uso</a></span></footer>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});</script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <script src="turma/supabase-config.js"></script>
 <script src="turma/jogos.js?v=20261107023500"></script>
 <script src="turma/qr.js"></script>
