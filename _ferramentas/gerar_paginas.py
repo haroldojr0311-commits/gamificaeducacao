@@ -95,7 +95,7 @@ def pagina(titulo, desc, corpo, caminho, extra_head='', absoluto=False):
     # imagem de pré-visualização própria da aplicação (og/<slug>.png), se existir; senão, a capa do site
     slug = os.path.basename(caminho)[:-5]
     tem_og = caminho.startswith('catalogo/') and caminho != 'catalogo/index.html' and os.path.exists(os.path.join(RAIZ, 'og', slug + '.png'))
-    imagem = f'{SITE}/og/{slug}.png' if tem_og else f'{SITE}/capa.png?v=3'
+    imagem = f'{SITE}/og/{slug}.png' if tem_og else f'{SITE}/capa.png?v=4'
     trilha = [('Início', SITE + '/')]
     if caminho.startswith('catalogo/') and caminho != 'catalogo/': trilha += [('Catálogo', SITE + '/catalogo/'), (titulo.split(' · ')[0].split(':')[0], url)]
     elif caminho not in ('', '404.html'): trilha += [(titulo.split(' · ')[0], url)]
