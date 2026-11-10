@@ -501,6 +501,40 @@ function sairVisitante(aviso){
   fecharPlayer();
   desenharLogin(aviso);
 }
+/* ---------- compartilhar: abre direto as opções (folha do aparelho ou menu) ---------- */
+function painelCompartilhar(url, titulo, texto){
+  var q = encodeURIComponent, t = q(texto + ' ' + url), u = q(url), tt = q(texto);
+  var wrap = null;
+  var botoes = [
+    ['📲 WhatsApp', 'https://wa.me/?text=' + t],
+    ['✈️ Telegram', 'https://t.me/share/url?url=' + u + '&text=' + tt],
+    ['📘 Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' + u],
+    ['🐦 X', 'https://twitter.com/intent/tweet?text=' + tt + '&url=' + u],
+    ['✉️ E-mail', 'mailto:?subject=' + q(titulo) + '&body=' + t]
+  ].map(function(b){
+    return el('a', {href:b[1], target:'_blank', rel:'noopener', class:'sec peq', style:'display:inline-block;margin:4px 6px 4px 0;text-decoration:none'}, b[0]);
+  });
+  var txt = el('input', {type:'text', readonly:true, value:url, style:'width:100%;margin:6px 0;padding:8px;border:1px solid #c7cfe3;border-radius:8px;font-size:13px'});
+  txt.onclick = function(){ this.select(); };
+  var copiar = el('button', {class:'sec peq', style:'margin:4px 0', onclick: function(){
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).catch(function(){ txt.select(); });
+    else txt.select();
+  }}, '📋 Copiar link');
+  var fechar = el('button', {class:'sec peq', style:'margin:4px 0 4px 6px', onclick: function(){ wrap.remove(); }}, 'Fechar');
+  wrap = el('div', {class:'card', style:'padding:14px 16px;margin:0 0 14px'},
+    el('p', {style:'margin:0 0 6px;font-weight:800'}, '📤 Compartilhar'),
+    botoes, txt, el('div', null, copiar, fechar));
+  return wrap;
+}
+function compartilharLink(url, titulo, texto, mostrar){
+  if(navigator.share){
+    return navigator.share({title:titulo, text:texto, url:url}).catch(function(err){
+      if(err && err.name === 'AbortError') return;
+      mostrar(painelCompartilhar(url, titulo, texto));
+    });
+  }
+  mostrar(painelCompartilhar(url, titulo, texto));
+}
 async function compartilharSite(){
   var r, d = {};
   try{
@@ -510,29 +544,9 @@ async function compartilharSite(){
   if(r.status === 403){ expulsar('outro_aparelho'); return; }
   if(!r.ok || !d.token){ app.prepend(msg('erro', d.erro || 'Não consegui gerar o link do site.')); return; }
   var url = new URL('index.html?convite=' + d.token, location.href).href;
-  // Copia direto, sem abrir outra tela. Se o navegador não deixar copiar, mostra o link para copiar à mão.
-  var copiado = false;
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    try{ await navigator.clipboard.writeText(url); copiado = true; }catch(e){ copiado = false; }
-  }
-  if(copiado){
-    var confirma = msg('ok', '✅ Link copiado! Agora é só colar onde quiser. Quem abrir entra sem login e tem 1 hora de acesso, contada a partir do primeiro acesso.');
-    app.prepend(confirma);
-    window.scrollTo({top:0, behavior:'smooth'});
-    setTimeout(function(){ confirma.remove(); }, 8000);
-    return;
-  }
-  var txt = el('input', {type:'text', readonly:true, value:url, style:'width:100%;margin:6px 0;padding:8px;border:1px solid #c7cfe3;border-radius:8px;font-size:13px'});
-  txt.onclick = function(){ this.select(); };
-  var aviso = el('p', {style:'margin:0 0 6px;font-size:14px'}, 'Quem abrir este link entra sem login e tem 1 hora de acesso, contada a partir do primeiro acesso. Depois disso, precisa de login e senha.');
-  var caixa = el('div', {class:'card', style:'padding:14px 16px;margin:0 0 14px'},
-    el('p', {style:'margin:0 0 4px;font-weight:800'}, '🔗 Link de teste do portal'), aviso, txt,
-    el('button', {class:'sec peq', onclick: function(){
-      if(navigator.clipboard) navigator.clipboard.writeText(url).then(function(){ aviso.textContent = '✅ Link copiado! Envie para a pessoa.'; }).catch(function(){ txt.select(); });
-      else txt.select();
-    }}, '📋 Copiar link'),
-    el('button', {class:'sec peq', style:'margin-left:6px', onclick: function(){ caixa.remove(); }}, 'Fechar'));
-  app.prepend(caixa); txt.select();
+  compartilharLink(url, 'Gamifica Educação',
+    'Jogos, simuladores e ferramentas educacionais de matemática e outras áreas. Entre sem login e teste por 1 hora.',
+    function(painel){ app.prepend(painel); });
 }
 
 /* ---------- início ---------- */
@@ -1108,17 +1122,11 @@ async function compartilharJogo(id, caixa){
     if(!r.ok || !d.token) throw new Error(d.erro || 'Não consegui gerar o link.');
     var url = new URL('turma/compartilhado.html?l=' + d.token, location.href).href;
     caixa.innerHTML = '';
-    var txt = el('input', {type:'text', readonly:true, value:url, style:'width:100%;margin:6px 0;padding:8px;border:1px solid #c7cfe3;border-radius:8px;font-size:13px'});
-    txt.onclick = function(){ this.select(); };
-    caixa.append(
-      el('p', {style:'margin:0 0 4px'}, '🔗 Link de teste: vale 1 hora a partir de quando a pessoa abrir. Nesse prazo ela não precisa de login.'),
-      txt,
-      el('button', {class:'peq', onclick: function(){
-        if(navigator.clipboard) navigator.clipboard.writeText(url).then(function(){ caixa.querySelector('p').textContent = '✅ Link copiado! Envie para a pessoa.'; }).catch(function(){ txt.select(); });
-        else { txt.select(); }
-      }}, '📋 Copiar link'),
-      el('button', {class:'peq', style:'margin-left:6px', onclick: function(){ caixa.style.display = 'none'; }}, 'Fechar'));
-    txt.select();
+    caixa.append(el('p', {style:'margin:0 0 4px'}, '🔗 Link de teste: vale 1 hora a partir de quando a pessoa abrir. Nesse prazo ela não precisa de login.'));
+    await compartilharLink(url, 'Gamifica Educação: teste de jogo', 'Teste este jogo por 1 hora, sem login.',
+      function(painel){
+        caixa.append(painel);
+      });
   }catch(e){
     caixa.innerHTML = '';
     caixa.append(el('p', {style:'margin:0;color:#dc2626'}, '😕 ' + (e.message || 'Não consegui gerar o link.')));

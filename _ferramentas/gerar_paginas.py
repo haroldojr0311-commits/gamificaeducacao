@@ -150,7 +150,7 @@ def cartao(k, v, pref=''):
             f'<div class="nota" style="background:{COR.get(v.get("cor"), "#ffe27a")}"><small>{e(v.get("tema", ""))}</small>{e(v.get("emoji", "🎲"))}</div>'
             f'<div class="c"><h3>{e(v["nome"])}</h3><p>{e(v.get("desc", ""))}</p></div></a>')
 
-SHARE_JS = """<script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-share]');if(!b)return;ev.preventDefault();var box=b.parentNode,menu=box.querySelector('.share-menu'),ok=box.querySelector('.ok');var dados={title:b.getAttribute('data-titulo'),text:b.getAttribute('data-texto'),url:b.getAttribute('data-share')};if(navigator.share){navigator.share(dados).catch(function(err){if(err&&err.name!=='AbortError'&&menu)menu.hidden=false;});return;}if(menu){menu.hidden=!menu.hidden;if(ok)ok.textContent='';}});</script>"""
+SHARE_JS = """<script>document.addEventListener('click',function(ev){var q=ev.target.closest('[data-copiar-quieto]');if(q){ev.preventDefault();if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(q.getAttribute('data-copiar-quieto')).catch(function(){});return;}var b=ev.target.closest('[data-share]');if(!b)return;ev.preventDefault();var box=b.parentNode,menu=box.querySelector('.share-menu'),ok=box.querySelector('.ok');var dados={title:b.getAttribute('data-titulo'),text:b.getAttribute('data-texto'),url:b.getAttribute('data-share')};if(navigator.share){navigator.share(dados).catch(function(err){if(err&&err.name!=='AbortError'&&menu)menu.hidden=false;});return;}if(menu){menu.hidden=!menu.hidden;if(ok)ok.textContent='';}});</script>"""
 COPIAR_JS = """<script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-copiar]');if(!b)return;var u=b.getAttribute('data-copiar'),ok=(b.closest('.compartilhar')||b.parentNode).querySelector('.ok');function f(){if(ok){ok.textContent='✅ Link copiado!';setTimeout(function(){ok.textContent='';},2500);}}
 if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(f).catch(f);}else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);f();}});</script>"""
 
@@ -209,7 +209,7 @@ for k, v in ordenados:
                   f'<a target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u={q_url}">📘 Facebook</a>'
                   f'<a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text={q_txt}&url={q_url}">🐦 X</a>'
                   f'<a href="mailto:?subject={urllib.parse.quote(v["nome"])}&body={q_both}">✉️ E-mail</a>'
-                  f'<button type="button" data-copiar="{url_pag}">📋 Copiar link</button>')
+                  f'<button type="button" data-copiar-quieto="{url_pag}">📋 Copiar link</button>')
     compartilhar = (f'<div class="compartilhar"><button type="button" class="bt" data-share="{html.escape(url_pag)}" '
                     f'data-titulo="{html.escape(v["nome"])}" data-texto="{html.escape(share_txt)}">📤 Compartilhar</button>'
                     f'<span class="ok" role="status" aria-live="polite"></span>'
