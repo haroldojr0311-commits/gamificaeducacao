@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Pitágoras e Trigonometria: rótulos ajustáveis",
+    "texto": "Agora você escolhe o que aparece na figura: Completos, Só letras ou Ocultos. No celular, a figura já abre com Só letras, para os números não atrapalharem. Os valores continuam na conta embaixo da figura.",
+    "link": "catalogo/simulador-pitagoras-trigonometria.html"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Degustação grátis agora dura 10 minutos",
     "texto": "Quem quiser conhecer o portal agora tem 10 minutos de degustação grátis (antes eram 5), com todas as atividades liberadas para testar.",
     "link": "./"
