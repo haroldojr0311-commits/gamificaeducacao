@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-10",
+    "titulo": "Caso 1889: colunas fixas no celular",
+    "texto": "No celular, as colunas Causas e Consequências ficam sempre visíveis no topo enquanto você arrasta as fichas de baixo. Assim é possível concluir o dossiê.",
+    "link": "catalogo/caso-1889-mesa-historiador.html"
+  },
+  {
+    "data": "2026-11-10",
     "titulo": "Nova ferramenta: Caso 1889, Mesa do Historiador",
     "texto": "Monte o dossiê da queda da monarquia: arraste 8 documentos para causas ou consequências, com pistas, carimbos e relatório final. Funciona no celular e no computador.",
     "link": "catalogo/caso-1889-mesa-historiador.html"
