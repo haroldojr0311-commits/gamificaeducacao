@@ -678,9 +678,9 @@ window.JOGOS = {
   },
   "caso-1889-mesa-historiador": {
     nivel: ["Ensino Médio"],
-    nome: "Caso 1889: Mesa do Historiador",
-    tema: "História do Brasil",
-    desc: "Você é o historiador do caso: monte o dossiê da queda da monarquia arrastando 8 documentos para causas ou consequências. Pistas, carimbos e relatório final.",
+    nome: "Mesa do Historiador: 8 casos",
+    tema: "História do Brasil e do mundo",
+    desc: "Investigue 8 casos da história com imagens e documentos: separe causas e consequências, ganhe pontos, e receba sua nota de 0 a 10 no final.",
     emoji: "📁", cor: "coral",
     conteudo: "História"
   }
