@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-10",
+    "titulo": "Novo jogo: Construtor de Volumes",
+    "texto": "Monte construções em 3D, como no Minecraft, e aprenda volume de sólidos: cada bloco vale 1 cm³. São 4 fases, com pontuação e nota de 0 a 10.",
+    "link": "catalogo/"
+  },
+  {
+    "data": "2026-11-10",
     "titulo": "Compartilhar sem mensagem de cópia",
     "texto": "Os botões de compartilhar do portal (site e teste de jogo) abrem direto as opções: WhatsApp, Telegram, Facebook, X, e-mail ou a folha do próprio celular. Copiar o link não mostra mais aviso.",
     "link": "catalogo/"

@@ -683,5 +683,13 @@ window.JOGOS = {
     desc: "Investigue 8 casos da história com imagens e documentos: separe causas e consequências, ganhe pontos, e receba sua nota de 0 a 10 no final.",
     emoji: "📁", cor: "coral",
     conteudo: "História"
+  },
+  "construtor-de-volumes": {
+    nivel: ["Ensino Fundamental II", "Ensino Médio"],
+    nome: "Construtor de Volumes",
+    tema: "Volume de sólidos",
+    desc: "Monte construções em 3D, como no Minecraft, e descubra o volume: cada bloco vale 1 cm³. 4 fases, pontuação e nota de 0 a 10.",
+    emoji: "🧱", cor: "verde",
+    conteudo: "Geometria"
   }
 };
