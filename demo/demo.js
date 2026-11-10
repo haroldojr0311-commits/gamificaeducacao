@@ -18,7 +18,7 @@
     o.innerHTML = '<div style="background:#fff;color:#1d2b53;max-width:460px;width:100%;border-radius:22px;padding:26px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)">'
       + '<div style="font-size:54px" aria-hidden="true">⏱️</div>'
       + '<h2 style="margin:6px 0 8px;font-size:1.5rem">Acabou a demonstração!</h2>'
-      + '<p style="margin:0 0 18px;font-size:1.05rem;line-height:1.5">Gostou? Faça a <b>degustação grátis de 5 minutos</b> com todos os jogos, ou veja o catálogo completo. Amanhã você pode jogar a demonstração de novo.</p>'
+      + '<p style="margin:0 0 18px;font-size:1.05rem;line-height:1.5">Gostou? Faça a <b>degustação grátis de 10 minutos</b> com todos os jogos, ou veja o catálogo completo. Amanhã você pode jogar a demonstração de novo.</p>'
       + '<a href="../#degustacao" style="display:block;background:#ffd23f;color:#1d2b53;font-weight:800;text-decoration:none;padding:14px;border-radius:14px;margin-bottom:10px;border:2px solid #e0ad00">⏱️ Fazer a degustação grátis</a>'
       + '<a href="../catalogo/" style="display:block;background:#fff;color:#1d2b53;font-weight:800;text-decoration:none;padding:14px;border-radius:14px;border:2px solid #cfd8ec">📚 Ver o catálogo</a></div>';
     document.body.appendChild(o);

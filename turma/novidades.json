@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-09",
+    "titulo": "Degustação grátis agora dura 10 minutos",
+    "texto": "Quem quiser conhecer o portal agora tem 10 minutos de degustação grátis (antes eram 5), com todas as atividades liberadas para testar.",
+    "link": "./"
+  },
+  {
+    "data": "2026-11-09",
     "titulo": "Novo simulador: Vetores no Plano e no Espaço",
     "texto": "Arraste vetores no plano, gire o espaço em 3D e veja a soma, a subtração, o produto escalar e o produto vetorial acontecendo. Tem atividade com gabarito.",
     "link": "catalogo/simulador-vetores.html"

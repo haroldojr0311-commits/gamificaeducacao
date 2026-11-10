@@ -632,13 +632,13 @@ function desenharTeste(){
       form,
       el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
 }
-/* ---------- Degustação grátis de 5 minutos (até 2 por dia para cada e-mail) ---------- */
+/* ---------- Degustação grátis de 10 minutos (até 2 por dia para cada e-mail) ---------- */
 function desenharDegustacao(){
   abasBox.hidden = true; usuarioBox.replaceChildren();
   var nome = el('input', {type:'text', maxlength:'80', placeholder:'Seu nome completo', required:'required', autocomplete:'name'});
   var email = el('input', {type:'email', maxlength:'120', placeholder:'Seu e-mail', required:'required', autocomplete:'email'});
   var caixa = el('div');
-  var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '⏱️ Começar degustação de 5 minutos');
+  var botao = el('button', {type:'submit', class:'grande', style:'width:100%;margin-top:14px'}, '⏱️ Começar degustação de 10 minutos');
   var form = el('form', {onsubmit: async function(ev){
     ev.preventDefault(); caixa.replaceChildren(); botao.disabled = true; botao.textContent = 'Preparando sua degustação…';
     try{
@@ -650,18 +650,18 @@ function desenharDegustacao(){
       entrarVisitante(d.token);
       return;
     }catch(e){ caixa.append(msg('erro', e.message || String(e))); }
-    botao.disabled = false; botao.textContent = '⏱️ Começar degustação de 5 minutos';
+    botao.disabled = false; botao.textContent = '⏱️ Começar degustação de 10 minutos';
   }},
     el('label', {}, 'Nome completo'), nome,
     el('label', {}, 'E-mail'), email,
-    el('p', {class:'sub2'}, '⏱️ São 5 minutos para conhecer os jogos, simuladores e ferramentas. A contagem aparece no topo da tela.'),
+    el('p', {class:'sub2'}, '⏱️ São 10 minutos para conhecer os jogos, simuladores e ferramentas. A contagem aparece no topo da tela.'),
     el('p', {class:'sub2'}, '🔒 Na degustação não é possível atribuir tarefas e nada fica salvo. Cada e-mail pode fazer até 2 degustações por dia.'),
     botao, caixa);
   app.replaceChildren(el('div', {class:'login-box'}, el('div', {class:'card'},
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '⏱️')),
     el('div', {style:'padding:18px 20px 22px'},
-      el('h2', {}, 'Degustação grátis de 5 minutos'),
-      el('p', {class:'sub'}, 'Sinta como é o site por 5 minutos, sem pagar nada.'),
+      el('h2', {}, 'Degustação grátis de 10 minutos'),
+      el('p', {class:'sub'}, 'Sinta como é o site por 10 minutos, sem pagar nada.'),
       form,
       el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
 }
@@ -862,7 +862,7 @@ function desenharLogin(aviso){
     el('p', {class:'sub2'}, '🎓 Aluno? Você não precisa de login: use o link que o seu professor enviou.'),
     el('div', {class:'login-acoes', style:'padding:6px 20px 22px;display:grid;gap:8px'},
       el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, '💳 Comprar acesso ao Plano Pró por apenas R$ 10,00'),
-      el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Degustação grátis · 5 minutos')),
+      el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Degustação grátis · 10 minutos')),
     el('p', {class:'sub2', style:'text-align:center;padding:0 20px 20px;margin-top:0'},
       el('a', {href:'catalogo/'}, '📚 Catálogo'), ' · ', el('a', {href:'mural/'}, '📌 Mural Eletrônico'), ' · ',
       el('a', {href:'novidades.html'}, '🆕 Novidades'), ' · ', el('a', {href:'como-funciona.html'}, '❓ Como funciona')));
@@ -891,7 +891,7 @@ function montarApresentacao(cartaoLogin, retorno){
       el('h2', {}, 'Jogos e simuladores para a turma aprender de forma ', el('em', {}, 'lúdica')),
       el('p', {}, ids.length + ' atividades prontas para usar na aula, com ranking, pódio, notas e tabelas para imprimir. Os alunos entram por um link, sem cadastro.'),
       el('div', {class:'lp-cta'},
-        el('button', {type:'button', class:'grande', onclick: desenharDegustacao}, '⏱️ Experimentar grátis · 5 min'),
+        el('button', {type:'button', class:'grande', onclick: desenharDegustacao}, '⏱️ Experimentar grátis · 10 min'),
         el('a', {href:'catalogo/', class:'sec'}, '📚 Ver o catálogo')),
       el('ul', {class:'lp-chips'},
         el('li', {}, '✔ Sem instalar nada'), el('li', {}, '✔ Celular, tablet e computador'), el('li', {}, '✔ Habilidades da BNCC indicadas'))),
@@ -923,7 +923,7 @@ function montarApresentacao(cartaoLogin, retorno){
       el('div', {class:'card'}, el('h3', {}, 'Plano Pró'), el('div', {class:'preco'}, 'R$ 10,00'),
         el('ul', {}, el('li', {}, 'Todas as atividades liberadas'), el('li', {}, 'Atribuir tarefas para as turmas'), el('li', {}, 'Notas e ranking por turma')),
         el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, 'Comprar acesso ao Plano Pró')),
-      el('div', {class:'card'}, el('h3', {}, 'Quer testar antes?'), el('p', {class:'sub', style:'margin-top:8px'}, 'A degustação é grátis e dura 5 minutos: você abre as atividades e vê como funciona na prática.'),
+      el('div', {class:'card'}, el('h3', {}, 'Quer testar antes?'), el('p', {class:'sub', style:'margin-top:8px'}, 'A degustação é grátis e dura 10 minutos: você abre as atividades e vê como funciona na prática.'),
         el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Começar a degustação grátis'),
         el('p', {class:'sub2'}, '🎓 Aluno? Use o link que o seu professor enviou. Você não precisa de login.'))));
 
@@ -932,7 +932,7 @@ function montarApresentacao(cartaoLogin, retorno){
     faq('O aluno precisa criar conta?', 'Não. O aluno entra pelo link enviado pelo professor e informa só o nome e a turma.'),
     faq('Preciso instalar algum programa?', 'Não. Tudo abre direto no navegador, no celular, no tablet ou no computador.'),
     faq('Para quais níveis de ensino?', 'Fundamental 2 e Ensino Médio, com atividades de Matemática, Educação Financeira, saúde e outras áreas.'),
-    faq('Posso testar antes de comprar?', 'Sim. Use a degustação grátis de 5 minutos.'));
+    faq('Posso testar antes de comprar?', 'Sim. Use a degustação grátis de 10 minutos.'));
 
   return el('div', {class:'lp'}, hero, numeros, vitrine, passos, plano, duvidas);
 }
