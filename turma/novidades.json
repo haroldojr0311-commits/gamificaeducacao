@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-10",
+    "titulo": "Compartilhar abre direto as opções",
+    "texto": "No celular, o botão Compartilhar abre as opções do próprio aparelho (WhatsApp, Instagram e outros apps). No computador, abre um menu com WhatsApp, Telegram, Facebook, X, e-mail e cópia do link.",
+    "link": "catalogo/"
+  },
+  {
+    "data": "2026-11-10",
     "titulo": "Mesa do Historiador: 8 casos com imagens e nota",
     "texto": "Agora são 8 casos de história, cada um com imagem e documentos para separar em causas e consequências. Você ganha pontos por acerto e recebe uma nota de 0 a 10 no final.",
     "link": "catalogo/caso-1889-mesa-historiador.html"

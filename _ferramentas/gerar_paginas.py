@@ -84,6 +84,8 @@ button.bt{font:inherit;cursor:pointer}
 .status{margin:10px 0 0;font-weight:700;min-height:1.4em}.status.ok{color:#0b6b4a}.status.erro{color:#b3261e}
 .compartilhar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
 .compartilhar .ok{font-weight:800;color:#0b6b4a}
+.share-menu{width:100%;display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}.share-menu[hidden]{display:none}
+.share-menu a,.share-menu button{font:inherit;font-weight:700;border:2px solid var(--linha);border-radius:12px;padding:9px 12px;background:#fff;color:inherit;text-decoration:none;cursor:pointer}
 .novi{display:grid;gap:12px}.novi article{border:2px solid var(--linha);border-radius:16px;padding:14px 16px;background:#fff}
 .novi time{font-size:.85rem;font-weight:800;color:var(--tinta2)}.novi h3{margin:4px 0}.novi p{margin:6px 0 0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
@@ -133,6 +135,7 @@ def pagina(titulo, desc, corpo, caminho, extra_head='', absoluto=False):
 <footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br>
 <a href="{prefixo}catalogo/">Catálogo</a>·<a href="{prefixo}mural/">Mural Eletrônico</a>·<a href="{prefixo}novidades.html">Novidades</a>·<a href="{prefixo}como-funciona.html">Como funciona</a>·<a href="{prefixo}privacidade.html">Privacidade</a>·<a href="{prefixo}termos.html">Termos de uso</a>·<a href="https://wa.me/{ZAP}" target="_blank" rel="noopener">Contato</a></footer>
 {COPIAR_JS}
+{SHARE_JS}
 <script src="{prefixo}site.js" defer></script>
 <script src="{prefixo}estat.js" defer></script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('{prefixo}sw.js').catch(function(){{}});</script>
@@ -147,7 +150,8 @@ def cartao(k, v, pref=''):
             f'<div class="nota" style="background:{COR.get(v.get("cor"), "#ffe27a")}"><small>{e(v.get("tema", ""))}</small>{e(v.get("emoji", "🎲"))}</div>'
             f'<div class="c"><h3>{e(v["nome"])}</h3><p>{e(v.get("desc", ""))}</p></div></a>')
 
-COPIAR_JS = """<script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-copiar]');if(!b)return;var u=b.getAttribute('data-copiar'),ok=b.parentNode.querySelector('.ok');function f(){if(ok){ok.textContent='✅ Link copiado!';setTimeout(function(){ok.textContent='';},2500);}}
+SHARE_JS = """<script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-share]');if(!b)return;ev.preventDefault();var box=b.parentNode,menu=box.querySelector('.share-menu'),ok=box.querySelector('.ok');var dados={title:b.getAttribute('data-titulo'),text:b.getAttribute('data-texto'),url:b.getAttribute('data-share')};if(navigator.share){navigator.share(dados).catch(function(err){if(err&&err.name!=='AbortError'&&menu)menu.hidden=false;});return;}if(menu){menu.hidden=!menu.hidden;if(ok)ok.textContent='';}});</script>"""
+COPIAR_JS = """<script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-copiar]');if(!b)return;var u=b.getAttribute('data-copiar'),ok=(b.closest('.compartilhar')||b.parentNode).querySelector('.ok');function f(){if(ok){ok.textContent='✅ Link copiado!';setTimeout(function(){ok.textContent='';},2500);}}
 if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(f).catch(f);}else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);f();}});</script>"""
 
 DEMOS = json.load(open(os.path.join(RAIZ, 'turma', 'demos.json'), encoding='utf-8'))
@@ -197,8 +201,19 @@ for k, v in ordenados:
     tema_txt = ((f' de {e(v["tema"])}' if t != 'ferramenta' else f' ({e(v["tema"])})') if tema_ok else '')
     url_pag = f'{SITE}/catalogo/{k}.html'
     zap_txt = urllib.parse.quote(f'{v["nome"]}: {v.get("desc", "")[:110]} {url_pag}')
-    compartilhar = (f'<div class="compartilhar"><a class="bt sec" target="_blank" rel="noopener" href="https://wa.me/?text={zap_txt}">📲 Compartilhar no WhatsApp</a>'
-                    f'<button type="button" class="bt sec" data-copiar="{url_pag}">📋 Copiar link</button><span class="ok" role="status" aria-live="polite"></span></div>')
+    share_txt = f'{v["nome"]}: {v.get("desc", "")[:110]}'
+    q_txt, q_url = urllib.parse.quote(share_txt), urllib.parse.quote(url_pag)
+    q_both = urllib.parse.quote(f'{share_txt} {url_pag}')
+    menu_links = (f'<a target="_blank" rel="noopener" href="https://wa.me/?text={q_both}">📲 WhatsApp</a>'
+                  f'<a target="_blank" rel="noopener" href="https://t.me/share/url?url={q_url}&text={q_txt}">✈️ Telegram</a>'
+                  f'<a target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u={q_url}">📘 Facebook</a>'
+                  f'<a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text={q_txt}&url={q_url}">🐦 X</a>'
+                  f'<a href="mailto:?subject={urllib.parse.quote(v["nome"])}&body={q_both}">✉️ E-mail</a>'
+                  f'<button type="button" data-copiar="{url_pag}">📋 Copiar link</button>')
+    compartilhar = (f'<div class="compartilhar"><button type="button" class="bt" data-share="{html.escape(url_pag)}" '
+                    f'data-titulo="{html.escape(v["nome"])}" data-texto="{html.escape(share_txt)}">📤 Compartilhar</button>'
+                    f'<span class="ok" role="status" aria-live="polite"></span>'
+                    f'<div class="share-menu" hidden>{menu_links}</div></div>')
     ld = {"@context": "https://schema.org", "@type": "LearningResource", "name": v['nome'], "description": v.get('desc', ''), "inLanguage": "pt-BR",
           "learningResourceType": NOME_TIPO[t], "educationalLevel": v.get('nivel', []), "url": f"{SITE}/catalogo/{k}.html",
           "provider": {"@type": "Person", "name": "Prof. Dr. Haroldo Aleixo de Lima Junior"}}
