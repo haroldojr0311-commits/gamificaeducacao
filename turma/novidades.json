@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-10",
+    "titulo": "Nova ferramenta: Caso 1889, Mesa do Historiador",
+    "texto": "Monte o dossiê da queda da monarquia: arraste 8 documentos para causas ou consequências, com pistas, carimbos e relatório final. Funciona no celular e no computador.",
+    "link": "catalogo/caso-1889-mesa-historiador.html"
+  },
+  {
+    "data": "2026-11-10",
     "titulo": "Nova ferramenta: Linha do Tempo 3D (História)",
     "texto": "Viaje em 3D por 6 estações: do mundo moderno ao mundo atual. Cada estação tem história curta, causa e consequência, desafio com feedback e atividade para a turma.",
     "link": "catalogo/linha-do-tempo-3d.html"

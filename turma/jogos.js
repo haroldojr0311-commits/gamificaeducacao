@@ -675,5 +675,13 @@ window.JOGOS = {
     desc: "Viaje em 3D por 6 estações da história: do mundo moderno ao mundo atual. Leia, entenda causas e consequências e resolva os desafios para desbloquear a próxima.",
     emoji: "⏳", cor: "amarelo",
     conteudo: "História"
+  },
+  "caso-1889-mesa-historiador": {
+    nivel: ["Ensino Médio"],
+    nome: "Caso 1889: Mesa do Historiador",
+    tema: "História do Brasil",
+    desc: "Você é o historiador do caso: monte o dossiê da queda da monarquia arrastando 8 documentos para causas ou consequências. Pistas, carimbos e relatório final.",
+    emoji: "📁", cor: "coral",
+    conteudo: "História"
   }
 };
