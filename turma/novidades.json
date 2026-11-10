@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-10",
+    "titulo": "Site: níveis de ensino atualizados",
+    "texto": "A página inicial agora informa que as atividades servem para Fundamental 1, Fundamental 2, Ensino Médio e Superior.",
+    "link": "index.html"
+  },
+  {
+    "data": "2026-11-10",
     "titulo": "Zoom e giro com dois dedos nos simuladores 3D",
     "texto": "Nos simuladores de Pitágoras e de Vetores, no modo 3D: aproxime ou afaste dois dedos para aumentar ou diminuir a figura, e gire os dedos para girar a cena.",
     "link": "catalogo/simulador-pitagoras-trigonometria.html"
