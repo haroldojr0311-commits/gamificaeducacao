@@ -545,7 +545,7 @@ async function compartilharSite(){
   if(!r.ok || !d.token){ app.prepend(msg('erro', d.erro || 'Não consegui gerar o link do site.')); return; }
   var url = new URL('index.html?convite=' + d.token, location.href).href;
   compartilharLink(url, 'Gamifica Educação',
-    'Jogos, simuladores e ferramentas educacionais de matemática e outras áreas. Entre sem login e teste por 1 hora.',
+    'Jogos, simuladores e ferramentas educacionais para todas as áreas. Entre sem login e teste por 1 hora.',
     function(painel){ app.prepend(painel); });
 }
 
