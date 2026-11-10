@@ -667,5 +667,13 @@ window.JOGOS = {
     desc: "Aventura em 10 fases: resolva integrais definidas passo a passo, ganhe estrelas e suba no ranking. Gera relatório em Word, PDF e Excel.",
     emoji: "🧭", cor: "lilas",
     conteudo: "Cálculo"
+  },
+  "linha-do-tempo-3d": {
+    nivel: ["Ensino Médio"],
+    nome: "Linha do Tempo 3D",
+    tema: "História",
+    desc: "Viaje em 3D por 6 estações da história: do mundo moderno ao mundo atual. Leia, entenda causas e consequências e resolva os desafios para desbloquear a próxima.",
+    emoji: "⏳", cor: "amarelo",
+    conteudo: "História"
   }
 };

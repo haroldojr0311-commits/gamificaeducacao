@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-10",
+    "titulo": "Nova ferramenta: Linha do Tempo 3D (História)",
+    "texto": "Viaje em 3D por 6 estações: do mundo moderno ao mundo atual. Cada estação tem história curta, causa e consequência, desafio com feedback e atividade para a turma.",
+    "link": "catalogo/linha-do-tempo-3d.html"
+  },
+  {
+    "data": "2026-11-10",
     "titulo": "Site: níveis de ensino atualizados",
     "texto": "A página inicial agora informa que as atividades servem para Fundamental 1, Fundamental 2, Ensino Médio e Superior.",
     "link": "index.html"
