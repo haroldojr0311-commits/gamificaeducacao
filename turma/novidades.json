@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-10",
+    "titulo": "Construtor de Volumes: pontuação ao vivo",
+    "texto": "O jogo agora confere a construção a cada bloco e mostra na hora se está certo, o que falta e a pontuação (até 40 pontos).",
+    "link": "catalogo/"
+  },
+  {
+    "data": "2026-11-10",
     "titulo": "Novo jogo: Construtor de Volumes",
     "texto": "Monte construções em 3D, como no Minecraft, e aprenda volume de sólidos: cada bloco vale 1 cm³. São 4 fases, com pontuação e nota de 0 a 10.",
     "link": "catalogo/"
