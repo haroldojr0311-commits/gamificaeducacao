@@ -1,5 +1,11 @@
 [
   {
+    "data": "2026-11-10",
+    "titulo": "Zoom e giro com dois dedos nos simuladores 3D",
+    "texto": "Nos simuladores de Pitágoras e de Vetores, no modo 3D: aproxime ou afaste dois dedos para aumentar ou diminuir a figura, e gire os dedos para girar a cena.",
+    "link": "catalogo/simulador-pitagoras-trigonometria.html"
+  },
+  {
     "data": "2026-11-09",
     "titulo": "Pitágoras e Trigonometria: rótulos ajustáveis",
     "texto": "Agora você escolhe o que aparece na figura: Completos, Só letras ou Ocultos. No celular, a figura já abre com Só letras, para os números não atrapalharem. Os valores continuam na conta embaixo da figura.",
