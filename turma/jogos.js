@@ -696,7 +696,7 @@ window.JOGOS = {
     nivel: ["Fundamental 1"],
     nome: "Cidade das Formas: Explorador 3D",
     tema: "Sólidos geométricos",
-    desc: "Gire construções da cidade em 3D e descubra cubo, paralelepípedo, cilindro, cone e esfera. Conte faces, vértices e arestas em uma missão com vidas e pontos.",
+    desc: "Gire construções da cidade em 3D e descubra cubo, paralelepípedo, cilindro, cone e esfera. Conte as partes chatas e descubra quais peças rolam, em uma missão com vidas e pontos.",
     emoji: "🏙️", cor: "azul",
     conteudo: "Geometria"
   },
