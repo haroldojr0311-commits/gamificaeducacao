@@ -1,5 +1,11 @@
 [
   {
+    "data": "2026-11-11",
+    "titulo": "Novo jogo 3D: Cidade das Formas",
+    "texto": "Gire construções da cidade e descubra cubo, paralelepípedo, cilindro, cone e esfera. Modo Explorar e Missão Arquiteto, com vidas, XP e Raio-X para contar faces, vértices e arestas.",
+    "link": "catalogo/"
+  },
+  {
     "data": "2026-11-10",
     "titulo": "Construtor de Volumes: pontuação ao vivo",
     "texto": "O jogo agora confere a construção a cada bloco e mostra na hora se está certo, o que falta e a pontuação (até 40 pontos).",

@@ -685,11 +685,19 @@ window.JOGOS = {
     conteudo: "História"
   },
   "construtor-de-volumes": {
-    nivel: ["Ensino Fundamental II", "Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Construtor de Volumes",
     tema: "Volume de sólidos",
     desc: "Monte construções em 3D, como no Minecraft, e descubra o volume: cada bloco vale 1 cm³. 4 fases, pontuação e nota de 0 a 10.",
     emoji: "🧱", cor: "verde",
+    conteudo: "Geometria"
+  },
+  "cidade-das-formas-explorador-3d": {
+    nivel: ["Fundamental 1"],
+    nome: "Cidade das Formas: Explorador 3D",
+    tema: "Sólidos geométricos",
+    desc: "Gire construções da cidade em 3D e descubra cubo, paralelepípedo, cilindro, cone e esfera. Conte faces, vértices e arestas em uma missão com vidas e pontos.",
+    emoji: "🏙️", cor: "azul",
     conteudo: "Geometria"
   }
 };
