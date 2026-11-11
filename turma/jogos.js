@@ -699,5 +699,13 @@ window.JOGOS = {
     desc: "Gire construções da cidade em 3D e descubra cubo, paralelepípedo, cilindro, cone e esfera. Conte faces, vértices e arestas em uma missão com vidas e pontos.",
     emoji: "🏙️", cor: "azul",
     conteudo: "Geometria"
+  },
+  "mercadinho-3d-pro": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
+    nome: "Mercadinho 3D PRO: Troco, Compras e Educação Financeira",
+    tema: "Dinheiro e porcentagem",
+    desc: "Monte compras no mercadinho em 3D, dê troco, cumpra orçamentos e calcule ofertas. Três níveis: valores inteiros, centavos e porcentagem.",
+    emoji: "🛒", cor: "verde",
+    conteudo: "Educação Financeira"
   }
 };

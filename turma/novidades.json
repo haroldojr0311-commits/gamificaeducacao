@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-11",
+    "titulo": "Novo jogo 3D: Mercadinho 3D PRO",
+    "texto": "Compre, dê troco e calcule ofertas no mercadinho em 3D. Quatro modos e três níveis, de valores inteiros a porcentagem, com bandeja de dinheiro e cupom fiscal.",
+    "link": "catalogo/"
+  },
+  {
+    "data": "2026-11-11",
     "titulo": "Novo jogo 3D: Cidade das Formas",
     "texto": "Gire construções da cidade e descubra cubo, paralelepípedo, cilindro, cone e esfera. Modo Explorar e Missão Arquiteto, com vidas, XP e Raio-X para contar faces, vértices e arestas.",
     "link": "catalogo/"
