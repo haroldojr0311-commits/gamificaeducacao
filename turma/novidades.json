@@ -1,6 +1,12 @@
 [
   {
     "data": "2026-11-11",
+    "titulo": "Mercadinho 3D PRO: loja mais realista",
+    "texto": "Prateleiras paradas, preço no rótulo dos produtos e etiquetas com nome e preço na gôndola, com cenário de mercado.",
+    "link": "catalogo/"
+  },
+  {
+    "data": "2026-11-11",
     "titulo": "Novo jogo 3D: Mercadinho 3D PRO",
     "texto": "Compre, dê troco e calcule ofertas no mercadinho em 3D. Quatro modos e três níveis, de valores inteiros a porcentagem, com bandeja de dinheiro e cupom fiscal.",
     "link": "catalogo/"
