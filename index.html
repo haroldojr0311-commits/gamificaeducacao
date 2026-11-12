@@ -1076,9 +1076,8 @@ function nivelDe(id){ var n = window.JOGOS[id].nivel; return n ? [].concat(n) : 
 function barraFiltros(qual){
   var tipoAba = {jogos:'jogo', simuladores:'simulador', ferramentas:'ferramenta'}[qual];
   var base = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem' && tipoDe(id) === tipoAba; });
-  var contaEtapa = function(n){ return n === 'todos' ? base.length : base.filter(function(id){ return nivelDe(id).indexOf(n) >= 0; }).length; };
   var selEtapa = el('select', {id:'selEtapa', 'aria-label':'Etapa de ensino'}, ['todos'].concat(NIVEIS).map(function(n){
-    return el('option', {value:n}, (n === 'todos' ? 'Todas as etapas' : n) + ' (' + contaEtapa(n) + ')');
+    return el('option', {value:n}, n === 'todos' ? 'Todas as etapas' : n);
   }));
   selEtapa.value = filtroNivel;
   selEtapa.onchange = function(){ filtroNivel = selEtapa.value; filtroConteudo = 'todos'; desenharJogos(qual); };
@@ -1092,7 +1091,7 @@ function barraFiltros(qual){
       return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b, 'pt-BR');
     });
     if(filtroConteudo !== 'todos' && nomes.indexOf(filtroConteudo) < 0) filtroConteudo = 'todos';
-    var selCont = el('select', {id:'selConteudo', 'aria-label':'Conteúdo'}, [el('option', {value:'todos'}, 'Todos os conteúdos (' + dentro.length + ')')].concat(nomes.map(function(n){
+    var selCont = el('select', {id:'selConteudo', 'aria-label':'Conteúdo'}, [el('option', {value:'todos'}, 'Todos os conteúdos')].concat(nomes.map(function(n){
       return el('option', {value:n}, (ICONE_CONTEUDO[n] || '🎲') + ' ' + n + ' (' + conts[n] + ')');
     })));
     selCont.value = filtroConteudo;
