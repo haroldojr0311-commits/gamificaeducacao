@@ -298,6 +298,11 @@
 .faixa-nov .txt b{display:block}
 .faixa-nov .ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .faixa-nov .ctrl a{font-weight:700}
+.barra-filtros{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;margin:4px 0 8px}
+.barra-filtros .rot{font-weight:800;font-size:14px;color:#64748b}
+.barra-filtros select{font:inherit;font-weight:700;font-size:15px;padding:8px 10px;border:2px solid #cbd5e1;border-radius:12px;background:#fff;color:inherit;min-height:44px;max-width:100%}
+.barra-filtros select:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.resultado{font-size:14px;color:#64748b;margin:6px 0 14px}
 </style>
 </head>
 <body>
@@ -1067,6 +1072,37 @@ var busca = '';
 function normalizar(t){ return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 var NIVEIS = ['Fundamental 1','Fundamental 2','Ensino Médio','Superior'];
 function nivelDe(id){ var n = window.JOGOS[id].nivel; return n ? [].concat(n) : []; }
+/* Barra de filtros: Etapa e Conteúdo como menus rotulados, com contagem e botão para limpar. */
+function barraFiltros(qual){
+  var tipoAba = {jogos:'jogo', simuladores:'simulador', ferramentas:'ferramenta'}[qual];
+  var base = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem' && tipoDe(id) === tipoAba; });
+  var contaEtapa = function(n){ return n === 'todos' ? base.length : base.filter(function(id){ return nivelDe(id).indexOf(n) >= 0; }).length; };
+  var selEtapa = el('select', {id:'selEtapa', 'aria-label':'Etapa de ensino'}, ['todos'].concat(NIVEIS).map(function(n){
+    return el('option', {value:n}, (n === 'todos' ? 'Todas as etapas' : n) + ' (' + contaEtapa(n) + ')');
+  }));
+  selEtapa.value = filtroNivel;
+  selEtapa.onchange = function(){ filtroNivel = selEtapa.value; filtroConteudo = 'todos'; desenharJogos(qual); };
+  var linha = [el('label', {class:'rot', 'for':'selEtapa'}, 'Etapa'), selEtapa];
+  if(qual === 'jogos'){
+    var dentro = base.filter(function(id){ return filtroNivel === 'todos' || nivelDe(id).indexOf(filtroNivel) >= 0; });
+    var conts = {};
+    dentro.forEach(function(id){ var c = window.JOGOS[id].conteudo || 'Outros'; if(c !== 'Anos iniciais') conts[c] = (conts[c] || 0) + 1; });
+    var nomes = Object.keys(conts).sort(function(a, b){
+      var ia = ORDEM_CONTEUDOS.indexOf(a), ib = ORDEM_CONTEUDOS.indexOf(b);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b, 'pt-BR');
+    });
+    if(filtroConteudo !== 'todos' && nomes.indexOf(filtroConteudo) < 0) filtroConteudo = 'todos';
+    var selCont = el('select', {id:'selConteudo', 'aria-label':'Conteúdo'}, [el('option', {value:'todos'}, 'Todos os conteúdos (' + dentro.length + ')')].concat(nomes.map(function(n){
+      return el('option', {value:n}, (ICONE_CONTEUDO[n] || '🎲') + ' ' + n + ' (' + conts[n] + ')');
+    })));
+    selCont.value = filtroConteudo;
+    selCont.onchange = function(){ filtroConteudo = selCont.value; desenharJogos(qual); };
+    linha.push(el('label', {class:'rot', 'for':'selConteudo'}, 'Conteúdo'), selCont);
+  }
+  var ativo = filtroNivel !== 'todos' || filtroConteudo !== 'todos';
+  if(ativo) linha.push(el('button', {type:'button', class:'sec peq', onclick: function(){ filtroNivel = 'todos'; filtroConteudo = 'todos'; desenharJogos(qual); }}, '✕ Limpar filtros'));
+  return el('div', {class:'barra-filtros', role:'group', 'aria-label':'Filtros'}, linha);
+}
 function barraNiveis(qual){
   return el('div', {class:'filtros', role:'group', 'aria-label':'Nível'}, [el('span', {class:'filtros-rot'}, 'Nível')].concat([['todos','Todos']].concat(NIVEIS.map(function(n){ return [n, n]; })).map(function(f){
     return el('button', {type:'button', class:'filtro', 'aria-pressed': String(filtroNivel === f[0]), onclick: function(){ filtroNivel = f[0]; filtroConteudo = 'todos'; desenharJogos(qual); }}, f[1]);
@@ -1099,7 +1135,7 @@ function desenharJogos(qual){
   var campoBusca = el('input', {type:'search', id:'busca', value:busca, placeholder:{jogos:'Buscar jogo, conteúdo, série ou código BNCC…', simuladores:'Buscar simulador…', ferramentas:'Buscar ferramenta…'}[qual], 'aria-label':'Buscar', autocomplete:'off'});
   campoBusca.oninput = function(){ busca = campoBusca.value; var pos = campoBusca.selectionStart; desenharJogos(qual); var n = document.getElementById('busca'); if(n){ n.focus(); try{ n.setSelectionRange(pos, pos); }catch(e){} } };
   corpo.push(el('div', {class:'busca'}, campoBusca));
-  corpo.push(barraNiveis(qual));
+  corpo.push(barraFiltros(qual));
   var emFaixa = [];
   if(!busca.trim() && filtroConteudo === 'todos'){
     var tipoAba = {jogos:'jogo', simuladores:'simulador', ferramentas:'ferramenta'}[qual];
@@ -1114,10 +1150,6 @@ function desenharJogos(qual){
   if(qual === 'jogos'){
     var grupos = gruposPorConteudo(idsLista.filter(function(id){ return tipoDe(id) === 'jogo'; }));
     if(filtroConteudo !== 'todos' && !grupos.some(function(g){ return g[0] === filtroConteudo; })) filtroConteudo = 'todos';
-    var chips = el('div', {class:'filtros', role:'group', 'aria-label':'Conteúdo'}, [el('span', {class:'filtros-rot'}, 'Conteúdo')].concat([['todos', 'Todos']].concat(grupos.map(function(g){ return [g[0], (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0]]; })).map(function(f){
-      return el('button', {type:'button', class:'filtro', 'aria-pressed': String(filtroConteudo === f[0]), onclick: function(){ filtroConteudo = f[0]; desenharJogos('jogos'); }}, f[1]);
-    })));
-    corpo.push(chips);
     grupos.filter(function(g){ return filtroConteudo === 'todos' || g[0] === filtroConteudo; }).forEach(function(g){
       corpo.push(el('div', {class:'secao-titulo conteudo'}, (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0], el('small', {}, g[1].length + (g[1].length === 1 ? ' jogo' : ' jogos'))));
       corpo.push(el('div', {class:'grade-jogos'}, g[1].map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); })));
@@ -1131,6 +1163,11 @@ function desenharJogos(qual){
     corpo.push(cartoesLista.length ? el('div', {class:'grade-jogos'}, cartoesLista)
       : el('p', {class:'vazio'}, busca.trim() ? 'Nada encontrado para “' + busca.trim() + '”.' : 'Nada por aqui ainda.'));
   }
+  var tipoCont = {jogos:'jogo', simuladores:'simulador', ferramentas:'ferramenta'}[qual];
+  var totalAba = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem' && tipoDe(id) === tipoCont; }).length;
+  var mostrados = ids.filter(function(id){ return tipoDe(id) === tipoCont; }).length;
+  var filtrado = filtroNivel !== 'todos' || filtroConteudo !== 'todos' || busca.trim();
+  corpo.push(el('p', {class:'resultado'}, 'Mostrando ' + mostrados + ' de ' + totalAba + (filtrado ? ' · com filtros ativos' : '')));
   var oQue = {jogos:'um jogo', simuladores:'um simulador', ferramentas:'uma ferramenta'}[qual] || 'algo';
   var textoSugestao = 'Olá, professor! Tenho uma sugestão para o Gamifica Educação. Sugiro ' + oQue + ' (ou uma melhoria em algo que já existe): ';
   corpo.push(el('div', {class:'sugestao', style:'margin-top:18px'},
