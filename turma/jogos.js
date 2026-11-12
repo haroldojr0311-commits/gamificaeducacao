@@ -708,6 +708,14 @@ window.JOGOS = {
     emoji: "🎼", cor: "lilas",
     conteudo: "Números e operações"
   },
+  "integral-em-passos": {
+    nivel: ["Ensino Médio", "Superior"],
+    nome: "Integral em Passos",
+    tema: "Integral definida passo a passo",
+    desc: "Calcule integrais definidas em 4 passos: limites, primitiva, F(b) − F(a) e o valor final. Ganhe XP, combo e entre no ranking.",
+    emoji: "📐", cor: "azul",
+    conteudo: "Cálculo"
+  },
   "mercadinho-3d-pro": {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Mercadinho 3D PRO: Troco, Compras e Educação Financeira",
