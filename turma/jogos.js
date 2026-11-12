@@ -700,6 +700,14 @@ window.JOGOS = {
     emoji: "🏙️", cor: "azul",
     conteudo: "Geometria"
   },
+  "compasso-que-fecha": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Compasso que Fecha",
+    tema: "Frações e figuras musicais",
+    desc: "Monte compassos com semibreve, mínima, semínima e colcheia e ouça cada figura. O compasso só vale quando a soma fecha exatamente 1.",
+    emoji: "🎼", cor: "lilas",
+    conteudo: "Números e operações"
+  },
   "mercadinho-3d-pro": {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Mercadinho 3D PRO: Troco, Compras e Educação Financeira",
