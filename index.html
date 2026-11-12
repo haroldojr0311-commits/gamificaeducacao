@@ -811,11 +811,17 @@ function faixaNovidades(){
   fetch('turma/novidades.json', {cache:'no-cache'}).then(function(r){ return r.json(); }).then(function(lista){
     var itens = (lista || []).slice(0, 3);
     if(!itens.length) return;
+    /* Quem fechou a faixa não a vê de novo, até chegar uma novidade nova. */
+    var assinatura = itens[0].data + '|' + itens[0].titulo;
+    var visto = null;
+    try{ visto = localStorage.getItem('faixaNov-visto'); }catch(e){}
+    if(visto === assinatura) return;
     var i = 0, pausado = false, timer = null;
     var reduzir = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     var txt = el('div', {class:'txt'});
     var btnPausa = el('button', {class:'sec peq', type:'button', 'aria-pressed':'false'}, '⏸ Pausar');
     var btnProx = el('button', {class:'sec peq', type:'button'}, 'Próxima ➜');
+    var btnFechar = el('button', {class:'sec peq', type:'button', 'aria-label':'Fechar faixa de novidades', title:'Fechar'}, '✕ Fechar');
     function mostra(){
       var it = itens[i];
       txt.replaceChildren(el('b', {}, '🆕 ' + it.titulo + ' · ' + fmtDia(it.data)), el('span', {}, it.texto));
@@ -825,6 +831,11 @@ function faixaNovidades(){
       if(!pausado && !reduzir && itens.length > 1) timer = setInterval(function(){ i = (i + 1) % itens.length; mostra(); }, 6000);
     }
     btnProx.addEventListener('click', function(){ i = (i + 1) % itens.length; mostra(); agenda(); });
+    btnFechar.addEventListener('click', function(){
+      clearInterval(timer);
+      try{ localStorage.setItem('faixaNov-visto', assinatura); }catch(e){}
+      faixa.remove();
+    });
     btnPausa.addEventListener('click', function(){
       pausado = !pausado;
       btnPausa.textContent = pausado ? '▶ Continuar' : '⏸ Pausar';
@@ -835,7 +846,7 @@ function faixaNovidades(){
     mostra(); agenda();
     var faixa = el('section', {id:'faixaNov', class:'faixa-nov', 'aria-label':'Novidades do site'},
       el('span', {'aria-hidden':'true'}, '🆕'), txt,
-      el('div', {class:'ctrl'}, btnProx, btnPausa, el('a', {href:'novidades.html'}, 'Ver todas')));
+      el('div', {class:'ctrl'}, btnProx, btnPausa, el('a', {href:'novidades.html'}, 'Ver todas'), btnFechar));
     var app = document.getElementById('app');
     if(app && app.parentNode) app.parentNode.insertBefore(faixa, app);
   }).catch(function(){});
