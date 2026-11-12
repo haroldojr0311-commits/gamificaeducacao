@@ -296,6 +296,9 @@
 .faixa-nov{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fef9c3;border:2px solid #facc15;border-radius:var(--r);padding:12px 16px;margin:0 auto 16px;max-width:1100px;box-shadow:var(--sombra)}
 .faixa-nov .txt{flex:1;min-width:220px}
 .faixa-nov .txt b{display:block}
+.faixa-nov .nov-jogo{all:unset;cursor:pointer;display:block;font-weight:800;text-decoration:underline;text-underline-offset:3px;color:inherit;border-radius:6px}
+.faixa-nov .nov-jogo:focus-visible{outline:3px solid var(--ouro);outline-offset:2px}
+.faixa-nov .nov-jogo:hover{color:var(--roxo)}
 .faixa-nov .ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .faixa-nov .ctrl a{font-weight:700}
 .barra-filtros{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;margin:4px 0 8px}
@@ -829,7 +832,13 @@ function faixaNovidades(){
     var btnFechar = el('button', {class:'sec peq', type:'button', 'aria-label':'Fechar faixa de novidades', title:'Fechar'}, '✕ Fechar');
     function mostra(){
       var it = itens[i];
-      txt.replaceChildren(el('b', {}, '🆕 ' + it.titulo + ' · ' + fmtDia(it.data)), el('span', {}, it.texto));
+      var rotulo = '🆕 ' + it.titulo + ' · ' + fmtDia(it.data);
+      var cab;
+      if(it.jogo && window.JOGOS && window.JOGOS[it.jogo]){
+        cab = el('button', {class:'nov-jogo', type:'button', title:'Abrir ' + window.JOGOS[it.jogo].nome}, rotulo);
+        cab.addEventListener('click', function(){ abrirJogo(it.jogo); });
+      } else cab = el('b', {}, rotulo);
+      txt.replaceChildren(cab, el('span', {}, it.texto));
     }
     function agenda(){
       clearInterval(timer);

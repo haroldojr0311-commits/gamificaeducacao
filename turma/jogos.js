@@ -712,7 +712,7 @@ window.JOGOS = {
     nivel: ["Ensino Médio", "Superior"],
     nome: "Integral em Passos",
     tema: "Integral definida passo a passo",
-    desc: "Calcule integrais definidas em 4 passos: limites, primitiva, F(b) − F(a) e o valor final. Ganhe XP, combo e entre no ranking.",
+    desc: "Calcule integrais definidas em 4 passos: início e fim do intervalo, primitiva, F(b) − F(a) e o valor final. Ganhe XP, combo e entre no ranking.",
     emoji: "📐", cor: "azul",
     conteudo: "Cálculo"
   },

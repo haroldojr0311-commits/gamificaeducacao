@@ -2,14 +2,16 @@
   {
     "data": "2026-11-12",
     "titulo": "Novo jogo: Integral em Passos",
-    "texto": "Calcule integrais definidas passo a passo: limites, primitiva, F(b) − F(a) e o valor final. Ganhe XP, combo e entre no ranking. Três níveis, de polinômios a seno, cosseno e eˣ.",
-    "link": "catalogo/"
+    "texto": "Calcule integrais definidas passo a passo: início e fim do intervalo, primitiva, F(b) − F(a) e o valor final. Errou? Tenta de novo e joga até o fim. Ganhe XP e entre no ranking. Três níveis.",
+    "link": "catalogo/",
+    "jogo": "integral-em-passos"
   },
   {
     "data": "2026-11-12",
     "titulo": "Novo jogo: Compasso que Fecha",
     "texto": "Música e frações juntas: monte compassos com figuras musicais, ouça cada nota e confira se a soma fecha 1 compasso inteiro. Três níveis.",
-    "link": "catalogo/"
+    "link": "catalogo/",
+    "jogo": "compasso-que-fecha"
   },
   {
     "data": "2026-11-11",
