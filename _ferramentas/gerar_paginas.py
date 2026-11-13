@@ -275,7 +275,7 @@ if not os.path.exists(os.path.join(RAIZ, 'depoimentos.json')):
 NOVI = json.load(open(os.path.join(RAIZ, 'turma', 'novidades.json'), encoding='utf-8'))
 def dt(d): a, m, dd = d.split('-'); return f'{dd}/{m}/{a}'
 def link_novi(n): return (f'catalogo/{n["id"]}.html' if n.get('id') else n.get('link', 'catalogo/'))
-itens = ''.join(f'<article><time datetime="{e(n["data"])}">{dt(n["data"])}</time><h3>{e(n["titulo"])}</h3><p>{e(n["texto"])}</p>'
+itens = ''.join(f'<article><time datetime="{e(n["data"] + ("T" + n["hora"] if n.get("hora") else ""))}">{dt(n["data"])}{(" às " + e(n["hora"])) if n.get("hora") else ""}</time><h3>{e(n["titulo"])}</h3><p>{e(n["texto"])}</p>'
                 f'<p><a class="bt" href="{e(link_novi(n))}">Ver</a></p></article>' for n in NOVI)
 zap_novi = urllib.parse.quote('Olá! Quero receber o aviso quando sair jogo novo no Gamifica Educação.')
 corpo = (f'<div class="card hero"><h1>Novidades</h1><p class="sub">Jogos, simuladores e ferramentas que chegaram ao Gamifica Educação.</p></div>'

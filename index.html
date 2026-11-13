@@ -838,7 +838,7 @@ function faixaNovidades(){
     var btnFechar = el('button', {class:'sec peq', type:'button', 'aria-label':'Fechar faixa de novidades', title:'Fechar'}, '✕ Fechar');
     function mostra(){
       var it = itens[i];
-      var rotulo = '🆕 ' + it.titulo + ' · ' + fmtDia(it.data);
+      var rotulo = '🆕 ' + it.titulo + ' · ' + fmtDia(it.data) + (it.hora ? ' às ' + it.hora : '');
       var cab;
       if(it.jogo && window.JOGOS && window.JOGOS[it.jogo]){
         cab = el('button', {class:'nov-jogo', type:'button', title:'Abrir ' + window.JOGOS[it.jogo].nome}, rotulo);
