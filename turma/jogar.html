@@ -265,11 +265,32 @@ function festa(nota, acertos, total, pontos){
   var dados = dadosResultado(nota, acertos, total, pontos);
   box.replaceChildren(el('div', {class:'grande'}, m.emoji), el('h2', {}, m.titulo + ', ' + primeiro + '!'),
     el('p', {class:'muted'}, 'Você terminou a atividade. Sua nota:'), el('div', {class:'nota'}, fmtNota(nota)),
-    el('p', {}, m.texto), el('p', {id:'posicao-msg', style:'font-weight:800;color:#312e81'}, 'Calculando sua posição…'), blocoResultado(dados),
+    el('p', {}, m.texto), el('p', {id:'posicao-msg', style:'font-weight:800;color:#312e81'}, 'Calculando sua posição…'), el('div', {id:'ranking-final'}), blocoResultado(dados),
     el('button', {type:'button', onclick: function(){ document.getElementById('parabens').classList.remove('on'); }}, '👍 Fechar'),
     el('button', {type:'button', class:'sec', onclick: function(){ document.getElementById('parabens').classList.remove('on'); prog = null; comecar(); }}, '🔁 Jogar de novo'));
   document.getElementById('parabens').classList.add('on');
   if(aluno.nome !== 'Não identificado') buscarPosicao(aluno.nome, aluno.turma).then(function(pos){ var q = document.getElementById('posicao-msg'); if(q) q.textContent = textoPosicao(pos); });
+  mostrarRanking();
+}
+/* Ranking da atividade (top 10: primeiro nome e inicial do sobrenome) */
+async function mostrarRanking(){
+  var box = document.getElementById('ranking-final'); if(!box) return;
+  try{
+    var r = await sb.rpc('ranking_atividade', {p_codigo: codigo});
+    if(r.error || !r.data || !r.data.length) return;
+    var med = ['🥇', '🥈', '🥉'];
+    var eu = (aluno.nome || '').trim().split(/\s+/), meu = eu[0] + (eu.length > 1 ? ' ' + eu[eu.length - 1].charAt(0).toUpperCase() + '.' : '');
+    var linhas = r.data.map(function(x){
+      var destaque = x.nome === meu;
+      return el('div', {style:'display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:10px;' + (destaque ? 'background:#fef3c7;font-weight:800' : '')},
+        el('span', {style:'width:30px;text-align:center;font-size:1.1rem'}, med[x.posicao - 1] || (x.posicao + 'º')),
+        el('span', {style:'flex:1;text-align:left'}, x.nome + (x.turma ? ' · ' + x.turma : '')),
+        el('span', {style:'font-weight:800'}, fmtNota(Number(x.nota))),
+        el('span', {style:'color:#64748b;font-size:.85rem;min-width:70px;text-align:right'}, (x.pontos || 0).toLocaleString('pt-BR') + ' pts'));
+    });
+    box.replaceChildren(el('div', {style:'margin:12px 0;background:#eef2ff;border:2px solid #c7d2fe;border-radius:12px;padding:10px'},
+      el('b', {style:'display:block;margin-bottom:6px;color:#312e81'}, '🏆 Ranking da atividade'), ...linhas));
+  }catch(e){}
 }
 
 function erroTela(titulo, texto){

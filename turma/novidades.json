@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "17:40",
+    "titulo": "Todos os jogos com nota, ranking e relatório",
+    "texto": "Agora todos os jogos e simuladores podem ser atribuídos à turma: ao terminar, a nota chega para você em Turmas e notas, e o aluno vê o ranking da atividade e o relatório de acertos.",
+    "link": "catalogo/"
+  },
+  {
+    "data": "2026-11-13",
     "hora": "15:25",
     "titulo": "Teorema de Tales: botões abaixo da cena",
     "texto": "Os botões de câmera (Visão geral, Perto da estaca, Olhar para o Sol) agora ficam abaixo da imagem 3D, deixando a pirâmide e os triângulos livres.",
