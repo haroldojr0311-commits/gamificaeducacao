@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "15:25",
+    "titulo": "Teorema de Tales: botões abaixo da cena",
+    "texto": "Os botões de câmera (Visão geral, Perto da estaca, Olhar para o Sol) agora ficam abaixo da imagem 3D, deixando a pirâmide e os triângulos livres.",
+    "link": "catalogo/",
+    "jogo": "semelhanca-piramide-3d"
+  },
+  {
+    "data": "2026-11-13",
     "hora": "11:10",
     "titulo": "Gamifica Live: jogar sozinho e link para os alunos",
     "texto": "Teste o seu quiz jogando sozinho, como o aluno vê. E crie um link com prazo para a turma jogar em casa: as respostas chegam no seu relatório.",
