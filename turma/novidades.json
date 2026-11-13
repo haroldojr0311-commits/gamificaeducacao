@@ -1,8 +1,8 @@
 [
   {
     "data": "2026-11-12",
-    "titulo": "Novo jogo: Semelhança e a Pirâmide 3D",
-    "texto": "Descubra a altura de uma pirâmide 3D usando a sombra e uma estaca. Veja os triângulos semelhantes e resolva os desafios.",
+    "titulo": "Novo jogo: Teorema de Tales: a Altura da Pirâmide",
+    "texto": "Refaça a experiência de Tales no Egito: raios de sol, sombra da estaca e sombra da pirâmide 3D para descobrir a altura. Com desafios de semelhança.",
     "link": "catalogo/",
     "jogo": "semelhanca-piramide-3d"
   },

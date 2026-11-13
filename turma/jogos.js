@@ -710,9 +710,9 @@ window.JOGOS = {
   },
   "semelhanca-piramide-3d": {
     nivel: ["Fundamental 2"],
-    nome: "Semelhança e a Pirâmide 3D",
-    tema: "Semelhança de triângulos e altura da pirâmide",
-    desc: "Gire a pirâmide em 3D, veja os dois triângulos formados pelo Sol e meça a altura pela sombra. Depois, desafios com razão de semelhança.",
+    nome: "Teorema de Tales: a Altura da Pirâmide",
+    tema: "Teorema de Tales e semelhança de triângulos",
+    desc: "Refaça a experiência de Tales de Mileto no Egito: veja os raios de sol paralelos, compare a sombra da estaca com a da pirâmide 3D e descubra a altura. Depois, desafios com razão de semelhança.",
     emoji: "🔺", cor: "laranja",
     conteudo: "Geometria"
   },
