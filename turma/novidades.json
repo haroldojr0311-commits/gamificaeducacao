@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "17:50",
+    "titulo": "Botão Atribuir em cada cartão",
+    "texto": "Nas abas Jogos e Simuladores, cada cartão tem o botão 📝 Atribuir: ele leva o jogo direto para Atribuir tarefas, já escolhido. É só dar o nome e gerar o link.",
+    "link": "./#jogos"
+  },
+  {
+    "data": "2026-11-13",
     "hora": "17:40",
     "titulo": "Atribuir tarefas: busca e filtros",
     "texto": "Na aba Atribuir tarefas, digite o nome ou o conteúdo e filtre por tipo, etapa e conteúdo. Favoritos e usados recentemente aparecem primeiro, e a barra de baixo mostra o jogo escolhido.",

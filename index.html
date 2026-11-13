@@ -106,6 +106,8 @@
   .cartao-jogo[aria-pressed="true"] .marcado{display:grid}
   .bncc{margin-top:6px;font-size:11.5px;font-weight:800;color:#3b4a8a;letter-spacing:.2px}
   .fav{position:absolute;right:8px;top:7px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;font-size:19px;line-height:1;cursor:pointer;color:#475569;border:1px solid #94a3b8;transition:transform .15s,background .15s}
+  .atr-cartao{display:inline-block;margin-top:10px;align-self:flex-start;background:#fff;color:#1e293b;border:2px solid #1e293b;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:800;line-height:1.2;cursor:pointer;box-shadow:0 2px 0 #1e293b;transition:transform .15s,background .15s}
+  .atr-cartao:hover,.atr-cartao:focus-visible{background:#ffd23f;transform:translateY(-1px)}
   .fav:hover{transform:scale(1.15);background:#fff}
   .fav.on{color:#b45309;background:#fff;border-color:#f59e0b}
   .faixa-rapida{margin-bottom:6px}
@@ -1079,6 +1081,23 @@ function botaoFav(id){
   return b;
 }
 var qualAtual = 'jogos';
+/* Atalho no cartão: leva o jogo direto para "Atribuir tarefas", já escolhido */
+function botaoAtribuir(id){
+  if(visitante || window.JOGOS[id].ferramenta || tipoDe(id) === 'ferramenta' || id === 'demo-porcentagem') return null;
+  var b = el('span', {class:'atr-cartao', role:'button', tabindex:'0', title:'Atribuir este jogo à turma', 'aria-label':'Atribuir ' + window.JOGOS[id].nome + ' à turma'}, '📝 Atribuir');
+  function ir(ev){
+    ev.preventDefault(); ev.stopPropagation();
+    jogoEscolhido = id; aba = 'atribuir'; busca = '';
+    history.replaceState(null, '', '#atribuir'); desenharAbas(); desenharAtribuir();
+    setTimeout(function(){
+      var p2 = document.getElementById('atr-passo2'); if(p2) p2.scrollIntoView({behavior:'smooth', block:'start'});
+      setTimeout(function(){ var t = document.getElementById('titulo'); if(t){ try{ t.focus({preventScroll:true}); t.select(); }catch(e){} } }, 450);
+    }, 60);
+  }
+  b.addEventListener('click', ir);
+  b.addEventListener('keydown', function(ev){ if(ev.key === 'Enter' || ev.key === ' ') ir(ev); });
+  return b;
+}
 function cartaoMural(){
   return el('button', {type:'button', class:'cartao-jogo', style:'--n:var(--n-amarelo)', onclick: function(){ window.open('mural/', '_blank'); }},
     el('div', {class:'nota'}, el('span', {class:'tema'}, 'Mural colaborativo'), el('span', {class:'emoji', 'aria-hidden':'true'}, '📌')),
@@ -1088,7 +1107,7 @@ function cartaoJogo(id, aoClicar, marcado){
   var j = window.JOGOS[id];
   return el('button', {type:'button', class:'cartao-jogo', style: corDe(id), 'aria-pressed': marcado === undefined ? null : String(!!marcado), onclick: aoClicar},
     el('div', {class:'nota'}, j.tema ? el('span', {class:'tema'}, j.tema) : null, el('span', {class:'emoji', 'aria-hidden':'true'}, j.emoji), el('span', {class:'marcado', 'aria-hidden':'true'}, '✓'), marcado === undefined ? botaoFav(id) : null),
-    el('div', {class:'corpo'}, el('h3', {}, j.nome), j.desc ? el('p', {}, j.desc) : null, j.bncc && j.bncc.length ? el('div', {class:'bncc', title:'Habilidades da BNCC: ' + j.bncc.join(', ')}, 'BNCC ' + j.bncc.slice(0, 3).join(' · ') + (j.bncc.length > 3 ? ' +' + (j.bncc.length - 3) : '')) : null));
+    el('div', {class:'corpo'}, el('h3', {}, j.nome), j.desc ? el('p', {}, j.desc) : null, j.bncc && j.bncc.length ? el('div', {class:'bncc', title:'Habilidades da BNCC: ' + j.bncc.join(', ')}, 'BNCC ' + j.bncc.slice(0, 3).join(' · ') + (j.bncc.length > 3 ? ' +' + (j.bncc.length - 3) : '')) : null, marcado === undefined ? botaoAtribuir(id) : null));
 }
 var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Geometria', 'Funções e trigonometria', 'Estatística e probabilidade', 'Educação Financeira', 'Desafios'];
 var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Outros':'🎲'};
