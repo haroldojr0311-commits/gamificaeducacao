@@ -159,7 +159,7 @@ const NOMES_FORMA = ['Triângulo', 'Losango', 'Círculo', 'Quadrado'];
 const CORES = ['#e21b3c', '#1368ce', '#c68a00', '#26890c'];
 const AVATARES = ['🦊', '🐼', '🐯', '🦁', '🐸', '🐵', '🐧', '🦄', '🐙', '🐢', '🐨', '🐰', '🦉', '🐳', '🐝', '🐶'];
 const EVENTOS = ['estado', 'entrar', 'resposta', 'oi'];
-const ACERTOU = ['Mandou bem!', 'Isso aí!', 'Arrasou!', 'Show de bola!', 'Você está voando!'];
+const ACERTOU = ['Mandou bem!', 'Isso aí!', 'Arrasou!', 'Show de bola!', 'Acertou em cheio!'];
 const ERROU = ['Quase! Na próxima você pega.', 'Errar faz parte de aprender.', 'Respira e vai na próxima!', 'Não desista, você consegue!'];
 function lerLS(k){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
 function gravarLS(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
@@ -402,7 +402,7 @@ function mostrarResultado(p){
     box.className = 'res neutro'; box.innerHTML = '<h2>📊 Voto registrado!</h2><div>Veja no telão o que a turma respondeu.</div>';
   } else if (r[0] === 1){
     box.className = 'res ok';
-    box.innerHTML = `<h2>✅ ${esc(sorteia(ACERTOU))}</h2><div class="pts">+${r[1]} pontos</div>` + (r[4] >= 2 ? `<div class="expl">🔥 ${r[4]} acertos seguidos!</div>` : '');
+    box.innerHTML = `<h2>✅ ${esc(r[4] >= 3 ? 'Você está voando!' : sorteia(ACERTOU))}</h2><div class="pts">+${r[1]} pontos</div>` + (r[4] >= 2 ? `<div class="expl">🔥 ${r[4]} acertos seguidos!</div>` : '');
     vibrar(60);
   } else {
     box.className = 'res no';
