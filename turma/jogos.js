@@ -731,5 +731,13 @@ window.JOGOS = {
     desc: "Monte compras no mercadinho em 3D, dê troco, cumpra orçamentos e calcule ofertas. Três níveis: valores inteiros, centavos e porcentagem.",
     emoji: "🛒", cor: "verde",
     conteudo: "Educação Financeira"
+  },
+  "missao-educatec": {
+    nivel: ["Superior"],
+    nome: "Missão EducaTec: a Escola do Futuro",
+    tema: "Educação e Tecnologia",
+    desc: "Acenda as 6 salas da escola: tecnologias na educação, o dia do professor, gestão escolar, teorias e TICs (SAMR, TPACK), aplicativos e dados com LGPD. Termina no Grande Conselho de Classe, com tempo e 3 vidas.",
+    emoji: "🏫", cor: "azul",
+    conteudo: "Educação e Tecnologia"
   }
 };

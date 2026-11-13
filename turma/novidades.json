@@ -1,6 +1,15 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "18:20",
+    "titulo": "Novo jogo: Missão EducaTec",
+    "texto": "Para a disciplina Educação e Tecnologia: 6 salas com desafios diferentes (arrastar, decisões de gestor, ligar teorias, loja de apps e detetive de dados com LGPD) e o Grande Conselho de Classe no final. Pode ser atribuído à turma, com nota e ranking.",
+    "link": "catalogo/missao-educatec.html",
+    "jogo": "missao-educatec",
+    "id": "missao-educatec"
+  },
+  {
+    "data": "2026-11-13",
     "hora": "17:40",
     "titulo": "Todos os jogos com nota, ranking e relatório",
     "texto": "Agora todos os jogos e simuladores podem ser atribuídos à turma: ao terminar, a nota chega para você em Turmas e notas, e o aluno vê o ranking da atividade e o relatório de acertos.",
