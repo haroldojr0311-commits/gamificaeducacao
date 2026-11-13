@@ -327,7 +327,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <script src="turma/supabase-config.js"></script>
-<script src="turma/jogos.js?v=20261113203000"></script>
+<script src="turma/jogos.js?v=20261113203500"></script>
 <script src="turma/qr.js"></script>
 <script src="turma/resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
@@ -850,6 +850,8 @@ function faixaNovidades(){
       if(it.jogo && window.JOGOS && window.JOGOS[it.jogo]){
         cab = el('button', {class:'nov-jogo', type:'button', title:'Abrir ' + window.JOGOS[it.jogo].nome}, rotulo);
         cab.addEventListener('click', function(){ abrirJogo(it.jogo); });
+      } else if(it.link){
+        cab = el('a', {class:'nov-jogo', href: it.link, title:'Ver novidade'}, rotulo);
       } else cab = el('b', {}, rotulo);
       txt.replaceChildren(cab, el('span', {}, it.texto));
     }
