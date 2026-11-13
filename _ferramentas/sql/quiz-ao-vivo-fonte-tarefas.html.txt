@@ -1,0 +1,2048 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gamifica Live · Quiz ao vivo</title>
+<meta name="description" content="Gamifica Live: quiz ao vivo para a sala de aula. O professor projeta, os alunos respondem pelo celular com um código.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root{--f1:#2a1468;--f2:#4b23b5;--tinta:#1b1640;--a:#e21b3c;--b:#1368ce;--c:#c68a00;--d:#26890c;--ok:#26890c;--erro:#e21b3c;--ouro:#ffd23f;--esc:1}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(1200px 700px at 15% -10%,#6b3bf0 0%,transparent 60%),linear-gradient(160deg,var(--f2),var(--f1));color:#fff;font-family:"Segoe UI",Roboto,Arial,sans-serif;font-size:calc(17px * var(--esc));min-height:100vh}
+body.contraste{--f1:#000;--f2:#000;background:#000}
+body.contraste .cartao,body.contraste .q-card{border:3px solid #fff}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:4px solid var(--ouro);outline-offset:2px}
+.oculto{display:none!important}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 18px;background:#0000002e;position:sticky;top:0;z-index:20;backdrop-filter:blur(6px)}
+.marca{font-weight:900;font-size:1.25em;letter-spacing:.3px}
+.marca b{color:var(--ouro)}
+.marca small{font-weight:700;opacity:.8;font-size:.62em;margin-left:6px}
+.ctrl{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ctrl button,.btn-s{background:#ffffff22;border:2px solid #ffffff55;color:#fff;border-radius:12px;padding:6px 10px;min-height:44px;min-width:44px;font-weight:800}
+.ctrl input[type=range]{width:90px}
+main{max-width:1280px;margin:0 auto;padding:18px}
+.tela{display:none}
+.tela.on{display:block;animation:entra .35s ease}
+@keyframes entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h1{font-size:2em;margin:.2em 0 .4em}
+h2{font-size:1.35em;margin:.2em 0 .5em}
+.cartao{background:#fff;color:var(--tinta);border-radius:22px;padding:20px;box-shadow:0 14px 36px #0005;margin-bottom:16px}
+.grade{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.btn{border:0;border-radius:14px;padding:12px 18px;font-weight:900;font-size:1em;min-height:48px;background:var(--tinta);color:#fff;box-shadow:0 5px 0 #000a}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #000a}
+.btn.ouro{background:var(--ouro);color:var(--tinta)}
+.btn.verde{background:var(--ok)}
+.btn.verm{background:var(--erro)}
+.btn.claro{background:#eef0ff;color:var(--tinta);box-shadow:0 4px 0 #b9bde6}
+.btn.grande{font-size:1.3em;padding:16px 28px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.linha{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.fb{font-weight:700;min-height:1.4em;margin-top:8px}
+.fb.erro{color:var(--erro)}
+.dica{background:#fff6d6;color:#5b4300;border-radius:12px;padding:10px 12px;font-size:.95em}
+/* lista de quizzes */
+.quizzes{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.qz{border:3px solid #e3e0f5;border-radius:16px;padding:14px;background:#fbfaff;text-align:left;color:var(--tinta)}
+.qz.sel{border-color:#5b2dbf;box-shadow:0 0 0 4px #5b2dbf33}
+.qz b{display:block;font-size:1.05em}
+.qz small{display:block;opacity:.8;margin-top:4px}
+.qz .tag{display:inline-block;background:#ede9fe;color:#4c1d95;border-radius:999px;padding:2px 8px;font-size:.75em;font-weight:800;margin-top:6px}
+.opcoes-cfg label{display:flex;align-items:center;gap:8px;margin:6px 0;font-weight:700}
+.opcoes-cfg select{border:2px solid #d8d3ee;border-radius:10px;padding:6px 8px;max-width:100%;min-height:44px}
+.opcoes-cfg label{flex-wrap:wrap}
+@media (max-width:600px){main{padding:12px}.cartao{padding:14px}.pin{letter-spacing:4px}.alternativas{grid-template-columns:1fr}.p-meio{grid-template-columns:auto 1fr}.p-meio .respondeu{grid-column:1 / -1}.relogio{width:90px;height:90px;font-size:32px}}
+.retomar{background:#fff3c4;color:#5b4300;border-radius:16px;padding:14px;margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+/* editor */
+.q-card{background:#fff;color:var(--tinta);border-radius:18px;padding:14px;margin-bottom:12px;border-left:10px solid #5b2dbf}
+.q-card.ruim{border-left-color:#f59e0b}
+.q-card.arrastando{opacity:.5}
+.q-cab{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.q-cab b{font-size:1.05em;margin-right:auto}
+.q-cab select,.q-card input[type=text],.q-card textarea,.q-card select{border:2px solid #d8d3ee;border-radius:10px;padding:8px;color:var(--tinta);background:#fff}
+.q-card textarea{width:100%;min-height:70px;resize:vertical;font-size:1.05em}
+.q-card input[type=text]{width:100%}
+.ferr{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ferr button{border:2px solid #d8d3ee;background:#f6f4ff;color:var(--tinta);border-radius:10px;min-height:40px;min-width:44px;font-weight:800;padding:4px 10px}
+.previa{background:#f6f4ff;border-radius:10px;padding:8px 10px;min-height:2em;margin-top:6px;font-size:1.05em}
+.alts{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:8px 0}
+.alt{display:flex;align-items:center;gap:6px;border-radius:12px;padding:6px;color:#fff}
+.alt input[type=text]{flex:1;border:0;border-radius:8px;padding:8px;color:var(--tinta)}
+.alt svg{width:26px;height:26px;flex:0 0 auto}
+.alt label{display:flex;align-items:center;gap:4px;font-weight:800;font-size:.85em;white-space:nowrap}
+.q-pe{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.q-pe label{font-weight:700;display:flex;gap:6px;align-items:center}
+.estado-q{font-weight:800;font-size:.9em}
+#colAvisos:empty{display:none}
+.img-prev{max-height:120px;border-radius:10px;margin-top:6px;display:block}
+/* sala */
+.sala{display:grid;grid-template-columns:1fr 1.2fr;gap:18px;align-items:start}
+@media (max-width:900px){.sala{grid-template-columns:1fr}}
+.pin-box{text-align:center}
+.pin-box .url{font-size:1.2em;font-weight:800}
+.pin{font-size:clamp(56px,9vw,120px);font-weight:900;letter-spacing:10px;color:var(--ouro);line-height:1;margin:6px 0}
+#qr canvas{width:min(260px,60vw);height:auto;border-radius:14px;background:#fff;padding:6px}
+.bolhas{display:flex;flex-wrap:wrap;gap:10px;min-height:120px;align-content:flex-start}
+.bolha{background:#fff;color:var(--tinta);border-radius:999px;padding:8px 14px 8px 8px;font-weight:900;display:flex;align-items:center;gap:6px;animation:pop .45s cubic-bezier(.2,1.6,.4,1);border:0;font-size:1em}
+.bolha .av{font-size:1.5em}
+.bolha.off{opacity:.45}
+.bolha:hover{background:#ffe1e1}
+@keyframes pop{from{transform:scale(.2);opacity:0}to{transform:none;opacity:1}}
+.contador{font-size:1.3em;font-weight:900}
+/* pergunta (telão) */
+.p-topo{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.selo{background:#ffffff26;border-radius:999px;padding:6px 14px;font-weight:900}
+.selo.dobro{background:var(--ouro);color:var(--tinta)}
+.enunciado{background:#fff;color:var(--tinta);border-radius:22px;padding:22px;font-size:clamp(24px,3.2vw,44px);font-weight:800;text-align:center;line-height:1.3;margin:14px 0;box-shadow:0 10px 30px #0004}
+.p-meio{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;margin-bottom:14px}
+.relogio{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--ouro) var(--p,100%),#ffffff22 0);display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:900;position:relative}
+.relogio::before{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--f1)}
+.relogio span{position:relative}
+.relogio.alerta span{color:#ff8a8a;animation:pulso .5s infinite alternate}
+@keyframes pulso{to{transform:scale(1.15)}}
+.p-img{max-height:32vh;max-width:100%;border-radius:16px;justify-self:center;background:#fff}
+.respondeu{text-align:center;font-weight:900;font-size:1.2em}
+.respondeu b{display:block;font-size:2.4em;color:var(--ouro)}
+.alternativas{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.alternativa{border-radius:18px;padding:18px;color:#fff;font-weight:900;font-size:clamp(20px,2.4vw,32px);display:flex;align-items:center;gap:14px;min-height:96px;box-shadow:0 6px 0 #0005;transition:opacity .3s,transform .3s;position:relative}
+.alternativa svg{width:48px;height:48px;flex:0 0 auto}
+.alternativa.apagada{opacity:.35}
+.alternativa.certa{transform:scale(1.03);outline:6px solid #fff}
+.alternativa .cont{margin-left:auto;background:#00000033;border-radius:12px;padding:4px 12px}
+.alternativa.marcador{background:#ffffff1a;border:3px dashed #ffffff66;box-shadow:none}
+.grafico{display:flex;align-items:flex-end;justify-content:center;gap:14px;height:170px;margin:0}
+.grafico div{width:78px;border-radius:12px 12px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;font-weight:900;font-size:1.4em;transition:height .8s cubic-bezier(.2,.9,.2,1)}
+.grafico small{display:block;text-align:center;font-size:.55em}
+.erros-comuns{background:#ffffff1f;border-radius:16px;padding:12px 18px;font-size:1.1em;font-weight:800;margin:10px 0}
+.explica{background:#fff6d6;color:#3b2a00;border-radius:16px;padding:14px 18px;font-size:1.15em;font-weight:700;margin:10px 0}
+.leitura{text-align:center;padding:30px 0}
+.leitura .num{font-size:1.3em;font-weight:900;opacity:.9}
+.barra-leitura{height:12px;border-radius:999px;background:#ffffff33;overflow:hidden;max-width:600px;margin:20px auto}
+.barra-leitura i{display:block;height:100%;background:var(--ouro);width:0;transition:width linear}
+.contagem{font-size:min(40vw,320px);font-weight:900;text-align:center;line-height:1;color:var(--ouro);animation:pop .5s}
+/* ranking */
+.rank{list-style:none;padding:0;margin:0 auto;max-width:820px;position:relative}
+.rank li{background:#fff;color:var(--tinta);border-radius:16px;padding:14px 18px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:1.35em;transition:transform .9s cubic-bezier(.2,.9,.2,1)}
+.rank li .pos{display:inline-flex;width:44px;height:44px;border-radius:50%;background:var(--f2);color:#fff;align-items:center;justify-content:center;margin-right:12px}
+.rank li .sobe{color:var(--ok);font-size:.7em;margin-left:8px}
+/* pódio */
+.podio{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:30px 0 10px;min-height:380px}
+.degrau{width:min(26vw,240px);text-align:center;font-weight:900;opacity:0;transform:translateY(60px);transition:all .8s cubic-bezier(.2,1.3,.4,1)}
+.degrau.on{opacity:1;transform:none}
+.degrau .quem{font-size:1.35em;margin-bottom:8px}
+.degrau .quem .av{font-size:2.2em;display:block}
+.degrau .bloco{border-radius:16px 16px 0 0;color:var(--tinta);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:12px;font-size:2.6em}
+.degrau .bloco small{font-size:.38em}
+.d1 .bloco{height:240px;background:var(--ouro)}
+.d2 .bloco{height:170px;background:#d9dde8}
+.d3 .bloco{height:120px;background:#e2a46a}
+.conf{position:fixed;top:-20px;width:12px;height:18px;z-index:50;animation:cai 3.6s linear forwards;pointer-events:none}
+@keyframes cai{to{transform:translateY(110vh) rotate(720deg)}}
+/* relatório */
+table{border-collapse:collapse;width:100%}
+th,td{border-bottom:1px solid #e3e0f5;padding:8px;text-align:left}
+th{background:#f3f0ff}
+tr.dificil td{background:#fff1f1}
+.abas{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.abas button[aria-pressed="true"]{background:var(--f2);color:#fff}
+.barrinha{display:inline-block;height:12px;border-radius:6px;background:var(--ok);vertical-align:middle;margin-right:6px}
+/* modal */
+.modal{position:fixed;inset:0;background:#000a;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px}
+.sozinho-caixa{width:min(480px,100%);height:min(920px,96vh);background:var(--f1);border-radius:22px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px #000a}
+.sozinho-caixa iframe{flex:1;border:0;width:100%;background:var(--f1)}
+.tarefa-item{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border:2px solid #e3e0f5;border-radius:14px;padding:12px;margin-bottom:10px;background:#fbfaff}
+.tag-on{background:#dcfce7;color:#14532d;border-radius:999px;padding:2px 10px;font-weight:800;font-size:.85em}
+.tag-off{background:#fee2e2;color:#7f1d1d;border-radius:999px;padding:2px 10px;font-weight:800;font-size:.85em}
+.modal .cartao{max-width:1000px;width:100%;max-height:90vh;overflow:auto}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  body{background:#fff;color:#000}
+  .topo,.no-print,.tela:not(#tRelatorio){display:none!important}
+  #tRelatorio{display:block!important}
+  .cartao{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="topo no-print">
+  <div class="marca">⚡ Gamifica <b>Live</b> <small>Quiz ao vivo</small></div>
+  <div class="ctrl">
+    <button id="bMudo" aria-pressed="false" title="Ligar ou desligar o som">🔊</button>
+    <input type="range" id="volume" min="0" max="100" value="60" aria-label="Volume da música e dos efeitos">
+    <button id="bMenos" title="Diminuir letras" aria-label="Diminuir letras">A−</button>
+    <button id="bMais" title="Aumentar letras" aria-label="Aumentar letras">A+</button>
+    <button id="bContraste" aria-pressed="false" title="Alto contraste">◐</button>
+    <button id="bTela" title="Tela cheia" aria-label="Tela cheia">⛶</button>
+  </div>
+</div>
+<main>
+
+<!-- ===================== INÍCIO ===================== -->
+<section class="tela on" id="tInicio">
+  <div id="caixaRetomar"></div>
+  <div class="cartao">
+    <h1 style="margin-top:0">Escolha um quiz</h1>
+    <p style="margin-top:0">Você projeta as perguntas. Os alunos entram pelo celular em <b>gamificaeducacao.com.br/vivo</b> com o código da sala.</p>
+    <div class="quizzes" id="listaQuizzes"></div>
+    <div class="linha" style="margin-top:14px">
+      <button class="btn ouro" id="bColar">📋 Colar questões</button>
+      <button class="btn claro" id="bNovoQuiz">➕ Criar quiz</button>
+      <button class="btn claro" id="bImportarCsv">📄 Importar planilha (CSV)</button>
+      <button class="btn claro" id="bModeloCsv">⬇️ Modelo de planilha</button>
+      <button class="btn claro" id="bImportarJson">📦 Restaurar cópia</button>
+      <button class="btn claro" id="bExportarJson">💾 Fazer cópia de segurança</button>
+      <button class="btn claro" id="bHistorico">📊 Relatórios das partidas</button>
+      <button class="btn claro" id="bTarefas">🔗 Minhas tarefas (links)</button>
+      <input type="file" id="arqCsv" accept=".csv,text/csv" class="oculto">
+      <input type="file" id="arqJson" accept=".json,application/json" class="oculto">
+    </div>
+    <div class="fb" id="fbInicio" role="status"></div>
+    <p class="dica" id="nuvemStatus" style="margin:12px 0 0" aria-live="polite"></p>
+  </div>
+  <div class="cartao" id="cfgPartida">
+    <h2 id="selTitulo">Quiz escolhido</h2>
+    <p id="selInfo"></p>
+    <div class="linha" id="selAcoes"></div>
+    <div class="opcoes-cfg" style="margin-top:12px">
+      <label><input type="checkbox" id="cEmbaralhar"> Embaralhar a ordem das perguntas</label>
+      <label><input type="checkbox" id="cTexto" checked> Mostrar a pergunta também no celular (ajuda quem senta longe da tela)</label>
+      <label>Tempo de leitura antes das alternativas:
+        <select id="cLeitura"><option value="0">sem leitura</option><option value="3" selected>3 segundos</option><option value="5">5 segundos</option><option value="8">8 segundos</option></select></label>
+      <label>Ranking:
+        <select id="cRanking"><option value="completo">Completo (Top 5 a cada pergunta)</option><option value="top3">Só o Top 3</option><option value="nenhum">Sem ranking público (turmas sensíveis)</option></select></label>
+      <label><input type="checkbox" id="cMusica" checked> Música de fundo</label>
+    </div>
+    <div class="linha" style="margin-top:12px">
+      <button class="btn ouro grande" id="bCriarSala">▶ Abrir sala</button>
+    </div>
+    <div class="fb" id="fbSala" role="status"></div>
+  </div>
+</section>
+
+<!-- ===================== COLAR QUESTÕES ===================== -->
+<section class="tela" id="tColar">
+  <div class="cartao">
+    <div class="linha" style="justify-content:space-between">
+      <h1 style="margin:0">📋 Colar questões</h1>
+      <button class="btn claro" id="bColVoltar">← Voltar</button>
+    </div>
+    <p>Cole as questões do jeito que estão no seu material (Word, PDF, apostila ou ChatGPT). O Gamifica Live reconhece sozinho o enunciado, as alternativas, a resposta certa e a explicação.</p>
+    <details class="dica"><summary><b>Como indicar a resposta certa?</b> Toque para ver os jeitos que funcionam.</summary>
+      <ul style="margin:8px 0 0">
+        <li>Uma linha depois das alternativas: <b>Resposta: C</b> (ou <b>Gabarito: C</b>, <b>Alternativa correta: c)</b>).</li>
+        <li>Uma marca na alternativa certa: <b>b) 30 *</b>, <b>*b) 30</b>, <b>b) 30 (x)</b>, <b>b) 30 ✓</b> ou <b>b) 30 (correta)</b>.</li>
+        <li>O gabarito no final: <b>Gabarito: 1-A, 2-C, 3-B</b>.</li>
+        <li>Sem alternativas e com <b>Resposta: 30</b> (ou 3/4, 0,75) vira <b>resposta numérica</b>.</li>
+        <li><b>Resposta: V</b> ou <b>Resposta: F</b> vira <b>verdadeiro ou falso</b>.</li>
+        <li>Uma linha <b>Explicação: …</b> aparece no telão depois da resposta.</li>
+        <li>Questões com 5 alternativas (a até e): fico com 4, sempre mantendo a certa.</li>
+      </ul>
+    </details>
+    <div class="linha" style="margin:12px 0">
+      <label style="font-weight:800;flex:1 1 260px">Título do quiz <input type="text" id="colTitulo" maxlength="80" placeholder="Ex.: Frações · 7º ano" style="width:100%;border:2px solid #d8d3ee;border-radius:10px;padding:10px;color:var(--tinta)"></label>
+      <label style="font-weight:800">⏱️ Tempo de cada questão <select id="colTempo" style="border:2px solid #d8d3ee;border-radius:10px;padding:8px;min-height:44px"><option value="15">15 s</option><option value="20" selected>20 s</option><option value="30">30 s</option><option value="45">45 s</option><option value="60">60 s</option></select></label>
+    </div>
+    <p id="colTituloAviso" class="fb"></p>
+    <label style="display:flex;gap:8px;align-items:center;font-weight:700;margin-bottom:8px"><input type="checkbox" id="colLivro" checked> Escrever frações e potências como no livro (3/4 vira fração empilhada, 2^5 vira potência)</label>
+    <textarea id="colTexto" rows="14" style="width:100%;border:3px solid #d8d3ee;border-radius:14px;padding:12px;font-size:1.05em;color:var(--tinta)" placeholder="Cole aqui as questões. Exemplo:
+
+1) Quanto é 3/4 de 20?
+a) 15
+b) 12
+c) 5
+d) 16
+Resposta: A"></textarea>
+    <div class="linha" style="margin-top:10px">
+      <button class="btn ouro grande" id="bColCriar" disabled>✅ Criar o quiz</button>
+      <button class="btn claro" id="bColExemplo">Ver um exemplo</button>
+    </div>
+    <div class="fb" id="colResumo" role="status" aria-live="polite"></div>
+    <ul id="colAvisos" class="dica" style="margin-top:8px;padding-left:28px"></ul>
+  </div>
+  <div id="colPrevia"></div>
+</section>
+
+<!-- ===================== EDITOR ===================== -->
+<section class="tela" id="tEditor">
+  <div class="cartao">
+    <div class="linha" style="justify-content:space-between">
+      <h1 style="margin:0">✏️ Editor de quiz</h1>
+      <div class="linha">
+        <button class="btn claro" id="bEdVoltar">← Voltar</button>
+        <button class="btn claro" id="bEdCsv">⬇️ Exportar planilha</button>
+      </div>
+    </div>
+    <label style="display:block;font-weight:800;margin-top:12px" for="edTitulo">Título do quiz</label>
+    <input type="text" id="edTitulo" maxlength="80" style="width:100%;border:2px solid #d8d3ee;border-radius:10px;padding:10px;font-size:1.1em;color:var(--tinta)">
+    <p class="dica" style="margin-top:10px">Para escrever matemática como no livro, use os botões de fórmula (fração, potência, raiz…). Na prévia aparece como vai ficar no telão. Tudo é salvo automaticamente neste computador.</p>
+    <div class="fb" id="edResumo"></div>
+  </div>
+  <div id="edLista"></div>
+  <div class="linha no-print" style="margin-bottom:30px">
+    <button class="btn ouro" id="bEdNova">➕ Nova pergunta</button>
+    <button class="btn claro" id="bEdColar">📋 Colar mais questões</button>
+  </div>
+</section>
+
+<!-- ===================== SALA (LOBBY) ===================== -->
+<section class="tela" id="tSala">
+  <div class="sala">
+    <div class="cartao pin-box">
+      <div>Entre em</div>
+      <div class="url">gamificaeducacao.com.br/vivo</div>
+      <div style="margin-top:8px">e digite o código:</div>
+      <div class="pin" id="pin">000000</div>
+      <div id="qr" aria-label="QR Code para entrar"></div>
+      <p style="margin:8px 0 0">ou aponte a câmera do celular para o QR Code</p>
+    </div>
+    <div>
+      <div class="linha" style="justify-content:space-between">
+        <h2 style="margin:0" id="salaTitulo"></h2>
+        <span class="contador" id="contJog">0 jogadores</span>
+      </div>
+      <p style="opacity:.85">Toque no nome de um aluno para removê-lo da sala.</p>
+      <div class="bolhas" id="bolhas"></div>
+      <div class="linha" style="margin-top:16px">
+        <button class="btn ouro grande" id="bComecar" disabled>🚀 Começar</button>
+        <button class="btn-s" id="bCancelar">Fechar sala</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PERGUNTA (TELÃO) ===================== -->
+<section class="tela" id="tPergunta">
+  <div class="p-topo">
+    <span class="selo" id="pNum">Pergunta 1 de 10</span>
+    <span class="selo" id="pPontos">1000 pontos</span>
+    <span class="selo" id="pCodigo">Código</span>
+  </div>
+  <div id="pContagem" class="oculto"></div>
+  <div id="pCorpo">
+    <div class="enunciado" id="pTexto"></div>
+    <div id="pLeitura" class="leitura oculto">
+      <div class="num">Leia com atenção…</div>
+      <div class="barra-leitura"><i id="barraLeitura"></i></div>
+    </div>
+    <div id="pJogo">
+      <div class="p-meio">
+        <div class="relogio" id="relogio"><span id="pTempo">20</span></div>
+        <div style="text-align:center"><img id="pImg" class="p-img oculto" alt="Imagem da pergunta"><div class="grafico oculto" id="grafico" aria-label="Gráfico de respostas"></div></div>
+        <div class="respondeu" id="pResp"><b>0</b>responderam</div>
+      </div>
+      <div id="pAlts"></div>
+      <div class="explica oculto" id="explica"></div>
+      <div class="erros-comuns oculto" id="errosComuns"></div>
+    </div>
+  </div>
+  <div class="linha no-print" style="justify-content:flex-end;margin-top:14px">
+    <button class="btn-s" id="bPular">⏭ Encerrar agora</button>
+    <button class="btn ouro grande oculto" id="bAvancar">Continuar ▶</button>
+  </div>
+</section>
+
+<!-- ===================== RANKING ===================== -->
+<section class="tela" id="tRanking">
+  <h1 style="text-align:center">🏆 Placar</h1>
+  <ul class="rank" id="rankLista"></ul>
+  <p style="text-align:center;opacity:.85" id="rankResto"></p>
+  <div class="linha" style="justify-content:center;margin-top:10px">
+    <button class="btn ouro grande" id="bProxima">Próxima pergunta ▶</button>
+  </div>
+</section>
+
+<!-- ===================== PÓDIO ===================== -->
+<section class="tela" id="tPodio">
+  <h1 style="text-align:center" id="podioTitulo">🏁 Fim de jogo!</h1>
+  <div class="podio" id="podio"></div>
+  <p style="text-align:center;font-size:1.3em;font-weight:800" id="podioMsg"></p>
+  <div class="linha no-print" style="justify-content:center">
+    <button class="btn claro oculto" id="bRevelarPodio">Mostrar o pódio</button>
+    <button class="btn ouro" id="bVerRelatorio">📊 Ver relatório</button>
+    <button class="btn ouro" id="bMesmaSala">🔁 Outro quiz com a mesma turma</button>
+    <button class="btn claro" id="bNovaPartida">Fechar a sala</button>
+  </div>
+</section>
+
+<!-- ===================== RELATÓRIO ===================== -->
+<section class="tela" id="tRelatorio">
+  <div class="cartao">
+    <div class="linha" style="justify-content:space-between">
+      <h1 style="margin:0" id="relTitulo">Relatório da partida</h1>
+      <div class="linha no-print">
+        <button class="btn claro" id="bRelCsv">⬇️ Planilha (CSV)</button>
+        <button class="btn claro" id="bRelPdf">🖨️ Imprimir / PDF</button>
+        <button class="btn claro" id="bRelVoltar">← Voltar</button>
+      </div>
+    </div>
+    <p id="relInfo"></p>
+    <div id="relAlerta"></div>
+    <div class="abas no-print">
+      <button class="btn claro" data-aba="alunos" aria-pressed="true">Alunos</button>
+      <button class="btn claro" data-aba="perguntas" aria-pressed="false">Perguntas</button>
+      <button class="btn claro" data-aba="detalhe" aria-pressed="false">Aluno × pergunta</button>
+    </div>
+    <div id="relAlunos"></div>
+    <div id="relPerguntas" class="oculto"></div>
+    <div id="relDetalhe" class="oculto" style="overflow-x:auto"></div>
+  </div>
+</section>
+
+<!-- ===================== LINK PARA OS ALUNOS ===================== -->
+<section class="tela" id="tLink">
+  <div class="cartao">
+    <div class="linha" style="justify-content:space-between">
+      <h1 style="margin:0">🔗 Link para os alunos</h1>
+      <button class="btn claro" id="bLkVoltar">← Voltar</button>
+    </div>
+    <p>Crie um link do quiz <b id="lkQuiz"></b> e envie para a turma (WhatsApp, Classroom, e-mail). Cada aluno joga sozinho, no próprio ritmo, pelo celular ou computador. As respostas chegam para você em <b>Minhas tarefas</b>.</p>
+    <div id="lkForm">
+      <label style="display:block;font-weight:800;margin:10px 0 4px" for="lkPrazo">Prazo (opcional)</label>
+      <input type="datetime-local" id="lkPrazo" style="border:2px solid #d8d3ee;border-radius:10px;padding:10px;min-height:44px;color:var(--tinta);max-width:100%">
+      <label style="display:flex;gap:8px;align-items:center;font-weight:700;margin:12px 0"><input type="checkbox" id="lkMostrar" checked> Mostrar a resposta certa e a explicação depois de cada questão</label>
+      <button class="btn ouro grande" id="bLkCriar">🔗 Criar link</button>
+    </div>
+    <div class="fb" id="lkFb" role="status"></div>
+    <div id="lkResultado" class="oculto">
+      <p class="dica">✅ Link criado! Envie para os alunos:</p>
+      <input type="text" id="lkUrl" readonly style="width:100%;font-size:1.15em;font-weight:800;border:3px solid #5b2dbf;border-radius:12px;padding:12px;color:var(--tinta)">
+      <div class="linha" style="margin-top:10px">
+        <button class="btn verde" id="bLkCopiar">📋 Copiar link</button>
+        <a class="btn" id="bLkZap" target="_blank" rel="noopener" style="text-decoration:none;background:#128c4a">💬 Enviar no WhatsApp</a>
+        <button class="btn claro" id="bLkShare">📤 Compartilhar</button>
+        <button class="btn claro" id="bLkVer">📊 Ver respostas</button>
+      </div>
+      <div id="lkQr" style="margin-top:12px"></div>
+      <p style="margin:6px 0 0">Também dá para projetar o QR Code para os alunos apontarem a câmera.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MINHAS TAREFAS ===================== -->
+<section class="tela" id="tTarefas">
+  <div class="cartao">
+    <div class="linha" style="justify-content:space-between">
+      <h1 style="margin:0">🔗 Minhas tarefas (links)</h1>
+      <button class="btn claro" id="bTrVoltar">← Voltar</button>
+    </div>
+    <p>Os quizzes que você enviou por link. Toque em uma tarefa para ver as respostas dos alunos.</p>
+    <div id="trLista"></div>
+  </div>
+</section>
+<section class="tela" id="tTarefa">
+  <div class="cartao">
+    <div class="linha" style="justify-content:space-between">
+      <h1 style="margin:0" id="tdTitulo">Tarefa</h1>
+      <div class="linha no-print">
+        <button class="btn claro" id="bTdAtualizar">↻ Atualizar</button>
+        <button class="btn claro" id="bTdCsv">⬇️ Planilha (CSV)</button>
+        <button class="btn claro" id="bTdVoltar">← Voltar</button>
+      </div>
+    </div>
+    <p id="tdInfo"></p>
+    <div class="linha no-print" id="tdAcoes"></div>
+    <div id="tdAlerta" style="margin-top:10px"></div>
+    <div class="abas no-print" style="margin-top:10px">
+      <button class="btn claro" data-tdaba="alunos" aria-pressed="true">Alunos</button>
+      <button class="btn claro" data-tdaba="perguntas" aria-pressed="false">Questões</button>
+    </div>
+    <div id="tdAlunos" style="overflow-x:auto"></div>
+    <div id="tdPerguntas" class="oculto" style="overflow-x:auto"></div>
+  </div>
+</section>
+
+<!-- ===================== HISTÓRICO ===================== -->
+<section class="tela" id="tHistorico">
+  <div class="cartao">
+    <div class="linha" style="justify-content:space-between">
+      <h1 style="margin:0">📊 Relatórios das partidas</h1>
+      <button class="btn claro" id="bHistVoltar">← Voltar</button>
+    </div>
+    <p>As últimas 30 partidas ficam guardadas neste computador.</p>
+    <div id="histLista"></div>
+  </div>
+</section>
+
+</main>
+
+<div id="sozinho" class="modal oculto" role="dialog" aria-modal="true" aria-label="Teste do quiz">
+  <div class="sozinho-caixa">
+    <div class="linha" style="justify-content:space-between;padding:8px 12px;background:#00000033"><b>🧪 Teste: como o aluno vê</b><button class="btn-s" id="bFecharSozinho">✕ Fechar</button></div>
+    <iframe id="frSozinho" title="Teste do quiz" allow="fullscreen; autoplay"></iframe>
+  </div>
+</div>
+<div id="modal" class="modal oculto" role="dialog" aria-modal="true" aria-label="Prévia no telão">
+  <div class="cartao" style="background:linear-gradient(160deg,var(--f2),var(--f1));color:#fff">
+    <div class="linha" style="justify-content:space-between"><h2 style="margin:0">Prévia no telão</h2><button class="btn claro" id="bFecharModal">Fechar</button></div>
+    <div id="modalCorpo"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+window.SUPABASE_URL = "https://ujzmqpsxfxpxehasoxbq.supabase.co";
+window.SUPABASE_KEY = "sb_publishable_wEtFV7CnN28YKIAclZfPQg_QVkVJPVn";
+</script>
+<script>
+/* Gerador de QR code (byte, correção M, versões 1–10). Sem dependências. */
+window.QRMini = (function(){
+  var ECC = {1:[10,[16]],2:[16,[28]],3:[26,[44]],4:[18,[32,32]],5:[24,[43,43]],6:[16,[27,27,27,27]],
+    7:[18,[31,31,31,31]],8:[22,[38,38,39,39]],9:[22,[36,36,36,37,37]],10:[26,[43,43,43,43,44]]};
+  var ALIN = {1:[],2:[6,18],3:[6,22],4:[6,26],5:[6,30],6:[6,34],7:[6,22,38],8:[6,24,42],9:[6,26,46],10:[6,28,50]};
+  var EXP = [], LOG = [];
+  (function(){ var x = 1; for(var i = 0; i < 255; i++){ EXP[i] = x; LOG[x] = i; x <<= 1; if(x & 256) x ^= 0x11d; } for(i = 255; i < 512; i++) EXP[i] = EXP[i - 255]; })();
+  function mul(a, b){ return (a && b) ? EXP[LOG[a] + LOG[b]] : 0; }
+  function gerador(n){ var g = [1]; for(var i = 0; i < n; i++){ var ng = new Array(g.length + 1).fill(0); for(var j = 0; j < g.length; j++){ ng[j] ^= g[j]; ng[j + 1] ^= mul(g[j], EXP[i]); } g = ng; } return g; }
+  function resto(dados, n){ var g = gerador(n), r = new Array(n).fill(0); dados.forEach(function(d){ var f = d ^ r.shift(); r.push(0); for(var i = 0; i < n; i++) r[i] ^= mul(g[i + 1], f); }); return r; }
+  function bch(v, poly, bits){ var d = v << bits; var tam = function(x){ return 32 - Math.clz32(x); }; while(tam(d) >= tam(poly)) d ^= poly << (tam(d) - tam(poly)); return d; }
+  function codificar(texto){
+    var bytes = Array.from(new TextEncoder().encode(texto));
+    var v, dados;
+    for(v = 1; v <= 10; v++){ var cap = ECC[v][1].reduce(function(a, b){ return a + b; }, 0); if(bytes.length + 2 + (v > 9 ? 1 : 0) <= cap) break; }
+    if(v > 10) throw new Error('texto longo demais');
+    var cap2 = ECC[v][1].reduce(function(a, b){ return a + b; }, 0), bits = [];
+    function pôr(val, n){ for(var i = n - 1; i >= 0; i--) bits.push((val >>> i) & 1); }
+    pôr(4, 4); pôr(bytes.length, v > 9 ? 16 : 8); bytes.forEach(function(b){ pôr(b, 8); });
+    pôr(0, Math.min(4, cap2 * 8 - bits.length)); while(bits.length % 8) bits.push(0);
+    dados = []; for(var i = 0; i < bits.length; i += 8){ var b = 0; for(var k = 0; k < 8; k++) b = (b << 1) | bits[i + k]; dados.push(b); }
+    for(var pad = 0xEC; dados.length < cap2; pad ^= 0xEC ^ 0x11) dados.push(pad);
+    var blocos = [], pos = 0, ne = ECC[v][0];
+    ECC[v][1].forEach(function(n){ var d = dados.slice(pos, pos + n); pos += n; blocos.push({d: d, e: resto(d, ne)}); });
+    var fim = [], maxd = Math.max.apply(null, ECC[v][1]);
+    for(i = 0; i < maxd; i++) blocos.forEach(function(b){ if(i < b.d.length) fim.push(b.d[i]); });
+    for(i = 0; i < ne; i++) blocos.forEach(function(b){ fim.push(b.e[i]); });
+    return {v: v, cw: fim};
+  }
+  function montar(v, cw, mascara){
+    var N = 17 + 4 * v, M = [], F = [];
+    for(var y = 0; y < N; y++){ M.push(new Array(N).fill(false)); F.push(new Array(N).fill(false)); }
+    function set(x, y, val){ M[y][x] = val; F[y][x] = true; }
+    function localizador(cx, cy){ for(var dy = -4; dy <= 4; dy++) for(var dx = -4; dx <= 4; dx++){ var x = cx + dx, y = cy + dy; if(x < 0 || y < 0 || x >= N || y >= N) continue; var d = Math.max(Math.abs(dx), Math.abs(dy)); set(x, y, d !== 2 && d !== 4); } }
+    localizador(3, 3); localizador(N - 4, 3); localizador(3, N - 4);
+    var al = ALIN[v];
+    al.forEach(function(cy, i){ al.forEach(function(cx, j){
+      if((i === 0 && j === 0) || (i === 0 && j === al.length - 1) || (i === al.length - 1 && j === 0)) return;
+      for(var dy = -2; dy <= 2; dy++) for(var dx = -2; dx <= 2; dx++) set(cx + dx, cy + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
+    }); });
+    for(var i = 8; i < N - 8; i++){ set(6, i, i % 2 === 0); set(i, 6, i % 2 === 0); }
+    set(8, N - 8, true);
+    for(i = 0; i < 9; i++){ F[8][i] = F[i][8] = true; }
+    for(i = 0; i < 8; i++){ F[8][N - 1 - i] = true; F[N - 1 - i][8] = true; }
+    if(v >= 7){ var vi = (v << 12) | bch(v, 0x1F25, 12);
+      for(i = 0; i < 18; i++){ var bit = ((vi >> i) & 1) === 1, a = N - 11 + (i % 3), b = Math.floor(i / 3); set(a, b, bit); set(b, a, bit); } }
+    var bitsDados = []; cw.forEach(function(c){ for(var k = 7; k >= 0; k--) bitsDados.push((c >> k) & 1); });
+    var idx = 0, sobe = true;
+    for(var x = N - 1; x >= 1; x -= 2){
+      if(x === 6) x = 5;
+      for(var n = 0; n < N; n++){ var yy = sobe ? N - 1 - n : n;
+        for(var c = 0; c < 2; c++){ var xx = x - c; if(F[yy][xx]) continue;
+          var bit2 = idx < bitsDados.length ? bitsDados[idx] === 1 : false; idx++;
+          var inv = [ (xx + yy) % 2 === 0, yy % 2 === 0, xx % 3 === 0, (xx + yy) % 3 === 0, (Math.floor(yy / 2) + Math.floor(xx / 3)) % 2 === 0,
+            (xx * yy) % 2 + (xx * yy) % 3 === 0, ((xx * yy) % 2 + (xx * yy) % 3) % 2 === 0, ((xx + yy) % 2 + (xx * yy) % 3) % 2 === 0 ][mascara];
+          M[yy][xx] = bit2 !== inv; } }
+      sobe = !sobe;
+    }
+    var fmt = ((0 << 3) | mascara); /* nível M = 00 */
+    var f = ((fmt << 10) | bch(fmt, 0x537, 10)) ^ 0x5412;
+    function fb(i){ return ((f >> i) & 1) === 1; }
+    for(i = 0; i <= 5; i++) M[i][8] = fb(i);
+    M[7][8] = fb(6); M[8][8] = fb(7); M[8][7] = fb(8);
+    for(i = 9; i < 15; i++) M[8][14 - i] = fb(i);
+    for(i = 0; i < 8; i++) M[8][N - 1 - i] = fb(i);
+    for(i = 8; i < 15; i++) M[N - 15 + i][8] = fb(i);
+    M[N - 8][8] = true;
+    return M;
+  }
+  function penalidade(M){
+    var N = M.length, p = 0, x, y, i;
+    for(var t = 0; t < 2; t++){
+      for(y = 0; y < N; y++){ var run = 1; for(x = 1; x < N; x++){ var a = t ? M[x][y] : M[y][x], b = t ? M[x - 1][y] : M[y][x - 1]; if(a === b){ run++; if(run === 5) p += 3; else if(run > 5) p++; } else run = 1; } }
+      for(y = 0; y < N; y++){ var s = 0; for(x = 0; x < N; x++){ s = ((s << 1) | ((t ? M[x][y] : M[y][x]) ? 1 : 0)) & 0x7FF;
+        if(x >= 10 && (s === 0x05D || s === 0x5D0)) p += 40; } }
+    }
+    for(y = 0; y < N - 1; y++) for(x = 0; x < N - 1; x++){ var c = M[y][x]; if(c === M[y][x + 1] && c === M[y + 1][x] && c === M[y + 1][x + 1]) p += 3; }
+    var pretos = 0; for(y = 0; y < N; y++) for(x = 0; x < N; x++) if(M[y][x]) pretos++;
+    p += 10 * Math.floor(Math.abs(pretos * 20 - N * N * 10) / (N * N) );
+    return p;
+  }
+  function matriz(texto){
+    var c = codificar(texto), melhor = null, mp = Infinity;
+    for(var m = 0; m < 8; m++){ var M = montar(c.v, c.cw, m), p = penalidade(M); if(p < mp){ mp = p; melhor = M; } }
+    return melhor;
+  }
+  /* desenha num <canvas> (com margem de 4 módulos) */
+  function canvas(texto, px){
+    var M = matriz(texto), N = M.length, mod = Math.max(2, Math.floor((px || 220) / (N + 8)));
+    var cv = document.createElement('canvas'); cv.width = cv.height = mod * (N + 8);
+    var g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height); g.fillStyle = '#000';
+    for(var y = 0; y < N; y++) for(var x = 0; x < N; x++) if(M[y][x]) g.fillRect((x + 4) * mod, (y + 4) * mod, mod, mod);
+    return cv;
+  }
+  return {matriz: matriz, canvas: canvas};
+})();
+</script>
+<script>
+'use strict';
+/* =====================================================================
+   GAMIFICA LIVE · tela do professor (telão)
+   O computador do professor é o "juiz" da partida: guarda as respostas
+   certas, mede o tempo de cada resposta e calcula os pontos. Os celulares
+   só recebem o enunciado e as alternativas, nunca a resposta certa.
+   ===================================================================== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+function lerLS(k, padrao){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : padrao; } catch(e){ return padrao; } }
+function gravarLS(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ return false; } }
+
+const FORMAS = [
+  '<svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,4 37,35 3,35" fill="#fff"/></svg>',
+  '<svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,3 37,20 20,37 3,20" fill="#fff"/></svg>',
+  '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="#fff"/></svg>',
+  '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="5" width="30" height="30" rx="3" fill="#fff"/></svg>'];
+const CORES = ['#e21b3c', '#1368ce', '#c68a00', '#26890c'];
+const NOMES_FORMA = ['Triângulo', 'Losango', 'Círculo', 'Quadrado'];
+const SITE_VIVO = 'https://gamificaeducacao.com.br/vivo/';
+const TIPOS = {multipla: 'Múltipla escolha', vf: 'Verdadeiro ou falso', numero: 'Resposta numérica', ordenar: 'Ordenar etapas', enquete: 'Enquete (sem pontos)'};
+const TEMPOS = [5, 10, 15, 20, 30, 45, 60, 90, 120];
+
+/* ===================== Matemática em notação de livro (KaTeX) ===================== */
+/* Fórmulas ficam entre \( e \). Sem KaTeX (internet fraca), mostramos uma versão simplificada. */
+const SOBRE = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻','+':'⁺','n':'ⁿ','x':'ˣ'};
+function sobrescrito(t){ return /^[-+0-9nx]+$/.test(t) ? t.split('').map(c => SOBRE[c]).join('') : '^(' + t + ')'; }
+function texSimples(s){
+  return String(s)
+    .replace(/\\\(|\\\)/g, '')
+    .replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, '$1/$2')
+    .replace(/\\sqrt\{([^{}]*)\}/g, '√($1)')
+    .replace(/\^\{2\}/g, '²').replace(/\^\{3\}/g, '³').replace(/\^\{([^{}]*)\}/g, (m, t) => sobrescrito(t))
+    .replace(/\\cdot/g, '·').replace(/\\times/g, '×').replace(/\\div/g, '÷')
+    .replace(/\\leq/g, '≤').replace(/\\geq/g, '≥').replace(/\\neq/g, '≠').replace(/\\pi/g, 'π')
+    .replace(/\{,\}/g, ',').replace(/\\,/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function pôrMat(el, texto){
+  el.textContent = texto == null ? '' : String(texto);
+  if (!/\\\(/.test(el.textContent)) return;
+  if (window.renderMathInElement){
+    try { window.renderMathInElement(el, {delimiters: [{left: '\\(', right: '\\)', display: false}], throwOnError: false}); return; } catch(e){}
+  }
+  el.textContent = texSimples(el.textContent);
+}
+function matHTML(texto){ const d = document.createElement('span'); pôrMat(d, texto); return d.innerHTML; }
+
+/* ===================== Som: efeitos e música (Web Audio, sem arquivos) ===================== */
+const Som = {
+  ctx: null, mestre: null, mudo: false, vol: 0.6, musica: null, timer: null, prox: 0, passo: 0, bpm: 112,
+  iniciar(){
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    try {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.mestre = this.ctx.createGain(); this.mestre.connect(this.ctx.destination); this.aplicarVol();
+    } catch(e){ this.ctx = null; }
+  },
+  aplicarVol(){ if (this.mestre) this.mestre.gain.value = this.mudo ? 0 : this.vol; },
+  nota(f, inicio, dur, tipo, vol){
+    if (!this.ctx) return;
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = tipo || 'triangle'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, inicio);
+    g.gain.exponentialRampToValueAtTime(vol || 0.15, inicio + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, inicio + dur);
+    o.connect(g); g.connect(this.mestre); o.start(inicio); o.stop(inicio + dur + 0.05);
+  },
+  ruido(inicio, dur, vol){
+    if (!this.ctx) return;
+    const n = Math.floor(this.ctx.sampleRate * dur), b = this.ctx.createBuffer(1, n, this.ctx.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    const s = this.ctx.createBufferSource(), g = this.ctx.createGain(), f = this.ctx.createBiquadFilter();
+    f.type = 'highpass'; f.frequency.value = 6000; g.gain.value = vol || 0.08;
+    s.buffer = b; s.connect(f); f.connect(g); g.connect(this.mestre); s.start(inicio);
+  },
+  efeito(nome){
+    this.iniciar(); if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const seq = {
+      entrou: [[784, 0, .12], [1046, .08, .16]],
+      resposta: [[880, 0, .06]],
+      certo: [[523, 0, .15], [659, .1, .15], [784, .2, .25]],
+      tique: [[1200, 0, .04, 'square', .05]],
+      gongo: [[196, 0, .9, 'sine', .3], [294, 0, .9, 'sine', .18]],
+      sobe: [[660, 0, .1], [880, .08, .14]],
+      tambor: [], fanfarra: [[523, 0, .2], [659, .15, .2], [784, .3, .2], [1046, .45, .5], [1318, .6, .7]]
+    }[nome] || [];
+    seq.forEach(([f, d, dur, tipo, vol]) => this.nota(f, t + d, dur, tipo || 'triangle', vol || .18));
+    if (nome === 'tambor') for (let i = 0; i < 18; i++) this.ruido(t + i * 0.09, 0.08, 0.05 + i * 0.006);
+  },
+  /* Música: "lobby" (arpejo calmo) ou "pergunta" (pulso que acelera no fim) */
+  tocar(modo){
+    this.parar(); this.iniciar(); if (!this.ctx || !Config.musica) return;
+    this.musica = modo; this.passo = 0; this.prox = this.ctx.currentTime + 0.1; this.bpm = modo === 'lobby' ? 108 : 124;
+    this.timer = setInterval(() => this.agendar(), 40);
+  },
+  acelerar(bpm){ this.bpm = bpm; },
+  parar(){ clearInterval(this.timer); this.timer = null; this.musica = null; },
+  agendar(){
+    if (!this.ctx) return;
+    const ACORDES = [[261.6, 329.6, 392], [196, 246.9, 293.7], [220, 261.6, 329.6], [174.6, 220, 261.6]];
+    while (this.prox < this.ctx.currentTime + 0.15){
+      const dur = 60 / this.bpm / 2, p = this.passo, ac = ACORDES[Math.floor(p / 8) % 4];
+      if (this.musica === 'lobby'){
+        this.nota(ac[p % 3] * 2, this.prox, dur * 1.6, 'triangle', 0.06);
+        if (p % 4 === 0) this.nota(ac[0] / 2, this.prox, dur * 3, 'sine', 0.12);
+      } else {
+        if (p % 2 === 0) this.nota(ac[0] / 2, this.prox, dur * 0.9, 'square', 0.05);
+        this.ruido(this.prox, 0.03, p % 4 === 2 ? 0.05 : 0.025);
+        if (p % 8 === 4) this.nota(ac[2] * 2, this.prox, dur, 'triangle', 0.05);
+      }
+      this.prox += dur; this.passo++;
+    }
+  }
+};
+$('#bMudo').onclick = function(){ Som.mudo = !Som.mudo; Som.aplicarVol(); this.textContent = Som.mudo ? '🔇' : '🔊'; this.setAttribute('aria-pressed', Som.mudo); };
+$('#volume').oninput = function(){ Som.vol = this.value / 100; Som.aplicarVol(); };
+let escala = 1;
+$('#bMais').onclick = () => { escala = Math.min(1.5, escala + 0.1); document.body.style.setProperty('--esc', escala); };
+$('#bMenos').onclick = () => { escala = Math.max(0.8, escala - 0.1); document.body.style.setProperty('--esc', escala); };
+$('#bContraste').onclick = function(){ const on = document.body.classList.toggle('contraste'); this.setAttribute('aria-pressed', on); };
+$('#bTela').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {}); };
+
+/* ===================== Quizzes prontos ===================== */
+function mc(t, o, c, tempo, e){ return {tipo: 'multipla', t, o, c, tempo: tempo || 20, pontos: 1000, e: e || ''}; }
+function tabuadaAleatoria(){
+  const l = [], usados = new Set();
+  while (l.length < 10){
+    const a = 2 + Math.floor(Math.random() * 8), b = 2 + Math.floor(Math.random() * 8), k = a + 'x' + b;
+    if (usados.has(k)) continue; usados.add(k);
+    const r = a * b, err = new Set([r]);
+    [r + a, r - b, a + b, r + 1, r - 1, r + 10].forEach(x => { if (err.size < 4 && x > 0) err.add(x); });
+    const o = [...err].slice(0, 4).map(String), pos = Math.floor(Math.random() * 4);
+    [o[0], o[pos]] = [o[pos], o[0]];
+    l.push(mc(`Quanto é ${a} × ${b}?`, o, pos, 15, `${a} × ${b} = ${r}`));
+  }
+  return l;
+}
+const PRONTOS = [
+  {id: 'p-exemplo', titulo: '⭐ Exemplo Gamifica Live', desc: '10 perguntas de todos os tipos: frações, porcentagem, equação e geometria.', perguntas: () => [
+    mc('Quanto é \\( \\frac{3}{4} \\) de 20?', ['15', '12', '5', '16'], 0, 20, '20 ÷ 4 = 5 e 3 · 5 = 15.'),
+    {tipo: 'vf', t: 'Verdadeiro ou falso: \\( \\frac{1}{2} = 0{,}5 \\)', o: ['Verdadeiro', 'Falso'], c: 0, tempo: 15, pontos: 1000, e: '1 ÷ 2 = 0,5. Então é verdadeiro.'},
+    {tipo: 'numero', t: 'Quanto é 20% de 150?', o: [], num: '30', tol: 0, tempo: 30, pontos: 1000, e: '10% de 150 = 15. Então 20% = 2 · 15 = 30.'},
+    mc('Resolva: \\( x + 7 = 15 \\). (x é o número desconhecido)', ['x = 8', 'x = 22', 'x = 7', 'x = 15'], 0, 20, 'x = 15 − 7 = 8.'),
+    {tipo: 'ordenar', t: 'Coloque em ordem os passos para resolver \\( 2x + 6 = 14 \\) (x é o número desconhecido):', o: ['Tirar 6 dos dois lados: \\( 2x = 8 \\)', 'Dividir os dois lados por 2', 'Encontrar \\( x = 4 \\)'], tempo: 45, pontos: 1000, e: '2x + 6 = 14 → 2x = 8 → x = 4.'},
+    {tipo: 'numero', t: 'Qual é o valor de \\( 2^{5} \\)?', o: [], num: '32', tol: 0, tempo: 30, pontos: 1000, e: '2 · 2 · 2 · 2 · 2 = 32.'},
+    mc('A área de um retângulo de 8 cm por 5 cm é:', ['40 cm²', '13 cm²', '26 cm²', '40 cm'], 0, 20, 'Área = base · altura = 8 · 5 = 40 cm².'),
+    {tipo: 'vf', t: 'Verdadeiro ou falso: a soma dos ângulos internos de um triângulo é 360°.', o: ['Verdadeiro', 'Falso'], c: 1, tempo: 15, pontos: 1000, e: 'A soma é 180°. Então é falso.'},
+    {tipo: 'numero', t: 'Quanto é \\( \\frac{1}{2} + \\frac{1}{4} \\)? (pode digitar 3/4 ou 0,75)', o: [], num: '3/4', tol: 0, tempo: 45, pontos: 2000, e: '\\( \\frac{1}{2} = \\frac{2}{4} \\), então \\( \\frac{2}{4} + \\frac{1}{4} = \\frac{3}{4} \\).'},
+    {tipo: 'enquete', t: 'Como você está se sentindo com frações agora?', o: ['😀 Seguro', '🙂 Quase lá', '😕 Preciso revisar'], tempo: 20, pontos: 0, e: ''}]},
+  {id: 'p-revisao', titulo: '📚 Revisão geral', desc: 'Frações, porcentagem, potências, equações e geometria.', perguntas: () => [
+    mc('Quanto é \\( \\frac{3}{4} \\) de 20?', ['15', '12', '5', '16'], 0, 20, '20 ÷ 4 = 5 e 3 · 5 = 15.'),
+    mc('20% de 150 é:', ['20', '30', '35', '15'], 1, 20, '10% de 150 = 15; 20% = 30.'),
+    mc('Qual é o valor de \\( 2^{5} \\)?', ['10', '25', '32', '7'], 2, 20, '2 · 2 · 2 · 2 · 2 = 32.'),
+    mc('Resolva: \\( x + 7 = 15 \\) (x é o número desconhecido)', ['x = 22', 'x = 7', 'x = 15', 'x = 8'], 3, 20, 'x = 15 − 7 = 8.'),
+    mc('Quanto é \\( \\sqrt{81} \\)?', ['9', '8', '40,5', '18'], 0, 15, '9 · 9 = 81.'),
+    mc('A soma dos ângulos internos de um triângulo é:', ['90°', '180°', '360°', '270°'], 1, 15, 'Sempre 180°.'),
+    mc('Qual fração é equivalente a \\( \\frac{2}{3} \\)?', ['\\( \\frac{3}{4} \\)', '\\( \\frac{4}{5} \\)', '\\( \\frac{4}{6} \\)', '\\( \\frac{2}{6} \\)'], 2, 20, 'Multiplicando em cima e embaixo por 2: 4/6.'),
+    mc('A área de um quadrado de lado 6 cm é:', ['24 cm²', '12 cm²', '36 cm', '36 cm²'], 3, 20, 'A = l² = 6² = 36 cm² (l é a medida do lado).'),
+    mc('0,75 corresponde a:', ['75%', '7,5%', '0,75%', '750%'], 0, 15, '0,75 = 75/100 = 75%.'),
+    mc('Quanto é \\( (-3) \\cdot (-4) \\)?', ['−12', '12', '−7', '7'], 1, 15, 'Sinais iguais na multiplicação: resultado positivo. 12.')]},
+  {id: 'p-tabuada', titulo: '✖️ Tabuada relâmpago', desc: '10 contas sorteadas (tabuadas do 2 ao 9), 15 s cada.', perguntas: tabuadaAleatoria},
+  {id: 'p-halloween', titulo: '🎃 Quiz Assombrado', desc: '15 desafios de matemática com tema de Halloween.', perguntas: () => [
+    mc('A bruxa tinha 12 abóboras e colheu mais 9. Quantas tem agora?', ['21', '19', '3', '108'], 0, 20, '12 + 9 = 21.'),
+    mc('48 balas divididas igualmente entre 6 crianças. Quantas para cada?', ['6', '8', '42', '54'], 1, 20, '48 ÷ 6 = 8.'),
+    mc('Um morcego voa 15 m por segundo. Quanto voa em 4 s?', ['19 m', '45 m', '60 m', '11 m'], 2, 20, '15 × 4 = 60 m.'),
+    mc('O caldeirão tinha 3,5 L; a bruxa usou 1,25 L. Quanto sobrou?', ['2,75 L', '2,25 L', '4,75 L', '2,3 L'], 1, 25, '3,50 − 1,25 = 2,25 L.'),
+    mc('25% de 80 crianças vieram de vampiro. Quantas?', ['25', '40', '8', '20'], 3, 25, '80 ÷ 4 = 20.'),
+    mc('De 30 abóboras, \\( \\frac{2}{5} \\) foram esculpidas. Quantas?', ['12', '6', '15', '10'], 0, 25, '30 ÷ 5 = 6; 2 × 6 = 12.'),
+    mc('5 pirulitos de morango, 3 de uva e 2 de limão. Chance de tirar uva?', ['\\( \\frac{3}{5} \\)', '\\( \\frac{1}{3} \\)', '\\( \\frac{3}{10} \\)', '\\( \\frac{3}{7} \\)'], 2, 25, '3 de 10 pirulitos: 3/10.'),
+    mc('Sequência: 3, 7, 11, 15, … Qual é o próximo?', ['18', '19', '20', '30'], 1, 20, 'Aumenta de 4 em 4: 19.'),
+    mc('O fantasma pensou em x, dobrou e somou 5: deu 21. Quanto vale x? (x é o número pensado)', ['13', '8', '16', '10'], 1, 30, '2x + 5 = 21 → 2x = 16 → x = 8.'),
+    mc('Tapete retangular de 4 m por 2,5 m. Qual a área?', ['6,5 m²', '13 m²', '10 m²', '8 m²'], 2, 25, '4 × 2,5 = 10 m².'),
+    mc('A festa começa às 19h45 e dura 2h30. Termina às:', ['21h75', '22h15', '21h15', '22h45'], 1, 30, '19h45 + 2h30 = 22h15.'),
+    mc('Cada abóbora custa R$ 7,50. Quanto custam 6?', ['R$ 42,00', 'R$ 45,00', 'R$ 13,50', 'R$ 47,50'], 1, 25, '7,50 × 6 = 45,00.'),
+    mc('Doces em 4 casas: 12, 15, 9 e 20. Qual a média?', ['14', '56', '15', '13'], 0, 30, '56 ÷ 4 = 14.'),
+    mc('O feitiço triplica as aranhas toda noite, a partir de 1. Quantas após 4 noites?', ['12', '81', '27', '64'], 1, 30, '\\( 3^{4} = 81 \\).'),
+    mc('Triângulo com ângulos de 50° e 60°. Quanto mede o terceiro?', ['70°', '110°', '90°', '250°'], 0, 25, '180° − 50° − 60° = 70°.')]}
+];
+
+/* ===================== Meus quizzes (salvos neste computador) ===================== */
+const CHAVE_QUIZ = 'live-quizzes';
+let meus = lerLS(CHAVE_QUIZ, null);
+if (!meus){
+  meus = [];
+  /* traz as perguntas criadas no Quiz Ao Vivo antigo, para não perder nada */
+  const antigas = lerLS('vivo-minhas', []);
+  if (Array.isArray(antigas) && antigas.length){
+    meus.push({id: uid(), titulo: '✏️ Minhas perguntas (do Quiz Ao Vivo)', perguntas: antigas.map(q => ({tipo: 'multipla', t: q.t || '', o: (q.o || ['', '', '', '']).slice(0, 4), c: q.c || 0, tempo: q.tempo || 20, pontos: 1000, e: q.e || ''}))});
+  }
+  gravarLS(CHAVE_QUIZ, meus);
+}
+function salvarMeus(){
+  if (!gravarLS(CHAVE_QUIZ, meus)) aviso('#fbInicio', 'Não consegui salvar neste aparelho: o espaço do navegador acabou. Use imagens menores ou apague quizzes antigos.', true);
+  try { Nuvem.agendar(); } catch(e){}
+}
+function aviso(sel, txt, erro){ const e = $(sel); if (!e) return; e.textContent = txt; e.className = 'fb' + (erro ? ' erro' : ''); }
+
+function normalizar(q){
+  const n = {tipo: TIPOS[q.tipo] ? q.tipo : 'multipla', t: String(q.t || ''), o: Array.isArray(q.o) ? q.o.map(String) : [],
+    c: +q.c || 0, num: q.num == null ? '' : String(q.num), tol: +q.tol || 0, tempo: TEMPOS.includes(+q.tempo) ? +q.tempo : 20,
+    pontos: [0, 1000, 2000].includes(+q.pontos) ? +q.pontos : 1000, img: q.img || '', e: String(q.e || '')};
+  if (n.tipo === 'vf') n.o = ['Verdadeiro', 'Falso'];
+  if (n.tipo === 'enquete') n.pontos = 0;
+  return n;
+}
+/* devolve um texto com o problema, ou '' se a pergunta está pronta para o jogo */
+function problema(q){
+  if (!q.t.trim()) return 'Falta o enunciado.';
+  const alts = q.o.filter(x => x.trim());
+  if (q.tipo === 'multipla'){ if (alts.length < 2) return 'Escreva pelo menos 2 alternativas.'; if (!(q.o[q.c] || '').trim()) return 'Marque qual alternativa é a certa.'; }
+  if (q.tipo === 'ordenar' && alts.length < 2) return 'Escreva pelo menos 2 etapas.';
+  if (q.tipo === 'enquete' && alts.length < 2) return 'Escreva pelo menos 2 opções.';
+  if (q.tipo === 'numero' && isNaN(lerNumero(q.num))) return 'Escreva a resposta numérica (ex.: 30, 0,75 ou 3/4).';
+  return '';
+}
+/* lê números como os alunos escrevem: 12 · −3 · 0,75 · 3/4 */
+function lerNumero(s){
+  s = String(s == null ? '' : s).replace(/\s+/g, '').replace(/[−–]/g, '-');
+  if (/^-?\d+([.,]\d+)?$/.test(s)) return parseFloat(s.replace(',', '.'));
+  const m = s.match(/^(-?\d+)\/(-?\d+)$/);
+  if (m && +m[2] !== 0) return +m[1] / +m[2];
+  return NaN;
+}
+
+/* ===================== Tela inicial ===================== */
+let selecionado = 'p-exemplo';
+const Config = {embaralhar: false, mostrarTexto: true, leitura: 3, ranking: 'completo', musica: true};
+function acharQuiz(id){
+  const p = PRONTOS.find(x => x.id === id);
+  if (p) return {id: p.id, titulo: p.titulo, desc: p.desc, pronto: true, perguntas: p.perguntas().map(normalizar)};
+  const m = meus.find(x => x.id === id);
+  return m ? {id: m.id, titulo: m.titulo, pronto: false, perguntas: m.perguntas.map(normalizar)} : null;
+}
+function desenharInicio(){
+  const card = (id, titulo, sub, tag) => `<button type="button" class="qz${id === selecionado ? ' sel' : ''}" data-id="${esc(id)}"><b>${esc(titulo)}</b><small>${esc(sub)}</small><span class="tag">${tag}</span></button>`;
+  $('#listaQuizzes').innerHTML =
+    PRONTOS.map(p => card(p.id, p.titulo, p.desc, 'pronto')).join('') +
+    meus.map(m => { const ok = m.perguntas.map(normalizar).filter(q => !problema(q)).length; return card(m.id, m.titulo || 'Quiz sem título', ok + ' de ' + m.perguntas.length + ' perguntas prontas', 'meu'); }).join('');
+  const q = acharQuiz(selecionado) || acharQuiz('p-exemplo');
+  selecionado = q.id;
+  const prontas = q.perguntas.filter(x => !problema(x));
+  $('#selTitulo').textContent = q.titulo;
+  $('#selInfo').textContent = prontas.length + ' pergunta(s) prontas para jogar' + (q.pronto ? ' · quiz pronto do Gamifica' : '') + '.';
+  $('#bCriarSala').textContent = H.manter && H.canal ? '▶ Continuar com a mesma turma' : '▶ Abrir sala';
+  $('#selAcoes').innerHTML = q.pronto
+    ? '<button class="btn claro" data-acao="teste">🧪 Jogar sozinho (teste)</button><button class="btn claro" data-acao="link">🔗 Link para os alunos</button><button class="btn claro" data-acao="duplicar">📋 Copiar para editar</button><button class="btn claro" data-acao="previa">👁️ Ver perguntas</button>'
+    : '<button class="btn claro" data-acao="teste">🧪 Jogar sozinho (teste)</button><button class="btn claro" data-acao="link">🔗 Link para os alunos</button><button class="btn claro" data-acao="editar">✏️ Editar</button><button class="btn claro" data-acao="duplicar">📋 Duplicar</button><button class="btn claro" data-acao="previa">👁️ Ver perguntas</button><button class="btn claro" data-acao="excluir">🗑️ Excluir</button>';
+  desenharRetomar();
+}
+$('#listaQuizzes').addEventListener('click', e => { const b = e.target.closest('.qz'); if (!b) return; selecionado = b.dataset.id; desenharInicio(); });
+$('#selAcoes').addEventListener('click', e => {
+  const b = e.target.closest('[data-acao]'); if (!b) return;
+  const q = acharQuiz(selecionado), acao = b.dataset.acao;
+  if (acao === 'editar') abrirEditor(selecionado);
+  if (acao === 'duplicar'){ const novo = {id: uid(), titulo: q.titulo.replace(/^[^\wÀ-ú]+\s*/, '') + ' (cópia)', perguntas: q.perguntas}; meus.push(novo); salvarMeus(); selecionado = novo.id; abrirEditor(novo.id); }
+  if (acao === 'excluir'){ if (confirm('Excluir o quiz "' + q.titulo + '"? Isso não pode ser desfeito.')){ Nuvem.excluir(meus.find(m => m.id === selecionado)); meus = meus.filter(m => m.id !== selecionado); salvarMeus(); selecionado = 'p-exemplo'; desenharInicio(); } }
+  if (acao === 'previa') abrirPrevia(q.perguntas, 0);
+  if (acao === 'teste') jogarSozinho(q);
+  if (acao === 'link') abrirLink(q);
+});
+$('#bColar').onclick = () => abrirColar(null);
+$('#bNovoQuiz').onclick = () => { const novo = {id: uid(), titulo: 'Meu quiz', perguntas: [normalizar({tipo: 'multipla', o: ['', '', '', '']})]}; meus.push(novo); salvarMeus(); selecionado = novo.id; abrirEditor(novo.id); };
+['cEmbaralhar', 'cTexto', 'cLeitura', 'cRanking', 'cMusica'].forEach(id => $('#' + id).addEventListener('change', lerConfig));
+function lerConfig(){ Config.embaralhar = $('#cEmbaralhar').checked; Config.mostrarTexto = $('#cTexto').checked; Config.leitura = +$('#cLeitura').value; Config.ranking = $('#cRanking').value; Config.musica = $('#cMusica').checked; if (!Config.musica) Som.parar(); }
+
+function mostrar(id){ document.querySelectorAll('.tela').forEach(t => t.classList.toggle('on', t.id === id)); window.scrollTo(0, 0); }
+
+/* ===================== Colar questões: monta o quiz a partir de um texto ===================== */
+/* Entende os formatos mais comuns de apostila, Word, PDF e ChatGPT:
+   1) enunciado · a) b) c) d) alternativas · resposta marcada com *, (x), ✓ ou "(correta)"
+   linha "Resposta: C" (ou "Gabarito: C") · gabarito no final ("Gabarito: 1-A, 2-C …")
+   questões sem alternativas com "Resposta: 30" viram resposta numérica · V ou F · "Explicação: …" */
+const RX_Q = /^\s*(?:quest[aã]o|exerc[ií]cio|q\.?)?\s*(\d{1,3})\s*[).:\-–]\s*(.*)$/i;
+const RX_Q_SO = /^\s*(?:quest[aã]o|exerc[ií]cio)\s*(\d{1,3})\s*[).:\-–]?\s*(.*)$/i;
+const RX_ALT = /^\s*\(?\s*([a-eA-E])\s*[)\].:\-–]\s+(.*)$/;
+const RX_CHK = /^\s*[(\[]\s*([xX✓✔ ]?)\s*[)\]]\s*(.+)$/;
+const RX_RESP = /^\s*(?:resposta(?:\s+(?:correta|certa))?|resp\.?|gabarito|alternativa\s+(?:correta|certa)|correta)\s*[:=\-–]\s*(.+)$/i;
+const RX_EXPL = /^\s*(?:explica[cç][aã]o|justificativa|resolu[cç][aã]o|coment[aá]rio|solu[cç][aã]o)\s*[:\-–]\s*(.+)$/i;
+const RX_PAR = /(\d{1,3})\s*[-–:.)=]?\s*\(?\s*(verdadeiro|falso|[a-eA-E]|V|F)\b\)?/g;
+
+function marcadaCerta(txt){
+  let t = String(txt).trim(), certo = false;
+  const marcas = [/^\*\s*/, /\s*\*$/, /\s*\((?:x|correta|certa|resposta)\)\s*$/i, /^\((?:x)\)\s*/i, /\s*\[x\]\s*$/i, /\s*[✓✔✅]\s*$/, /^[✓✔✅]\s*/, /\s*(?:<-+|←)\s*(?:correta|certa)?\s*$/i];
+  marcas.forEach(rx => { if (rx.test(t)){ certo = true; t = t.replace(rx, ''); } });
+  return {txt: t.trim(), certo};
+}
+function lerResposta(r){
+  r = String(r).trim().replace(/[.;]\s*$/, '');
+  const m = r.match(/^\(?\s*([a-eA-E])\s*\)?(?:[).:\-–\s]|$)/);
+  if (m && !/^(verdadeir|falso|falsa)/i.test(r)) return {letra: m[1].toLowerCase()};
+  if (/^(v|verdadeiro|verdadeira|certo|certa)$/i.test(r)) return {vf: 0};
+  if (/^(f|falso|falsa|errado|errada)$/i.test(r)) return {vf: 1};
+  if (!isNaN(lerNumero(r))) return {num: r.replace(/\s+/g, '')};
+  return {texto: r};
+}
+function comoNoLivro(s){
+  if (/\\\(/.test(s)) return s;
+  return s
+    .replace(/(?<![\w\/.,])(\d{1,4})\/(\d{1,4})(?![\w\/])/g, '\\( \\frac{$1}{$2} \\)')
+    .replace(/(?<![\w])([a-zA-Z]|\d+)\^(\d{1,3})(?!\d)/g, '\\( $1^{$2} \\)');
+}
+function separarAlternativasNaLinha(l){
+  const rx = /(^|\s)\(?([a-eA-E])[)\]]\s+/g, pos = [];
+  let m; while ((m = rx.exec(l))) pos.push(m.index + m[1].length);
+  if (pos.length < 2) return [l];
+  const partes = []; if (pos[0] > 0) partes.push(l.slice(0, pos[0]));
+  pos.forEach((p, i) => partes.push(l.slice(p, pos[i + 1] || l.length)));
+  return partes.map(x => x.trim()).filter(Boolean);
+}
+function lerQuestoesColadas(texto, op){
+  op = Object.assign({tempo: 20, livro: true}, op || {});
+  let linhas = String(texto || '').replace(/\r/g, '').replace(/ /g, ' ').replace(/\t/g, ' ').replace(/\*\*|__/g, '').split('\n').map(l => l.replace(/^#+\s*/, '').replace(/\s+$/, ''));
+  /* gabarito no final */
+  const gab = {};
+  for (let i = 0; i < linhas.length; i++){
+    if (/^\s*gabarito\b/i.test(linhas[i])){
+      const resto = linhas.slice(i).join(' ').replace(/^\s*gabarito\s*[:\-–]?/i, '');
+      const pares = [...resto.matchAll(RX_PAR)];
+      if (pares.length >= 2 || (pares.length === 1 && /\d\s*[-–:.)=]\s*\(?\s*(?:[a-eA-E]|V|F|verdadeiro|falso)\b/i.test(resto))){ pares.forEach(p => { gab[+p[1]] = p[2]; }); linhas = linhas.slice(0, i); break; }
+    }
+  }
+  /* separa em blocos: por numeração (1. 2) Questão 3) ou, sem numeração, por linha em branco */
+  const blocos = [];
+  const numerado = linhas.filter(l => RX_Q.test(l) && !RX_ALT.test(l)).length >= 1;
+  if (numerado){
+    let atual = null;
+    linhas.forEach(l => {
+      const m = RX_Q_SO.exec(l) || (!RX_ALT.test(l) && !RX_RESP.test(l) ? RX_Q.exec(l) : null);
+      if (m && (!atual || atual.linhas.length || atual.inicio.trim())){ atual = {n: +m[1], inicio: m[2] || '', linhas: []}; blocos.push(atual); }
+      else if (atual){ if (l.trim()) atual.linhas.push(l); }
+    });
+  } else {
+    let atual = null;
+    linhas.forEach(l => { if (!l.trim()){ atual = null; return; } if (!atual){ atual = {n: blocos.length + 1, inicio: l, linhas: []}; blocos.push(atual); } else atual.linhas.push(l); });
+  }
+  const perguntas = [], avisos = [];
+  blocos.forEach((b, bi) => {
+    /* alternativas na mesma linha do enunciado: "Quanto é 2 + 2? a) 3 b) 4 c) 5" */
+    const partes0 = separarAlternativasNaLinha(b.inicio);
+    const comecaAlt = partes0.length > 1 && RX_ALT.test(partes0[0]);
+    let enun = partes0.length > 1 ? (comecaAlt ? '' : partes0[0].trim()) : b.inicio.trim(), resp = null, expl = '';
+    const extras = partes0.length > 1 ? partes0.slice(comecaAlt ? 0 : 1) : [];
+    const alts = [];
+    let semLetra = [];
+    extras.concat(b.linhas).flatMap(separarAlternativasNaLinha).forEach(l => {
+      let m;
+      if ((m = RX_EXPL.exec(l))){ expl = m[1].trim(); return; }
+      if ((m = RX_RESP.exec(l))){ resp = m[1].trim(); return; }
+      if ((m = RX_ALT.exec(l))){ const c = marcadaCerta(m[2]); alts.push({letra: m[1].toLowerCase(), txt: c.txt, certo: c.certo}); return; }
+      if ((m = RX_CHK.exec(l))){ const c = marcadaCerta(m[2]); alts.push({letra: String.fromCharCode(97 + alts.length), txt: c.txt, certo: c.certo || !!m[1].trim()}); return; }
+      if (!alts.length && !enun){ enun = l.trim(); return; }
+      if (alts.length) { alts[alts.length - 1].txt += ' ' + l.trim(); return; }
+      semLetra.push(l.trim());
+    });
+    /* formato antigo: enunciado e alternativas em linhas, a certa com * */
+    if (!alts.length && semLetra.length >= 2){ semLetra.forEach((l, k) => { const c = marcadaCerta(l); alts.push({letra: String.fromCharCode(97 + k), txt: c.txt, certo: c.certo}); }); semLetra = []; }
+    if (semLetra.length) enun = (enun + ' ' + semLetra.join(' ')).trim();
+    if (!resp && gab[b.n] != null) resp = gab[b.n];
+    const r = resp ? lerResposta(resp) : {};
+    const n = bi + 1;
+    let q;
+    const ehVF = alts.length === 2 && alts.every(a => /^(v|verdadeiro|verdadeira|f|falso|falsa)\b/i.test(a.txt));
+    if (alts.length >= 2 && !ehVF){
+      let lista = alts.slice();
+      let c = lista.findIndex(a => a.certo);
+      if (c < 0 && r.letra) c = lista.findIndex(a => a.letra === r.letra);
+      if (c < 0 && r.texto) c = lista.findIndex(a => a.txt.toLowerCase() === r.texto.toLowerCase());
+      if (c < 0 && r.num != null) c = lista.findIndex(a => lerNumero(a.txt) === lerNumero(r.num));
+      if (lista.length > 4){
+        const tirar = lista.map((a, k) => k).filter(k => k !== c).pop();
+        avisos.push(`Questão ${n}: tinha ${lista.length} alternativas; o Gamifica Live usa até 4, então tirei a ${lista[tirar].letra.toUpperCase()}).`);
+        lista.splice(tirar, 1); if (c > tirar) c--;
+        while (lista.length > 4){ const t2 = lista.map((a, k) => k).filter(k => k !== c).pop(); lista.splice(t2, 1); if (c > t2) c--; }
+      }
+      q = {tipo: 'multipla', t: enun, o: lista.map(a => a.txt).concat(['', '', '', '']).slice(0, 4), c, tempo: op.tempo, pontos: 1000, e: expl};
+    } else if (ehVF || r.vf != null || /verdadeiro\s+ou\s+falso|\bv\s+ou\s+f\b|\(\s*v\s*\)\s*ou\s*\(\s*f\s*\)/i.test(enun)){
+      let c = r.vf != null ? r.vf : -1;
+      if (ehVF){ const k = alts.findIndex(a => a.certo); if (k >= 0) c = /^f/i.test(alts[k].txt) ? 1 : 0; }
+      q = {tipo: 'vf', t: enun, c, tempo: op.tempo, pontos: 1000, e: expl};
+    } else if (r.num != null){
+      q = {tipo: 'numero', t: enun, o: [], num: r.num, tol: 0, tempo: Math.max(op.tempo, 30), pontos: 1000, e: expl};
+    } else {
+      q = {tipo: 'multipla', t: enun, o: ['', '', '', ''], c: -1, tempo: op.tempo, pontos: 1000, e: expl};
+      avisos.push(`Questão ${n}: não encontrei alternativas nem a resposta. Complete no editor.`);
+    }
+    if (op.livro){ q.t = comoNoLivro(q.t); if (q.o) q.o = q.o.map(x => x ? comoNoLivro(x) : x); if (q.e) q.e = comoNoLivro(q.e); }
+    const nq = normalizar(q); if (q.c === -1) nq.c = -1;
+    perguntas.push(nq);
+  });
+  return {perguntas, avisos};
+}
+
+/* ===================== Tela de colar ===================== */
+let colDestino = null;
+function abrirColar(destino){
+  colDestino = destino || null;
+  $('#colTitulo').closest('label').classList.toggle('oculto', !!colDestino);
+  $('#colTituloAviso').textContent = colDestino ? 'As questões serão acrescentadas ao quiz "' + (edQuiz() ? edQuiz().titulo : '') + '".' : '';
+  $('#bColCriar').textContent = colDestino ? '✅ Acrescentar ao quiz' : '✅ Criar o quiz';
+  mostrar('tColar'); atualizarColar(); $('#colTexto').focus();
+}
+let colTimer = null, colResultado = {perguntas: [], avisos: []};
+function atualizarColar(){
+  colResultado = lerQuestoesColadas($('#colTexto').value, {tempo: +$('#colTempo').value, livro: $('#colLivro').checked});
+  const ps = colResultado.perguntas, prontas = ps.filter(p => !problema(p)).length;
+  $('#colResumo').textContent = !$('#colTexto').value.trim() ? '' : ps.length ? `Encontrei ${ps.length} questão(ões): ${prontas} pronta(s) para jogar${ps.length - prontas ? ' e ' + (ps.length - prontas) + ' para completar no editor' : ''}.` : 'Ainda não encontrei questões. Veja os exemplos acima.';
+  $('#bColCriar').disabled = !ps.length;
+  $('#colAvisos').innerHTML = colResultado.avisos.map(a => `<li>${esc(a)}</li>`).join('');
+  $('#colPrevia').innerHTML = ps.map((p, i) => {
+    const pr = problema(p);
+    let corpo = '';
+    if (p.tipo === 'multipla') corpo = '<ol type="a" style="margin:6px 0 0">' + p.o.filter(x => x.trim()).map((x, k) => `<li${k === p.c ? ' style="font-weight:900;color:#15803d"' : ''}><span data-mat="${esc(x)}"></span>${k === p.c ? ' ✅' : ''}</li>`).join('') + '</ol>';
+    if (p.tipo === 'vf') corpo = `<p style="margin:6px 0 0">Resposta: <b>${p.c === 0 ? 'Verdadeiro' : p.c === 1 ? 'Falso' : '?'}</b></p>`;
+    if (p.tipo === 'numero') corpo = `<p style="margin:6px 0 0">Resposta: <b>${esc(p.num)}</b></p>`;
+    return `<div class="q-card${pr ? ' ruim' : ''}"><div class="q-cab"><b>Questão ${i + 1}</b><span class="qz" style="padding:2px 10px;border-width:2px">${TIPOS[p.tipo]}</span></div>
+      <div data-mat="${esc(p.t)}" style="font-weight:700"></div>${corpo}${p.e ? `<p style="margin:6px 0 0">💡 <span data-mat="${esc(p.e)}"></span></p>` : ''}
+      <div class="estado-q" style="margin-top:6px">${pr ? '⚠️ ' + esc(pr) + ' Dá para completar no editor.' : '✅ Pronta'}</div></div>`;
+  }).join('');
+  renderMatEm($('#colPrevia'));
+}
+$('#colTexto').addEventListener('input', () => { clearTimeout(colTimer); colTimer = setTimeout(atualizarColar, 300); });
+$('#colTempo').addEventListener('change', atualizarColar);
+$('#colLivro').addEventListener('change', atualizarColar);
+$('#bColVoltar').onclick = () => { if (colDestino){ desenharEditor(); mostrar('tEditor'); } else { desenharInicio(); mostrar('tInicio'); } };
+$('#bColExemplo').onclick = () => { $('#colTexto').value = EXEMPLO_COLAR; atualizarColar(); };
+$('#bColCriar').onclick = () => {
+  const ps = colResultado.perguntas; if (!ps.length) return;
+  if (colDestino && edQuiz()){
+    const q = edQuiz();
+    if (q.perguntas.length === 1 && !q.perguntas[0].t.trim()) q.perguntas = [];
+    q.perguntas.push(...ps); salvarMeus(); $('#colTexto').value = ''; abrirEditor(q.id);
+  } else {
+    const novo = {id: uid(), titulo: ($('#colTitulo').value.trim() || 'Quiz colado') .slice(0, 80), perguntas: ps};
+    meus.push(novo); salvarMeus(); selecionado = novo.id; $('#colTexto').value = ''; $('#colTitulo').value = '';
+    abrirEditor(novo.id);
+  }
+  aviso('#edResumo', ps.length + ' questão(ões) acrescentada(s). Confira e ajuste o que precisar.');
+};
+const EXEMPLO_COLAR = `1) Quanto é 3/4 de 20?
+a) 15
+b) 12
+c) 5
+d) 16
+Resposta: A
+Explicação: 20 ÷ 4 = 5 e 3 · 5 = 15.
+
+2) 20% de 150 é:
+a) 20
+b) 30 *
+c) 35
+d) 15
+
+3) Verdadeiro ou falso: a soma dos ângulos internos de um triângulo é 180°.
+Resposta: V
+
+4) Quanto é 2^5?
+Resposta: 32
+
+5) Resolva x + 7 = 15 (x é o número desconhecido). a) x = 22 b) x = 7 c) x = 15 d) x = 8
+
+Gabarito: 5-D`;
+
+/* ===================== Editor ===================== */
+let edId = null;
+function edQuiz(){ return meus.find(m => m.id === edId); }
+function abrirEditor(id){
+  edId = id; const q = edQuiz(); if (!q) return;
+  q.perguntas = q.perguntas.map(normalizar);
+  $('#edTitulo').value = q.titulo;
+  desenharEditor(); mostrar('tEditor');
+}
+let salvarDepois = null;
+function agendarSalvar(){ clearTimeout(salvarDepois); salvarDepois = setTimeout(() => { salvarMeus(); atualizarResumo(); }, 300); }
+$('#edTitulo').addEventListener('input', e => { edQuiz().titulo = e.target.value; agendarSalvar(); });
+function atualizarResumo(){
+  const q = edQuiz(); if (!q) return;
+  const ok = q.perguntas.filter(p => !problema(p)).length;
+  $('#edResumo').textContent = ok + ' de ' + q.perguntas.length + ' perguntas prontas para jogar.';
+  document.querySelectorAll('#edLista .q-card').forEach(c => {
+    const p = q.perguntas[+c.dataset.i]; if (!p) return;
+    const pr = problema(p); c.classList.toggle('ruim', !!pr);
+    c.querySelector('.estado-q').textContent = pr ? '⚠️ ' + pr : '✅ Pronta';
+  });
+}
+function opcaoHTML(p, i, k, comCerta){
+  return `<div class="alt" style="background:${CORES[k]}">${FORMAS[k]}<input type="text" data-campo="o" data-k="${k}" value="${esc(p.o[k] || '')}" placeholder="${p.tipo === 'ordenar' ? 'Etapa ' + (k + 1) : 'Alternativa ' + (k + 1)}" aria-label="${NOMES_FORMA[k]}">` +
+    (comCerta ? `<label><input type="radio" name="certa${i}" data-campo="c" value="${k}" ${p.c === k ? 'checked' : ''}> certa</label>` : '') + '</div>';
+}
+function cardHTML(p, i){
+  let resp = '';
+  if (p.tipo === 'multipla') resp = '<div class="alts">' + [0, 1, 2, 3].map(k => opcaoHTML(p, i, k, true)).join('') + '</div><small>Deixe uma alternativa vazia para usar só 2 ou 3.</small>';
+  if (p.tipo === 'enquete') resp = '<div class="alts">' + [0, 1, 2, 3].map(k => opcaoHTML(p, i, k, false)).join('') + '</div><small>Enquete não tem resposta certa e não vale pontos.</small>';
+  if (p.tipo === 'ordenar') resp = '<p style="margin:6px 0"><b>Escreva as etapas na ordem certa.</b> No celular elas aparecem embaralhadas.</p><div class="alts">' + [0, 1, 2, 3].map(k => opcaoHTML(p, i, k, false)).join('') + '</div>';
+  if (p.tipo === 'vf') resp = `<div class="alts"><div class="alt" style="background:${CORES[0]}">${FORMAS[0]}<b style="flex:1">Verdadeiro</b><label><input type="radio" name="certa${i}" data-campo="c" value="0" ${p.c === 0 ? 'checked' : ''}> certa</label></div><div class="alt" style="background:${CORES[1]}">${FORMAS[1]}<b style="flex:1">Falso</b><label><input type="radio" name="certa${i}" data-campo="c" value="1" ${p.c === 1 ? 'checked' : ''}> certa</label></div></div>`;
+  if (p.tipo === 'numero') resp = `<div class="q-pe"><label>Resposta certa <input type="text" data-campo="num" value="${esc(p.num)}" placeholder="ex.: 30, 0,75 ou 3/4" style="width:180px"></label><label>Aceitar diferença de até ± <input type="text" data-campo="tol" value="${p.tol || 0}" style="width:80px"></label></div><small>O aluno pode digitar número inteiro, decimal com vírgula ou fração. 3/4 e 0,75 valem a mesma coisa.</small>`;
+  return `<div class="q-card" data-i="${i}" draggable="true">
+    <div class="q-cab"><b>Pergunta ${i + 1}</b>
+      <select data-campo="tipo" aria-label="Tipo da pergunta">${Object.entries(TIPOS).map(([k, v]) => `<option value="${k}" ${p.tipo === k ? 'selected' : ''}>${v}</option>`).join('')}</select>
+      <button class="btn-s" style="color:var(--tinta);border-color:#d8d3ee" data-mover="-1" title="Subir" aria-label="Subir pergunta">↑</button>
+      <button class="btn-s" style="color:var(--tinta);border-color:#d8d3ee" data-mover="1" title="Descer" aria-label="Descer pergunta">↓</button>
+      <button class="btn-s" style="color:var(--tinta);border-color:#d8d3ee" data-previa title="Ver no telão">👁️</button>
+      <button class="btn-s" style="color:var(--tinta);border-color:#d8d3ee" data-copiar title="Duplicar pergunta">📋</button>
+      <button class="btn-s" style="color:#b91c1c;border-color:#fecaca" data-apagar title="Apagar pergunta" aria-label="Apagar pergunta">🗑️</button>
+    </div>
+    <textarea data-campo="t" placeholder="Escreva o enunciado. Ex.: Quanto é 3/4 de 20?" aria-label="Enunciado">${esc(p.t)}</textarea>
+    <div class="ferr">
+      <button type="button" data-ins="\\( \\frac{a}{b} \\)">a/b fração</button>
+      <button type="button" data-ins="\\( x^{2} \\)">x² potência</button>
+      <button type="button" data-ins="\\( \\sqrt{x} \\)">√ raiz</button>
+      <button type="button" data-ins=" × ">×</button><button type="button" data-ins=" ÷ ">÷</button>
+      <button type="button" data-ins=" · ">·</button><button type="button" data-ins=" ≠ ">≠</button>
+      <button type="button" data-ins=" ≤ ">≤</button><button type="button" data-ins=" ≥ ">≥</button><button type="button" data-ins="π">π</button><button type="button" data-ins="°">°</button>
+    </div>
+    <div class="previa" aria-label="Prévia do enunciado"></div>
+    <div class="q-pe"><label>🖼️ Imagem <input type="file" accept="image/*" data-img></label>
+      ${p.img ? '<button class="btn-s" style="color:#b91c1c;border-color:#fecaca" data-semimg>Tirar imagem</button>' : ''}</div>
+    ${p.img ? `<img class="img-prev" src="${esc(p.img)}" alt="Imagem da pergunta ${i + 1}">` : ''}
+    ${resp}
+    <div class="q-pe">
+      <label>⏱️ Tempo <select data-campo="tempo">${TEMPOS.map(t => `<option value="${t}" ${p.tempo === t ? 'selected' : ''}>${t} s</option>`).join('')}</select></label>
+      ${p.tipo === 'enquete' ? '' : `<label>⭐ Pontos <select data-campo="pontos"><option value="1000" ${p.pontos === 1000 ? 'selected' : ''}>Padrão (1000)</option><option value="2000" ${p.pontos === 2000 ? 'selected' : ''}>Dobro (2000)</option><option value="0" ${p.pontos === 0 ? 'selected' : ''}>Sem pontos</option></select></label>`}
+    </div>
+    <label style="display:block;font-weight:700;margin-top:8px">💡 Explicação (aparece depois da resposta)<input type="text" data-campo="e" value="${esc(p.e)}" placeholder="Ex.: 20 ÷ 4 = 5 e 3 · 5 = 15."></label>
+    <div class="estado-q" style="margin-top:8px"></div>
+  </div>`;
+}
+function desenharEditor(){
+  const q = edQuiz();
+  $('#edLista').innerHTML = q.perguntas.map(cardHTML).join('');
+  document.querySelectorAll('#edLista .q-card').forEach(c => pôrMat(c.querySelector('.previa'), q.perguntas[+c.dataset.i].t || 'Prévia do enunciado'));
+  atualizarResumo();
+}
+$('#edLista').addEventListener('input', e => {
+  const c = e.target.closest('.q-card'); if (!c) return;
+  const p = edQuiz().perguntas[+c.dataset.i], campo = e.target.dataset.campo;
+  if (campo === 't'){ p.t = e.target.value; pôrMat(c.querySelector('.previa'), p.t || 'Prévia do enunciado'); }
+  else if (campo === 'o'){ p.o[+e.target.dataset.k] = e.target.value; }
+  else if (campo === 'num' || campo === 'e'){ p[campo] = e.target.value; }
+  else if (campo === 'tol'){ p.tol = Math.abs(lerNumero(e.target.value)) || 0; }
+  else return;
+  agendarSalvar();
+});
+$('#edLista').addEventListener('change', e => {
+  const c = e.target.closest('.q-card'); if (!c) return;
+  const q = edQuiz(), i = +c.dataset.i, p = q.perguntas[i], campo = e.target.dataset.campo;
+  if (campo === 'c'){ p.c = +e.target.value; agendarSalvar(); return; }
+  if (campo === 'tempo' || campo === 'pontos'){ p[campo] = +e.target.value; agendarSalvar(); return; }
+  if (campo === 'tipo'){
+    p.tipo = e.target.value;
+    if (p.tipo === 'vf'){ p.o = ['Verdadeiro', 'Falso']; p.c = p.c > 1 ? 0 : p.c; }
+    else if (p.o.length < 4 || p.o[0] === 'Verdadeiro'){ p.o = ['', '', '', '']; }
+    q.perguntas[i] = normalizar(p); salvarMeus(); desenharEditor(); return;
+  }
+  if (e.target.matches('[data-img]') && e.target.files[0]) carregarImagem(e.target.files[0], url => { p.img = url; salvarMeus(); desenharEditor(); });
+});
+$('#edLista').addEventListener('click', e => {
+  const c = e.target.closest('.q-card'); if (!c) return;
+  const q = edQuiz(), i = +c.dataset.i;
+  const ins = e.target.closest('[data-ins]');
+  if (ins){
+    const ta = c.querySelector('textarea'), a = ta.selectionStart, b = ta.selectionEnd;
+    ta.value = ta.value.slice(0, a) + ins.dataset.ins + ta.value.slice(b);
+    ta.focus(); ta.selectionStart = ta.selectionEnd = a + ins.dataset.ins.length;
+    ta.dispatchEvent(new Event('input', {bubbles: true})); return;
+  }
+  const mv = e.target.closest('[data-mover]');
+  if (mv){ const j = i + (+mv.dataset.mover); if (j < 0 || j >= q.perguntas.length) return; [q.perguntas[i], q.perguntas[j]] = [q.perguntas[j], q.perguntas[i]]; salvarMeus(); desenharEditor(); return; }
+  if (e.target.closest('[data-apagar]')){ if (q.perguntas.length === 1){ alert('O quiz precisa ter pelo menos uma pergunta.'); return; } if (confirm('Apagar a pergunta ' + (i + 1) + '?')){ q.perguntas.splice(i, 1); salvarMeus(); desenharEditor(); } return; }
+  if (e.target.closest('[data-copiar]')){ q.perguntas.splice(i + 1, 0, JSON.parse(JSON.stringify(q.perguntas[i]))); salvarMeus(); desenharEditor(); return; }
+  if (e.target.closest('[data-semimg]')){ q.perguntas[i].img = ''; salvarMeus(); desenharEditor(); return; }
+  if (e.target.closest('[data-previa]')) abrirPrevia(q.perguntas, i);
+});
+/* arrastar e soltar para reordenar (no computador) */
+let arrastado = null;
+$('#edLista').addEventListener('dragstart', e => { const c = e.target.closest('.q-card'); if (!c || /input|textarea|select/i.test(e.target.tagName)) return; arrastado = +c.dataset.i; c.classList.add('arrastando'); });
+$('#edLista').addEventListener('dragover', e => { if (arrastado != null) e.preventDefault(); });
+$('#edLista').addEventListener('drop', e => {
+  e.preventDefault(); const c = e.target.closest('.q-card'); if (arrastado == null || !c) return;
+  const q = edQuiz(), alvo = +c.dataset.i, item = q.perguntas.splice(arrastado, 1)[0];
+  q.perguntas.splice(alvo, 0, item); arrastado = null; salvarMeus(); desenharEditor();
+});
+$('#edLista').addEventListener('dragend', () => { arrastado = null; document.querySelectorAll('.arrastando').forEach(x => x.classList.remove('arrastando')); });
+$('#bEdColar').onclick = () => { salvarMeus(); abrirColar(edId); };
+$('#bEdNova').onclick = () => { const q = edQuiz(); q.perguntas.push(normalizar({tipo: 'multipla', o: ['', '', '', '']})); salvarMeus(); desenharEditor(); const cs = document.querySelectorAll('#edLista .q-card textarea'); if (cs.length) cs[cs.length - 1].focus(); };
+$('#bEdVoltar').onclick = () => { salvarMeus(); desenharInicio(); mostrar('tInicio'); };
+$('#bEdCsv').onclick = () => { const q = edQuiz(); baixar(q.titulo.replace(/[^\wÀ-ú -]/g, '').trim() + '.csv', paraCsv(q.perguntas), 'text/csv;charset=utf-8'); };
+/* imagens: reduzidas para caber no navegador (até 900 px, JPEG) */
+function carregarImagem(arq, pronto){
+  const r = new FileReader();
+  r.onload = () => { const img = new Image(); img.onload = () => {
+    const k = Math.min(1, 900 / Math.max(img.width, img.height)), cv = document.createElement('canvas');
+    cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+    cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); pronto(cv.toDataURL('image/jpeg', 0.72));
+  }; img.src = r.result; };
+  r.readAsDataURL(arq);
+}
+
+/* ===================== Prévia no telão ===================== */
+let previaLista = [], previaI = 0;
+function abrirPrevia(lista, i){ previaLista = lista; previaI = i; desenharPrevia(); $('#modal').classList.remove('oculto'); $('#bFecharModal').focus(); }
+function desenharPrevia(){
+  const p = normalizar(previaLista[previaI]), pr = problema(p);
+  $('#modalCorpo').innerHTML = `<div class="p-topo" style="margin-top:10px"><span class="selo">Pergunta ${previaI + 1} de ${previaLista.length} · ${TIPOS[p.tipo]}</span><span class="selo${p.pontos === 2000 ? ' dobro' : ''}">${p.pontos ? p.pontos + ' pontos' : 'sem pontos'}</span><span class="selo">⏱️ ${p.tempo} s</span></div>
+    <div class="enunciado" id="prvTexto"></div>${p.img ? `<div style="text-align:center"><img class="p-img" src="${esc(p.img)}" alt=""></div>` : ''}<div id="prvAlts"></div>
+    ${pr ? `<p class="explica">⚠️ ${esc(pr)}</p>` : ''}
+    <div class="linha" style="justify-content:space-between;margin-top:12px"><button class="btn claro" id="prvAnt" ${previaI === 0 ? 'disabled' : ''}>◀ Anterior</button><button class="btn claro" id="prvProx" ${previaI >= previaLista.length - 1 ? 'disabled' : ''}>Próxima ▶</button></div>`;
+  pôrMat($('#prvTexto'), p.t || '(sem enunciado)');
+  $('#prvAlts').innerHTML = altsTelao(p, p.tipo === 'ordenar' ? p.o.map((x, k) => k).filter(k => (p.o[k] || '').trim()) : null);
+  renderMatEm($('#prvAlts'));
+  $('#prvAnt').onclick = () => { previaI--; desenharPrevia(); };
+  $('#prvProx').onclick = () => { previaI++; desenharPrevia(); };
+}
+$('#bFecharModal').onclick = () => $('#modal').classList.add('oculto');
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') $('#modal').classList.add('oculto'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ $('#modal').classList.add('oculto'); if (!$('#sozinho').classList.contains('oculto')) $('#bFecharSozinho').click(); } });
+function renderMatEm(el){ el.querySelectorAll('[data-mat]').forEach(x => pôrMat(x, x.dataset.mat)); }
+/* alternativas no telão; "ordem" = posições exibidas (para ordenar) */
+function altsTelao(p, ordem){
+  if (p.tipo === 'numero') return `<div class="alternativa marcador" style="justify-content:center">🔢 Digite a resposta no celular</div>`;
+  if (p.tipo === 'ordenar') return '<div class="alternativas" style="grid-template-columns:1fr">' + ordem.map((k, pos) => `<div class="alternativa" style="background:${CORES[pos]}"><span style="font-size:1.2em">${String.fromCharCode(65 + pos)}</span><span data-mat="${esc(p.o[k])}"></span></div>`).join('') + '</div>';
+  const ks = p.o.map((x, k) => k).filter(k => (p.o[k] || '').trim());
+  return '<div class="alternativas">' + ks.map(k => `<div class="alternativa" data-k="${k}" style="background:${CORES[k]}">${FORMAS[k]}<span data-mat="${esc(p.o[k])}"></span></div>`).join('') + '</div>';
+}
+
+/* ===================== Planilha (CSV) e cópia de segurança (JSON) ===================== */
+const CAB_CSV = ['tipo', 'pergunta', 'opcao1', 'opcao2', 'opcao3', 'opcao4', 'correta', 'tempo', 'pontos', 'explicacao'];
+function campoCsv(v){ return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+function paraCsv(lista){
+  const linhas = [CAB_CSV].concat(lista.map(normalizar).map(q => {
+    let correta = '';
+    if (q.tipo === 'multipla') correta = q.c + 1;
+    if (q.tipo === 'vf') correta = q.c === 0 ? 'V' : 'F';
+    if (q.tipo === 'numero') correta = q.num + (q.tol ? ' ±' + String(q.tol).replace('.', ',') : '');
+    const o = q.tipo === 'vf' ? ['', '', '', ''] : [0, 1, 2, 3].map(k => q.o[k] || '');
+    return [q.tipo, q.t].concat(o, [correta, q.tempo, q.pontos, q.e]);
+  }));
+  return '\ufeff' + linhas.map(l => l.map(campoCsv).join(';')).join('\r\n');
+}
+function lerCsv(texto){
+  texto = texto.replace(/^\ufeff/, '');
+  const sep = (texto.split('\n')[0].match(/;/g) || []).length >= (texto.split('\n')[0].match(/,/g) || []).length ? ';' : ',';
+  const linhas = []; let linha = [], campo = '', aspas = false;
+  for (let i = 0; i < texto.length; i++){
+    const ch = texto[i];
+    if (aspas){ if (ch === '"'){ if (texto[i + 1] === '"'){ campo += '"'; i++; } else aspas = false; } else campo += ch; }
+    else if (ch === '"') aspas = true;
+    else if (ch === sep){ linha.push(campo); campo = ''; }
+    else if (ch === '\n' || ch === '\r'){ if (ch === '\r' && texto[i + 1] === '\n') i++; linha.push(campo); campo = ''; if (linha.some(x => x.trim())) linhas.push(linha); linha = []; }
+    else campo += ch;
+  }
+  linha.push(campo); if (linha.some(x => x.trim())) linhas.push(linha);
+  return linhas;
+}
+function csvParaPerguntas(texto){
+  const linhas = lerCsv(texto); if (!linhas.length) return {ok: [], ruins: []};
+  const cab = linhas[0].map(x => x.trim().toLowerCase());
+  const temCab = cab.includes('pergunta') || cab.includes('tipo');
+  const ok = [], ruins = [];
+  linhas.slice(temCab ? 1 : 0).forEach((l, n) => {
+    const tipoTxt = (l[0] || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const mapa = {multipla: 'multipla', 'multipla escolha': 'multipla', vf: 'vf', 'verdadeiro ou falso': 'vf', numero: 'numero', numerica: 'numero', ordenar: 'ordenar', enquete: 'enquete'};
+    const tipo = mapa[tipoTxt] || 'multipla';
+    const o = [l[2], l[3], l[4], l[5]].map(x => (x || '').trim());
+    const corr = (l[6] || '').trim();
+    const q = {tipo, t: (l[1] || '').trim(), o, tempo: +l[7] || 20, pontos: l[8] === '' || l[8] == null ? 1000 : +l[8], e: (l[9] || '').trim()};
+    if (tipo === 'multipla') q.c = Math.max(0, (parseInt(corr, 10) || 1) - 1);
+    if (tipo === 'vf') q.c = /^f/i.test(corr) ? 1 : 0;
+    if (tipo === 'numero'){ const m = corr.split('±'); q.num = m[0].trim(); q.tol = m[1] ? Math.abs(lerNumero(m[1])) || 0 : 0; }
+    const nq = normalizar(q);
+    if (problema(nq)) ruins.push(n + (temCab ? 2 : 1)); else ok.push(nq);
+  });
+  return {ok, ruins};
+}
+function baixar(nome, conteudo, tipo){
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([conteudo], {type: tipo}));
+  a.download = nome; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+$('#bModeloCsv').onclick = () => baixar('modelo-gamifica-live.csv', paraCsv([
+  {tipo: 'multipla', t: 'Quanto é 3/4 de 20?', o: ['15', '12', '5', '16'], c: 0, tempo: 20, pontos: 1000, e: '20 ÷ 4 = 5 e 3 · 5 = 15.'},
+  {tipo: 'vf', t: 'A soma dos ângulos de um triângulo é 180°.', c: 0, tempo: 15, pontos: 1000, e: 'Sempre 180°.'},
+  {tipo: 'numero', t: 'Quanto é 20% de 150?', num: '30', tol: 0, tempo: 30, pontos: 2000, e: '10% = 15; 20% = 30.'},
+  {tipo: 'ordenar', t: 'Ordene os passos para resolver 2x + 6 = 14', o: ['Tirar 6 dos dois lados', 'Dividir por 2', 'x = 4'], tempo: 45, pontos: 1000, e: ''},
+  {tipo: 'enquete', t: 'Como você está com frações?', o: ['Seguro', 'Quase lá', 'Preciso revisar'], tempo: 20, pontos: 0, e: ''}]), 'text/csv;charset=utf-8');
+$('#bImportarCsv').onclick = () => $('#arqCsv').click();
+$('#arqCsv').onchange = e => {
+  const arq = e.target.files[0]; if (!arq) return;
+  const r = new FileReader();
+  r.onload = () => {
+    const {ok, ruins} = csvParaPerguntas(r.result);
+    if (!ok.length){ aviso('#fbInicio', 'Não encontrei perguntas válidas na planilha. Baixe o modelo e compare as colunas.', true); return; }
+    const novo = {id: uid(), titulo: arq.name.replace(/\.csv$/i, ''), perguntas: ok};
+    meus.push(novo); salvarMeus(); selecionado = novo.id; desenharInicio();
+    aviso('#fbInicio', ok.length + ' pergunta(s) importada(s).' + (ruins.length ? ' Linhas com problema (não importadas): ' + ruins.join(', ') + '.' : ''), !!ruins.length);
+  };
+  r.readAsText(arq, 'utf-8'); e.target.value = '';
+};
+$('#bExportarJson').onclick = () => baixar('gamifica-live-copia-' + new Date().toISOString().slice(0, 10) + '.json', JSON.stringify({app: 'gamifica-live', versao: 1, quizzes: meus}, null, 1), 'application/json');
+$('#bImportarJson').onclick = () => $('#arqJson').click();
+$('#arqJson').onchange = e => {
+  const arq = e.target.files[0]; if (!arq) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const d = JSON.parse(r.result), lista = (d.quizzes || []).filter(q => q && Array.isArray(q.perguntas));
+      if (!lista.length) throw new Error();
+      lista.forEach(q => meus.push({id: uid(), titulo: String(q.titulo || 'Quiz'), perguntas: q.perguntas.map(normalizar)}));
+      salvarMeus(); desenharInicio(); aviso('#fbInicio', lista.length + ' quiz(zes) restaurado(s).');
+    } catch(err){ aviso('#fbInicio', 'Esse arquivo não é uma cópia do Gamifica Live.', true); }
+  };
+  r.readAsText(arq, 'utf-8'); e.target.value = '';
+};
+
+/* ===================== Canal em tempo real ===================== */
+/* Supabase Realtime (broadcast). Para testes no mesmo navegador: #local (BroadcastChannel). */
+const EVENTOS = ['estado', 'entrar', 'resposta', 'oi'];
+function criarCanal(codigo, aoMsg){
+  const nome = 'gamifica-live-' + codigo;
+  if (location.hash.indexOf('local') >= 0 || !window.supabase){
+    const bc = new BroadcastChannel(nome);
+    bc.onmessage = e => aoMsg(e.data.ev, e.data.p);
+    return Promise.resolve({enviar(ev, p){ bc.postMessage({ev, p}); }, fechar(){ bc.close(); }});
+  }
+  const sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY, {auth: {persistSession: false}, realtime: {params: {eventsPerSecond: 30}}});
+  const ch = sb.channel(nome, {config: {broadcast: {self: false, ack: false}}});
+  EVENTOS.forEach(ev => ch.on('broadcast', {event: ev}, m => aoMsg(ev, m.payload)));
+  return new Promise((ok, falha) => {
+    let feito = false;
+    ch.subscribe(st => {
+      if (st === 'SUBSCRIBED' && !feito){ feito = true; ok({enviar(ev, p){ ch.send({type: 'broadcast', event: ev, payload: p}); }, fechar(){ sb.removeChannel(ch); }}); }
+      else if ((st === 'CHANNEL_ERROR' || st === 'TIMED_OUT') && !feito){ feito = true; falha(st); }
+    });
+    setTimeout(() => { if (!feito){ feito = true; falha('TEMPO'); } }, 12000);
+  });
+}
+
+/* ===================== Partida ===================== */
+/* Pontos de uma resposta certa: arredondar( P · (1 − t / (2 · T)) )
+   P = pontos base da pergunta (1000, 2000 ou 0); t = tempo que o aluno levou; T = tempo total da pergunta.
+   Bônus de sequência: a partir do 2º acerto seguido, +100 por acerto da sequência (no máximo +500). */
+function pontosDe(P, t, T){ return Math.round(P * (1 - t / (2 * T))); }
+function bonusSeq(seq, P){ return P > 0 ? Math.min(500, Math.max(0, seq - 1) * 100) : 0; }
+
+const H = {codigo: '', canal: null, titulo: '', perg: [], jog: {}, removidos: [], fase: 'lobby', qi: -1, inicio: 0, tempoMs: 0, leituraFim: 0,
+  resp: {}, res: null, fin: null, ordem: [], hist: [], posAnt: {}, cfg: {}, hb: null, tick: null, envio: null, salvo: 0, msgs: {}};
+const PALAVROES = ['porra', 'caralho', 'merda', 'puta', 'buceta', 'viado', 'fdp', 'pqp', 'bosta', 'cacete', 'piroca', 'xoxota', 'vadia', 'arrombad', 'corno', 'foda', 'fuder', 'foder', 'desgraca', 'otario', 'babaca', 'idiota', 'imbecil', 'retardad'];
+const PALAVROES_INTEIROS = ['cu', 'rola', 'pinto', 'pau', 'bunda', 'anus'];
+const colapsa = w => w.replace(/(.)\1+/g, '$1');
+function nomeLimpo(nome){
+  const n = colapsa(nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4|@/g, 'a').replace(/5|\$/g, 's'));
+  const junto = n.replace(/[^a-z]/g, '');
+  if (PALAVROES.some(p => junto.includes(colapsa(p)))) return false;
+  if (n.split(/[^a-z]+/).some(p => PALAVROES_INTEIROS.includes(p))) return false;
+  return true;
+}
+function embaralhar(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function ativos(){ const agora = Date.now(); return Object.entries(H.jog).filter(([, j]) => agora - j.visto < 12000); }
+
+$('#bCriarSala').onclick = async () => {
+  lerConfig(); Som.iniciar();
+  const q = acharQuiz(selecionado);
+  let perg = q.perguntas.filter(p => !problema(p));
+  if (!perg.length){ aviso('#fbSala', 'Esse quiz ainda não tem nenhuma pergunta pronta. Abra o editor para completar.', true); return; }
+  if (Config.embaralhar) perg = embaralhar(perg);
+  if (H.manter && H.canal){
+    /* mesma sala e mesmos alunos: zera só os pontos */
+    Object.values(H.jog).forEach(j => Object.assign(j, {pts: 0, ac: 0, seq: 0, tTot: 0, resps: {}}));
+    Object.assign(H, {titulo: q.titulo, perg, fase: 'lobby', qi: -1, resp: {}, res: null, fin: null, ordem: [], hist: [], posAnt: {}, cfg: Object.assign({}, Config), manter: false});
+    aviso('#fbSala', ''); entrarNaSala(); return;
+  }
+  Object.assign(H, {titulo: q.titulo, perg, jog: {}, removidos: [], fase: 'lobby', qi: -1, resp: {}, res: null, fin: null, ordem: [], hist: [], posAnt: {}, cfg: Object.assign({}, Config), msgs: {}});
+  H.codigo = String(100000 + Math.floor(Math.random() * 900000));
+  $('#bCriarSala').disabled = true; aviso('#fbSala', 'Abrindo a sala…');
+  try { H.canal = await criarCanal(H.codigo, aoMsg); }
+  catch(e){ $('#bCriarSala').disabled = false; aviso('#fbSala', 'Não foi possível abrir a sala em tempo real. Verifique a internet e tente de novo.', true); return; }
+  $('#bCriarSala').disabled = false; aviso('#fbSala', '');
+  entrarNaSala();
+};
+function entrarNaSala(){
+  $('#pin').textContent = H.codigo; $('#pCodigo').textContent = 'Código ' + H.codigo; $('#salaTitulo').textContent = H.titulo;
+  $('#qr').innerHTML = '';
+  try { $('#qr').appendChild(window.QRMini.canvas(SITE_VIVO + '?c=' + H.codigo, 440)); } catch(e){}
+  $('#bolhas').innerHTML = ''; desenharBolhas(); mostrar('tSala');
+  Som.tocar('lobby');
+  clearInterval(H.hb); H.hb = setInterval(() => { enviarEstado(); if (H.fase === 'lobby') desenharBolhas(); }, 1500);
+  enviarEstado(); salvarPartida();
+}
+$('#bCancelar').onclick = () => { if (Object.keys(H.jog).length && !confirm('Fechar a sala? Os alunos que entraram vão sair.')) return; encerrarSala(); };
+function encerrarSala(){
+  H.manter = false;
+  clearInterval(H.hb); clearInterval(H.tick); Som.parar();
+  if (H.canal){ try { H.canal.fechar(); } catch(e){} H.canal = null; }
+  apagarPartidaSalva(); desenharInicio(); mostrar('tInicio');
+}
+
+/* estado enviado aos celulares (nunca inclui a resposta certa antes do resultado) */
+function estado(){
+  const p = {v: 1, fase: H.fase, qi: H.qi, total: H.perg.length, rem: H.removidos, jog: {}};
+  for (const [pid, j] of Object.entries(H.jog)) p.jog[pid] = [j.nome, j.av];
+  if (H.fase === 'leitura' || H.fase === 'pergunta'){
+    const q = H.perg[H.qi];
+    p.perg = {tipo: q.tipo, pontos: q.pontos, n: q.tipo === 'ordenar' ? H.ordem.length : q.o.filter(x => x.trim()).length};
+    if (H.cfg.mostrarTexto) p.perg.t = q.t;
+    if (q.tipo === 'ordenar') p.perg.o = H.ordem.map(k => q.o[k]);
+    else if (H.cfg.mostrarTexto && q.tipo !== 'numero') p.perg.o = q.o.map((x, k) => [k, x]).filter(v => v[1].trim());
+    else if (q.tipo !== 'numero') p.perg.ks = q.o.map((x, k) => k).filter(k => q.o[k].trim());
+  }
+  if (H.fase === 'leitura') p.restaMs = Math.max(0, H.leituraFim - Date.now());
+  if (H.fase === 'pergunta'){ p.restaMs = Math.max(0, H.tempoMs - (Date.now() - H.inicio)); p.resp = Object.keys(H.resp); }
+  if (H.fase === 'resultado' || H.fase === 'ranking') p.res = H.res;
+  if (H.fase === 'fim') p.fin = H.fin;
+  return p;
+}
+function enviarEstado(){ if (H.canal) H.canal.enviar('estado', estado()); salvarPartida(); }
+function enviarLogo(){ clearTimeout(H.envio); H.envio = setTimeout(enviarEstado, 200); }
+
+function aoMsg(ev, p){
+  if (!p || typeof p.pid !== 'string' || p.pid.length > 40) return;
+  /* limite de mensagens por aluno (evita travar o telão) */
+  const agora = Date.now(), m = H.msgs[p.pid] || (H.msgs[p.pid] = {t: agora, n: 0});
+  if (agora - m.t > 1000){ m.t = agora; m.n = 0; }
+  if (++m.n > 12) return;
+  if (H.removidos.includes(p.pid)){ enviarLogo(); return; }
+  const j = H.jog[p.pid];
+  if (ev === 'oi'){ if (j) j.visto = agora; return; }
+  if (ev === 'entrar'){
+    if (j){ j.visto = agora; enviarLogo(); return; }
+    if (H.fase === 'fim') return;
+    let nome = String(p.nome || '').replace(/\s+/g, ' ').trim().slice(0, 20);
+    const nAluno = Object.keys(H.jog).length + 1;
+    if (nome.length < 2 || !nomeLimpo(nome)) nome = 'Aluno ' + nAluno;
+    const usados = new Set(Object.values(H.jog).map(x => x.nome.toLowerCase()));
+    let base = nome, k = 2; while (usados.has(nome.toLowerCase())) nome = base + ' ' + (k++);
+    const av = typeof p.av === 'string' && p.av.length <= 8 ? p.av : '🙂';
+    H.jog[p.pid] = {nome, av, pts: 0, ac: 0, seq: 0, tTot: 0, visto: agora, resps: {}};
+    salvarPartida(true);
+    Som.efeito('entrou');
+    if (H.fase === 'lobby') desenharBolhas();
+    enviarLogo(); return;
+  }
+  if (ev === 'resposta'){
+    if (!j || H.fase !== 'pergunta' || p.qi !== H.qi || H.resp[p.pid]){ enviarLogo(); return; }
+    j.visto = agora;
+    const t = agora - H.inicio;
+    if (t > H.tempoMs + 1500) return;
+    const q = H.perg[H.qi];
+    let r = p.r;
+    if (q.tipo === 'numero'){ r = String(r == null ? '' : r).slice(0, 20); }
+    else if (q.tipo === 'ordenar'){ if (!Array.isArray(r) || r.length !== H.ordem.length || new Set(r).size !== r.length || r.some(x => !(x >= 0 && x < H.ordem.length))) return; }
+    else { r = +r; if (!(r >= 0 && r <= 3) || !(q.o[r] || '').trim()) return; }
+    H.resp[p.pid] = {r, ms: Math.min(t, H.tempoMs)};
+    salvarPartida(true);
+    Som.efeito('resposta');
+    atualizarContador(); enviarLogo();
+    const n = ativos().length;
+    if (Object.keys(H.resp).length >= Math.max(1, n)) setTimeout(() => { if (H.fase === 'pergunta') encerrarPergunta(); }, 400);
+  }
+}
+
+function desenharBolhas(){
+  const lista = Object.entries(H.jog), agora = Date.now(), box = $('#bolhas');
+  const vazio = box.querySelector('.vazio'); if (vazio && lista.length) vazio.remove();
+  box.querySelectorAll('.bolha').forEach(b => { if (!H.jog[b.dataset.pid]) b.remove(); });
+  lista.forEach(([pid, j]) => {
+    let b = box.querySelector(`.bolha[data-pid="${CSS.escape(pid)}"]`);
+    if (!b){ b = document.createElement('button'); b.type = 'button'; b.className = 'bolha'; b.dataset.pid = pid; b.title = 'Remover ' + j.nome; b.innerHTML = `<span class="av">${esc(j.av)}</span>${esc(j.nome)}`; box.appendChild(b); }
+    b.classList.toggle('off', agora - j.visto > 12000);
+  });
+  if (!lista.length && !box.querySelector('.vazio')) box.innerHTML = '<p class="vazio" style="opacity:.8">Esperando os alunos entrarem…</p>';
+  $('#contJog').textContent = lista.length + (lista.length === 1 ? ' jogador' : ' jogadores');
+  $('#bComecar').disabled = !lista.length;
+}
+$('#bolhas').addEventListener('click', e => {
+  const b = e.target.closest('.bolha'); if (!b) return;
+  const j = H.jog[b.dataset.pid];
+  if (j && confirm('Remover ' + j.nome + ' da sala?')){ H.removidos.push(b.dataset.pid); delete H.jog[b.dataset.pid]; desenharBolhas(); enviarLogo(); }
+});
+
+$('#bComecar').onclick = () => {
+  Som.parar(); Som.efeito('gongo');
+  mostrar('tPergunta'); $('#pCorpo').classList.add('oculto'); $('#pContagem').classList.remove('oculto');
+  H.fase = 'contagem'; H.qi = -1; enviarEstado();
+  let n = 3;
+  const passo = () => {
+    if (n === 0){ $('#pContagem').classList.add('oculto'); $('#pCorpo').classList.remove('oculto'); abrirPergunta(0); return; }
+    $('#pContagem').innerHTML = `<div class="contagem">${n}</div>`; Som.efeito('tique'); n--; setTimeout(passo, 900);
+  };
+  passo();
+};
+
+function atualizarContador(){
+  const nResp = Object.keys(H.resp).length, total = Object.keys(H.jog).length;
+  $('#pResp').innerHTML = `<b>${nResp}</b>de ${total} responderam`;
+}
+function abrirPergunta(i){
+  H.qi = i; H.resp = {}; H.res = null;
+  mostrar('tPergunta'); $('#pCorpo').classList.remove('oculto'); $('#pContagem').classList.add('oculto');
+  const q = H.perg[i];
+  H.ordem = q.tipo === 'ordenar' ? embaralhar(q.o.map((x, k) => k).filter(k => q.o[k].trim())) : [];
+  if (q.tipo === 'ordenar' && H.ordem.every((k, pos) => k === pos) && H.ordem.length > 1) H.ordem.reverse();
+  $('#pNum').textContent = `Pergunta ${i + 1} de ${H.perg.length}`;
+  $('#pPontos').textContent = q.tipo === 'enquete' ? '📊 Enquete' : q.pontos === 2000 ? '⭐ Pontos em dobro' : q.pontos === 0 ? 'Sem pontos' : '1000 pontos';
+  $('#pPontos').className = 'selo' + (q.pontos === 2000 ? ' dobro' : '');
+  pôrMat($('#pTexto'), q.t);
+  $('#pImg').classList.toggle('oculto', !q.img); if (q.img) $('#pImg').src = q.img;
+  $('#grafico').classList.add('oculto'); $('#explica').classList.add('oculto'); $('#errosComuns').classList.add('oculto');
+  $('#bAvancar').classList.add('oculto'); $('#bPular').classList.remove('oculto');
+  const leitura = (H.cfg.leitura || 0) * 1000;
+  if (leitura > 0){
+    H.fase = 'leitura'; H.leituraFim = Date.now() + leitura;
+    $('#pJogo').classList.add('oculto'); $('#pLeitura').classList.remove('oculto');
+    const barra = $('#barraLeitura'); barra.style.transition = 'none'; barra.style.width = '0';
+    requestAnimationFrame(() => { barra.style.transition = 'width ' + leitura + 'ms linear'; barra.style.width = '100%'; });
+    enviarEstado();
+    clearTimeout(H.tLeitura); H.tLeitura = setTimeout(() => iniciarResposta(), leitura);
+  } else iniciarResposta();
+}
+function iniciarResposta(){
+  const q = H.perg[H.qi];
+  H.fase = 'pergunta'; H.tempoMs = q.tempo * 1000; H.inicio = Date.now();
+  $('#pLeitura').classList.add('oculto'); $('#pJogo').classList.remove('oculto');
+  $('#pAlts').innerHTML = altsTelao(q, H.ordem); renderMatEm($('#pAlts'));
+  atualizarContador(); $('#relogio').classList.remove('oculto'); $('#relogio').style.visibility = '';
+  enviarEstado(); Som.tocar('pergunta');
+  clearInterval(H.tick); let ult = -1;
+  H.tick = setInterval(() => {
+    const resta = Math.max(0, H.tempoMs - (Date.now() - H.inicio)), s = Math.ceil(resta / 1000);
+    $('#pTempo').textContent = s; $('#relogio').style.setProperty('--p', (resta / H.tempoMs * 100) + '%');
+    $('#relogio').classList.toggle('alerta', resta < 5000);
+    if (s !== ult && s <= 5 && s > 0){ Som.efeito('tique'); Som.acelerar(124 + (6 - s) * 12); }
+    ult = s;
+    if (resta <= 0) encerrarPergunta();
+  }, 100);
+}
+$('#bPular').onclick = () => { if (H.fase === 'pergunta') encerrarPergunta(); else if (H.fase === 'leitura'){ clearTimeout(H.tLeitura); iniciarResposta(); } };
+
+function ranking(){ return Object.entries(H.jog).sort((a, b) => b[1].pts - a[1].pts || b[1].ac - a[1].ac || a[1].tTot - b[1].tTot || a[1].nome.localeCompare(b[1].nome)); }
+/* corrige uma resposta: true, false ou null (enquete) */
+function corrigir(q, r){
+  if (q.tipo === 'enquete') return null;
+  if (q.tipo === 'numero'){ const v = lerNumero(r), c = lerNumero(q.num); return !isNaN(v) && Math.abs(v - c) <= (q.tol || 0) + 1e-9; }
+  if (q.tipo === 'ordenar') return r.every((pos, k) => H.ordem[pos] === k);
+  return r === q.c;
+}
+function encerrarPergunta(){
+  if (H.fase !== 'pergunta') return;
+  clearInterval(H.tick); Som.parar(); Som.efeito('gongo');
+  const q = H.perg[H.qi], cont = [0, 0, 0, 0];
+  let certos = 0, errados = 0, somaMs = 0;
+  const errosCont = {};
+  for (const [pid, j] of Object.entries(H.jog)){
+    const r = H.resp[pid];
+    if (!r){ if (q.tipo !== 'enquete') j.seq = 0; continue; }
+    const ok = corrigir(q, r.r);
+    if (q.tipo === 'multipla' || q.tipo === 'vf' || q.tipo === 'enquete') cont[r.r]++;
+    somaMs += r.ms;
+    if (ok === true){
+      j.seq++; j.ac++; j.tTot += r.ms; certos++;
+      r.ganho = q.pontos > 0 ? pontosDe(q.pontos, r.ms / 1000, q.tempo) + bonusSeq(j.seq, q.pontos) : 0;
+      j.pts += r.ganho; r.ok = 1;
+    } else if (ok === false){ j.seq = 0; j.tTot += r.ms; errados++; r.ganho = 0; r.ok = 0; }
+    else { r.ganho = 0; r.ok = -1; }
+    j.resps[H.qi] = {ok: r.ok, ms: r.ms, ganho: r.ganho, r: r.r};
+    if (ok === false && q.tipo !== 'ordenar'){
+      const rot = q.tipo === 'numero' ? String(r.r).trim().replace(/\./g, ',').replace('-', '−') : q.o[r.r];
+      errosCont[rot] = (errosCont[rot] || 0) + 1;
+    }
+  }
+  const topErros = Object.entries(errosCont).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  const nResp = Object.keys(H.resp).length;
+  H.hist[H.qi] = {t: q.t, tipo: q.tipo, respostas: nResp, certos, errados, jogadores: Object.keys(H.jog).length, tempoMedio: nResp ? somaMs / nResp / 1000 : 0, erroComum: topErros[0] ? [texSimples(topErros[0][0]), topErros[0][1]] : null};
+  const pos = {}; ranking().forEach(([pid], i) => pos[pid] = i + 1);
+  const mostraPos = H.cfg.ranking !== 'nenhum';
+  const por = {};
+  for (const [pid, j] of Object.entries(H.jog)){ const r = H.resp[pid]; por[pid] = [r ? r.ok : -2, r ? r.ganho : 0, j.pts, mostraPos ? pos[pid] : 0, j.seq]; }
+  let certaTxt = '';
+  if (q.tipo === 'multipla' || q.tipo === 'vf') certaTxt = q.o[q.c];
+  if (q.tipo === 'numero') certaTxt = q.num;
+  if (q.tipo === 'ordenar') certaTxt = q.o.filter(x => x.trim()).map((x, k) => (k + 1) + ') ' + x).join('  ');
+  H.res = {tipo: q.tipo, certaTxt, por, e: q.e};
+  H.fase = 'resultado'; enviarEstado(); salvarPartida(true);
+  /* tela do professor */
+  $('#relogio').style.visibility = 'hidden'; $('#bPular').classList.add('oculto');
+  if (q.tipo === 'multipla' || q.tipo === 'vf' || q.tipo === 'enquete'){
+    document.querySelectorAll('#pAlts .alternativa[data-k]').forEach(a => { const k = +a.dataset.k; if (q.tipo !== 'enquete') a.classList.add(k === q.c ? 'certa' : 'apagada'); a.insertAdjacentHTML('beforeend', `<span class="cont">${cont[k]}</span>`); });
+    const ks = q.o.map((x, k) => k).filter(k => q.o[k].trim()), mx = Math.max(1, ...cont);
+    $('#grafico').innerHTML = ks.map(k => `<div style="background:${CORES[k]};height:${26 + cont[k] / mx * 120}px;${q.tipo !== 'enquete' && k !== q.c ? 'opacity:.5;' : ''}">${cont[k]}</div>`).join('');
+  } else if (q.tipo === 'numero'){
+    $('#pAlts').innerHTML = `<div class="alternativa" style="background:${CORES[3]};justify-content:center">✅ Resposta certa: <span data-mat="${esc(q.num)}"></span></div>`; renderMatEm($('#pAlts'));
+    $('#grafico').innerHTML = barras([[certos, CORES[3], 'certas'], [errados, CORES[0], 'erradas'], [Object.keys(H.jog).length - nResp, '#7c7f9e', 'sem resposta']]);
+  } else if (q.tipo === 'ordenar'){
+    $('#pAlts').innerHTML = '<div class="alternativas" style="grid-template-columns:1fr">' + q.o.filter(x => x.trim()).map((x, k) => `<div class="alternativa certa" style="background:${CORES[3]}"><span>${k + 1}º</span><span data-mat="${esc(x)}"></span></div>`).join('') + '</div>'; renderMatEm($('#pAlts'));
+    $('#grafico').innerHTML = barras([[certos, CORES[3], 'na ordem certa'], [errados, CORES[0], 'fora de ordem'], [Object.keys(H.jog).length - nResp, '#7c7f9e', 'sem resposta']]);
+  }
+  $('#grafico').classList.remove('oculto'); $('#pImg').classList.add('oculto');
+  $('#pResp').innerHTML = q.tipo === 'enquete' ? `<b>${nResp}</b>votaram` : `<b>${nResp ? Math.round(certos / nResp * 100) : 0}%</b>acertaram`;
+  if (q.e){ pôrMat($('#explica'), '💡 ' + q.e); $('#explica').classList.remove('oculto'); }
+  $('#errosComuns').classList.toggle('oculto', !(q.tipo === 'numero' && topErros.length));
+  if (q.tipo === 'numero' && topErros.length) $('#errosComuns').textContent = '🔎 Respostas erradas mais comuns: ' + topErros.map(([v, n]) => v + ' (' + n + (n === 1 ? ' aluno' : ' alunos') + ')').join(' · ');
+  $('#bAvancar').classList.remove('oculto'); $('#bAvancar').focus({preventScroll: true});
+  const ultima = H.qi >= H.perg.length - 1;
+  $('#bAvancar').textContent = ultima ? 'Resultado final 🏆' : (H.cfg.ranking === 'nenhum' ? 'Próxima pergunta ▶' : 'Ver placar ▶');
+  if (certos) setTimeout(() => Som.efeito('certo'), 500);
+}
+function barras(lista){
+  const mx = Math.max(1, ...lista.map(x => x[0]));
+  return lista.map(([n, cor, nome]) => `<div style="background:${cor};height:${26 + n / mx * 120}px">${n}<small>${nome}</small></div>`).join('');
+}
+$('#bAvancar').onclick = () => {
+  if (H.qi >= H.perg.length - 1) return finalizar();
+  if (H.cfg.ranking === 'nenhum') return abrirPergunta(H.qi + 1);
+  mostrarRanking();
+};
+function mostrarRanking(){
+  H.fase = 'ranking'; enviarEstado();
+  const r = ranking(), lim = H.cfg.ranking === 'top3' ? 3 : 5, top = r.slice(0, lim);
+  $('#rankLista').innerHTML = top.map(([pid, j], i) => {
+    const antes = H.posAnt[pid], sobe = antes && antes > i + 1 ? `<span class="sobe">▲ ${antes - (i + 1)}</span>` : '';
+    return `<li data-pid="${esc(pid)}"><span><span class="pos">${i + 1}</span>${esc(j.av)} ${esc(j.nome)}${sobe}</span><span>${j.pts}${j.seq >= 2 ? ' 🔥' + j.seq : ''}</span></li>`;
+  }).join('') || '<li>Ninguém pontuou ainda.</li>';
+  /* animação de ultrapassagem: cada linha sai da posição anterior */
+  const altura = 72;
+  $('#rankLista').querySelectorAll('li[data-pid]').forEach((li, i) => {
+    const antes = H.posAnt[li.dataset.pid];
+    const de = antes ? Math.min(antes - 1, lim) : lim;
+    if (de !== i){ li.style.transition = 'none'; li.style.transform = `translateY(${(de - i) * altura}px)`; requestAnimationFrame(() => requestAnimationFrame(() => { li.style.transition = ''; li.style.transform = ''; })); }
+  });
+  if (top.some(([pid], i) => H.posAnt[pid] && H.posAnt[pid] > i + 1)) setTimeout(() => Som.efeito('sobe'), 500);
+  H.posAnt = {}; r.forEach(([pid], i) => H.posAnt[pid] = i + 1);
+  $('#rankResto').textContent = r.length > lim ? `+ ${r.length - lim} jogador(es) continuam na disputa!` : '';
+  mostrar('tRanking');
+}
+$('#bProxima').onclick = () => abrirPergunta(H.qi + 1);
+
+function finalizar(){
+  const r = ranking(); H.fin = {};
+  r.forEach(([pid, j], i) => H.fin[pid] = [j.pts, H.cfg.ranking === 'nenhum' ? 0 : i + 1, j.ac]);
+  H.fase = 'fim'; enviarEstado(); setTimeout(enviarEstado, 800);
+  salvarRelatorio(r);
+  mostrar('tPodio');
+  if (H.cfg.ranking === 'nenhum'){
+    $('#podio').innerHTML = ''; $('#podioTitulo').textContent = '🎉 Fim de jogo!';
+    $('#podioMsg').textContent = 'Parabéns a todos pela participação!';
+    $('#bRevelarPodio').classList.remove('oculto');
+    confete(); Som.efeito('fanfarra');
+  } else revelarPodio(r);
+  clearTimeout(H.tFimHb); H.tFimHb = setTimeout(() => { if (!H.manter) clearInterval(H.hb); }, 30000);
+}
+$('#bRevelarPodio').onclick = () => { $('#bRevelarPodio').classList.add('oculto'); revelarPodio(ranking()); };
+function revelarPodio(r){
+  $('#podioTitulo').textContent = '🏆 Pódio';
+  const top = r.slice(0, 3);
+  $('#podio').innerHTML = [1, 0, 2].filter(i => top[i]).map(i => `<div class="degrau d${i + 1}" id="deg${i + 1}"><div class="quem"><span class="av">${esc(top[i][1].av)}</span>${esc(top[i][1].nome)}</div><div class="bloco">${i + 1}º<small>${top[i][1].pts} pts</small></div></div>`).join('');
+  $('#podioMsg').textContent = '';
+  const ordem = [3, 2, 1].filter(n => top[n - 1]);
+  Som.efeito('tambor');
+  ordem.forEach((n, k) => setTimeout(() => {
+    const d = $('#deg' + n); if (d) d.classList.add('on');
+    if (n === 1){ confete(); Som.efeito('fanfarra'); $('#podioMsg').textContent = 'Parabéns, ' + top[0][1].nome + '! 🎉 E parabéns a toda a turma!'; }
+    else Som.efeito('sobe');
+  }, 1200 + k * 1500 + (n === 1 ? 900 : 0)));
+}
+function confete(){
+  const cores = ['#ffd23f', '#e21b3c', '#1368ce', '#26890c', '#fff'];
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  for (let i = 0; i < 110; i++){ const c = document.createElement('i'); c.className = 'conf'; c.style.left = Math.random() * 100 + 'vw'; c.style.background = cores[i % 5]; c.style.animationDelay = Math.random() * 0.9 + 's'; document.body.appendChild(c); setTimeout(() => c.remove(), 4800); }
+}
+$('#bNovaPartida').onclick = () => { H.manter = false; encerrarSala(); };
+$('#bMesmaSala').onclick = () => {
+  H.manter = true; clearTimeout(H.tFimHb);
+  clearInterval(H.hb); H.hb = setInterval(enviarEstado, 1500);
+  desenharInicio(); mostrar('tInicio');
+  aviso('#fbSala', 'A sala ' + H.codigo + ' continua aberta com ' + Object.keys(H.jog).length + ' aluno(s). Escolha o quiz e clique em "Continuar com a mesma turma".');
+};
+$('#bVerRelatorio').onclick = () => { const h = lerLS(CHAVE_HIST, []); if (h[0]) abrirRelatorio(h[0], 'tPodio'); };
+
+/* ===================== Relatórios ===================== */
+const CHAVE_HIST = 'live-historico';
+function salvarRelatorio(r){
+  const rel = {
+    id: uid(), data: new Date().toISOString(), titulo: H.titulo, codigo: H.codigo, nPerg: H.perg.length,
+    perguntas: H.perg.map((q, i) => { const h = H.hist[i] || {respostas: 0, certos: 0, errados: 0, tempoMedio: 0}; return {t: texSimples(q.t), tipo: q.tipo, respostas: h.respostas, certos: h.certos, pct: h.respostas ? Math.round(h.certos / h.respostas * 100) : 0, tempoMedio: h.tempoMedio, jogadores: h.jogadores || 0, erroComum: h.erroComum || null}; }),
+    alunos: r.map(([, j], i) => { const rs = Object.values(j.resps), n = rs.length; return {pos: i + 1, nome: j.nome, pts: j.pts, ac: j.ac, respondidas: n, tempoMedio: n ? rs.reduce((s, x) => s + x.ms, 0) / n / 1000 : 0, res: H.perg.map((q, k) => j.resps[k] ? j.resps[k].ok : null)}; })
+  };
+  const h = lerLS(CHAVE_HIST, []); h.unshift(rel); gravarLS(CHAVE_HIST, h.slice(0, 30));
+  Nuvem.salvarRel();
+  return rel;
+}
+let relAtual = null, relVoltar = 'tInicio';
+function abrirRelatorio(rel, voltar){
+  relAtual = rel; relVoltar = voltar || 'tInicio';
+  $('#relTitulo').textContent = '📊 ' + rel.titulo;
+  const d = new Date(rel.data);
+  $('#relInfo').textContent = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}) + ' · ' + rel.alunos.length + ' aluno(s) · ' + rel.nPerg + ' pergunta(s)';
+  const dificeis = rel.perguntas.map((p, i) => [p, i]).filter(([p]) => p.tipo !== 'enquete' && p.respostas && p.pct < 50);
+  $('#relAlerta').innerHTML = dificeis.length ? `<p class="dica">⚠️ <b>Vale retomar em aula:</b> ${dificeis.map(([p, i]) => 'pergunta ' + (i + 1) + ' (' + p.pct + '% de acerto)').join(', ')}.</p>` : '<p class="dica">✅ Todas as perguntas tiveram 50% de acerto ou mais.</p>';
+  const nCorr = rel.perguntas.filter(p => p.tipo !== 'enquete').length;
+  $('#relAlunos').innerHTML = '<table><tr><th>Posição</th><th>Aluno</th><th>Pontos</th><th>Acertos</th><th>Respondeu</th><th>Tempo médio</th></tr>' +
+    rel.alunos.map(a => `<tr><td>${a.pos}º</td><td>${esc(a.nome)}</td><td>${a.pts}</td><td>${a.ac} de ${nCorr}</td><td>${a.respondidas} de ${rel.nPerg}</td><td>${a.tempoMedio.toFixed(1).replace('.', ',')} s</td></tr>`).join('') + '</table>';
+  $('#relPerguntas').innerHTML = '<table><tr><th>#</th><th>Pergunta</th><th>Tipo</th><th>Acerto</th><th>Erro mais comum</th><th>Respostas</th><th>Tempo médio</th></tr>' +
+    rel.perguntas.map((p, i) => `<tr class="${p.tipo !== 'enquete' && p.respostas && p.pct < 50 ? 'dificil' : ''}"><td>${i + 1}</td><td>${esc(p.t)}</td><td>${TIPOS[p.tipo]}</td><td>${p.tipo === 'enquete' ? '—' : `<span class="barrinha" style="width:${p.pct}px"></span>${p.pct}%`}</td><td>${p.erroComum ? esc(p.erroComum[0]) + ' (' + p.erroComum[1] + ')' : '—'}</td><td>${p.respostas}</td><td>${p.tempoMedio.toFixed(1).replace('.', ',')} s</td></tr>`).join('') + '</table>';
+  const marca = v => v === 1 ? '✅' : v === 0 ? '❌' : v === -1 ? '📊' : '⏰';
+  $('#relDetalhe').innerHTML = '<p class="dica">✅ acertou · ❌ errou · ⏰ não respondeu · 📊 votou na enquete</p><table><tr><th>Aluno</th>' + rel.perguntas.map((p, i) => `<th title="${esc(p.t)}">P${i + 1}</th>`).join('') + '</tr>' +
+    rel.alunos.map(a => '<tr><td>' + esc(a.nome) + '</td>' + (a.res || []).map(v => `<td style="text-align:center">${marca(v)}</td>`).join('') + '</tr>').join('') + '</table>';
+  mostrarAbaRel('alunos'); mostrar('tRelatorio');
+}
+function mostrarAbaRel(a){
+  document.querySelectorAll('[data-aba]').forEach(b => b.setAttribute('aria-pressed', b.dataset.aba === a));
+  $('#relAlunos').classList.toggle('oculto', a !== 'alunos'); $('#relPerguntas').classList.toggle('oculto', a !== 'perguntas'); $('#relDetalhe').classList.toggle('oculto', a !== 'detalhe');
+}
+document.querySelectorAll('[data-aba]').forEach(b => b.onclick = () => mostrarAbaRel(b.dataset.aba));
+$('#bRelVoltar').onclick = () => { if (relVoltar === 'tInicio') desenharInicio(); if (relVoltar === 'tHistorico') desenharHistorico(); mostrar(relVoltar); };
+$('#bRelPdf').onclick = () => { ['#relAlunos', '#relPerguntas', '#relDetalhe'].forEach(x => $(x).classList.remove('oculto')); window.print(); mostrarAbaRel('alunos'); };
+$('#bRelCsv').onclick = () => {
+  const r = relAtual; if (!r) return;
+  const l = [['Relatório', r.titulo], ['Data', new Date(r.data).toLocaleString('pt-BR')], [],
+    ['Posição', 'Aluno', 'Pontos', 'Acertos', 'Respondeu', 'Tempo médio (s)']].concat(
+    r.alunos.map(a => [a.pos, a.nome, a.pts, a.ac, a.respondidas, a.tempoMedio.toFixed(1).replace('.', ',')]), [[]],
+    [['Pergunta', 'Enunciado', 'Tipo', 'Acerto (%)', 'Erro mais comum', 'Respostas', 'Tempo médio (s)']],
+    r.perguntas.map((p, i) => [i + 1, p.t, TIPOS[p.tipo], p.tipo === 'enquete' ? '' : p.pct, p.erroComum ? p.erroComum[0] + ' (' + p.erroComum[1] + ')' : '', p.respostas, p.tempoMedio.toFixed(1).replace('.', ',')]), [[]],
+    [['Aluno'].concat(r.perguntas.map((p, i) => 'P' + (i + 1)))],
+    r.alunos.map(a => [a.nome].concat((a.res || []).map(v => v === 1 ? 'acertou' : v === 0 ? 'errou' : v === -1 ? 'votou' : 'sem resposta'))));
+  baixar('gamifica-live-' + r.data.slice(0, 10) + '.csv', '\ufeff' + l.map(x => x.map(campoCsv).join(';')).join('\r\n'), 'text/csv;charset=utf-8');
+};
+let histAtual = [];
+async function desenharHistorico(){
+  if (Nuvem.sb){ $('#histLista').innerHTML = '<p>☁️ Buscando os relatórios na sua conta…</p>'; await Nuvem.carregarRelatorios(); }
+  const local = lerLS(CHAVE_HIST, []), ids = new Set(local.map(r => r.id));
+  const h = histAtual = local.concat(Nuvem.relatorios.filter(r => !ids.has(r.id))).sort((a, b) => String(b.data).localeCompare(String(a.data)));
+  $('#histLista').innerHTML = (Nuvem.sb ? '<p>☁️ Relatórios salvos na sua conta (de todos os aparelhos).</p>' : '') + (h.length ? '<table><tr><th>Data</th><th>Quiz</th><th>Alunos</th><th></th></tr>' + h.map((r, i) => `<tr><td>${new Date(r.data).toLocaleString('pt-BR', {dateStyle: 'short', timeStyle: 'short'})}</td><td>${esc(r.titulo)}</td><td>${r.alunos.length}</td><td><button class="btn claro" data-rel="${i}">Abrir</button></td></tr>`).join('') + '</table>' : '<p>Nenhuma partida terminada ainda.</p>');
+}
+$('#bHistorico').onclick = () => { desenharHistorico(); mostrar('tHistorico'); };
+$('#histLista').addEventListener('click', e => { const b = e.target.closest('[data-rel]'); if (b) abrirRelatorio(histAtual[+b.dataset.rel], 'tHistorico'); });
+$('#bHistVoltar').onclick = () => { desenharInicio(); mostrar('tInicio'); };
+
+/* ===================== Retomar a partida se a página recarregar ===================== */
+const CHAVE_PARTIDA = 'live-partida';
+function salvarPartida(agora_mesmo){
+  if (!H.codigo || H.fase === 'fim') return;
+  const agora = Date.now(); if (!agora_mesmo && agora - H.salvo < 1000) return; H.salvo = agora;
+  if (H.pergSalvas !== H.perg){ H.pergSalvas = H.perg; if (!gravarLS(CHAVE_PARTIDA + '-perg', H.perg)) gravarLS(CHAVE_PARTIDA + '-perg', H.perg.map(q => Object.assign({}, q, {img: ''}))); }
+  const dados = {ts: agora, codigo: H.codigo, titulo: H.titulo, nPerg: H.perg.length, jog: H.jog, removidos: H.removidos, fase: H.fase, qi: H.qi, inicio: H.inicio, tempoMs: H.tempoMs, resp: H.resp, res: H.res, ordem: H.ordem, hist: H.hist, posAnt: H.posAnt, cfg: H.cfg};
+  gravarLS(CHAVE_PARTIDA, dados);
+}
+function apagarPartidaSalva(){ try { localStorage.removeItem(CHAVE_PARTIDA); localStorage.removeItem(CHAVE_PARTIDA + '-perg'); } catch(e){} H.codigo = ''; H.pergSalvas = null; }
+function desenharRetomar(){
+  const d = lerLS(CHAVE_PARTIDA, null);
+  if (d) d.perg = lerLS(CHAVE_PARTIDA + '-perg', null);
+  if (!d || !Array.isArray(d.perg) || Date.now() - d.ts > 3 * 3600 * 1000 || H.canal){ $('#caixaRetomar').innerHTML = ''; return; }
+  $('#caixaRetomar').innerHTML = `<div class="retomar"><span>⏯️ Há uma partida em andamento: <b>${esc(d.titulo)}</b> · código <b>${esc(d.codigo)}</b> · ${d.qi >= 0 ? 'pergunta ' + (d.qi + 1) + ' de ' + d.perg.length : 'na sala de espera'} · ${Object.keys(d.jog).length} aluno(s).</span>
+    <span class="linha"><button class="btn verde" id="bRetomar">Retomar</button><button class="btn claro" id="bDescartar">Descartar</button></span></div>`;
+  $('#bRetomar').onclick = () => retomar(d);
+  $('#bDescartar').onclick = () => { if (confirm('Descartar a partida salva?')){ apagarPartidaSalva(); desenharRetomar(); } };
+}
+async function retomar(d){
+  Object.assign(H, {codigo: d.codigo, titulo: d.titulo, perg: d.perg, jog: d.jog, removidos: d.removidos || [], fase: d.fase, qi: d.qi, inicio: d.inicio, tempoMs: d.tempoMs, resp: d.resp || {}, res: d.res, ordem: d.ordem || [], hist: d.hist || [], posAnt: d.posAnt || {}, cfg: d.cfg || Object.assign({}, Config), msgs: {}, pergSalvas: d.perg});
+  Object.values(H.jog).forEach(j => j.visto = Date.now());
+  Som.iniciar();
+  try { H.canal = await criarCanal(H.codigo, aoMsg); }
+  catch(e){ aviso('#fbInicio', 'Não consegui reconectar. Verifique a internet e tente de novo.', true); return; }
+  $('#pin').textContent = H.codigo; $('#pCodigo').textContent = 'Código ' + H.codigo; $('#salaTitulo').textContent = H.titulo;
+  clearInterval(H.hb); H.hb = setInterval(enviarEstado, 1500);
+  if (H.fase === 'lobby' || H.qi < 0){ H.fase = 'lobby'; entrarNaSala(); return; }
+  mostrar('tPergunta'); $('#pCorpo').classList.remove('oculto'); $('#pContagem').classList.add('oculto');
+  const q = H.perg[H.qi];
+  $('#pNum').textContent = `Pergunta ${H.qi + 1} de ${H.perg.length}`; pôrMat($('#pTexto'), q.t);
+  $('#pImg').classList.toggle('oculto', !q.img); if (q.img) $('#pImg').src = q.img;
+  if (H.fase === 'pergunta' && Date.now() - H.inicio < H.tempoMs){
+    $('#pLeitura').classList.add('oculto'); $('#pJogo').classList.remove('oculto');
+    $('#pAlts').innerHTML = altsTelao(q, H.ordem); renderMatEm($('#pAlts'));
+    $('#grafico').classList.add('oculto'); $('#explica').classList.add('oculto'); $('#errosComuns').classList.add('oculto'); $('#bAvancar').classList.add('oculto'); $('#bPular').classList.remove('oculto');
+    atualizarContador(); $('#relogio').classList.remove('oculto'); $('#relogio').style.visibility = ''; enviarEstado();
+    clearInterval(H.tick);
+    H.tick = setInterval(() => { const resta = Math.max(0, H.tempoMs - (Date.now() - H.inicio)); $('#pTempo').textContent = Math.ceil(resta / 1000); $('#relogio').style.setProperty('--p', (resta / H.tempoMs * 100) + '%'); if (resta <= 0) encerrarPergunta(); }, 100);
+    Som.tocar('pergunta');
+  } else if (H.fase === 'pergunta' || H.fase === 'leitura'){
+    if (H.fase === 'leitura'){ abrirPergunta(H.qi); return; }
+    $('#pLeitura').classList.add('oculto'); $('#pJogo').classList.remove('oculto'); $('#pAlts').innerHTML = altsTelao(q, H.ordem); renderMatEm($('#pAlts'));
+    encerrarPergunta();
+  } else {
+    /* estava no resultado ou no placar: vai direto para o placar */
+    if (H.qi >= H.perg.length - 1) finalizar(); else mostrarRanking();
+  }
+}
+
+/* ===================== Nuvem: quizzes e relatórios na conta do professor ===================== */
+/* Quando o Gamifica Live é aberto no site com login, ele usa a conexão do próprio site (window.parent.GamificaNuvem).
+   Cada professor só enxerga os próprios dados (regras de segurança do banco). Sem login ou sem internet,
+   tudo continua salvo neste aparelho e sobe para a conta quando possível. */
+const Nuvem = {
+  sb: null, uid: null, estado: 'local', fila: new Set(), apagar: new Set(), ultimo: {}, timer: null, relatorios: [], msg: '', enviando: false,
+  conectar(){
+    try {
+      const p = window.parent;
+      if (p && p !== window && p.GamificaNuvem){ const u = p.GamificaNuvem.usuario(); if (u){ this.sb = p.GamificaNuvem.cliente(); this.uid = u; return true; } }
+    } catch(e){}
+    this.sb = null; this.uid = null; return false;
+  },
+  marcarTodos(){ meus.forEach(m => { this.ultimo[m.id] = JSON.stringify([m.titulo, m.perguntas]); }); },
+  async iniciar(){
+    this.marcarTodos();
+    if (!this.conectar()){ this.estado = 'local'; this.mostrar(); return; }
+    try { await this.sincronizar(); } catch(e){ this.estado = 'erro'; this.mostrar(); }
+    setInterval(() => { if (this.sb && (this.estado === 'erro' || this.fila.size || this.apagar.size)) this.enviar(); }, 60000);
+  },
+  async sincronizar(){
+    this.estado = 'sincronizando'; this.mostrar();
+    const {data, error} = await this.sb.from('live_quizzes').select('id,titulo,perguntas,atualizado_em').order('atualizado_em', {ascending: false});
+    if (error){ this.estado = 'erro'; this.mostrar(); return; }
+    const nuvem = new Map((data || []).map(q => [q.id, q])), juntos = [];
+    for (const m of meus){
+      if (m.nuvem && nuvem.has(m.nuvem)){
+        const c = nuvem.get(m.nuvem), tc = Date.parse(c.atualizado_em) || 0;
+        if ((m.atualizado || 0) > tc + 1000) this.fila.add(m.id);                     /* mudou aqui depois: sobe */
+        else if (tc > (m.atualizado || 0) + 1000){ m.titulo = c.titulo; m.perguntas = c.perguntas; m.atualizado = tc; m.sinc = tc; }  /* mudou em outro aparelho: desce */
+        nuvem.delete(m.nuvem); juntos.push(m);
+      } else if (m.nuvem){
+        if ((m.atualizado || 0) > (m.sinc || 0)){ delete m.nuvem; this.fila.add(m.id); juntos.push(m); }  /* apagado lá, mas editado aqui: guarda */
+      } else { this.fila.add(m.id); juntos.push(m); }                                 /* ainda não subiu */
+    }
+    for (const c of nuvem.values()){ const t = Date.parse(c.atualizado_em) || Date.now(); juntos.push({id: uid(), nuvem: c.id, titulo: c.titulo, perguntas: c.perguntas, atualizado: t, sinc: t}); }
+    meus = juntos; gravarLS(CHAVE_QUIZ, meus); this.marcarTodos();
+    if (!meus.some(m => m.id === selecionado) && !PRONTOS.some(p => p.id === selecionado)) selecionado = 'p-exemplo';
+    this.sincronizando = true;
+    await this.enviar();
+    await this.carregarRelatorios();
+    this.sincronizando = false;
+    if ($('#tInicio').classList.contains('on')) desenharInicio();
+    this.mostrar();
+  },
+  agendar(){
+    for (const m of meus){ const s = JSON.stringify([m.titulo, m.perguntas]); if (this.ultimo[m.id] !== s){ this.ultimo[m.id] = s; m.atualizado = Date.now(); this.fila.add(m.id); } }
+    gravarLS(CHAVE_QUIZ, meus);
+    if (!this.sb) return;
+    clearTimeout(this.timer); this.timer = setTimeout(() => this.enviar(), 1500);
+  },
+  excluir(m){ if (m && m.nuvem && this.sb){ this.apagar.add(m.nuvem); clearTimeout(this.timer); this.timer = setTimeout(() => this.enviar(), 500); } },
+  salvarRel(){ if (this.sb){ clearTimeout(this.timer); this.timer = setTimeout(() => this.enviar(), 300); } },
+  async enviar(){
+    if (!this.sb) return;
+    if (this.enviando){ clearTimeout(this.timer); this.timer = setTimeout(() => this.enviar(), 1500); return; }
+    this.enviando = true; let falhou = false; this.msg = '';
+    try {
+      for (const nid of [...this.apagar]){ const {error} = await this.sb.from('live_quizzes').delete().eq('id', nid); if (error) falhou = true; else this.apagar.delete(nid); }
+      for (const id of [...this.fila]){
+        const m = meus.find(x => x.id === id); if (!m){ this.fila.delete(id); continue; }
+        const quando = m.atualizado || Date.now();
+        const dados = {titulo: String(m.titulo || 'Meu quiz').slice(0, 120), perguntas: m.perguntas, atualizado_em: new Date(quando).toISOString()};
+        let r = null;
+        if (m.nuvem){ r = await this.sb.from('live_quizzes').update(dados).eq('id', m.nuvem).select('id'); if (!r.error && (!r.data || !r.data.length)){ delete m.nuvem; r = null; } }
+        if (!m.nuvem){ r = await this.sb.from('live_quizzes').insert(dados).select('id').single(); if (!r.error && r.data) m.nuvem = r.data.id; }
+        if (r && r.error){ falhou = true; if (/check|violat|large|size/i.test(r.error.message || '')) this.msg = 'O quiz "' + m.titulo + '" ficou grande demais para a nuvem (muitas imagens). Use imagens menores.'; }
+        else { m.sinc = quando; if ((m.atualizado || 0) <= quando) this.fila.delete(id); }
+      }
+      gravarLS(CHAVE_QUIZ, meus);
+      const h = lerLS(CHAVE_HIST, []); let mudou = false;
+      for (const rel of h){ if (!rel.nuvem){ const {error} = await this.sb.from('live_relatorios').insert({dados: rel}); if (!error){ rel.nuvem = true; mudou = true; } else falhou = true; } }
+      if (mudou) gravarLS(CHAVE_HIST, h);
+    } catch(e){ falhou = true; }
+    this.enviando = false;
+    this.estado = falhou ? 'erro' : 'ok'; if (!this.sincronizando) this.mostrar();
+  },
+  async carregarRelatorios(){
+    if (!this.sb) return;
+    try {
+      const {data, error} = await this.sb.from('live_relatorios').select('dados,criado_em').order('criado_em', {ascending: false}).limit(100);
+      if (!error && data) this.relatorios = data.map(x => Object.assign({}, x.dados, {nuvem: true}));
+    } catch(e){}
+  },
+  mostrar(){
+    const el = $('#nuvemStatus'); if (!el) return;
+    el.textContent = {
+      local: '💾 Seus quizzes estão salvos só neste aparelho. Entre no site com o seu login para salvá-los na sua conta e abrir em qualquer computador, tablet ou celular.',
+      sincronizando: '☁️ Sincronizando com a sua conta…',
+      ok: '☁️ Seus quizzes e relatórios ficam salvos na sua conta. Abra o Gamifica Live em qualquer computador, tablet ou celular.',
+      erro: '⚠️ Não consegui falar com a nuvem agora. Tudo continua salvo neste aparelho e vai para a sua conta quando a conexão voltar.'
+    }[this.estado] + (this.msg ? ' ' + this.msg : '');
+  }
+};
+
+/* ===================== Jogar sozinho (teste) e tarefas por link ===================== */
+function urlVivo(){
+  if (window.__VIVO_URL) return window.__VIVO_URL;
+  try { if (location.origin === 'https://gamificaeducacao.com.br') return location.origin + '/vivo/'; } catch(e){}
+  return SITE_VIVO;
+}
+function prontasDe(q){ return q.perguntas.filter(p => !problema(p)).map(p => Object.assign({}, p)); }
+function jogarSozinho(q){
+  const perg = prontasDe(q);
+  if (!perg.length){ aviso('#fbSala', 'Esse quiz ainda não tem perguntas prontas para jogar.', true); return; }
+  if (!gravarLS('live-teste', {titulo: q.titulo, perguntas: perg, ts: Date.now()})) gravarLS('live-teste', {titulo: q.titulo, perguntas: perg.map(p => Object.assign(p, {img: ''})), ts: Date.now()});
+  Som.parar();
+  $('#frSozinho').src = urlVivo() + '?teste=1&v=' + Date.now();
+  $('#sozinho').classList.remove('oculto'); $('#bFecharSozinho').focus();
+}
+$('#bFecharSozinho').onclick = () => { $('#sozinho').classList.add('oculto'); $('#frSozinho').src = 'about:blank'; };
+
+let lkQuiz = null, lkTarefa = null;
+function linkDe(codigo){ return SITE_VIVO + '?t=' + codigo; }
+function abrirLink(q){
+  lkQuiz = q; lkTarefa = null;
+  $('#lkQuiz').textContent = '"' + q.titulo + '"';
+  $('#lkResultado').classList.add('oculto'); $('#lkForm').classList.remove('oculto'); $('#lkPrazo').value = '';
+  if (!Nuvem.sb){ aviso('#lkFb', 'Para criar link, abra o Gamifica Live no site com o seu login (assim as respostas dos alunos ficam salvas na sua conta).', true); $('#bLkCriar').disabled = true; }
+  else { aviso('#lkFb', ''); $('#bLkCriar').disabled = false; }
+  mostrar('tLink');
+}
+function gerarCodigo(){ const L = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', a = new Uint32Array(6); crypto.getRandomValues(a); return Array.from(a, x => L[x % L.length]).join(''); }
+function erroTarefas(e){
+  const m = String((e && (e.message || e.details || e.hint)) || '');
+  if (/does not exist|could not find|schema cache|404/i.test(m)) return 'Os links de tarefa ainda estão sendo ativados no servidor. Tente de novo mais tarde.';
+  if (/row-level|violates|permission/i.test(m)) return 'Sua conta não tem permissão para criar tarefas agora. Verifique se o seu acesso está liberado.';
+  if (/too large|octet|check/i.test(m)) return 'O quiz ficou grande demais (muitas imagens). Use imagens menores.';
+  return 'Não consegui falar com o servidor. Verifique a internet e tente de novo.';
+}
+$('#bLkCriar').onclick = async () => {
+  const q = lkQuiz, perg = prontasDe(q);
+  if (!perg.length){ aviso('#lkFb', 'Esse quiz ainda não tem perguntas prontas.', true); return; }
+  const prazo = $('#lkPrazo').value ? new Date($('#lkPrazo').value).toISOString() : null;
+  if (prazo && new Date(prazo) < new Date()){ aviso('#lkFb', 'O prazo precisa ser uma data futura.', true); return; }
+  $('#bLkCriar').disabled = true; aviso('#lkFb', 'Criando o link…');
+  try {
+    let feito = null;
+    for (let i = 0; i < 5 && !feito; i++){
+      const {data, error} = await Nuvem.sb.from('live_tarefas').insert({codigo: gerarCodigo(), titulo: String(q.titulo).slice(0, 120), perguntas: perg, prazo, mostrar_resposta: $('#lkMostrar').checked}).select('id,codigo').single();
+      if (!error){ feito = data; break; }
+      if (!/duplicate|unique/i.test(error.message || '')) throw error;
+    }
+    if (!feito) throw new Error('codigo');
+    lkTarefa = feito; mostrarLinkCriado(feito.codigo);
+  } catch(e){ aviso('#lkFb', erroTarefas(e), true); }
+  $('#bLkCriar').disabled = false;
+};
+function mostrarLinkCriado(codigo){
+  const url = linkDe(codigo);
+  $('#lkForm').classList.add('oculto'); aviso('#lkFb', ''); $('#lkResultado').classList.remove('oculto');
+  $('#lkUrl').value = url;
+  $('#bLkZap').href = 'https://wa.me/?text=' + encodeURIComponent('📝 Quiz "' + lkQuiz.titulo + '": responda pelo link ' + url);
+  $('#lkQr').innerHTML = ''; try { $('#lkQr').appendChild(window.QRMini.canvas(url, 300)); } catch(e){}
+}
+$('#bLkCopiar').onclick = async () => { const u = $('#lkUrl').value; try { await navigator.clipboard.writeText(u); } catch(e){ $('#lkUrl').select(); document.execCommand('copy'); } aviso('#lkFb', '📋 Link copiado!'); };
+$('#bLkShare').onclick = async () => { const u = $('#lkUrl').value; if (navigator.share){ try { await navigator.share({title: lkQuiz.titulo, text: 'Responda o quiz "' + lkQuiz.titulo + '"', url: u}); } catch(e){} } else $('#bLkCopiar').click(); };
+$('#bLkVer').onclick = () => { if (lkTarefa) abrirTarefa(lkTarefa.id); };
+$('#bLkVoltar').onclick = () => { desenharInicio(); mostrar('tInicio'); };
+
+/* ---------- Minhas tarefas ---------- */
+async function desenharTarefas(){
+  mostrar('tTarefas');
+  if (!Nuvem.sb){ $('#trLista').innerHTML = '<p class="dica">Para ver as suas tarefas, abra o Gamifica Live no site com o seu login.</p>'; return; }
+  $('#trLista').innerHTML = '<p>☁️ Buscando as suas tarefas…</p>';
+  try {
+    const r1 = await Nuvem.sb.from('live_tarefas').select('id,codigo,titulo,prazo,ativa,criado_em').order('criado_em', {ascending: false});
+    if (r1.error) throw r1.error;
+    const r2 = await Nuvem.sb.from('live_tarefa_tentativas').select('tarefa_id,concluida');
+    const cont = {}; (r2.data || []).forEach(x => { const c = cont[x.tarefa_id] || (cont[x.tarefa_id] = [0, 0]); c[0]++; if (x.concluida) c[1]++; });
+    const agora = new Date();
+    $('#trLista').innerHTML = (r1.data || []).map(t => {
+      const venceu = t.prazo && new Date(t.prazo) < agora, aberta = t.ativa && !venceu, c = cont[t.id] || [0, 0];
+      return `<div class="tarefa-item"><div><b>${esc(t.titulo)}</b> <span class="${aberta ? 'tag-on' : 'tag-off'}">${aberta ? 'aberta' : venceu ? 'prazo encerrado' : 'encerrada'}</span><br>
+        <small>Código ${esc(t.codigo)} · criada em ${new Date(t.criado_em).toLocaleDateString('pt-BR')}${t.prazo ? ' · prazo ' + new Date(t.prazo).toLocaleString('pt-BR', {dateStyle: 'short', timeStyle: 'short'}) : ''} · ${c[1]} aluno(s) concluíram${c[0] > c[1] ? ', ' + (c[0] - c[1]) + ' em andamento' : ''}</small></div>
+        <button class="btn claro" data-tarefa="${esc(t.id)}">📊 Abrir</button></div>`;
+    }).join('') || '<p>Você ainda não criou nenhum link. Escolha um quiz e toque em "🔗 Link para os alunos".</p>';
+  } catch(e){ $('#trLista').innerHTML = '<p class="dica">' + esc(erroTarefas(e)) + '</p>'; }
+}
+$('#bTarefas').onclick = desenharTarefas;
+$('#bTrVoltar').onclick = () => { desenharInicio(); mostrar('tInicio'); };
+$('#trLista').addEventListener('click', e => { const b = e.target.closest('[data-tarefa]'); if (b) abrirTarefa(b.dataset.tarefa); });
+
+let tdAtual = null;
+async function abrirTarefa(id){
+  mostrar('tTarefa'); $('#tdAlunos').innerHTML = '<p>☁️ Carregando as respostas…</p>'; $('#tdPerguntas').innerHTML = ''; $('#tdAlerta').innerHTML = '';
+  try {
+    const r1 = await Nuvem.sb.from('live_tarefas').select('*').eq('id', id).single();
+    if (r1.error) throw r1.error;
+    const r2 = await Nuvem.sb.from('live_tarefa_tentativas').select('nome,turma,pontos,acertos,concluida,iniciada_em,concluida_em,respostas').eq('tarefa_id', id).order('pontos', {ascending: false});
+    if (r2.error) throw r2.error;
+    tdAtual = {t: r1.data, tent: r2.data || []}; desenharTarefa();
+  } catch(e){ $('#tdAlunos').innerHTML = '<p class="dica">' + esc(erroTarefas(e)) + '</p>'; }
+}
+function rotuloResposta(q, r){
+  if (r == null) return '';
+  if (q.tipo === 'multipla' || q.tipo === 'enquete') return texSimples(q.o[+r] || '');
+  if (q.tipo === 'vf') return +r === 0 ? 'Verdadeiro' : 'Falso';
+  if (q.tipo === 'numero') return String(r).replace(/\./g, ',');
+  return '';
+}
+function desenharTarefa(){
+  const {t, tent} = tdAtual, perg = t.perguntas, url = linkDe(t.codigo);
+  const venceu = t.prazo && new Date(t.prazo) < new Date();
+  $('#tdTitulo').textContent = '🔗 ' + t.titulo;
+  $('#tdInfo').innerHTML = `Link: <b>${esc(url)}</b> · ${perg.length} questão(ões)${t.prazo ? ' · prazo ' + new Date(t.prazo).toLocaleString('pt-BR', {dateStyle: 'short', timeStyle: 'short'}) : ''} · ${t.ativa && !venceu ? '<span class="tag-on">aberta</span>' : '<span class="tag-off">encerrada</span>'}`;
+  $('#tdAcoes').innerHTML = `<button class="btn verde" data-td="copiar">📋 Copiar link</button><a class="btn" style="text-decoration:none;background:#128c4a" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent('📝 Quiz "' + t.titulo + '": responda pelo link ' + url)}">💬 WhatsApp</a>` +
+    `<button class="btn claro" data-td="ativa">${t.ativa ? '⏹️ Encerrar a tarefa' : '▶️ Reabrir a tarefa'}</button><button class="btn claro" data-td="excluir" style="color:#b91c1c">🗑️ Excluir</button>`;
+  const concl = tent.filter(x => x.concluida);
+  /* por questão */
+  const porQ = perg.map((q, i) => {
+    let resp = 0, certos = 0, soma = 0; const erros = {};
+    tent.forEach(x => { const r = x.respostas && x.respostas[i]; if (!r) return; resp++; soma += r.ms || 0; if (r.ok === 1) certos++; if (r.ok === 0 && r.r != null){ const rot = rotuloResposta(q, r.r); if (rot) erros[rot] = (erros[rot] || 0) + 1; } });
+    const top = Object.entries(erros).sort((a, b) => b[1] - a[1])[0];
+    return {t: texSimples(q.t), tipo: q.tipo, resp, certos, pct: resp ? Math.round(certos / resp * 100) : 0, tempo: resp ? soma / resp / 1000 : 0, erro: top ? top[0] + ' (' + top[1] + ')' : ''};
+  });
+  const dificeis = porQ.map((p, i) => [p, i]).filter(([p]) => p.tipo !== 'enquete' && p.resp && p.pct < 50);
+  $('#tdAlerta').innerHTML = !tent.length ? '<p class="dica">Ainda ninguém respondeu. Envie o link para a turma!</p>' :
+    (dificeis.length ? `<p class="dica">⚠️ <b>Vale retomar em aula:</b> ${dificeis.map(([p, i]) => 'questão ' + (i + 1) + ' (' + p.pct + '% de acerto)').join(', ')}.</p>` : '<p class="dica">✅ Todas as questões tiveram 50% de acerto ou mais.</p>');
+  const nCorr = perg.filter(q => q.tipo !== 'enquete').length;
+  $('#tdAlunos').innerHTML = `<p>${concl.length} aluno(s) concluíram${tent.length > concl.length ? ' · ' + (tent.length - concl.length) + ' em andamento ou que pararam no meio' : ''}.</p>` +
+    '<table><tr><th>#</th><th>Aluno</th><th>Turma</th><th>Pontos</th><th>Acertos</th><th>Situação</th><th>Data</th></tr>' +
+    tent.map((x, i) => `<tr><td>${i + 1}º</td><td>${esc(x.nome)}</td><td>${esc(x.turma)}</td><td>${x.pontos}</td><td>${x.acertos} de ${nCorr}</td><td>${x.concluida ? '✅ concluiu' : '⏳ parou na questão ' + (Object.keys(x.respostas || {}).length + 1)}</td><td>${new Date(x.concluida_em || x.iniciada_em).toLocaleString('pt-BR', {dateStyle: 'short', timeStyle: 'short'})}</td></tr>`).join('') + '</table>';
+  $('#tdPerguntas').innerHTML = '<table><tr><th>#</th><th>Questão</th><th>Acerto</th><th>Erro mais comum</th><th>Respostas</th><th>Tempo médio</th></tr>' +
+    porQ.map((p, i) => `<tr class="${p.tipo !== 'enquete' && p.resp && p.pct < 50 ? 'dificil' : ''}"><td>${i + 1}</td><td>${esc(p.t)}</td><td>${p.tipo === 'enquete' ? '—' : `<span class="barrinha" style="width:${p.pct}px"></span>${p.pct}%`}</td><td>${esc(p.erro) || '—'}</td><td>${p.resp}</td><td>${p.tempo.toFixed(1).replace('.', ',')} s</td></tr>`).join('') + '</table>';
+  tdAtual.porQ = porQ; mostrarAbaTd('alunos');
+}
+function mostrarAbaTd(a){ document.querySelectorAll('[data-tdaba]').forEach(b => b.setAttribute('aria-pressed', b.dataset.tdaba === a)); $('#tdAlunos').classList.toggle('oculto', a !== 'alunos'); $('#tdPerguntas').classList.toggle('oculto', a !== 'perguntas'); }
+document.querySelectorAll('[data-tdaba]').forEach(b => b.onclick = () => mostrarAbaTd(b.dataset.tdaba));
+$('#tdAcoes').addEventListener('click', async e => {
+  const b = e.target.closest('[data-td]'); if (!b || !tdAtual) return;
+  const t = tdAtual.t;
+  if (b.dataset.td === 'copiar'){ try { await navigator.clipboard.writeText(linkDe(t.codigo)); b.textContent = '✅ Copiado!'; } catch(err){ prompt('Copie o link:', linkDe(t.codigo)); } }
+  if (b.dataset.td === 'ativa'){ const {error} = await Nuvem.sb.from('live_tarefas').update({ativa: !t.ativa}).eq('id', t.id); if (!error){ t.ativa = !t.ativa; desenharTarefa(); } }
+  if (b.dataset.td === 'excluir' && confirm('Excluir a tarefa "' + t.titulo + '" e todas as respostas dos alunos? Isso não pode ser desfeito.')){
+    const {error} = await Nuvem.sb.from('live_tarefas').delete().eq('id', t.id); if (!error) desenharTarefas();
+  }
+});
+$('#bTdAtualizar').onclick = () => { if (tdAtual) abrirTarefa(tdAtual.t.id); };
+$('#bTdVoltar').onclick = desenharTarefas;
+$('#bTdCsv').onclick = () => {
+  if (!tdAtual) return; const {t, tent, porQ} = tdAtual;
+  const l = [['Tarefa', t.titulo], ['Link', linkDe(t.codigo)], [], ['Posição', 'Aluno', 'Turma', 'Pontos', 'Acertos', 'Concluiu', 'Data']].concat(
+    tent.map((x, i) => [i + 1, x.nome, x.turma, x.pontos, x.acertos, x.concluida ? 'sim' : 'não', new Date(x.concluida_em || x.iniciada_em).toLocaleString('pt-BR')]), [[]],
+    [['Questão', 'Enunciado', 'Acerto (%)', 'Erro mais comum', 'Respostas', 'Tempo médio (s)']],
+    porQ.map((p, i) => [i + 1, p.t, p.tipo === 'enquete' ? '' : p.pct, p.erro, p.resp, p.tempo.toFixed(1).replace('.', ',')]), [[]],
+    [['Aluno'].concat(t.perguntas.map((q, i) => 'Q' + (i + 1)))],
+    tent.map(x => [x.nome].concat(t.perguntas.map((q, i) => { const r = x.respostas && x.respostas[i]; return !r ? 'sem resposta' : r.ok === 1 ? 'acertou' : r.ok === -1 ? 'votou' : 'errou'; }))));
+  baixar('tarefa-' + t.codigo + '.csv', '﻿' + l.map(x => x.map(campoCsv).join(';')).join('\r\n'), 'text/csv;charset=utf-8');
+};
+
+/* ===================== Passador de slides e teclado ===================== */
+/* Enter, espaço, seta para a direita ou PageDown avançam o jogo (os passadores de slide enviam essas teclas). */
+document.addEventListener('keydown', e => {
+  if (!['Enter', ' ', 'ArrowRight', 'PageDown'].includes(e.key) || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (/input|textarea|select|button/i.test(document.activeElement && document.activeElement.tagName) && e.key !== 'PageDown' && e.key !== 'ArrowRight') return;
+  if (!$('#modal').classList.contains('oculto') || !$('#sozinho').classList.contains('oculto')) return;
+  const visivel = id => $(id) && !$(id).classList.contains('oculto') && !$(id).disabled && $(id).offsetParent !== null;
+  let alvo = null;
+  if ($('#tSala').classList.contains('on') && visivel('#bComecar')) alvo = '#bComecar';
+  else if ($('#tPergunta').classList.contains('on')) alvo = visivel('#bAvancar') ? '#bAvancar' : null;
+  else if ($('#tRanking').classList.contains('on')) alvo = '#bProxima';
+  if (alvo){ e.preventDefault(); $(alvo).click(); }
+});
+
+/* ===================== Início ===================== */
+desenharInicio();
+Nuvem.iniciar();
+window.addEventListener('load', () => { if ($('#tEditor').classList.contains('on')) desenharEditor(); });
+window.__live = {lerQuestoesColadas, Nuvem, H, pontosDe, bonusSeq, lerNumero, csvParaPerguntas, paraCsv, problema, normalizar, nomeLimpo, texSimples};
+</script>
+</body>
+</html>
