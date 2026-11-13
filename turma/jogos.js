@@ -529,10 +529,10 @@ window.JOGOS = {
   },
   "quiz-ao-vivo": {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
-    nome: "Quiz Ao Vivo",
+    nome: "Gamifica Live (Quiz ao vivo)",
     tema: "Quiz em tempo real",
-    desc: "Você projeta, os alunos respondem pelo celular em gamificaeducacao.com.br/vivo com um código. Pontos por rapidez, ranking a cada pergunta, pódio e planilha de resultados. Use perguntas prontas ou crie as suas.",
-    emoji: "📡", cor: "lilas", ferramenta: true
+    desc: "Você projeta, os alunos respondem pelo celular em gamificaeducacao.com.br/vivo com um código. Cinco tipos de pergunta (múltipla escolha, verdadeiro ou falso, resposta numérica, ordenar etapas e enquete), fórmulas como no livro, música, ranking animado, pódio e relatório da turma. Crie seus quizzes ou importe de planilha.",
+    emoji: "⚡", cor: "lilas", ferramenta: true
   },
   "calculadora-grafica": {
     bncc: ["EF09MA06", "EM13MAT302", "EM13MAT402", "EM13MAT306"],

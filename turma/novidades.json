@@ -1,5 +1,12 @@
 [
   {
+    "data": "2026-11-13",
+    "titulo": "Novo: Gamifica Live (Quiz ao vivo)",
+    "texto": "O quiz ao vivo ficou completo: 5 tipos de pergunta, fórmulas como no livro, avatares, música, ranking animado, pódio, relatório da turma e importação de planilha. Suas perguntas antigas foram mantidas.",
+    "link": "catalogo/",
+    "jogo": "quiz-ao-vivo"
+  },
+  {
     "data": "2026-11-12",
     "titulo": "Novo jogo: Teorema de Tales: a Altura da Pirâmide",
     "texto": "Refaça a experiência de Tales no Egito: raios de sol, sombra da estaca e sombra da pirâmide 3D para descobrir a altura. Com desafios de semelhança.",
