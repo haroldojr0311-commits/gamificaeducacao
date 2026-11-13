@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-13",
+    "titulo": "Gamifica Live na nuvem",
+    "texto": "Seus quizzes e relatórios do Gamifica Live agora ficam salvos na sua conta: abra em qualquer computador, tablet ou celular, é só entrar com o seu login.",
+    "link": "catalogo/",
+    "jogo": "quiz-ao-vivo"
+  },
+  {
+    "data": "2026-11-13",
     "titulo": "Novo: Gamifica Live (Quiz ao vivo)",
     "texto": "O quiz ao vivo ficou completo: 5 tipos de pergunta, fórmulas como no livro, avatares, música, ranking animado, pódio, relatório da turma e importação de planilha. Suas perguntas antigas foram mantidas.",
     "link": "catalogo/",

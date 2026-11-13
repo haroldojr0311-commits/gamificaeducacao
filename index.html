@@ -337,6 +337,12 @@ var usuarioBox = document.getElementById('usuario');
 var abasBox = document.getElementById('abas');
 
 var sessao = null;      // sessão do Supabase (token)
+/* Ponte para as aplicações abertas no site (ex.: Gamifica Live) salvarem dados na conta do professor.
+   Só entrega o cliente já logado; quem protege os dados são as regras de segurança do banco. */
+window.GamificaNuvem = {
+  cliente: function(){ return sb; },
+  usuario: function(){ return (sessao && sessao.user && perfil) ? sessao.user.id : null; }
+};
 var perfil = null;      // {nome, papel, login, validade}
 var SID = null;         // identificador desta sessão (um aparelho por vez)
 var aba = 'jogos';
