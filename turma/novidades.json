@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "17:55",
+    "titulo": "Simuladores e Ferramentas organizados",
+    "texto": "Simuladores agora aparecem separados por conteúdo, com filtro de etapa e de conteúdo. As Ferramentas ficaram agrupadas pela finalidade: Ao vivo com a turma, Avaliação e notas, Gerar materiais, Sorteios e dinâmicas e Organização da sala.",
+    "link": "./#simuladores"
+  },
+  {
+    "data": "2026-11-13",
     "hora": "17:50",
     "titulo": "Botão Atribuir em cada cartão",
     "texto": "Nas abas Jogos e Simuladores, cada cartão tem o botão 📝 Atribuir: ele leva o jogo direto para Atribuir tarefas, já escolhido. É só dar o nome e gerar o link.",

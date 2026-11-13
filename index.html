@@ -327,7 +327,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <script src="turma/supabase-config.js"></script>
-<script src="turma/jogos.js?v=20261113174500"></script>
+<script src="turma/jogos.js?v=20261113175000"></script>
 <script src="turma/qr.js"></script>
 <script src="turma/resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
@@ -1109,8 +1109,8 @@ function cartaoJogo(id, aoClicar, marcado){
     el('div', {class:'nota'}, j.tema ? el('span', {class:'tema'}, j.tema) : null, el('span', {class:'emoji', 'aria-hidden':'true'}, j.emoji), el('span', {class:'marcado', 'aria-hidden':'true'}, '✓'), marcado === undefined ? botaoFav(id) : null),
     el('div', {class:'corpo'}, el('h3', {}, j.nome), j.desc ? el('p', {}, j.desc) : null, j.bncc && j.bncc.length ? el('div', {class:'bncc', title:'Habilidades da BNCC: ' + j.bncc.join(', ')}, 'BNCC ' + j.bncc.slice(0, 3).join(' · ') + (j.bncc.length > 3 ? ' +' + (j.bncc.length - 3) : '')) : null, marcado === undefined ? botaoAtribuir(id) : null));
 }
-var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Grandezas e medidas', 'Geometria', 'Geometria espacial', 'Geometria analítica', 'Funções e trigonometria', 'Estatística e probabilidade', 'Cálculo', 'Educação Financeira', 'Biologia celular', 'Saúde e bem-estar', 'História', 'Educação e Tecnologia', 'Jogos de tabuleiro', 'Desafios'];
-var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Grandezas e medidas':'📏', 'Geometria espacial':'🧊', 'Geometria analítica':'🧭', 'Cálculo':'∫', 'Biologia celular':'🧬', 'Saúde e bem-estar':'🍎', 'História':'🏛️', 'Educação e Tecnologia':'💻', 'Outros':'🎲'};
+var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Grandezas e medidas', 'Geometria', 'Geometria espacial', 'Geometria analítica', 'Funções e trigonometria', 'Estatística e probabilidade', 'Cálculo', 'Educação Financeira', 'Biologia celular', 'Saúde e bem-estar', 'História', 'Educação e Tecnologia', 'Jogos de tabuleiro', 'Desafios', 'Ao vivo com a turma', 'Avaliação e notas', 'Gerar materiais', 'Sorteios e dinâmicas', 'Organização da sala'];
+var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Grandezas e medidas':'📏', 'Geometria espacial':'🧊', 'Geometria analítica':'🧭', 'Cálculo':'∫', 'Biologia celular':'🧬', 'Saúde e bem-estar':'🍎', 'História':'🏛️', 'Educação e Tecnologia':'💻', 'Ao vivo com a turma':'📡', 'Avaliação e notas':'📝', 'Gerar materiais':'🖨️', 'Sorteios e dinâmicas':'🎲', 'Organização da sala':'🗂️', 'Outros':'🎲'};
 var filtroConteudo = 'todos';
 var filtroNivel = 'todos';
 var busca = '';
@@ -1127,7 +1127,7 @@ function barraFiltros(qual){
   selEtapa.value = filtroNivel;
   selEtapa.onchange = function(){ filtroNivel = selEtapa.value; filtroConteudo = 'todos'; desenharJogos(qual); };
   var linha = [el('label', {class:'rot', 'for':'selEtapa'}, 'Etapa'), selEtapa];
-  if(qual === 'jogos'){
+  if(true){
     var dentro = base.filter(function(id){ return filtroNivel === 'todos' || nivelDe(id).indexOf(filtroNivel) >= 0; });
     var conts = {};
     dentro.forEach(function(id){ var c = window.JOGOS[id].conteudo || 'Outros'; conts[c] = (conts[c] || 0) + 1; });
@@ -1136,12 +1136,12 @@ function barraFiltros(qual){
       return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b, 'pt-BR');
     });
     if(filtroConteudo !== 'todos' && nomes.indexOf(filtroConteudo) < 0) filtroConteudo = 'todos';
-    var selCont = el('select', {id:'selConteudo', 'aria-label':'Conteúdo'}, [el('option', {value:'todos'}, 'Todos os conteúdos')].concat(nomes.map(function(n){
+    var selCont = el('select', {id:'selConteudo', 'aria-label':'Conteúdo'}, [el('option', {value:'todos'}, qual === 'ferramentas' ? 'Todas as finalidades' : 'Todos os conteúdos')].concat(nomes.map(function(n){
       return el('option', {value:n}, (ICONE_CONTEUDO[n] || '🎲') + ' ' + n + ' (' + conts[n] + ')');
     })));
     selCont.value = filtroConteudo;
     selCont.onchange = function(){ filtroConteudo = selCont.value; desenharJogos(qual); };
-    linha.push(el('label', {class:'rot', 'for':'selConteudo'}, 'Conteúdo'), selCont);
+    linha.push(el('label', {class:'rot', 'for':'selConteudo'}, qual === 'ferramentas' ? 'Para quê' : 'Conteúdo'), selCont);
   }
   var ativo = filtroNivel !== 'todos' || filtroConteudo !== 'todos';
   if(ativo) linha.push(el('button', {type:'button', class:'sec peq', onclick: function(){ filtroNivel = 'todos'; filtroConteudo = 'todos'; desenharJogos(qual); }}, '✕ Limpar filtros'));
@@ -1191,25 +1191,18 @@ function desenharJogos(qual){
     if(!favs.length && qual === 'jogos') corpo.push(el('p', {class:'sub', style:'margin:4px 0 0;font-size:14px'}, '💡 Dica: toque na ☆ de um cartão para guardar nos favoritos.'));
   }
   var idsLista = ids.filter(function(id){ return emFaixa.indexOf(id) < 0; });
-  if(qual === 'jogos'){
-    var grupos = gruposPorConteudo(idsLista.filter(function(id){ return tipoDe(id) === 'jogo'; }));
-    if(filtroConteudo !== 'todos' && !grupos.some(function(g){ return g[0] === filtroConteudo; })) filtroConteudo = 'todos';
-    grupos.filter(function(g){ return filtroConteudo === 'todos' || g[0] === filtroConteudo; }).forEach(function(g){
-      corpo.push(el('div', {class:'secao-titulo conteudo'}, (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0], el('small', {}, g[1].length + (g[1].length === 1 ? ' jogo' : ' jogos'))));
-      corpo.push(el('div', {class:'grade-jogos'}, g[1].map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); })));
-    });
-    if(!grupos.length) corpo.push(el('p', {class:'vazio'}, busca.trim() ? 'Nenhum jogo encontrado para “' + busca.trim() + '”.' : 'Nenhum jogo deste nível ainda.'));
-  } else {
-    var lista = idsLista.filter(function(id){ return tipoDe(id) === (qual === 'simuladores' ? 'simulador' : 'ferramenta'); })
-      .sort(function(a, b){ return window.JOGOS[a].nome.localeCompare(window.JOGOS[b].nome, 'pt-BR'); });
-    var cartoesLista = lista.map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); });
-    if(qual === 'ferramentas' && filtroNivel === 'todos' && (!busca.trim() || normalizar('mural eletronico turbo padlet publicacoes turma').indexOf(normalizar(busca.trim())) >= 0)) cartoesLista.unshift(cartaoMural());
-    corpo.push(cartoesLista.length ? el('div', {class:'grade-jogos'}, cartoesLista)
-      : el('p', {class:'vazio'}, busca.trim() ? 'Nada encontrado para “' + busca.trim() + '”.' : 'Nada por aqui ainda.'));
-  }
+  var tipoG = {jogos:'jogo', simuladores:'simulador', ferramentas:'ferramenta'}[qual];
+  var palavra = {jogos:['jogo', 'jogos'], simuladores:['simulador', 'simuladores'], ferramentas:['ferramenta', 'ferramentas']}[qual];
+  var grupos = gruposPorConteudo(idsLista.filter(function(id){ return tipoDe(id) === tipoG; }));
+  if(filtroConteudo !== 'todos' && !grupos.some(function(g){ return g[0] === filtroConteudo; })) filtroConteudo = 'todos';
+  grupos.filter(function(g){ return filtroConteudo === 'todos' || g[0] === filtroConteudo; }).forEach(function(g){
+    corpo.push(el('div', {class:'secao-titulo conteudo'}, (ICONE_CONTEUDO[g[0]] || '🎲') + ' ' + g[0], el('small', {}, g[1].length + ' ' + (g[1].length === 1 ? palavra[0] : palavra[1]))));
+    corpo.push(el('div', {class:'grade-jogos'}, g[1].map(function(id){ return cartaoJogo(id, function(){ abrirJogo(id); }); })));
+  });
+  if(!grupos.length) corpo.push(el('p', {class:'vazio'}, busca.trim() ? 'Nada encontrado para “' + busca.trim() + '”.' : 'Nada nesta etapa ainda.'));
   var tipoCont = {jogos:'jogo', simuladores:'simulador', ferramentas:'ferramenta'}[qual];
   var totalAba = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem' && tipoDe(id) === tipoCont; }).length;
-  var mostrados = ids.filter(function(id){ return tipoDe(id) === tipoCont; }).length;
+  var mostrados = ids.filter(function(id){ return tipoDe(id) === tipoCont && (filtroConteudo === 'todos' || (window.JOGOS[id].conteudo || 'Outros') === filtroConteudo); }).length;
   var filtrado = filtroNivel !== 'todos' || filtroConteudo !== 'todos' || busca.trim();
   corpo.push(el('p', {class:'resultado'}, 'Mostrando ' + mostrados + ' de ' + totalAba + (filtrado ? ' · com filtros ativos' : '')));
   var oQue = {jogos:'um jogo', simuladores:'um simulador', ferramentas:'uma ferramenta'}[qual] || 'algo';

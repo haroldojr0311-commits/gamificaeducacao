@@ -140,6 +140,7 @@ window.JOGOS = {
     conteudo: "Funções e trigonometria"
   },
   "leitor-gabaritos": {
+    conteudo: "Avaliação e notas",
     nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Leitor de Gabaritos",
     tema: "Ferramenta do professor",
@@ -148,6 +149,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "mapa-da-sala": {
+    conteudo: "Organização da sala",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Mapa da Sala",
     tema: "Ferramenta do professor",
@@ -175,6 +177,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "caca-palavras": {
+    conteudo: "Gerar materiais",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Caça-Palavras Gerador",
     tema: "Ferramenta do professor",
@@ -183,6 +186,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "gerador-qrcode": {
+    conteudo: "Gerar materiais",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Gerador de QR Code",
     tema: "Ferramenta",
@@ -219,6 +223,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "sorteador": {
+    conteudo: "Sorteios e dinâmicas",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Sorteador de Alunos e Grupos",
     tema: "Ferramenta do professor",
@@ -227,6 +232,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "roleta": {
+    conteudo: "Sorteios e dinâmicas",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Roleta da Sala",
     tema: "Ferramenta do professor",
@@ -235,6 +241,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "calculadora-notas": {
+    conteudo: "Avaliação e notas",
     nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Calculadora de Notas e Médias",
     tema: "Ferramenta do professor",
@@ -243,6 +250,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "cronometro": {
+    conteudo: "Organização da sala",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Cronômetro de Atividades",
     tema: "Ferramenta do professor",
@@ -251,6 +259,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "bingo": {
+    conteudo: "Sorteios e dinâmicas",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Bingo Matemático",
     tema: "Ferramenta do professor",
@@ -365,6 +374,7 @@ window.JOGOS = {
     conteudo: "Proporção e porcentagem"
   },
   "montador-de-provas": {
+    conteudo: "Avaliação e notas",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Gerador de Provas",
     tema: "Ferramenta do professor",
@@ -373,6 +383,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "gerador-sudoku": {
+    conteudo: "Gerar materiais",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Gerador de Sudoku",
     tema: "Ferramenta do professor",
@@ -381,6 +392,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "campeonato-tarefas": {
+    conteudo: "Sorteios e dinâmicas",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Campeonato de Tarefas",
     tema: "Ferramenta do professor",
@@ -513,6 +525,7 @@ window.JOGOS = {
     emoji: "🎃", cor: "coral", ferramenta: false, conteudo: "Desafios", nivel: ["Fundamental 2"]
   },
   "gamifica-cards": {
+    conteudo: "Ao vivo com a turma",
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Gamifica Cards",
     tema: "Ferramenta do professor",
@@ -535,6 +548,7 @@ window.JOGOS = {
     emoji: "🔺", cor: "lilas", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2", "Ensino Médio"]
   },
   "quiz-ao-vivo": {
+    conteudo: "Ao vivo com a turma",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Gamifica Live (Quiz ao vivo)",
     tema: "Quiz em tempo real",
@@ -581,6 +595,7 @@ window.JOGOS = {
     tipo: "simulador", conteudo: "Geometria"
   },
   "enquete-ao-vivo": {
+    conteudo: "Ao vivo com a turma",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Enquete e Nuvem de Palavras Ao Vivo",
     tema: "Enquete em tempo real",
@@ -594,7 +609,7 @@ window.JOGOS = {
     nome: "Fichas de Tabuada e Cálculo Mental",
     tema: "Ferramenta do professor",
     desc: "Gere fichas para imprimir: tabuadas, número que falta, tabela pitagórica, adição e subtração mental, dobro e metade, ×÷ por 10/100/1000, porcentagem, expressões, potências e raízes. Várias versões, letra grande e gabarito separado.",
-    emoji: "🖨️", cor: "lilas", ferramenta: true, tipo: "ferramenta", conteudo: "Números e operações"
+    emoji: "🖨️", cor: "lilas", ferramenta: true, tipo: "ferramenta", conteudo: "Gerar materiais"
   },
   "ligar-classificar": {
     bncc: ["EF08MA01", "EF08MA02", "EF09MA03"],
@@ -605,6 +620,7 @@ window.JOGOS = {
     emoji: "🔗", cor: "lilas", ferramenta: false, conteudo: "Números e operações"
   },
   "mural-eletronico": {
+    conteudo: "Ao vivo com a turma",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Mural Eletrônico",
     tema: "Mural colaborativo",

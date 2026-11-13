@@ -386,7 +386,7 @@ for k, v in J_TODOS.items():
     if not niv: pend.append(f'{k}: falta a etapa ("nivel")')
     for n in niv:
         if n not in NIVEIS: pend.append(f'{k}: etapa fora da lista "{n}" (use {", ".join(NIVEIS)})')
-    if t != 'ferramenta':
+    if True:
         c = v.get('conteudo')
         if not c: pend.append(f'{k}: falta o conteúdo ("conteudo") para os filtros')
         elif c not in ICONES or c not in ORDEM: pend.append(f'{k}: conteúdo "{c}" sem ícone/ordem no index.html (ICONE_CONTEUDO e ORDEM_CONTEUDOS)')
