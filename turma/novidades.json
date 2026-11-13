@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-13",
+    "titulo": "Gamifica Live: colar questões",
+    "texto": "Cole as questões do Word, PDF, apostila ou ChatGPT e o quiz se monta sozinho: enunciado, alternativas, resposta certa, verdadeiro ou falso, resposta numérica e explicação.",
+    "link": "catalogo/",
+    "jogo": "quiz-ao-vivo"
+  },
+  {
+    "data": "2026-11-13",
     "titulo": "Gamifica Live na nuvem",
     "texto": "Seus quizzes e relatórios do Gamifica Live agora ficam salvos na sua conta: abra em qualquer computador, tablet ou celular, é só entrar com o seu login.",
     "link": "catalogo/",
