@@ -327,7 +327,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <script src="turma/supabase-config.js"></script>
-<script src="turma/jogos.js?v=20261113182000"></script>
+<script src="turma/jogos.js?v=20261113174500"></script>
 <script src="turma/qr.js"></script>
 <script src="turma/resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
@@ -1109,8 +1109,8 @@ function cartaoJogo(id, aoClicar, marcado){
     el('div', {class:'nota'}, j.tema ? el('span', {class:'tema'}, j.tema) : null, el('span', {class:'emoji', 'aria-hidden':'true'}, j.emoji), el('span', {class:'marcado', 'aria-hidden':'true'}, '✓'), marcado === undefined ? botaoFav(id) : null),
     el('div', {class:'corpo'}, el('h3', {}, j.nome), j.desc ? el('p', {}, j.desc) : null, j.bncc && j.bncc.length ? el('div', {class:'bncc', title:'Habilidades da BNCC: ' + j.bncc.join(', ')}, 'BNCC ' + j.bncc.slice(0, 3).join(' · ') + (j.bncc.length > 3 ? ' +' + (j.bncc.length - 3) : '')) : null, marcado === undefined ? botaoAtribuir(id) : null));
 }
-var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Geometria', 'Funções e trigonometria', 'Estatística e probabilidade', 'Educação Financeira', 'Desafios'];
-var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Outros':'🎲'};
+var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Grandezas e medidas', 'Geometria', 'Geometria espacial', 'Geometria analítica', 'Funções e trigonometria', 'Estatística e probabilidade', 'Cálculo', 'Educação Financeira', 'Biologia celular', 'Saúde e bem-estar', 'História', 'Educação e Tecnologia', 'Jogos de tabuleiro', 'Desafios'];
+var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Grandezas e medidas':'📏', 'Geometria espacial':'🧊', 'Geometria analítica':'🧭', 'Cálculo':'∫', 'Biologia celular':'🧬', 'Saúde e bem-estar':'🍎', 'História':'🏛️', 'Educação e Tecnologia':'💻', 'Outros':'🎲'};
 var filtroConteudo = 'todos';
 var filtroNivel = 'todos';
 var busca = '';
@@ -1130,7 +1130,7 @@ function barraFiltros(qual){
   if(qual === 'jogos'){
     var dentro = base.filter(function(id){ return filtroNivel === 'todos' || nivelDe(id).indexOf(filtroNivel) >= 0; });
     var conts = {};
-    dentro.forEach(function(id){ var c = window.JOGOS[id].conteudo || 'Outros'; if(c !== 'Anos iniciais') conts[c] = (conts[c] || 0) + 1; });
+    dentro.forEach(function(id){ var c = window.JOGOS[id].conteudo || 'Outros'; conts[c] = (conts[c] || 0) + 1; });
     var nomes = Object.keys(conts).sort(function(a, b){
       var ia = ORDEM_CONTEUDOS.indexOf(a), ib = ORDEM_CONTEUDOS.indexOf(b);
       return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b, 'pt-BR');

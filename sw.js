@@ -1,6 +1,6 @@
 /* Service worker do Gamifica Educação: permite instalar como aplicativo.
    Estratégia "rede primeiro": sempre busca a versão nova; usa a cópia guardada só se estiver sem internet. */
-const VERSAO = 'gamifica-v66';
+const VERSAO = 'gamifica-v67';
 const BASE = ['/', '/index.html', '/manifest.webmanifest', '/icone-192.png', '/icone-512.png', '/icone.svg', '/favicon.ico'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSAO).then(c => c.addAll(BASE)).catch(() => {})); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSAO).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

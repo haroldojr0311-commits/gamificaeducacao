@@ -92,7 +92,7 @@ window.JOGOS = {
     tema: "Geometria espacial",
     desc: "Conte vértices, arestas e faces dos sólidos girando em 3D.",
     emoji: "🧊", cor: "lilas",
-    conteudo: "Geometria"
+    conteudo: "Geometria espacial"
   },
   "show-da-proporcao": {
     bncc: ["EF07MA17", "EF09MA08"],
@@ -156,6 +156,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "urna-eletronica": {
+    conteudo: "Estatística e probabilidade",
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Urna Eletrônica",
     tema: "Simulador",
@@ -164,6 +165,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "laboratorio-probabilidade": {
+    conteudo: "Estatística e probabilidade",
     bncc: ["EF08MA22", "EM13MAT511"],
     nivel: ["Ensino Médio"],
     nome: "Laboratório de Probabilidade",
@@ -189,6 +191,7 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "derivada-integral": {
+    conteudo: "Cálculo",
     nivel: ["Superior"],
     nome: "Derivada e Integral",
     tema: "Cálculo",
@@ -197,6 +200,8 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "simulador-pitagoras-trigonometria": {
+    bncc: ["EF09MA13", "EF09MA14", "EM13MAT308"],
+    conteudo: "Funções e trigonometria",
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Pitágoras e Trigonometria na Vida Real",
     tema: "Geometria e Trigonometria",
@@ -205,6 +210,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "simulador-vetores": {
+    conteudo: "Geometria analítica",
     nivel: ["Ensino Médio", "Superior"],
     nome: "Vetores no Plano e no Espaço",
     tema: "Geometria Analítica",
@@ -346,7 +352,7 @@ window.JOGOS = {
     nivel: ["Ensino Médio"],
     nome: "BioAR · Biologia em Realidade Aumentada",
     tema: "Biologia celular",
-    desc: "Células, DNA, vírus, bactérias, neurônio e hemácia em 3D: gire, corte, use o raio-X e toque nas estruturas para ver o nome e a função.",
+    desc: "Células, DNA, vírus, bactérias, neurônio e hemácia em 3D: gire, corte, use o raio-X e toque nas estruturas para ver o nome e a função. Tem quiz de 10 perguntas com nota.",
     emoji: "🧬", cor: "verde",
     tipo: "simulador", conteudo: "Biologia celular"
   },
@@ -408,41 +414,41 @@ window.JOGOS = {
     bncc: ["EF01MA01", "EF01MA02"],
     nivel: ["Fundamental 1"],
     nome: "Fazenda da contagem",
-    tema: "Fundamental 1",
+    tema: "Contagem",
     desc: "Conte os animais da fazenda e toque no número certo. Três fases, de 1 a 5, de 1 a 10 e de 6 a 15.",
-    emoji: "🐄", cor: "amarelo", ferramenta: false, conteudo: "Anos iniciais"
+    emoji: "🐄", cor: "amarelo", ferramenta: false, conteudo: "Números e operações"
   },
   "corrida-dezenas": {
     bncc: ["EF01MA07", "EF02MA04"],
     nivel: ["Fundamental 1"],
     nome: "Corrida das dezenas",
-    tema: "Fundamental 1",
+    tema: "Dezenas e unidades",
     desc: "Monte o número com o material dourado (barras de 10 e cubinhos de 1), confira no quadro de valor de lugar e leve o corredor até a chegada.",
-    emoji: "🏃", cor: "verde", ferramenta: false, conteudo: "Anos iniciais"
+    emoji: "🏃", cor: "verde", ferramenta: false, conteudo: "Números e operações"
   },
   "monte-desenho": {
     bncc: ["EF01MA14"],
     nivel: ["Fundamental 1"],
     nome: "Monte o desenho",
-    tema: "Fundamental 1",
+    tema: "Figuras planas",
     desc: "Descubra quadrado, retângulo, triângulo e círculo e monte um desenho com eles. Perguntas e desenhos diferentes a cada partida (casinha, foguete, barco, robô e parque).",
-    emoji: "🔷", cor: "azul", ferramenta: false, conteudo: "Anos iniciais"
+    emoji: "🔷", cor: "azul", ferramenta: false, conteudo: "Geometria"
   },
   "relogio-horas": {
     bncc: ["EF02MA19", "EF03MA23"],
     nivel: ["Fundamental 1"],
     nome: "Relógio das horas",
-    tema: "Fundamental 1",
+    tema: "Horas e relógio",
     desc: "Ajuste o relógio de ponteiros para as horas em ponto e meia hora pedidas.",
-    emoji: "⏰", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais"
+    emoji: "⏰", cor: "lilas", ferramenta: false, conteudo: "Grandezas e medidas"
   },
   "quebra-cabeca-soma": {
     bncc: ["EF01MA06", "EF02MA05"],
     nivel: ["Fundamental 1"],
     nome: "Quebra-cabeça da soma",
-    tema: "Fundamental 1",
+    tema: "Adição",
     desc: "Escolha duas peças que somam o número pedido. Cinco rodadas, de 5 a 15, com a conta montada na tela e dica quando falta ou passa.",
-    emoji: "🧩", cor: "coral", ferramenta: false, conteudo: "Anos iniciais"
+    emoji: "🧩", cor: "coral", ferramenta: false, conteudo: "Números e operações"
   },
   "cartesiano-desenhos": {
     bncc: ["EF05MA15", "EF06MA16"],
@@ -456,7 +462,7 @@ window.JOGOS = {
     nome: "Memória das horas",
     tema: "Horas e relógio",
     desc: "Encontre o par: a hora escrita e o relógio que mostra essa hora. Até 18 pares, com meias horas, pontos, espiada e recorde.",
-    emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Anos iniciais", nivel: ["Fundamental 1"]
+    emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Grandezas e medidas", nivel: ["Fundamental 1"]
   },
   "memoria-areas": {
     bncc: ["EF07MA31", "EF08MA19"],
@@ -522,6 +528,7 @@ window.JOGOS = {
     emoji: "✖️", cor: "amarelo", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 1", "Fundamental 2"]
   },
   "potencia-raiz-turbo": {
+    bncc: ["EF08MA01", "EF08MA02"],
     nome: "Potência e Raiz Turbo",
     tema: "Potenciação e radiciação",
     desc: "Treine quadrados, cubos, potências e raízes quadradas e cúbicas: treino com dica e tabela de apoio, contra o relógio (60 s), duelo para dois jogadores e ranking da turma com cronômetro, pódio e impressão.",
@@ -535,6 +542,7 @@ window.JOGOS = {
     emoji: "⚡", cor: "lilas", ferramenta: true
   },
   "calculadora-grafica": {
+    conteudo: "Funções e trigonometria",
     bncc: ["EF09MA06", "EM13MAT302", "EM13MAT402", "EM13MAT306"],
     nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Calculadora Gráfica",
@@ -544,6 +552,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "fracoes-visuais": {
+    conteudo: "Números e operações",
     bncc: ["EF05MA04", "EF05MA05", "EF06MA07", "EF06MA10"],
     nivel: ["Fundamental 1", "Fundamental 2"],
     nome: "Frações Visuais",
@@ -553,6 +562,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "material-dourado": {
+    conteudo: "Números e operações",
     bncc: ["EF02MA04", "EF03MA01", "EF03MA05"],
     nivel: ["Fundamental 1"],
     nome: "Material Dourado e Ábaco",
@@ -617,7 +627,7 @@ window.JOGOS = {
     nome: "Lojinha do Troco",
     tema: "Sistema monetário",
     desc: "Dinheiro de brinquedo com cédulas e moedas: conte quanto tem no balcão, pague a conta certinha, dê o troco com o dinheiro do caixa e calcule o troco de várias compras. 4 níveis com dicas e estrelas.",
-    emoji: "🏪", cor: "verde", ferramenta: false, conteudo: "Anos iniciais"
+    emoji: "🏪", cor: "verde", ferramenta: false, conteudo: "Educação Financeira"
   },
   "financiamento-sac-price": {
     nivel: ["Ensino Médio", "Superior"],
@@ -629,6 +639,7 @@ window.JOGOS = {
     tipo: "simulador", conteudo: "Educação Financeira"
   },
   "calculadora-imc": {
+    conteudo: "Saúde e bem-estar",
     nivel: ["Ensino Médio"],
     nome: "Simulador de IMC",
     tema: "Saúde e Educação Física",
@@ -637,6 +648,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "calculo-proteina": {
+    conteudo: "Saúde e bem-estar",
     nivel: ["Ensino Médio"],
     nome: "Simulador de Proteína Diária",
     tema: "Saúde e Educação Física",
@@ -645,6 +657,7 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "calculo-agua": {
+    conteudo: "Saúde e bem-estar",
     nivel: ["Ensino Médio"],
     nome: "Simulador de Hidratação",
     tema: "Saúde e Educação Física",
@@ -653,7 +666,8 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "pitagoras-agua-3d": {
-    nivel: ["Ensino Fundamental II", "Ensino Médio"],
+    conteudo: "Geometria",
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Pitágoras em 3D: encha os quadrados",
     tema: "Teorema de Pitágoras",
     desc: "Veja em 3D a água dos quadrados dos catetos caber exatamente no quadrado da hipotenusa. Gire a cena, teste triângulos e vença 8 desafios.",
@@ -685,22 +699,25 @@ window.JOGOS = {
     conteudo: "História"
   },
   "construtor-de-volumes": {
+    bncc: ["EF05MA21", "EF07MA30"],
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Construtor de Volumes",
     tema: "Volume de sólidos",
     desc: "Monte construções em 3D, como no Minecraft, e descubra o volume: cada bloco vale 1 cm³. 4 fases, pontuação e nota de 0 a 10.",
     emoji: "🧱", cor: "verde",
-    conteudo: "Geometria"
+    conteudo: "Geometria espacial"
   },
   "cidade-das-formas-explorador-3d": {
+    bncc: ["EF06MA17"],
     nivel: ["Fundamental 1"],
     nome: "Cidade das Formas: Explorador 3D",
     tema: "Sólidos geométricos",
     desc: "Gire construções da cidade em 3D e descubra cubo, paralelepípedo, cilindro, cone e esfera. Conte as partes chatas e descubra quais peças rolam, em uma missão com vidas e pontos.",
     emoji: "🏙️", cor: "azul",
-    conteudo: "Geometria"
+    conteudo: "Geometria espacial"
   },
   "compasso-que-fecha": {
+    bncc: ["EF06MA07", "EF06MA10"],
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Compasso que Fecha",
     tema: "Frações e figuras musicais",
@@ -709,6 +726,7 @@ window.JOGOS = {
     conteudo: "Números e operações"
   },
   "semelhanca-piramide-3d": {
+    bncc: ["EF09MA12", "EF09MA14"],
     nivel: ["Fundamental 2"],
     nome: "Teorema de Tales: a Altura da Pirâmide",
     tema: "Teorema de Tales e semelhança de triângulos",
@@ -725,6 +743,7 @@ window.JOGOS = {
     conteudo: "Cálculo"
   },
   "mercadinho-3d-pro": {
+    bncc: ["EF03MA24", "EF05MA06", "EF07MA02"],
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Mercadinho 3D PRO: Troco, Compras e Educação Financeira",
     tema: "Dinheiro e porcentagem",
