@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "17:40",
+    "titulo": "Atribuir tarefas: busca e filtros",
+    "texto": "Na aba Atribuir tarefas, digite o nome ou o conteúdo e filtre por tipo, etapa e conteúdo. Favoritos e usados recentemente aparecem primeiro, e a barra de baixo mostra o jogo escolhido.",
+    "link": "./#atribuir"
+  },
+  {
+    "data": "2026-11-13",
     "hora": "18:20",
     "titulo": "Novo jogo: Missão EducaTec",
     "texto": "Para a disciplina Educação e Tecnologia: 6 salas com desafios diferentes (arrastar, decisões de gestor, ligar teorias, loja de apps e detetive de dados com LGPD) e o Grande Conselho de Classe no final. Pode ser atribuído à turma, com nota e ranking.",
