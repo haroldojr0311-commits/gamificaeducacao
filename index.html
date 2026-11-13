@@ -875,6 +875,12 @@ function faixaNovidades(){
 function entrarNoSite(){
   mostrarAvisoVencimento();
   faixaNovidades();
+  /* link direto para um jogo (ex.: botão "Ver" da página de novidades): ?jogo=id */
+  var jogoPedido = new URLSearchParams(location.search).get('jogo');
+  if(jogoPedido && window.JOGOS && window.JOGOS[jogoPedido]){
+    try { history.replaceState(null, '', location.pathname + location.hash); } catch(e){}
+    setTimeout(function(){ abrirJogo(jogoPedido); }, 400);
+  }
   /* Sem o filtro, o item vazio (null) iria para a tela como o texto "null". */
   usuarioBox.replaceChildren.apply(usuarioBox, [
     el('span', {}, (perfil.papel === 'admin' ? '🛡️ ' : '👤 ') + (perfil.nome || sessao.user.email)),

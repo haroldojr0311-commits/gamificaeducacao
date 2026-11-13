@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2a1468">
-<title>Gamifica Live · Entrar no quiz</title>
+<title>Gamifica Live · Quiz</title>
 <meta name="description" content="Entre no quiz ao vivo do seu professor com o código da sala.">
 <link rel="icon" href="../favicon.ico">
 <style>
@@ -79,6 +79,24 @@ input:focus{outline:none;border-color:#5b2dbf}
 <body>
 <div class="topo"><span>⚡ Gamifica <b>Live</b></span><span id="topoInfo"></span></div>
 <main>
+  <section class="tela" id="tSolo">
+    <div class="grande" id="soloEmoji">📝</div>
+    <h1 id="soloTitulo">Carregando…</h1>
+    <p class="sub" id="soloInfo"></p>
+    <div class="voltar" id="soloTeste" style="display:none">🧪 <b>Modo teste do professor.</b> Você joga como o aluno vai ver. Nada é enviado para ninguém.</div>
+    <div id="soloRetomar"></div>
+    <div class="cartao" id="soloForm">
+      <div id="soloCampos">
+        <label for="inSoloNome">Seu nome completo</label>
+        <input type="text" id="inSoloNome" maxlength="60" autocomplete="name" placeholder="ex.: Ana Clara Souza">
+        <label for="inSoloTurma">Série e turma</label>
+        <input type="text" id="inSoloTurma" maxlength="40" placeholder="ex.: 7º A">
+      </div>
+      <button class="btn ouro" id="btnSoloComecar" type="button">Começar ▶</button>
+      <div class="erro" id="erroSolo" aria-live="polite"></div>
+    </div>
+  </section>
+
   <section class="tela on" id="tEntrar">
     <h1>Entrar no quiz</h1>
     <p class="sub">Digite o código que aparece na tela do professor.</p>
@@ -111,8 +129,10 @@ input:focus{outline:none;border-color:#5b2dbf}
   </section>
 
   <section class="tela" id="tPergunta">
+    <div class="sub" id="soloTopo" style="display:none;margin:0 0 6px;font-weight:800"></div>
     <div class="relogio" id="relogio">⏱️ 20</div>
     <div class="pergunta" id="pTexto"></div>
+    <img id="pImgSolo" alt="Imagem da questão" style="display:none;max-width:100%;max-height:36vh;border-radius:14px;margin:0 auto 12px;background:#fff">
     <div id="pResposta"></div>
   </section>
 
@@ -125,6 +145,7 @@ input:focus{outline:none;border-color:#5b2dbf}
 
   <section class="tela" id="tResultado">
     <div class="res" id="resBox" aria-live="polite"></div>
+    <button class="btn ouro" type="button" id="btnSoloProxima" style="display:none;margin-top:14px">Próxima ▶</button>
   </section>
 
   <section class="tela" id="tFim">
@@ -132,6 +153,7 @@ input:focus{outline:none;border-color:#5b2dbf}
     <h1 id="fimTitulo">Fim de jogo!</h1>
     <div class="res ok" id="fimBox"></div>
     <p class="sub" style="margin-top:16px" id="fimElogio">Obrigado por jogar! 🎉</p>
+    <div id="fimSolo" style="display:none"><button class="btn ouro" type="button" id="btnSoloDeNovo">↺ Jogar de novo</button></div>
   </section>
 
   <section class="tela" id="tRemovido">
@@ -232,7 +254,7 @@ $('#btnDeNovo').onclick = () => { try { localStorage.removeItem('live-sessao'); 
 
 /* sessão salva: volta para a mesma partida com os mesmos pontos */
 const sessao = lerLS('live-sessao');
-if (sessao && Date.now() - sessao.ts < 3 * 3600 * 1000 && (!params.get('c') || params.get('c') === sessao.codigo)){
+if (!params.get('t') && !params.get('teste') && sessao && Date.now() - sessao.ts < 3 * 3600 * 1000 && (!params.get('c') || params.get('c') === sessao.codigo)){
   $('#caixaVoltar').innerHTML = `<div class="voltar">Você estava no jogo <b>${esc(sessao.codigo)}</b> como <b>${esc(sessao.av)} ${esc(sessao.nome)}</b>.<button class="btn ouro" type="button" id="btnVoltar">Voltar para o jogo ▶</button></div>`;
   $('#btnVoltar').onclick = () => entrar(sessao);
   if (params.get('c') === sessao.codigo) entrar(sessao);
@@ -377,6 +399,7 @@ $('#pResposta').addEventListener('click', e => {
   if (e.target.closest('#btnEnviaOrd') && A.ordem.length === document.querySelectorAll('.item').length) enviar(A.ordem.slice());
 });
 function enviar(r){
+  if (Solo.ativo){ Solo.enviar(r); return; }
   const qi = A.est.qi;
   A.respondida = qi; vibrar(40);
   const manda = () => A.canal && A.canal.enviar('resposta', {pid: A.pid, qi, r});
@@ -433,6 +456,181 @@ setInterval(() => {
     if (A.canal) A.canal.enviar('entrar', {pid: A.pid, nome: A.nome, av: A.av});
   }
 }, 3000);
+/* ======================================================================
+   MODO SOZINHO: tarefa (?t=CÓDIGO, correção no servidor) e teste do professor (?teste=1, correção local)
+   ====================================================================== */
+function lerNumero(s){
+  s = String(s == null ? '' : s).replace(/\s+/g, '').replace(/[−–]/g, '-');
+  if (/^-?\d+([.,]\d+)?$/.test(s)) return parseFloat(s.replace(',', '.'));
+  const m = s.match(/^(-?\d+)\/(-?\d+)$/); if (m && +m[2] !== 0) return +m[1] / +m[2];
+  return NaN;
+}
+function esperar(ms){ return new Promise(r => setTimeout(r, ms)); }
+/* motor da tarefa: tudo é corrigido no banco (o aluno não recebe as respostas) */
+function motorRemoto(codigo){
+  const sb = window.supabase ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY, {auth: {persistSession: false}}) : null;
+  async function rpc(fn, args){
+    if (!sb) throw new Error('sem conexão');
+    let ultimo;
+    for (let i = 0; i < 4; i++){
+      try { const {data, error} = await sb.rpc(fn, args); if (error) throw error; return data; }
+      catch(e){ ultimo = e; await esperar(800 * (i + 1)); }
+    }
+    throw ultimo;
+  }
+  const m = {tid: null,
+    abrir: () => rpc('live_tarefa_abrir', {p_codigo: codigo}),
+    iniciar: async (nome, turma) => { const d = await rpc('live_tarefa_iniciar', {p_codigo: codigo, p_nome: nome, p_turma: turma}); if (d && d.tentativa) m.tid = d.tentativa; return d; },
+    responder: (qi, r, ms) => rpc('live_tarefa_responder', {p_tentativa: m.tid, p_qi: qi, p_resposta: r, p_ms: ms}),
+    concluir: () => rpc('live_tarefa_concluir', {p_tentativa: m.tid})};
+  return m;
+}
+/* motor do teste do professor: corrige aqui mesmo, com as mesmas regras do servidor */
+function motorLocal(quiz){
+  let pontos = 0, acertos = 0, seq = 0;
+  const perg = quiz.perguntas;
+  return {tid: 'teste',
+    abrir: async () => ({titulo: quiz.titulo, total: perg.length, mostrar_resposta: true, perguntas: perg.map(q => {
+      const it = {tipo: q.tipo, t: q.t, img: q.img || '', tempo: q.tempo || 20, pontos: q.pontos == null ? 1000 : q.pontos};
+      if (q.tipo === 'multipla' || q.tipo === 'enquete') it.o = q.o.map((x, k) => [k, x]).filter(v => String(v[1]).trim());
+      if (q.tipo === 'ordenar'){ it.o = q.o.map((x, k) => ({id: 'k' + k, txt: x})).filter(v => String(v.txt).trim()); for (let i = it.o.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [it.o[i], it.o[j]] = [it.o[j], it.o[i]]; } }
+      return it; })}),
+    iniciar: async () => ({tentativa: 'teste'}),
+    responder: async (qi, r, ms) => {
+      const q = perg[qi], T = q.tempo || 20, P = q.pontos == null ? 1000 : q.pontos; ms = Math.min(Math.max(ms || 0, 0), T * 1000);
+      let ok;
+      if (q.tipo === 'enquete') ok = -1;
+      else if (r == null) ok = 0;
+      else if (q.tipo === 'multipla' || q.tipo === 'vf') ok = r === q.c ? 1 : 0;
+      else if (q.tipo === 'numero'){ const v = lerNumero(r), c = lerNumero(q.num); ok = !isNaN(v) && Math.abs(v - c) <= (q.tol || 0) + 1e-9 ? 1 : 0; }
+      else if (q.tipo === 'ordenar'){ const certa = q.o.map((x, k) => 'k' + k).filter((id, k) => String(q.o[k]).trim()); ok = JSON.stringify(r) === JSON.stringify(certa) ? 1 : 0; }
+      seq = ok === 1 ? seq + 1 : ok === 0 ? 0 : seq;
+      const ganho = ok === 1 && P > 0 ? Math.round(P * (1 - (ms / 1000) / (2 * T))) + Math.min(500, Math.max(0, seq - 1) * 100) : 0;
+      pontos += ganho; if (ok === 1) acertos++;
+      const certa = q.tipo === 'vf' ? (q.c === 0 ? 'Verdadeiro' : 'Falso') : q.tipo === 'multipla' ? q.o[q.c] : q.tipo === 'numero' ? q.num : q.tipo === 'ordenar' ? q.o.filter(x => String(x).trim()).join('  →  ') : '';
+      return {ok, ganho, total: pontos, seq, certa, e: q.e || ''};
+    },
+    concluir: async () => ({pontos, acertos, perguntas: perg.length, posicao: 1, participantes: 1})};
+}
+const Solo = {
+  ativo: false, motor: null, dados: null, qi: 0, inicio: 0, timer: null, codigo: '', teste: false, total: 0,
+  async abrir(){
+    this.ativo = true;
+    document.querySelector('.rodape').textContent = 'gamificaeducacao.com.br · Gamifica Live';
+    mostrar('tSolo'); $('#soloForm').style.display = 'none';
+    try {
+      if (this.teste){
+        const q = lerLS('live-teste');
+        if (!q || !Array.isArray(q.perguntas) || !q.perguntas.length) throw {erro: 'teste'};
+        this.motor = motorLocal(q);
+      } else this.motor = motorRemoto(this.codigo);
+      const d = await this.motor.abrir();
+      if (!d || d.erro) throw d || {};
+      this.dados = d;
+    } catch(e){
+      const erro = e && e.erro;
+      $('#soloEmoji').textContent = erro === 'encerrada' || erro === 'fechada' ? '⏰' : '😕';
+      $('#soloTitulo').textContent = erro === 'fechada' ? 'O professor encerrou esta tarefa' : erro === 'encerrada' ? 'O prazo desta tarefa acabou' : erro === 'nao_encontrada' ? 'Tarefa não encontrada' : erro === 'teste' ? 'Teste não encontrado' : 'Não consegui abrir a tarefa';
+      $('#soloInfo').textContent = erro === 'encerrada' || erro === 'fechada' ? 'Fale com o seu professor.' : erro === 'nao_encontrada' ? 'Confira o link que o professor enviou.' : erro === 'teste' ? 'Volte ao Gamifica Live e toque em "Jogar sozinho" de novo.' : 'Verifique a internet e recarregue a página.';
+      return;
+    }
+    const d = this.dados;
+    $('#soloEmoji').textContent = this.teste ? '🧪' : '📝';
+    $('#soloTitulo').textContent = d.titulo;
+    let info = d.total + (d.total === 1 ? ' questão' : ' questões') + '. Responda com calma: quanto mais rápido e certo, mais pontos.';
+    if (d.prazo) info += ' Prazo: ' + new Date(d.prazo).toLocaleString('pt-BR', {dateStyle: 'short', timeStyle: 'short'}) + '.';
+    $('#soloInfo').textContent = info;
+    $('#soloTeste').style.display = this.teste ? '' : 'none';
+    $('#soloCampos').style.display = this.teste ? 'none' : '';
+    const perfil = lerLS('live-aluno') || {};
+    $('#inSoloNome').value = perfil.nome || ''; $('#inSoloTurma').value = perfil.turma || '';
+    $('#soloForm').style.display = '';
+    /* tentativa que ficou pela metade (a página fechou ou recarregou) */
+    const salvo = !this.teste && lerLS('live-tarefa-' + this.codigo);
+    if (salvo && salvo.tid && salvo.qi < d.total && Date.now() - salvo.ts < 24 * 3600 * 1000){
+      $('#soloRetomar').innerHTML = `<div class="voltar">Você já começou esta tarefa como <b>${esc(salvo.nome)}</b>.<button class="btn ouro" type="button" id="btnSoloContinuar">Continuar da questão ${salvo.qi + 1} ▶</button></div>`;
+      $('#btnSoloContinuar').onclick = () => { this.motor.tid = salvo.tid; this.pontos = salvo.pontos || 0; this.comecar(salvo.qi); };
+    }
+  },
+  async iniciar(){
+    const nome = $('#inSoloNome').value.trim().replace(/\s+/g, ' '), turma = $('#inSoloTurma').value.trim();
+    if (!this.teste && nome.length < 3){ $('#erroSolo').textContent = 'Digite o seu nome completo.'; return; }
+    $('#erroSolo').textContent = ''; $('#btnSoloComecar').disabled = true; $('#btnSoloComecar').textContent = 'Abrindo…';
+    try {
+      const d = await this.motor.iniciar(nome, turma);
+      if (!d || d.erro) throw d || {};
+      if (!this.teste) gravarLS('live-aluno', {nome, turma});
+      this.nome = nome; this.pontos = 0; this.comecar(0);
+    } catch(e){
+      $('#erroSolo').textContent = e && e.erro === 'fechada' ? 'O professor encerrou esta tarefa.' : e && e.erro === 'encerrada' ? 'O prazo desta tarefa acabou.' : e && e.erro === 'muitas' ? 'Muita gente entrando ao mesmo tempo. Tente de novo em 1 minuto.' : 'Não consegui começar. Verifique a internet e tente de novo.';
+    }
+    $('#btnSoloComecar').disabled = false; $('#btnSoloComecar').textContent = 'Começar ▶';
+  },
+  comecar(qi){ this.qi = qi; this.total = this.dados.total; manterTelaLigada(); this.questao(); },
+  questao(){
+    const q = this.dados.perguntas[this.qi];
+    const p = {fase: 'pergunta', qi: this.qi, perg: {tipo: q.tipo, t: q.t, pontos: q.pontos}};
+    if (q.tipo === 'multipla' || q.tipo === 'enquete') p.perg.o = q.o;
+    if (q.tipo === 'vf') p.perg.o = [[0, 'Verdadeiro'], [1, 'Falso']];
+    if (q.tipo === 'ordenar') p.perg.o = q.o.map(x => x.txt);
+    A.est = p; A.respondida = null;
+    montarPergunta(p);
+    const img = $('#pImgSolo'); img.style.display = q.img ? 'block' : 'none'; if (q.img) img.src = q.img;
+    $('#soloTopo').style.display = '';
+    $('#soloTopo').textContent = `Questão ${this.qi + 1} de ${this.total} · ${q.pontos === 2000 ? '⭐ pontos em dobro' : q.pontos === 0 ? 'sem pontos' : q.pontos + ' pontos'} · Total: ${this.pontos || 0}`;
+    this.inicio = Date.now();
+    const T = (q.tempo || 20) * 1000;
+    clearInterval(this.timer);
+    const tick = () => { const resta = Math.max(0, T - (Date.now() - this.inicio)); $('#relogio').textContent = '⏱️ ' + Math.ceil(resta / 1000); if (resta <= 0 && A.respondida !== this.qi){ clearInterval(this.timer); enviar(null); } };
+    tick(); this.timer = setInterval(tick, 250);
+    vibrar(40);
+  },
+  async enviar(r){
+    if (A.respondida === this.qi) return;
+    A.respondida = this.qi; clearInterval(this.timer);
+    const q = this.dados.perguntas[this.qi], ms = Date.now() - this.inicio;
+    if (q.tipo === 'ordenar' && Array.isArray(r)) r = r.map(pos => q.o[pos].id);
+    $('#envIcone').textContent = '⏳'; $('#envTitulo').textContent = r == null ? 'O tempo acabou!' : 'Corrigindo…'; mostrar('tEnviada');
+    let res;
+    try { res = await this.motor.responder(this.qi, r == null ? null : r, ms); if (!res || res.erro) throw res || {}; }
+    catch(e){ $('#envIcone').textContent = '📶'; $('#envTitulo').textContent = 'Sem conexão'; $('#envTitulo').insertAdjacentHTML('afterend', ''); 
+      const box = $('#resBox'); box.className = 'res no'; box.innerHTML = '<h2>📶 Sem conexão</h2><div>Não consegui enviar a resposta. Verifique a internet e toque em Tentar de novo.</div>';
+      mostrar('tResultado'); const b = $('#btnSoloProxima'); b.style.display = ''; b.textContent = 'Tentar de novo ↻'; b.onclick = () => { A.respondida = null; this.enviar(r); }; return; }
+    this.pontos = res.total;
+    if (!this.teste) gravarLS('live-tarefa-' + this.codigo, {tid: this.motor.tid, qi: this.qi + 1, nome: this.nome, pontos: res.total, ts: Date.now()});
+    const box = $('#resBox');
+    if (res.ok === -1){ box.className = 'res neutro'; box.innerHTML = '<h2>📊 Voto registrado!</h2>'; }
+    else if (res.ok === 1){ box.className = 'res ok'; box.innerHTML = `<h2>✅ ${esc(res.seq >= 3 ? 'Você está voando!' : sorteia(ACERTOU))}</h2><div class="pts">+${res.ganho} pontos</div>` + (res.seq >= 2 ? `<div class="expl">🔥 ${res.seq} acertos seguidos!</div>` : ''); vibrar(60); }
+    else { box.className = 'res no'; box.innerHTML = `<h2>${r == null ? '⏰ Tempo esgotado' : '❌ Não foi dessa vez'}</h2>` + (res.certa ? '<div>Resposta certa: <b data-certa></b></div>' : '') + `<div class="expl">${esc(sorteia(ERROU))}</div>`; const c = box.querySelector('[data-certa]'); if (c) pôrMat(c, res.certa); vibrar([60, 60, 60]); }
+    box.insertAdjacentHTML('beforeend', `<div class="pos">Total: <b>${res.total}</b> pontos</div>`);
+    if (res.e){ const d = document.createElement('div'); d.className = 'expl'; box.appendChild(d); pôrMat(d, '💡 ' + res.e); }
+    const ultima = this.qi >= this.total - 1, b = $('#btnSoloProxima');
+    b.style.display = ''; b.textContent = ultima ? 'Ver meu resultado 🏁' : 'Próxima ▶';
+    b.onclick = () => { b.style.display = 'none'; if (ultima) this.terminar(); else { this.qi++; this.questao(); } };
+    mostrar('tResultado'); b.focus();
+  },
+  async terminar(){
+    mostrar('tEnviada'); $('#envIcone').textContent = '🏁'; $('#envTitulo').textContent = 'Calculando o resultado…';
+    let f;
+    try { f = await this.motor.concluir(); } catch(e){ f = {pontos: this.pontos, acertos: '?', perguntas: this.total}; }
+    try { localStorage.removeItem('live-tarefa-' + this.codigo); } catch(e){}
+    const pct = typeof f.acertos === 'number' && f.perguntas ? f.acertos / f.perguntas : 0;
+    $('#fimEmoji').textContent = f.posicao === 1 && f.participantes > 1 ? '🥇' : pct >= 0.8 ? '🌟' : pct >= 0.5 ? '💪' : '🚀';
+    $('#fimTitulo').textContent = this.teste ? 'Fim do teste!' : 'Tarefa concluída!';
+    $('#fimBox').innerHTML = `<div class="pts">${f.pontos} pontos</div><div class="pos">${f.acertos} acerto(s) em ${f.perguntas} questão(ões)</div>` + (!this.teste && f.participantes > 1 ? `<div class="pos">Você está em ${f.posicao}º lugar entre ${f.participantes} participantes</div>` : '');
+    $('#fimElogio').textContent = (pct >= 0.8 ? 'Excelente! Você domina esse conteúdo. 🌟' : pct >= 0.5 ? 'Muito bom! Continue praticando que você chega lá. 💪' : 'Cada tentativa é um treino. Revise e jogue de novo! 🚀') + (this.teste ? '' : ' Seu resultado foi enviado ao professor.');
+    $('#fimSolo').style.display = '';
+    mostrar('tFim');
+  }
+};
+$('#btnSoloComecar').onclick = () => Solo.iniciar();
+$('#btnSoloDeNovo').onclick = () => { $('#fimSolo').style.display = 'none'; $('#soloRetomar').innerHTML = ''; Solo.abrir(); };
+if (params.get('t') || params.get('teste')){
+  Solo.teste = !!params.get('teste'); Solo.codigo = String(params.get('t') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+  $('#caixaVoltar').innerHTML = '';
+  Solo.abrir();
+}
+window.__solo = Solo;
 window.__aluno = A;
 </script>
 <script src="../estat.js" defer></script>

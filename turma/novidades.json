@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "11:10",
+    "titulo": "Gamifica Live: jogar sozinho e link para os alunos",
+    "texto": "Teste o seu quiz jogando sozinho, como o aluno vê. E crie um link com prazo para a turma jogar em casa: as respostas chegam no seu relatório.",
+    "link": "catalogo/",
+    "jogo": "quiz-ao-vivo"
+  },
+  {
+    "data": "2026-11-13",
     "titulo": "Gamifica Live: colar questões",
     "texto": "Cole as questões do Word, PDF, apostila ou ChatGPT e o quiz se monta sozinho: enunciado, alternativas, resposta certa, verdadeiro ou falso, resposta numérica e explicação.",
     "link": "catalogo/",
