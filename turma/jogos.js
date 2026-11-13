@@ -708,6 +708,14 @@ window.JOGOS = {
     emoji: "🎼", cor: "lilas",
     conteudo: "Números e operações"
   },
+  "semelhanca-piramide-3d": {
+    nivel: ["Fundamental 2"],
+    nome: "Semelhança e a Pirâmide 3D",
+    tema: "Semelhança de triângulos e altura da pirâmide",
+    desc: "Gire a pirâmide em 3D, veja os dois triângulos formados pelo Sol e meça a altura pela sombra. Depois, desafios com razão de semelhança.",
+    emoji: "🔺", cor: "laranja",
+    conteudo: "Geometria"
+  },
   "integral-em-passos": {
     nivel: ["Ensino Médio", "Superior"],
     nome: "Integral em Passos",

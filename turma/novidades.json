@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-12",
+    "titulo": "Novo jogo: Semelhança e a Pirâmide 3D",
+    "texto": "Descubra a altura de uma pirâmide 3D usando a sombra e uma estaca. Veja os triângulos semelhantes e resolva os desafios.",
+    "link": "catalogo/",
+    "jogo": "semelhanca-piramide-3d"
+  },
+  {
+    "data": "2026-11-12",
     "titulo": "Novo jogo: Integral em Passos",
     "texto": "Calcule integrais definidas passo a passo: início e fim do intervalo, primitiva, F(b) − F(a) e o valor final. Errou? Tenta de novo e joga até o fim. Ganhe XP e entre no ranking. Três níveis.",
     "link": "catalogo/",
