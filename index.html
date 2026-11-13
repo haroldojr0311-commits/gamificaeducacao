@@ -1518,8 +1518,8 @@ function consolidar(brutos){
   return Object.keys(porAluno).map(function(k){ return porAluno[k]; })
     .sort(function(a, b){
       var ea = a.escolhido, eb = b.escolhido;
-      return (Number(eb.nota) - Number(ea.nota)) || ((eb.pontos || 0) - (ea.pontos || 0)) ||
-        ((ea.tempo_segundos || 0) - (eb.tempo_segundos || 0)) || a.nome.localeCompare(b.nome, 'pt-BR');
+      /* maior nota primeiro; em caso de empate, fica na frente quem terminou (enviou) primeiro */
+      return (Number(eb.nota) - Number(ea.nota)) || (Date.parse(ea.enviado_em) - Date.parse(eb.enviado_em)) || a.nome.localeCompare(b.nome, 'pt-BR');
     });
 }
 
@@ -1560,8 +1560,8 @@ function desenharResultados(a){
     el('option', {value:'ultima'}, 'Contar a última tentativa'));
   selModo.value = modo;
 
-  /* posição no ranking: alunos com a mesma nota ficam no mesmo lugar */
-  function posicaoDe(i){ var n = Number(linhas[i].escolhido.nota), k = 0; linhas.forEach(function(l){ if(Number(l.escolhido.nota) > n) k++; }); return k + 1; }
+  /* posição no ranking: cada aluno tem a sua; no empate de nota, quem terminou primeiro fica na frente */
+  function posicaoDe(i){ return i + 1; }
   var corpo = linhas.length === 0
     ? el('p', {class:'vazio'}, 'Nenhum aluno enviou resultado ainda. Cole o link da atividade na Sala do Futuro ou no Moodle.')
     : el('div', {class:'tabela-wrap'}, el('table', {},
