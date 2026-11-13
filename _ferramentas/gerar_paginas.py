@@ -360,3 +360,48 @@ _h = open(os.path.join(RAIZ, 'index.html'), encoding='utf-8').read()
 _n = re.sub(r'\b\d+ jogos, simuladores e ferramentas educacionais', f'{TOTAL} jogos, simuladores e ferramentas educacionais', _h)
 if _n != _h: open(os.path.join(RAIZ, 'index.html'), 'w', encoding='utf-8').write(_n)
 print(f'{TOTAL} aplicações · {len(urls)} URLs no sitemap')
+
+# ---------------------------------------------------------------------------
+# Conferência automática do catálogo: roda a cada publicação.
+# Aponta tudo o que falta atualizar quando entra um jogo, simulador ou ferramenta novo.
+# ---------------------------------------------------------------------------
+import sys
+J_TODOS = json.loads(subprocess.run(['node', '-e', "global.window={};require(process.argv[1]);console.log(JSON.stringify(window.JOGOS))",
+                                     os.path.join(RAIZ, 'turma', 'jogos.js')], capture_output=True, text=True, check=True).stdout)
+idx = open(os.path.join(RAIZ, 'index.html'), encoding='utf-8').read()
+m_ic = re.search(r"var ICONE_CONTEUDO = \{(.*?)\};", idx)
+ICONES = set(re.findall(r"'([^']+)':", m_ic.group(1))) if m_ic else set()
+m_or = re.search(r"var ORDEM_CONTEUDOS = \[(.*?)\];", idx)
+ORDEM = set(re.findall(r"'([^']+)'", m_or.group(1))) if m_or else set()
+prot = {f[:-5] for f in os.listdir(os.path.join(RAIZ, 'protegido')) if f.endswith('.json') and not f.startswith('chave')}
+SEM_ARQUIVO = {'mural-eletronico'}          # abre por página própria (mural/), não pelo cofre
+pend = []
+for k, v in J_TODOS.items():
+    if k == 'demo-porcentagem': continue
+    t = tipo(v)
+    for campo in ('nome', 'tema', 'desc', 'emoji', 'cor'):
+        if not v.get(campo): pend.append(f'{k}: falta "{campo}"')
+    if v.get('cor') and v['cor'] not in COR: pend.append(f'{k}: cor desconhecida "{v["cor"]}"')
+    niv = v.get('nivel') or []
+    if not niv: pend.append(f'{k}: falta a etapa ("nivel")')
+    for n in niv:
+        if n not in NIVEIS: pend.append(f'{k}: etapa fora da lista "{n}" (use {", ".join(NIVEIS)})')
+    if t != 'ferramenta':
+        c = v.get('conteudo')
+        if not c: pend.append(f'{k}: falta o conteúdo ("conteudo") para os filtros')
+        elif c not in ICONES or c not in ORDEM: pend.append(f'{k}: conteúdo "{c}" sem ícone/ordem no index.html (ICONE_CONTEUDO e ORDEM_CONTEUDOS)')
+    if v.get('tema') in NIVEIS: pend.append(f'{k}: o tema não pode ser a etapa ("{v["tema"]}")')
+    if k not in prot and k not in SEM_ARQUIVO: pend.append(f'{k}: falta protegido/{k}.json (rode proteger.mjs)')
+for k in sorted(prot - set(J_TODOS)): pend.append(f'protegido/{k}.json sem item no catálogo (turma/jogos.js)')
+for n in json.load(open(os.path.join(RAIZ, 'turma', 'novidades.json'), encoding='utf-8')):
+    jid = n.get('jogo') or n.get('id')
+    if jid and jid not in J_TODOS: pend.append(f'novidade "{n.get("titulo")}" aponta para jogo inexistente "{jid}"')
+# rodapé com o total sempre em dia ("mais de N aplicações", N em dezenas)
+dez = (TOTAL // 10) * 10
+novo_idx = re.sub(r'Catálogo \(mais de \d+ aplicações\)', f'Catálogo (mais de {dez} aplicações)', idx)
+if novo_idx != idx: open(os.path.join(RAIZ, 'index.html'), 'w', encoding='utf-8').write(novo_idx)
+if pend:
+    print('⚠ PENDÊNCIAS NO CATÁLOGO (' + str(len(pend)) + '):')
+    for x in pend: print('  - ' + x)
+    sys.exit(2)
+print('✔ Catálogo conferido: todos os itens com conteúdo, etapa, tema, ícone, arquivo e novidades em dia.')

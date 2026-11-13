@@ -21,6 +21,17 @@ Os alunos usam `turma/jogar.html?a=CÓDIGO` (link gerado na aba "Turmas e notas"
 3. Para o jogo mandar nota na turma, ele deve chamar `GAMIFICA.enviar(acertos, total, pontos)` ao terminar
    (veja `_ferramentas/ponte-portal.js`). Dentro do portal o jogo abre em "modo livre" (`#livre`) e não envia nota.
 
+## Checklist a cada jogo, simulador ou ferramenta nova (sempre, sem esperar pedido)
+1. Cifrar: `node _ferramentas/proteger.mjs <id> <arquivo.html>`.
+2. `turma/jogos.js`: nome, tema (assunto, nunca a etapa), desc, emoji, cor, nivel (Fundamental 1, Fundamental 2, Ensino Médio, Superior),
+   conteudo (obrigatório para jogos e simuladores), bncc quando houver código claro, tipo/ferramenta.
+3. Conteúdo novo? Acrescentar em `ICONE_CONTEUDO` e `ORDEM_CONTEUDOS` no `index.html`.
+4. Jogo e simulador atribuíveis devem chamar `GAMIFICA.enviar(acertos, total, pontos)` ao terminar.
+5. Novidade em `turma/novidades.json` (data, hora, titulo, texto, link, jogo).
+6. Trocar o `?v=` do jogos.js no `index.html` e a VERSAO do `sw.js`.
+7. `python3 _ferramentas/gerar_paginas.py`: gera catálogo, sitemap, contagens e rodapé e CONFERE o catálogo.
+   Se aparecer "⚠ PENDÊNCIAS", corrigir antes de publicar.
+
 ## Arquivos antigos
 - `portal-antigo-cifrado.html`: o portal anterior (login no navegador), guardado só como cópia de segurança.
 - `portal-fonte.html`, `construir.py`, `correio.mjs`: ferramentas do portal antigo (não usadas pelo site novo).
