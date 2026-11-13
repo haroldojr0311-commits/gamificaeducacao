@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "20:30",
+    "titulo": "🤟 Tradutor de LIBRAS com avatar 3D",
+    "texto": "Nova ferramenta de inclusão: traduza qualquer texto para Língua Brasileira de Sinais com um avatar 3D animado em tempo real. Suporta digitação e voz. Inclui glossário com palavras do cotidiano escolar e matemática. Powered by VLibras / UFPB.",
+    "link": "./#ferramentas"
+  },
+  {
+    "data": "2026-11-13",
     "hora": "18:00",
     "titulo": "Jogos em mais de uma etapa",
     "texto": "40 jogos e simuladores agora aparecem em todas as etapas em que podem ser usados (ex.: UNO das potências no Fundamental 2 e no Ensino Médio, Batalha Naval também no Fundamental 1). Use o filtro Etapa para encontrar.",

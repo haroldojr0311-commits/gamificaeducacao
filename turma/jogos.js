@@ -774,5 +774,15 @@ window.JOGOS = {
     desc: "Acenda as 6 salas da escola: tecnologias na educação, o dia do professor, gestão escolar, teorias e TICs (SAMR, TPACK), aplicativos e dados com LGPD. Termina no Grande Conselho de Classe, com tempo e 3 vidas.",
     emoji: "🏫", cor: "azul",
     conteudo: "Educação e Tecnologia"
+  },
+  "tradutor-libras": {
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
+    nome: "Tradutor de LIBRAS",
+    tema: "Inclusão e Acessibilidade",
+    desc: "Digite ou fale qualquer texto e veja o avatar 3D traduzir para Língua Brasileira de Sinais (LIBRAS) em tempo real. Inclui glossário de palavras do cotidiano escolar e matemática. Powered by VLibras / UFPB.",
+    emoji: "🤟", cor: "verde",
+    tipo: "ferramenta",
+    ferramenta: true,
+    conteudo: "Inclusão"
   }
 };

@@ -10,11 +10,11 @@
 <link rel="apple-touch-icon" href="icone-180.png?v=3">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#1d2b53">
-<meta name="description" content="89 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
+<meta name="description" content="90 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gamifica Educação">
 <meta property="og:title" content="Gamifica Educação: jogos e ferramentas para sala de aula">
-<meta property="og:description" content="89 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
+<meta property="og:description" content="90 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
 <meta property="og:url" content="https://gamificaeducacao.com.br/">
 <meta property="og:image" content="https://gamificaeducacao.com.br/capa.png?v=4">
 <meta property="og:image:width" content="1200">
@@ -22,7 +22,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Gamifica Educação: jogos e ferramentas para sala de aula">
-<meta name="twitter:description" content="89 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
+<meta name="twitter:description" content="90 jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico, com ranking, pódio e tabelas para imprimir. Para professores e alunos.">
 <meta name="twitter:image" content="https://gamificaeducacao.com.br/capa.png?v=4">
 <link rel="canonical" href="https://gamificaeducacao.com.br/">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://gamificaeducacao.com.br/#site", "name": "Gamifica Educação", "url": "https://gamificaeducacao.com.br/", "inLanguage": "pt-BR", "description": "Jogos, simuladores e ferramentas educacionais para aprender de um jeito lúdico."}, {"@type": "Organization", "@id": "https://gamificaeducacao.com.br/#org", "name": "Gamifica Educação", "url": "https://gamificaeducacao.com.br/", "logo": "https://gamificaeducacao.com.br/icone-512.png", "founder": {"@type": "Person", "name": "Prof. Dr. Haroldo Aleixo de Lima Junior"}}]}</script>
@@ -327,7 +327,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <script src="turma/supabase-config.js"></script>
-<script src="turma/jogos.js?v=20261113202000"></script>
+<script src="turma/jogos.js?v=20261113203000"></script>
 <script src="turma/qr.js"></script>
 <script src="turma/resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
@@ -1109,8 +1109,8 @@ function cartaoJogo(id, aoClicar, marcado){
     el('div', {class:'nota'}, j.tema ? el('span', {class:'tema'}, j.tema) : null, el('span', {class:'emoji', 'aria-hidden':'true'}, j.emoji), el('span', {class:'marcado', 'aria-hidden':'true'}, '✓'), marcado === undefined ? botaoFav(id) : null),
     el('div', {class:'corpo'}, el('h3', {}, j.nome), j.desc ? el('p', {}, j.desc) : null, j.bncc && j.bncc.length ? el('div', {class:'bncc', title:'Habilidades da BNCC: ' + j.bncc.join(', ')}, 'BNCC ' + j.bncc.slice(0, 3).join(' · ') + (j.bncc.length > 3 ? ' +' + (j.bncc.length - 3) : '')) : null, marcado === undefined ? botaoAtribuir(id) : null));
 }
-var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Grandezas e medidas', 'Geometria', 'Geometria espacial', 'Geometria analítica', 'Funções e trigonometria', 'Estatística e probabilidade', 'Cálculo', 'Educação Financeira', 'Biologia celular', 'Saúde e bem-estar', 'História', 'Educação e Tecnologia', 'Jogos de tabuleiro', 'Desafios', 'Ao vivo com a turma', 'Avaliação e notas', 'Gerar materiais', 'Sorteios e dinâmicas', 'Organização da sala'];
-var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Grandezas e medidas':'📏', 'Geometria espacial':'🧊', 'Geometria analítica':'🧭', 'Cálculo':'∫', 'Biologia celular':'🧬', 'Saúde e bem-estar':'🍎', 'História':'🏛️', 'Educação e Tecnologia':'💻', 'Ao vivo com a turma':'📡', 'Avaliação e notas':'📝', 'Gerar materiais':'🖨️', 'Sorteios e dinâmicas':'🎲', 'Organização da sala':'🗂️', 'Outros':'🎲'};
+var ORDEM_CONTEUDOS = ['Números e operações', 'Álgebra', 'Proporção e porcentagem', 'Grandezas e medidas', 'Geometria', 'Geometria espacial', 'Geometria analítica', 'Funções e trigonometria', 'Estatística e probabilidade', 'Cálculo', 'Educação Financeira', 'Biologia celular', 'Saúde e bem-estar', 'História', 'Educação e Tecnologia', 'Inclusão', 'Jogos de tabuleiro', 'Desafios', 'Ao vivo com a turma', 'Avaliação e notas', 'Gerar materiais', 'Sorteios e dinâmicas', 'Organização da sala'];
+var ICONE_CONTEUDO = {'Números e operações':'🔢', 'Álgebra':'🧮', 'Proporção e porcentagem':'💯', 'Geometria':'📐', 'Funções e trigonometria':'📈', 'Estatística e probabilidade':'📊', 'Educação Financeira':'💰', 'Desafios':'🧩', 'Jogos de tabuleiro':'♟️', 'Anos iniciais':'🧒', 'Grandezas e medidas':'📏', 'Geometria espacial':'🧊', 'Geometria analítica':'🧭', 'Cálculo':'∫', 'Biologia celular':'🧬', 'Saúde e bem-estar':'🍎', 'História':'🏛️', 'Educação e Tecnologia':'💻', 'Inclusão':'🤟', 'Ao vivo com a turma':'📡', 'Avaliação e notas':'📝', 'Gerar materiais':'🖨️', 'Sorteios e dinâmicas':'🎲', 'Organização da sala':'🗂️', 'Outros':'🎲'};
 var filtroConteudo = 'todos';
 var filtroNivel = 'todos';
 var busca = '';
