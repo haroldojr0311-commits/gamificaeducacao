@@ -8,7 +8,7 @@
 window.JOGOS = {
   "aventura-do-pi": {
     bncc: ["EF07MA31", "EF07MA33", "EF08MA19"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Aventura do Pi",
     tema: "Geometria plana",
     desc: "Plataforma com portões de perímetro e área das figuras planas.",
@@ -51,7 +51,7 @@ window.JOGOS = {
   },
   "invasao-alienigena": {
     bncc: ["EF06MA13", "EF07MA02"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Invasão Alienígena",
     tema: "Porcentagem",
     desc: "Calcule porcentagens para defender a Terra dos invasores.",
@@ -60,7 +60,7 @@ window.JOGOS = {
   },
   "estatistica-agrupados": {
     bncc: ["EF08MA25", "EM13MAT316", "EM13MAT406"],
-    nivel: ["Fundamental 2", "Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Laboratório Estatístico",
     tema: "Estatística",
     desc: "Roteiro completo e escolhido pelo professor ou aluno: média, moda, rol e mediana, tabelas de frequência, medidas da tabela, histograma e polígono, desvio médio, variância, desvio padrão e coeficiente de variação.",
@@ -69,7 +69,7 @@ window.JOGOS = {
   },
   "laboratorio-de-funcoes": {
     bncc: ["EM13MAT302", "EM13MAT402", "EM13MAT503"],
-    nivel: ["Ensino Médio"],
+    nivel: ["Ensino Médio", "Superior"],
     nome: "Laboratório de Funções",
     tema: "Função do 2º grau",
     desc: "Raízes, vértice e gráfico da parábola, passo a passo.",
@@ -78,7 +78,7 @@ window.JOGOS = {
   },
   "laboratorio-de-exponenciais": {
     bncc: ["EM13MAT303", "EM13MAT304"],
-    nivel: ["Ensino Médio"],
+    nivel: ["Ensino Médio", "Superior"],
     nome: "Laboratório de Exponenciais",
     tema: "Função exponencial",
     desc: "Crescimento, juros compostos e meia-vida: mude os controles, veja o gráfico e vença o desafio.",
@@ -87,7 +87,7 @@ window.JOGOS = {
   },
   "geometria-espacial-3d": {
     bncc: ["EF06MA17"],
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Missão Geometria Espacial 3D",
     tema: "Geometria espacial",
     desc: "Conte vértices, arestas e faces dos sólidos girando em 3D.",
@@ -96,7 +96,7 @@ window.JOGOS = {
   },
   "show-da-proporcao": {
     bncc: ["EF07MA17", "EF09MA08"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Show da Proporção",
     tema: "Proporcionalidade",
     desc: "Show de perguntas de regra de três valendo um milhão.",
@@ -105,7 +105,7 @@ window.JOGOS = {
   },
   "uno-potenciacao": {
     bncc: ["EF08MA01"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "UNO da Potenciação",
     tema: "Potências",
     desc: "UNO contra o Prof. Robô com perguntas relâmpago de potências.",
@@ -114,7 +114,7 @@ window.JOGOS = {
   },
   "uno-radiciacao": {
     bncc: ["EF08MA02"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "UNO da Radiciação",
     tema: "Raízes",
     desc: "UNO contra o Prof. Robô com perguntas relâmpago de raízes.",
@@ -123,7 +123,7 @@ window.JOGOS = {
   },
   "uno-fracoes-decimais": {
     bncc: ["EF06MA08"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 1", "Fundamental 2"],
     nome: "UNO de Frações e Decimais",
     tema: "Frações",
     desc: "UNO contra o Prof. Robô: transforme frações em decimais.",
@@ -132,7 +132,7 @@ window.JOGOS = {
   },
   "roda-gigante": {
     bncc: ["EM13MAT306"],
-    nivel: ["Ensino Médio"],
+    nivel: ["Ensino Médio", "Superior"],
     nome: "Roda-Gigante Trigonométrica",
     tema: "Trigonometria",
     desc: "A cabine gira e a altura vira gráfico: seno, cosseno, quadrantes e ângulos notáveis.",
@@ -159,7 +159,7 @@ window.JOGOS = {
   },
   "urna-eletronica": {
     conteudo: "Estatística e probabilidade",
-    nivel: ["Fundamental 2", "Ensino Médio"],
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Urna Eletrônica",
     tema: "Simulador",
     desc: "Simulador de votação com boletim de urna e zerésima.",
@@ -169,7 +169,7 @@ window.JOGOS = {
   "laboratorio-probabilidade": {
     conteudo: "Estatística e probabilidade",
     bncc: ["EF08MA22", "EM13MAT511"],
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Laboratório de Probabilidade",
     tema: "Probabilidade",
     desc: "Lance dados e moedas, sorteie cartas e compare o observado com o teórico.",
@@ -269,7 +269,7 @@ window.JOGOS = {
   },
   "geoplano": {
     bncc: ["EF07MA31", "EF08MA19", "EF09MA14"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Geoplano Digital",
     tema: "Geometria plana",
     desc: "Estique elásticos nos pinos: área, perímetro, Pitágoras e simetria, com 10 desafios.",
@@ -278,7 +278,7 @@ window.JOGOS = {
   },
   "domino-equivalencias": {
     bncc: ["EF05MA06", "EF06MA08"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 1", "Fundamental 2"],
     nome: "Dominó de Equivalências",
     tema: "Frações, decimais e %",
     desc: "Dominó contra o robô: encaixe frações, decimais, porcentagens e desenhos que valem o mesmo.",
@@ -287,7 +287,7 @@ window.JOGOS = {
   },
   "cofre-combinacoes": {
     bncc: ["EM13MAT310"],
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Cofre das Combinações",
     tema: "Análise combinatória",
     desc: "Abra 10 cofres resolvendo problemas de princípio multiplicativo, fatorial, permutação, arranjo e combinação.",
@@ -305,7 +305,7 @@ window.JOGOS = {
   },
   "batalha-naval": {
     bncc: ["EF05MA15", "EF06MA16"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 1", "Fundamental 2"],
     nome: "Batalha Naval Cartesiana",
     tema: "Plano cartesiano",
     desc: "Batalha naval contra o robô: leia e localize pontos (x, y), com radar de distância e ponto médio.",
@@ -314,7 +314,7 @@ window.JOGOS = {
   },
   "balanca-equacoes": {
     bncc: ["EF07MA18"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Balança das Equações",
     tema: "Equações do 1º grau",
     desc: "Equilibre a balança fazendo a mesma operação nos dois lados até deixar o x sozinho.",
@@ -332,7 +332,7 @@ window.JOGOS = {
   },
   "supermercado-inteligente": {
     bncc: ["EF06MA13", "EF07MA02"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Supermercado Inteligente",
     tema: "Preço por unidade, desconto e troco",
     desc: "Compare embalagens, calcule descontos, promoções leve 3 pague 2 e o troco certo.",
@@ -350,7 +350,7 @@ window.JOGOS = {
   },
   "geoar-solidos-ar": {
     bncc: ["EF06MA17"],
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "GeoAR · Sólidos na Sua Sala",
     tema: "Geometria espacial",
     desc: "Sólidos geométricos em realidade aumentada: veja, gire e conte faces, arestas e vértices na sua sala. Com fórmulas e desafios.",
@@ -358,7 +358,7 @@ window.JOGOS = {
     tipo: "simulador", conteudo: "Geometria espacial"
   },
   "bioar-biologia-ar": {
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "BioAR · Biologia em Realidade Aumentada",
     tema: "Biologia celular",
     desc: "Células, DNA, vírus, bactérias, neurônio e hemácia em 3D: gire, corte, use o raio-X e toque nas estruturas para ver o nome e a função. Tem quiz de 10 perguntas com nota.",
@@ -401,14 +401,14 @@ window.JOGOS = {
     tipo: "ferramenta"
   },
   "jogo-dama": {
-    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Dama · Campeonato",
     tema: "Jogo de estratégia",
     desc: "Dama para dois jogadores ou contra a máquina em 3 níveis, com relógio por jogador e campeonato com chaveamento, sorteio, partida única ou melhor de três.",
     emoji: "♟️", cor: "coral", ferramenta: false, conteudo: "Jogos de tabuleiro"
   },
   "jogo-xadrez": {
-    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Xadrez · Campeonato",
     tema: "Jogo de estratégia",
     desc: "Xadrez com peças em 3D: partida rápida, contra a máquina em 3 níveis e campeonato com chaveamento, sorteio e melhor de três.",
@@ -416,7 +416,7 @@ window.JOGOS = {
   },
   "jogo-hanoi": {
     bncc: ["EF08MA10"],
-    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Torre de Hanói",
     tema: "Matemática",
     desc: "Jogo de Torre de Hanói em 3D, com a história da lenda, a matemática por trás (recursão e 2ⁿ − 1), gráfico e desafios com pontuação.",
@@ -467,7 +467,7 @@ window.JOGOS = {
     nome: "Plano Cartesiano · Desenhos",
     tema: "Plano cartesiano",
     desc: "Localize pontos pelas coordenadas (x, y) e descubra figuras ligando os pontos. Crie seu próprio desenho e imprima a atividade para os alunos.",
-    emoji: "📍", cor: "azul", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 2"]
+    emoji: "📍", cor: "azul", ferramenta: false, conteudo: "Geometria", nivel: ["Fundamental 1", "Fundamental 2"]
   },
   "memoria-horas": {
     bncc: ["EF03MA23"],
@@ -488,35 +488,35 @@ window.JOGOS = {
     nome: "Memória das frações equivalentes",
     tema: "Frações equivalentes",
     desc: "Grupos de três frações equivalentes, como 1/2, 2/4 e 4/8. Até 12 grupos (36 cartas).",
-    emoji: "🧠", cor: "verde", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
+    emoji: "🧠", cor: "verde", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 1", "Fundamental 2"]
   },
   "memoria-fracao-decimal-porcentagem": {
     bncc: ["EF05MA06", "EF06MA08"],
     nome: "Memória: fração, decimal e %",
     tema: "Frações, decimais e porcentagem",
     desc: "Junte fração, decimal e porcentagem do mesmo valor, como 1/4, 0,25 e 25%. Até 12 grupos (36 cartas).",
-    emoji: "🧠", cor: "amarelo", ferramenta: false, conteudo: "Proporção e porcentagem", nivel: ["Fundamental 2"]
+    emoji: "🧠", cor: "amarelo", ferramenta: false, conteudo: "Proporção e porcentagem", nivel: ["Fundamental 1", "Fundamental 2"]
   },
   "memoria-potencia-valor": {
     bncc: ["EF08MA01"],
     nome: "Memória das potências",
     tema: "Potências",
     desc: "Relacione cada potência ao seu valor, como 2³ com 8. Até 20 pares.",
-    emoji: "🧠", cor: "azul", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
+    emoji: "🧠", cor: "azul", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2", "Ensino Médio"]
   },
   "memoria-raiz-valor": {
     bncc: ["EF08MA02"],
     nome: "Memória das raízes",
     tema: "Raízes quadradas",
     desc: "Relacione cada raiz quadrada ao seu valor, de √1 a √400. Até 20 pares.",
-    emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2"]
+    emoji: "🧠", cor: "lilas", ferramenta: false, conteudo: "Números e operações", nivel: ["Fundamental 2", "Ensino Médio"]
   },
   "memoria-equacao-solucao": {
     bncc: ["EF07MA18"],
     nome: "Memória das equações",
     tema: "Equações do 1º grau",
     desc: "Relacione cada equação do 1º grau ao valor de x, com soluções de 1 a 20. Até 20 pares.",
-    emoji: "🧠", cor: "coral", ferramenta: false, conteudo: "Álgebra", nivel: ["Fundamental 2"]
+    emoji: "🧠", cor: "coral", ferramenta: false, conteudo: "Álgebra", nivel: ["Fundamental 2", "Ensino Médio"]
   },
   "quiz-halloween": {
     nome: "Quiz Assombrado · Halloween",
@@ -578,7 +578,7 @@ window.JOGOS = {
   "material-dourado": {
     conteudo: "Números e operações",
     bncc: ["EF02MA04", "EF03MA01", "EF03MA05"],
-    nivel: ["Fundamental 1"],
+    nivel: ["Fundamental 1", "Fundamental 2"],
     nome: "Material Dourado e Ábaco",
     tema: "Sistema de numeração",
     desc: "Monte números com cubinhos, barras, placas e cubo (ou no ábaco) e veja o valor posicional. Faça adição com reserva e subtração com empréstimo passo a passo, junto com a conta armada. Termina com desafio.",
@@ -656,7 +656,7 @@ window.JOGOS = {
   },
   "calculadora-imc": {
     conteudo: "Saúde e bem-estar",
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Simulador de IMC",
     tema: "Saúde e Educação Física",
     desc: "Calcule o IMC, veja a classificação da OMS e a faixa de massa adequada. Tem passo a passo, desafio e atividade.",
@@ -665,7 +665,7 @@ window.JOGOS = {
   },
   "calculo-proteina": {
     conteudo: "Saúde e bem-estar",
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Simulador de Proteína Diária",
     tema: "Saúde e Educação Física",
     desc: "Descubra quantos gramas de proteína por dia e como dividir nas refeições, conforme massa e objetivo.",
@@ -674,7 +674,7 @@ window.JOGOS = {
   },
   "calculo-agua": {
     conteudo: "Saúde e bem-estar",
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Simulador de Hidratação",
     tema: "Saúde e Educação Física",
     desc: "Calcule quanta água beber por dia, com exercício e clima, e acompanhe os copos do seu dia.",
@@ -699,7 +699,7 @@ window.JOGOS = {
     conteudo: "Cálculo"
   },
   "linha-do-tempo-3d": {
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Linha do Tempo 3D",
     tema: "História",
     desc: "Viaje em 3D por 6 estações da história: do mundo moderno ao mundo atual. Leia, entenda causas e consequências e resolva os desafios para desbloquear a próxima.",
@@ -707,7 +707,7 @@ window.JOGOS = {
     conteudo: "História"
   },
   "caso-1889-mesa-historiador": {
-    nivel: ["Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Mesa do Historiador: 8 casos",
     tema: "História do Brasil e do mundo",
     desc: "Investigue 8 casos da história com imagens e documentos: separe causas e consequências, ganhe pontos, e receba sua nota de 0 a 10 no final.",
@@ -716,7 +716,7 @@ window.JOGOS = {
   },
   "construtor-de-volumes": {
     bncc: ["EF05MA21", "EF07MA30"],
-    nivel: ["Fundamental 2", "Ensino Médio"],
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Construtor de Volumes",
     tema: "Volume de sólidos",
     desc: "Monte construções em 3D, como no Minecraft, e descubra o volume: cada bloco vale 1 cm³. 4 fases, pontuação e nota de 0 a 10.",
@@ -725,7 +725,7 @@ window.JOGOS = {
   },
   "cidade-das-formas-explorador-3d": {
     bncc: ["EF06MA17"],
-    nivel: ["Fundamental 1"],
+    nivel: ["Fundamental 1", "Fundamental 2"],
     nome: "Cidade das Formas: Explorador 3D",
     tema: "Sólidos geométricos",
     desc: "Gire construções da cidade em 3D e descubra cubo, paralelepípedo, cilindro, cone e esfera. Conte as partes chatas e descubra quais peças rolam, em uma missão com vidas e pontos.",
@@ -734,7 +734,7 @@ window.JOGOS = {
   },
   "compasso-que-fecha": {
     bncc: ["EF06MA07", "EF06MA10"],
-    nivel: ["Fundamental 2", "Ensino Médio"],
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
     nome: "Compasso que Fecha",
     tema: "Frações e figuras musicais",
     desc: "Monte compassos com semibreve, mínima, semínima e colcheia e ouça cada figura. O compasso só vale quando a soma fecha exatamente 1.",
@@ -743,7 +743,7 @@ window.JOGOS = {
   },
   "semelhanca-piramide-3d": {
     bncc: ["EF09MA12", "EF09MA14"],
-    nivel: ["Fundamental 2"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Teorema de Tales: a Altura da Pirâmide",
     tema: "Teorema de Tales e semelhança de triângulos",
     desc: "Refaça a experiência de Tales de Mileto no Egito: veja os raios de sol paralelos, compare a sombra da estaca com a da pirâmide 3D e descubra a altura. Depois, desafios com razão de semelhança.",
