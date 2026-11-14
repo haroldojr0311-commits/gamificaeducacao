@@ -172,18 +172,8 @@ window.JOGOS = {
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Laboratório de Probabilidade",
     tema: "Probabilidade",
-    desc: "Lance dados e moedas, sorteie cartas e compare o observado com o teórico.",
+    desc: "Lance dados e moedas, sorteie cartas e monte urnas: compare o observado com o teórico e calcule probabilidades com a urna, a árvore e seis missões.",
     emoji: "🎲", cor: "lilas", ferramenta: true,
-    tipo: "simulador"
-  },
-  "laboratorio-urna": {
-    conteudo: "Estatística e probabilidade",
-    bncc: ["EF08MA22", "EM13MAT511"],
-    nivel: ["Fundamental 2", "Ensino Médio"],
-    nome: "Laboratório da Urna: Cálculo de Probabilidade",
-    tema: "Probabilidade",
-    desc: "Monte a urna, calcule P(evento), compare sorteios reais com a teoria e resolva dois sorteios com e sem reposição. Missões desafiam você a chegar a cada probabilidade.",
-    emoji: "🧪", cor: "lilas",
     tipo: "simulador"
   },
   "caca-palavras": {

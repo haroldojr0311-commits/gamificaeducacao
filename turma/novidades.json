@@ -2,10 +2,10 @@
   {
     "data": "2026-11-13",
     "hora": "23:55",
-    "titulo": "Novo: Laboratório da Urna (probabilidade)",
-    "texto": "Monte uma urna com bolas coloridas, calcule P(evento), compare os sorteios com a teoria e veja a árvore de dois sorteios com e sem reposição. Seis missões guiam o aluno.",
+    "titulo": "Laboratório de Probabilidade: nova aba Urna",
+    "texto": "Nova aba 🧪 Urna: monte uma urna com bolas coloridas, calcule P(evento), compare sorteios com a teoria e veja a árvore de dois sorteios com e sem reposição. Seis missões guiam o aluno.",
     "link": "./#ferramentas",
-    "jogo": "laboratorio-urna"
+    "jogo": "laboratorio-probabilidade"
   },
   {
     "data": "2026-11-13",
