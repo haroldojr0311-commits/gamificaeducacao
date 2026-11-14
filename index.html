@@ -379,6 +379,7 @@ function el(tag, props){
   return e;
 }
 function fmtNota(n){ return Number(n).toFixed(1).replace('.', ','); }
+function fmtDtHr(iso){ try{ var d=new Date(iso); return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso; } }
 function fmtTempo(s){ if(s === null || s === undefined) return '—'; return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
 function fmtData(iso){ return iso ? new Date(iso).toLocaleString('pt-BR', {dateStyle:'short', timeStyle:'short'}) : '—'; }
 function fmtDia(d){ if(!d) return ''; var p = String(d).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
@@ -1336,10 +1337,12 @@ async function carregarAtividades(){
 function desenharAtribuir(){
   var ids = Object.keys(window.JOGOS).filter(function(id){ return !window.JOGOS[id].ferramenta; });
   if(jogoEscolhido && ids.indexOf(jogoEscolhido) < 0) jogoEscolhido = null;
-  var titulo = el('input', {type:'text', id:'titulo', maxlength:'120', placeholder:'Ex.: Porcentagem – lista 1'});
-  var turma  = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Ex.: 3ª A (opcional)'});
-  var aviso  = el('div');
-  var botao  = el('button', {type:'submit', class:'grande'}, '🔗 Criar atividade e gerar link');
+  var titulo  = el('input', {type:'text', id:'titulo', maxlength:'120', placeholder:'Ex.: Porcentagem – lista 1'});
+  var turma   = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Ex.: 3ª A (opcional)'});
+  var abreEm  = el('input', {type:'datetime-local', id:'abre-em', title:'Deixe em branco para liberar imediatamente'});
+  var fechaEm = el('input', {type:'datetime-local', id:'fecha-em', title:'Deixe em branco para nunca expirar'});
+  var aviso   = el('div');
+  var botao   = el('button', {type:'submit', class:'grande'}, '🔗 Criar atividade e gerar link');
   var resumoEscolha = el('div');
   var tituloAuto = '';
   function mostrarEscolha(){
@@ -1431,7 +1434,10 @@ function desenharAtribuir(){
     var t = titulo.value.trim();
     if(!t){ aviso.append(msg('erro', 'Dê um nome à atividade.')); titulo.focus(); return; }
     botao.disabled = true;
-    var r = await sb.from('atividades').insert({jogo: jogoEscolhido, titulo: t, turma: turma.value.trim() || null}).select().single();
+    var abre  = abreEm.value  ? new Date(abreEm.value).toISOString()  : null;
+    var fecha = fechaEm.value ? new Date(fechaEm.value).toISOString() : null;
+    if(abre && fecha && new Date(fecha) <= new Date(abre)){ aviso.append(msg('erro', 'A data de encerramento deve ser depois da data de abertura.')); botao.disabled = false; return; }
+    var r = await sb.from('atividades').insert({jogo: jogoEscolhido, titulo: t, turma: turma.value.trim() || null, abre_em: abre, fecha_em: fecha}).select().single();
     botao.disabled = false;
     if(r.error){ aviso.append(msg('erro', 'Não foi possível criar: ' + r.error.message)); return; }
     jogoEscolhido = null; abertaId = null;
@@ -1446,6 +1452,16 @@ function desenharAtribuir(){
     el('div', {class:'duas', style:'margin-top:6px'},
       el('div', {}, el('label', {for:'titulo'}, 'Nome da atividade'), titulo),
       el('div', {}, el('label', {for:'turma'}, 'Turma'), turma)),
+    el('div', {class:'datas-prazo', style:'margin-top:10px'},
+      el('p', {style:'margin:0 0 8px;font-size:.82rem;color:var(--sub);display:flex;align-items:center;gap:6px'},
+        el('span', {style:'font-size:1rem'}, '📅'),
+        el('b', {}, 'Prazo de disponibilidade'),
+        el('small', {style:'opacity:.7'}, '— opcional')),
+      el('div', {class:'duas'},
+        el('div', {}, el('label', {for:'abre-em', style:'font-size:.82rem'}, '🟢 Abre em'), abreEm,
+          el('small', {style:'opacity:.6;font-size:.75rem'}, 'Em branco = disponível agora')),
+        el('div', {}, el('label', {for:'fecha-em', style:'font-size:.82rem'}, '🔴 Fecha em'), fechaEm,
+          el('small', {style:'opacity:.6;font-size:.75rem'}, 'Em branco = sem prazo')))),
     el('div', {class:'passo'}, el('b', {}, '3'), 'Gere o link e mande aos alunos'),
     botao, aviso);
   mostrarEscolha();
@@ -1487,7 +1503,9 @@ function cartaoAtividade(a){
       el('div', {class:'tags'},
         a.turma ? el('span', {class:'tag'}, a.turma) : null,
         el('span', {class:'tag ' + (a.ativa ? 'aberta' : 'enc')}, a.ativa ? '● Aberta' : '⏸ Encerrada'),
-        el('span', {class:'tag'}, '👥 ' + alunos + (alunos === 1 ? ' aluno' : ' alunos'))),
+        el('span', {class:'tag'}, '👥 ' + alunos + (alunos === 1 ? ' aluno' : ' alunos')),
+        a.abre_em  ? el('span', {class:'tag', title:'Data/hora de abertura'}, '🟢 ' + fmtDtHr(a.abre_em)) : null,
+        a.fecha_em ? el('span', {class:'tag', title:'Data/hora de encerramento'}, '🔴 ' + fmtDtHr(a.fecha_em)) : null),
       el('div', {class:'link'}, link),
       qrCaixa,
       el('div', {class:'linha'},

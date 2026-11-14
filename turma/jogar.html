@@ -189,6 +189,9 @@ async function iniciar(){
   if(r.error){ return erroTela('Sem conexão', 'Não consegui abrir a atividade. Verifique a internet e tente de novo.'); }
   if(!r.data || r.data.length === 0){ return erroTela('Atividade não encontrada', 'Ela pode ter sido encerrada ou o link está incompleto. Fale com seu professor.'); }
   atividade = r.data[0];
+  if(atividade.bloqueio === 'encerrada') return erroTela('Atividade encerrada', 'Seu professor já encerrou esta atividade. Fale com ele para mais informações.');
+  if(atividade.bloqueio === 'ainda_nao') return erroTela('Atividade ainda não abriu ⏳', 'Seu professor programou esta atividade para abrir em breve. Aguarde e tente de novo mais tarde.');
+  if(atividade.bloqueio === 'expirada') return erroTela('Prazo encerrado ⏰', 'O prazo para realizar esta atividade já passou. Fale com seu professor.');
   if(!window.JOGOS[atividade.jogo]){ return erroTela('Jogo indisponível', 'Este jogo ainda não está no portal. Avise seu professor.'); }
   prog = lerProg();
   if(prog && prog.nome && prog.estado === 'concluido') return telaConcluida();
