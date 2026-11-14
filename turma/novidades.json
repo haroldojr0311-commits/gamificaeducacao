@@ -1,6 +1,28 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "22:10",
+    "titulo": "Lousa de Geometria: limpar, arrastar e zoom",
+    "texto": "O botão Limpar agora apaga a lousa inteira (com confirmação e opção de desfazer). No modo Mover, arraste o fundo para navegar. Role o mouse para dar zoom.",
+    "link": "./#ferramentas",
+    "jogo": "lousa-geometria"
+  },
+  {
+    "data": "2026-11-13",
+    "hora": "21:45",
+    "titulo": "Atividades com prazo de abertura e encerramento",
+    "texto": "Ao criar uma atividade, você pode definir quando ela abre e quando fecha. Fora desse período, o aluno vê uma mensagem informando que a atividade ainda não abriu ou que o prazo terminou.",
+    "link": "./#turmas"
+  },
+  {
+    "data": "2026-11-13",
+    "hora": "21:20",
+    "titulo": "Entrar em dois aparelhos ao mesmo tempo",
+    "texto": "Agora sua conta pode ficar aberta em um celular e um notebook ao mesmo tempo, sem ser desconectada. Ao entrar em um terceiro aparelho, o mais antigo é desconectado.",
+    "link": "./#turmas"
+  },
+  {
+    "data": "2026-11-13",
     "hora": "20:30",
     "titulo": "🤟 Tradutor de LIBRAS com avatar 3D",
     "texto": "Nova ferramenta de inclusão: traduza qualquer texto para Língua Brasileira de Sinais com um avatar 3D animado em tempo real. Suporta digitação e voz. Inclui glossário com palavras do cotidiano escolar e matemática. Powered by VLibras / UFPB.",
