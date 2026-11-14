@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-13",
+    "hora": "23:55",
+    "titulo": "Novo: Laboratório da Urna (probabilidade)",
+    "texto": "Monte uma urna com bolas coloridas, calcule P(evento), compare os sorteios com a teoria e veja a árvore de dois sorteios com e sem reposição. Seis missões guiam o aluno.",
+    "link": "./#ferramentas",
+    "jogo": "laboratorio-urna"
+  },
+  {
+    "data": "2026-11-13",
     "hora": "22:10",
     "titulo": "Lousa de Geometria: limpar, arrastar e zoom",
     "texto": "O botão Limpar agora apaga a lousa inteira (com confirmação e opção de desfazer). No modo Mover, arraste o fundo para navegar. Role o mouse para dar zoom.",
