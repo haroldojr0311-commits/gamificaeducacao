@@ -327,7 +327,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <script src="turma/supabase-config.js"></script>
-<script src="turma/jogos.js?v=20261113215000"></script>
+<script src="turma/jogos.js?v=20261113213200"></script>
 <script src="turma/qr.js"></script>
 <script src="turma/resultado-jogo.js?v=20261102223800"></script>
 <script>ResultadoJogo.protegerPagina();</script>
@@ -897,7 +897,8 @@ function entrarNoSite(){
     botaoMeuAcesso(),
     el('button', {class:'sec peq', onclick: sair}, 'Sair')].filter(function(x){ return x; }));
   var h = (location.hash || '').replace('#', '');
-  if(h === 'turmas' || h === 'atribuir' || h === 'jogos' || h === 'simuladores' || h === 'ferramentas' || (h === 'admin' && perfil.papel === 'admin')) aba = h;
+  if(h === 'turmas' || h === 'jogos' || h === 'simuladores' || h === 'ferramentas' || (h === 'admin' && perfil.papel === 'admin')) aba = h;
+  else if(h === 'atribuir') aba = 'atribuir'; /* ainda aceita via botão dos cards */
   iniciarVigia();
   desenharAbas(); mostrarAba();
 }
@@ -1041,7 +1042,7 @@ function montarApresentacao(cartaoLogin, retorno){
 
 /* ---------- abas ---------- */
 function desenharAbas(){
-  var itens = [['jogos', '🎮 Jogos'], ['simuladores', '🔬 Simuladores'], ['ferramentas', '🧰 Ferramentas'], ['atribuir', '📝 Atribuir tarefas'], ['turmas', '👩‍🏫 Turmas e notas']];
+  var itens = [['jogos', '🎮 Jogos'], ['simuladores', '🔬 Simuladores'], ['ferramentas', '🧰 Ferramentas'], ['turmas', '👩‍🏫 Turmas e notas']];
   if(visitante) itens = itens.slice(0, 3);
   else if(perfil.papel === 'admin') itens.push(['admin', '🛡️ Administração']);
   abasBox.replaceChildren.apply(abasBox, itens.map(function(it){
