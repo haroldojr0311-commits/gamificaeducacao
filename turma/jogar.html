@@ -398,7 +398,6 @@ quadro.addEventListener('load', function(){
 });
 var statusEl = document.getElementById('barra-status');
 document.getElementById('barra-tela').addEventListener('click', function(){ if(document.fullscreenElement) document.exitFullscreen(); else entrarTelaCheia(); });
-quadro.addEventListener('load', function(){ ResultadoJogo.marcaDagua(aluno.nome); });
 var reenviarBtn = document.getElementById('barra-reenviar');
 function setStatus(texto, classe){ statusEl.textContent = texto; statusEl.className = classe || ''; }
 reenviarBtn.addEventListener('click', function(){ if(pendente) enviar(); });

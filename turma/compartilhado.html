@@ -105,9 +105,6 @@
     quadro.src = url + '#livre';
     principal.appendChild(quadro);
     ResultadoJogo.anexar(quadro, 'Acesso de teste');
-    quadro.addEventListener('load', function(){
-            ResultadoJogo.marcaDagua('Acesso de teste');
-    });
     tempoEl.hidden = false; btnTela.hidden = false;
     atualizaTempo();
     timer = setInterval(atualizaTempo, 1000);

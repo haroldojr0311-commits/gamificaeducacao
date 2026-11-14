@@ -1297,7 +1297,6 @@ async function abrirJogo(id){
     quadro = el('iframe', {title: j.nome, allow:'fullscreen; autoplay; camera; microphone; clipboard-write; xr-spatial-tracking'});
     quadro.src = urlJogo + '#livre';
     ResultadoJogo.anexar(quadro, j.nome);
-    quadro.addEventListener('load', function(){ ResultadoJogo.marcaDagua(perfil ? perfil.nome : ''); });
     miolo.replaceWith(quadro);
   }catch(e){
     miolo.textContent = '😕 ' + (e.message || 'Não foi possível abrir o jogo.') + ' Tente de novo.';
