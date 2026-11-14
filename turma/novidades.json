@@ -1,5 +1,13 @@
 [
   {
+    "data": "2026-11-14",
+    "hora": "09:30",
+    "titulo": "Nova ferramenta: SOAP Express ESF",
+    "texto": "Gerador de evolução de enfermagem no padrão SOAP para o e-SUS APS, com CIAP-2 automático. Linhas de cuidado: Hiperdia, Puericultura, Preventivo e Acolhimento.",
+    "link": "./#ferramentas",
+    "jogo": "soap-express-esf"
+  },
+  {
     "data": "2026-11-13",
     "hora": "23:55",
     "titulo": "Laboratório de Probabilidade: nova aba Urna",

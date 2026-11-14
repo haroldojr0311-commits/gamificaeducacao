@@ -784,5 +784,15 @@ window.JOGOS = {
     tipo: "ferramenta",
     ferramenta: true,
     conteudo: "Inclusão"
+  },
+  "soap-express-esf": {
+    nivel: ["Superior"],
+    nome: "SOAP Express ESF",
+    tema: "Saúde na Atenção Primária",
+    desc: "Gerador de evolução de enfermagem no padrão SOAP para o e-SUS APS. Escolha os achados com cliques, marque condutas e códigos CIAP-2 e copie o texto pronto. Linhas de cuidado: Hiperdia, Puericultura, Preventivo e Acolhimento.",
+    emoji: "🩺", cor: "coral",
+    tipo: "ferramenta",
+    ferramenta: true,
+    conteudo: "Saúde e bem-estar"
   }
 };
