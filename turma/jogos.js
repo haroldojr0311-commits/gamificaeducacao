@@ -204,12 +204,12 @@ window.JOGOS = {
     tipo: "simulador"
   },
   "simulador-pitagoras-trigonometria": {
-    bncc: ["EF09MA13", "EF09MA14", "EM13MAT308"],
+    bncc: ["EF09MA13", "EF09MA14", "EM13MAT308", "EM13MAT309", "EM13MAT310"],
     conteudo: "Funções e trigonometria",
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Pitágoras e Trigonometria na Vida Real",
     tema: "Geometria e Trigonometria",
-    desc: "Avião decolando, escada no muro e escada do bombeiro em 2D e em 3D (gire a cena!). Veja o triângulo retângulo, Pitágoras, seno, cosseno e tangente.",
+    desc: "5 cenários: avião decolando, escada no muro, bombeiro 3D (gire a cena!), rampa de acesso (NBR 9050) e altura da árvore com teodolito. Pitágoras, seno, cosseno, tangente e norma de acessibilidade.",
     emoji: "✈️", cor: "azul",
     tipo: "simulador"
   },
@@ -795,24 +795,4 @@ window.JOGOS = {
     ferramenta: true,
     conteudo: "Saúde e bem-estar"
   },
-  "altura-arvore-trigonometria": {
-    bncc: ["EM13MAT309", "EM13MAT308"],
-    conteudo: "Funções e trigonometria",
-    nivel: ["Ensino Médio"],
-    nome: "Altura da Árvore: Teodolito e Tangente",
-    tema: "Trigonometria na Vida Real",
-    desc: "Use o teodolito e a tangente para calcular a altura de uma árvore sem escalar. Veja o triângulo na cena, a tabela de tangentes e resolva 5 desafios.",
-    emoji: "🌳", cor: "verde",
-    tipo: "simulador"
-  },
-  "rampa-acesso-trigonometria": {
-    bncc: ["EM13MAT309", "EM13MAT308"],
-    conteudo: "Funções e trigonometria",
-    nivel: ["Ensino Médio"],
-    nome: "Rampa de Acesso: NBR 9050 e Inclinação",
-    tema: "Trigonometria + Norma ABNT",
-    desc: "Calcule a inclinação da rampa (%), a tangente, o ângulo e o comprimento. Veja se atende à norma de acessibilidade NBR 9050 e compare com avião, teleférico e obras civis.",
-    emoji: "♿", cor: "azul",
-    tipo: "simulador"
-  }
 };

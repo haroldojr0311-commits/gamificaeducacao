@@ -1,5 +1,13 @@
 [
   {
+    "data": "2026-11-15",
+    "hora": "10:00",
+    "titulo": "Pitágoras e Trigonometria na Vida Real: agora com 5 cenários",
+    "texto": "O simulador ganhou 2 novos cenários: Rampa de Acesso (NBR 9050 e inclinação) e Altura da Árvore com teodolito. São 5 abas, 25 questões e cenas SVG detalhadas com figuras, ângulos e dimensões.",
+    "link": "./#simuladores",
+    "jogo": "simulador-pitagoras-trigonometria"
+  },
+  {
     "data": "2026-11-14",
     "hora": "09:30",
     "titulo": "Nova ferramenta: SOAP Express ESF",
