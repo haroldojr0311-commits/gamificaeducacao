@@ -313,6 +313,113 @@
 .barra-filtros select:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
 .resultado{font-size:14px;color:#64748b;margin:6px 0 14px}
 </style>
+<style id="gm-design-v2">
+/* === MELHORIAS DE DESIGN v2 === */
+
+/* MELHORIA 1: Faixa-nov → Pill discreto */
+.faixa-nov {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 8px 16px 0 !important;
+  margin: 0 auto 4px !important;
+  justify-content: center !important;
+}
+.faixa-nov .txt {
+  background: linear-gradient(135deg, #fff7d6, #fff3c4);
+  border: 1.5px solid #f59e0b;
+  border-radius: 999px;
+  padding: 5px 16px 5px 12px;
+  font-size: .84rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 1px 4px rgba(245,158,11,.18);
+  flex: unset !important;
+  min-width: unset !important;
+  max-width: 600px;
+  color: #92400e;
+}
+.faixa-nov .txt::before {
+  content: "✨";
+  font-size: .9rem;
+  flex-shrink: 0;
+}
+.faixa-nov .txt b { display: inline !important; font-weight: 800; }
+.faixa-nov .txt a { color: #b45309; font-weight: 700; text-decoration: none; }
+.faixa-nov .txt a:hover { text-decoration: underline; }
+
+/* MELHORIA 2: Micro-animações nos cartões */
+@keyframes gm-fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.cartao-jogo.gm-anim-pronto {
+  animation: gm-fadeInUp .38s ease both;
+}
+.cartao-jogo.gm-anim-pronto:nth-child(2) { animation-delay: .05s; }
+.cartao-jogo.gm-anim-pronto:nth-child(3) { animation-delay: .10s; }
+.cartao-jogo.gm-anim-pronto:nth-child(4) { animation-delay: .15s; }
+.cartao-jogo.gm-anim-pronto:nth-child(5) { animation-delay: .20s; }
+.cartao-jogo.gm-anim-pronto:nth-child(6) { animation-delay: .25s; }
+.cartao-jogo.gm-anim-pronto:nth-child(7) { animation-delay: .30s; }
+.cartao-jogo.gm-anim-pronto:nth-child(8) { animation-delay: .35s; }
+.lp-vitrine a {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .4s ease, transform .4s ease;
+}
+.lp-vitrine a.gm-vis {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* MELHORIA 3: Mockup SVG no hero */
+.lp-esq::after { content: none !important; }
+.gm-mockup-wrap {
+  position: absolute;
+  right: -18px;
+  bottom: -20px;
+  width: 180px;
+  height: 160px;
+  pointer-events: none;
+  opacity: .22;
+  overflow: hidden;
+}
+@keyframes gm-float {
+  0%, 100% { transform: translateY(0) rotate(-6deg); }
+  50%       { transform: translateY(-8px) rotate(-6deg); }
+}
+.gm-mockup-wrap { animation: gm-float 4s ease-in-out infinite; }
+
+/* MELHORIA 4: Contadores com barra animada */
+.lp-numeros div { position: relative; overflow: hidden; }
+.lp-numeros div::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--azul), var(--coral));
+  border-radius: 0 0 16px 16px;
+  transition: width 1.2s ease;
+}
+.lp-numeros div.gm-counted::after { width: 100%; }
+
+/* MELHORIA 5: Hover refinado nos cartões */
+.nota {
+  background-image: linear-gradient(135deg, rgba(255,255,255,.35) 0%, transparent 60%) !important;
+}
+.cartao-jogo:hover {
+  box-shadow: 0 0 0 1.5px var(--azul), 0 8px 24px -6px rgba(47,99,214,.22) !important;
+  border-color: var(--azul) !important;
+  transform: translateY(-5px) rotate(-.4deg) !important;
+}
+.lp-cta button.grande {
+  background: var(--coral) !important;
+  border-color: var(--coral) !important;
+  box-shadow: 0 4px 14px rgba(217,68,47,.35) !important;
+}
+</style>
 </head>
 <body>
 <a class="pular" href="#app">Pular para o conteúdo</a>
@@ -2037,5 +2144,112 @@ iniciar();
 })();
 </script>
 <script src="estat.js" defer></script>
+<script id="gm-design-v2-js">
+(function(){
+  // MELHORIA 2: Animações nos cartões do portal
+  function initCardAnimations() {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('gm-anim-pronto');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.cartao-jogo').forEach(function(c) { obs.observe(c); });
+  }
+
+  // MELHORIA 2: Animação nos cartões da vitrine (landing)
+  function initVitrineAnim() {
+    var items = document.querySelectorAll('.lp-vitrine a');
+    if (!items.length) return;
+    var obs2 = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e, i) {
+        if (e.isIntersecting) {
+          setTimeout(function(){ e.target.classList.add('gm-vis'); }, i * 70);
+          obs2.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    items.forEach(function(a) { obs2.observe(a); });
+  }
+
+  // MELHORIA 3: Mockup SVG no hero
+  function injectMockupSVG() {
+    var lpe = document.querySelector('.lp-esq');
+    if (!lpe || lpe.querySelector('.gm-mockup-wrap')) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'gm-mockup-wrap';
+    wrap.setAttribute('aria-hidden', 'true');
+    wrap.innerHTML = '<svg viewBox="0 0 240 210" xmlns="http://www.w3.org/2000/svg">'
+      + '<rect x="10" y="10" width="220" height="160" rx="16" fill="white" opacity="0.9"/>'
+      + '<rect x="10" y="10" width="220" height="68" rx="16" fill="#ffe27a"/>'
+      + '<rect x="10" y="58" width="220" height="20" fill="#ffe27a"/>'
+      + '<rect x="20" y="20" width="80" height="16" rx="8" fill="white" opacity="0.65"/>'
+      + '<text x="120" y="60" text-anchor="middle" font-size="32">🎮</text>'
+      + '<rect x="20" y="88" width="140" height="10" rx="5" fill="#1d2b53" opacity="0.7"/>'
+      + '<rect x="20" y="104" width="100" height="8" rx="4" fill="#55627f" opacity="0.5"/>'
+      + '<rect x="20" y="118" width="120" height="8" rx="4" fill="#55627f" opacity="0.4"/>'
+      + '<rect x="20" y="136" width="90" height="14" rx="7" fill="#b9d4ff"/>'
+      + '<rect x="10" y="10" width="220" height="160" rx="16" fill="none" stroke="#2f63d6" stroke-width="2" opacity="0.6"/>'
+      + '<rect x="168" y="80" width="60" height="80" rx="10" fill="white" opacity="0.5" transform="rotate(12 198 120)"/>'
+      + '<rect x="162" y="76" width="60" height="80" rx="10" fill="white" opacity="0.4" transform="rotate(8 192 116)"/>'
+      + '</svg>';
+    lpe.appendChild(wrap);
+  }
+
+  // MELHORIA 4: Contadores animados
+  function animateCounters() {
+    var bs = document.querySelectorAll('.lp-numeros b');
+    if (!bs.length) return;
+    var obsC = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        var target = parseInt(el.textContent, 10);
+        if (isNaN(target)) return;
+        var parent = el.closest ? el.closest('.lp-numeros div') : null;
+        var start = performance.now();
+        var dur = 1200;
+        function step(now) {
+          var p = Math.min((now - start) / dur, 1);
+          var eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+          el.textContent = Math.floor(eased * target);
+          if (p < 1) { requestAnimationFrame(step); }
+          else { el.textContent = target; if (parent) parent.classList.add('gm-counted'); }
+        }
+        requestAnimationFrame(step);
+        obsC.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    bs.forEach(function(b) { obsC.observe(b); });
+  }
+
+  function init() {
+    initCardAnimations();
+    initVitrineAnim();
+    injectMockupSVG();
+    animateCounters();
+    // MutationObserver para cartões injetados dinamicamente
+    var mo = new MutationObserver(function(muts) {
+      muts.forEach(function(m) {
+        m.addedNodes.forEach(function(n) {
+          if (n.nodeType === 1 && n.classList && n.classList.contains('cartao-jogo')) {
+            n.classList.add('gm-anim-pronto');
+          }
+        });
+      });
+    });
+    var portal = document.getElementById('lista-jogos') || document.querySelector('.grade-jogos') || document.body;
+    mo.observe(portal, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 </body>
 </html>
