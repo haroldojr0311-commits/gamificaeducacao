@@ -794,5 +794,25 @@ window.JOGOS = {
     tipo: "ferramenta",
     ferramenta: true,
     conteudo: "Saúde e bem-estar"
+  },
+  "altura-arvore-trigonometria": {
+    bncc: ["EM13MAT309", "EM13MAT308"],
+    conteudo: "Funções e trigonometria",
+    nivel: ["Ensino Médio"],
+    nome: "Altura da Árvore: Teodolito e Tangente",
+    tema: "Trigonometria na Vida Real",
+    desc: "Use o teodolito e a tangente para calcular a altura de uma árvore sem escalar. Veja o triângulo na cena, a tabela de tangentes e resolva 5 desafios.",
+    emoji: "🌳", cor: "verde",
+    tipo: "simulador"
+  },
+  "rampa-acesso-trigonometria": {
+    bncc: ["EM13MAT309", "EM13MAT308"],
+    conteudo: "Funções e trigonometria",
+    nivel: ["Ensino Médio"],
+    nome: "Rampa de Acesso: NBR 9050 e Inclinação",
+    tema: "Trigonometria + Norma ABNT",
+    desc: "Calcule a inclinação da rampa (%), a tangente, o ângulo e o comprimento. Veja se atende à norma de acessibilidade NBR 9050 e compare com avião, teleférico e obras civis.",
+    emoji: "♿", cor: "azul",
+    tipo: "simulador"
   }
 };
