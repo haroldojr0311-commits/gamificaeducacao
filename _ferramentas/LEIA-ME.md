@@ -43,3 +43,8 @@ Os alunos usam `turma/jogar.html?a=CÓDIGO` (link gerado na aba "Turmas e notas"
 - Para o jogo voltar exatamente de onde parou, ele precisa chamar `GAMIFICA.salvarEstado({...})` a cada fase/pergunta e,
   ao abrir, ler `GAMIFICA.estado` (via `GAMIFICA.aoReceberAluno`). Jogos sem isso reabrem do início.
 - Ao enviar a nota, a página mostra os parabéns com mensagem de incentivo conforme a nota.
+
+## Capturas de tela dos cartões
+- Imagem real da atividade em `capturas/<id>.webp` (640×400). O catálogo (`gerar_paginas.py`) usa sozinho quando o arquivo existe.
+- Na página inicial e no portal, acrescente o id em `CAPTURAS` no `index.html`.
+- Página "Sobre" (`sobre.html`, foto em `sobre-foto.jpg`) é gerada pelo `gerar_paginas.py`.
