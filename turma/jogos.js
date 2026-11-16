@@ -206,10 +206,10 @@ window.JOGOS = {
   "simulador-pitagoras-trigonometria": {
     bncc: ["EF09MA13", "EF09MA14", "EM13MAT308", "EM13MAT309", "EM13MAT310"],
     conteudo: "Funções e trigonometria",
-    nivel: ["Fundamental 2", "Ensino Médio"],
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Pitágoras e Trigonometria na Vida Real",
-    tema: "Geometria e Trigonometria",
-    desc: "5 cenários: avião decolando, escada no muro, bombeiro 3D (gire a cena!), rampa de acesso (NBR 9050) e altura da árvore com teodolito. Pitágoras, seno, cosseno, tangente e norma de acessibilidade.",
+    tema: "Triângulo retângulo em situações reais",
+    desc: "Cenas realistas com medidas de verdade: decolagem com altímetro, resgate dos bombeiros com escada (regra 4:1), rampa em escala real pela NBR 9050 e altura de árvore com teodolito e visão pela luneta. Seno, cosseno, tangente e Pitágoras passo a passo, com desafio final.",
     emoji: "✈️", cor: "azul",
     tipo: "simulador"
   },
@@ -794,16 +794,6 @@ window.JOGOS = {
     emoji: "🔭", cor: "azul",
     tipo: "simulador",
     conteudo: "Física"
-  },
-  "pitagoras-trigonometria": {
-    bncc: ["EF09MA14"],
-    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
-    nome: "Pitágoras e Trigonometria na Vida Real",
-    tema: "Avião, prédio e rampa: triângulo retângulo no cotidiano",
-    desc: "Simulador em 2D e 3D com decolagem de avião, escada de um prédio e rampa de acessibilidade. Calcule altura, comprimento e ângulo com Pitágoras, seno, cosseno e tangente, e feche com um desafio final.",
-    emoji: "📐", cor: "laranja",
-    tipo: "simulador",
-    conteudo: "Geometria"
   },
   "soap-express-esf": {
     nivel: ["Superior"],

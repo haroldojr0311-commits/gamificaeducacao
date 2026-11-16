@@ -1,11 +1,11 @@
 [
   {
     "data": "2026-11-16",
-    "hora": "11:58",
-    "titulo": "Novo simulador: Pitágoras e Trigonometria na Vida Real",
-    "texto": "Avião decolando, escada de prédio e rampa de acessibilidade, em 2D e 3D, com desafio final.",
-    "link": "./#simuladores",
-    "jogo": "pitagoras-trigonometria"
+    "hora": "20:50",
+    "titulo": "Pitágoras e Trigonometria na Vida Real: nova versão realista",
+    "texto": "Cenas com proporções reais: decolagem com altímetro, resgate dos bombeiros com escada, rampa em escala real pela NBR 9050 e árvore medida com teodolito e visão pela luneta. Cálculo passo a passo e desafio final.",
+    "link": "catalogo/simulador-pitagoras-trigonometria.html",
+    "jogo": "simulador-pitagoras-trigonometria"
   },
   {
     "data": "2026-11-16",
