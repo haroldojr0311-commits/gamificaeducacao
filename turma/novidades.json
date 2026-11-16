@@ -1,5 +1,21 @@
 [
   {
+    "data": "2026-11-16",
+    "hora": "09:24",
+    "titulo": "Campeonato de Tarefas: lista de alunos colada do Excel",
+    "texto": "Agora você pode colar a lista inteira de alunos copiada do Excel, criar turmas sem erro e excluir turmas e alunos.",
+    "link": "./#ferramentas",
+    "jogo": "campeonato-tarefas"
+  },
+  {
+    "data": "2026-11-16",
+    "hora": "09:10",
+    "titulo": "Simulador de Óptica voltou a abrir",
+    "texto": "O Simulador de Óptica estava indisponível e já está no ar. Confira na seção de simuladores.",
+    "link": "./#simuladores",
+    "jogo": "simulador-optica"
+  },
+  {
     "data": "2026-11-15",
     "hora": "10:00",
     "titulo": "Pitágoras e Trigonometria na Vida Real: agora com 5 cenários",
