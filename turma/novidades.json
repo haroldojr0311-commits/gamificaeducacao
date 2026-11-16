@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-16",
+    "hora": "11:58",
+    "titulo": "Novo simulador: Pitágoras e Trigonometria na Vida Real",
+    "texto": "Avião decolando, escada de prédio e rampa de acessibilidade, em 2D e 3D, com desafio final.",
+    "link": "./#simuladores",
+    "jogo": "pitagoras-trigonometria"
+  },
+  {
+    "data": "2026-11-16",
     "hora": "09:24",
     "titulo": "Campeonato de Tarefas: lista de alunos colada do Excel",
     "texto": "Agora você pode colar a lista inteira de alunos copiada do Excel, criar turmas sem erro e excluir turmas e alunos.",

@@ -795,6 +795,16 @@ window.JOGOS = {
     tipo: "simulador",
     conteudo: "Física"
   },
+  "pitagoras-trigonometria": {
+    bncc: ["EF09MA14"],
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
+    nome: "Pitágoras e Trigonometria na Vida Real",
+    tema: "Avião, prédio e rampa: triângulo retângulo no cotidiano",
+    desc: "Simulador em 2D e 3D com decolagem de avião, escada de um prédio e rampa de acessibilidade. Calcule altura, comprimento e ângulo com Pitágoras, seno, cosseno e tangente, e feche com um desafio final.",
+    emoji: "📐", cor: "laranja",
+    tipo: "simulador",
+    conteudo: "Geometria"
+  },
   "soap-express-esf": {
     nivel: ["Superior"],
     nome: "SOAP Express ESF",
