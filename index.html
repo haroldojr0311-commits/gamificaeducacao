@@ -915,7 +915,17 @@ function desenharAcompanhar(tok){
   consultar();
 }
 
+/* ---------- itens que o administrador tirou do site (tabela itens_ocultos) ---------- */
+var OCULTOS = {};
+function idsJogos(){ return Object.keys(window.JOGOS).filter(function(k){ return !OCULTOS[k]; }); }
+async function carregarOcultos(){
+  try{
+    var r = await Promise.race([sb.from('itens_ocultos').select('id'), new Promise(function(ok){ setTimeout(function(){ ok({data: null}); }, 4000); })]);
+    if(r && r.data){ var o = {}; r.data.forEach(function(x){ o[x.id] = 1; }); OCULTOS = o; }
+  }catch(e){}
+}
 async function iniciar(){
+  await carregarOcultos();
   var r = await sb.auth.getSession();
   sessao = r.data.session;
   sb.auth.onAuthStateChange(function(evt, s){
@@ -1153,11 +1163,11 @@ function desenharLogin(aviso){
 var CAPTURAS = {'tabuada-turbo':1, 'invasao-alienigena':1, 'fracoes-visuais':1, 'jogo-hanoi':1};   /* itens com imagem em capturas/<id>.webp */
 function capDe(id){ var j = window.JOGOS[id]; return CAPTURAS[id] ? el('img', {class:'cap', src:'capturas/' + id + '.webp', alt:'Tela de ' + (j ? j.nome : 'atividade'), loading:'lazy'}) : null; }
 function montarApresentacao(cartaoLogin, retorno, direto){
-  var ids = Object.keys(window.JOGOS).filter(function(k){ return k !== 'demo-porcentagem'; });
+  var ids = idsJogos().filter(function(k){ return k !== 'demo-porcentagem'; });
   var tipos = {jogo:0, simulador:0, ferramenta:0};
   ids.forEach(function(id){ var t = tipoDe(id); tipos[t] = (tipos[t] || 0) + 1; });
   var destaque = ['aventura-do-pi','invasao-alienigena','tabuada-turbo','projeto-omega','fracoes-visuais','forca-financeira','tesouro-das-integrais','calculadora-imc']
-    .filter(function(id){ return window.JOGOS[id]; });
+    .filter(function(id){ return window.JOGOS[id] && !OCULTOS[id]; });
   if(destaque.length < 8) ids.forEach(function(id){ if(destaque.length < 8 && destaque.indexOf(id) < 0 && tipoDe(id) === 'jogo') destaque.push(id); });
   function num(n, rot){ return el('div', {}, el('b', {}, String(n)), el('span', {}, rot)); }
   function faq(p, r){ return el('details', {}, el('summary', {}, p), el('p', {}, r)); }
@@ -1175,7 +1185,7 @@ function montarApresentacao(cartaoLogin, retorno, direto){
         el('li', {}, '✔ Sem instalar nada'), el('li', {}, '✔ Celular, tablet e computador'), el('li', {}, '✔ Habilidades da BNCC indicadas')),
       el('p', {class:'lp-micro'}, el('b', {}, 'Menos de R$ 0,35 por dia'), ' · Pix ou cartão · 7 dias para desistir')),
     direto ? el('div', {class:'lp-login'}, cartaoLogin)
-      : el('div', {class:'lp-telas'}, Object.keys(CAPTURAS).filter(function(id){ return window.JOGOS[id]; }).slice(0, 4).map(function(id){
+      : el('div', {class:'lp-telas'}, Object.keys(CAPTURAS).filter(function(id){ return window.JOGOS[id] && !OCULTOS[id]; }).slice(0, 4).map(function(id){
           return el('a', {href:'demo/' + id + '.html', title:'Jogar ' + window.JOGOS[id].nome}, el('img', {src:'capturas/' + id + '.webp', alt:'Tela do jogo ' + window.JOGOS[id].nome, width:'640', height:'400'}));
         }), el('p', {}, '▶ Clique em um jogo e experimente agora, sem cadastro')));
   var dlg = null;
@@ -1206,7 +1216,7 @@ function montarApresentacao(cartaoLogin, retorno, direto){
       el('div', {}, el('div', {class:'n'}, '3'), el('h3', {}, 'Acompanhe os resultados'), el('p', {}, 'Ranking, pódio e notas por aluno e por turma, prontos para imprimir.'))));
 
   /* demonstrações que abrem sem cadastro */
-  var demosIds = ['tabuada-turbo','invasao-alienigena','fracoes-visuais','jogo-hanoi'].filter(function(id){ return window.JOGOS[id]; });
+  var demosIds = ['tabuada-turbo','invasao-alienigena','fracoes-visuais','jogo-hanoi'].filter(function(id){ return window.JOGOS[id] && !OCULTOS[id]; });
   var demos = demosIds.length ? el('section', {class:'lp-sec'},
     el('h2', {}, '🕹️ Jogue agora, sem cadastro'),
     el('p', {class:'sub'}, 'Abra um jogo completo e veja como a sua turma vai aprender. Não precisa de login nem de e-mail.'),
@@ -1372,7 +1382,7 @@ function nivelDe(id){ var n = window.JOGOS[id].nivel; return n ? [].concat(n) : 
 /* Barra de filtros: Etapa e Conteúdo como menus rotulados, com contagem e botão para limpar. */
 function barraFiltros(qual){
   var tipoAba = {jogos:'jogo', simuladores:'simulador', ferramentas:'ferramenta'}[qual];
-  var base = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem' && tipoDe(id) === tipoAba; });
+  var base = idsJogos().filter(function(id){ return id !== 'demo-porcentagem' && tipoDe(id) === tipoAba; });
   var selEtapa = el('select', {id:'selEtapa', 'aria-label':'Etapa de ensino'}, ['todos'].concat(NIVEIS).map(function(n){
     return el('option', {value:n}, n === 'todos' ? 'Todas as etapas' : n);
   }));
@@ -1415,7 +1425,7 @@ function gruposPorConteudo(ids){
 }
 function desenharJogos(qual){
   qual = qual || 'jogos'; qualAtual = qual;
-  var ids = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem'; });
+  var ids = idsJogos().filter(function(id){ return id !== 'demo-porcentagem'; });
   if(filtroNivel !== 'todos') ids = ids.filter(function(id){ return nivelDe(id).indexOf(filtroNivel) >= 0; });
   if(busca.trim()){
     var termo = normalizar(busca.trim());
@@ -1453,7 +1463,7 @@ function desenharJogos(qual){
   });
   if(!grupos.length) corpo.push(el('p', {class:'vazio'}, busca.trim() ? 'Nada encontrado para “' + busca.trim() + '”.' : 'Nada nesta etapa ainda.'));
   var tipoCont = {jogos:'jogo', simuladores:'simulador', ferramentas:'ferramenta'}[qual];
-  var totalAba = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem' && tipoDe(id) === tipoCont; }).length;
+  var totalAba = idsJogos().filter(function(id){ return id !== 'demo-porcentagem' && tipoDe(id) === tipoCont; }).length;
   var mostrados = ids.filter(function(id){ return tipoDe(id) === tipoCont && (filtroConteudo === 'todos' || (window.JOGOS[id].conteudo || 'Outros') === filtroConteudo); }).length;
   var filtrado = filtroNivel !== 'todos' || filtroConteudo !== 'todos' || busca.trim();
   corpo.push(el('p', {class:'resultado'}, 'Mostrando ' + mostrados + ' de ' + totalAba + (filtrado ? ' · com filtros ativos' : '')));
@@ -1582,7 +1592,7 @@ async function carregarAtividades(){
   }
 }
 function desenharAtribuir(){
-  var ids = Object.keys(window.JOGOS).filter(function(id){ return !window.JOGOS[id].ferramenta; });
+  var ids = idsJogos().filter(function(id){ return !window.JOGOS[id].ferramenta; });
   if(jogoEscolhido && ids.indexOf(jogoEscolhido) < 0) jogoEscolhido = null;
   var titulo  = el('input', {type:'text', id:'titulo', maxlength:'120', placeholder:'Ex.: Porcentagem – lista 1'});
   var turma   = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Ex.: 3ª A (opcional)'});
@@ -2115,6 +2125,39 @@ function cartaoAvisos(){
   carregar();
   return caixa;
 }
+var buscaItens = '';
+function cartaoItens(){
+  var caixa = el('div', {class:'card'});
+  function desenhar(aviso){
+    var todos = Object.keys(window.JOGOS).filter(function(id){ return id !== 'demo-porcentagem'; })
+      .sort(function(a, b){ return window.JOGOS[a].nome.localeCompare(window.JOGOS[b].nome, 'pt-BR'); });
+    var ocultos = todos.filter(function(id){ return OCULTOS[id]; });
+    var t = buscaItens.trim().toLowerCase();
+    var achados = t ? todos.filter(function(id){ return !OCULTOS[id] && (window.JOGOS[id].nome + ' ' + id).toLowerCase().indexOf(t) >= 0; }).slice(0, 12) : [];
+    var rotulo = {jogo:'🎮 Jogo', simulador:'🔬 Simulador', ferramenta:'🧰 Ferramenta'};
+    async function mudar(id, ocultar){
+      if(ocultar && !window.confirm('Excluir "' + window.JOGOS[id].nome + '" do site?\n\nEle some dos jogos, simuladores, ferramentas e do catálogo. Você pode restaurar depois, aqui mesmo.')) return;
+      var r = await sb.rpc('ocultar_item', {p_id: id, p_ocultar: ocultar});
+      if(r.error){ desenhar(msg('erro', 'Não foi possível concluir: ' + r.error.message)); return; }
+      if(ocultar) OCULTOS[id] = 1; else delete OCULTOS[id];
+      desenhar(msg('ok', ocultar ? '"' + window.JOGOS[id].nome + '" foi excluído do site.' : '"' + window.JOGOS[id].nome + '" voltou para o site.'));
+    }
+    function linha(id, ocultar){
+      return el('div', {class:'linha', style:'justify-content:space-between;padding:8px 0;border-top:1px solid var(--linha)'},
+        el('span', {}, el('b', {}, (window.JOGOS[id].emoji || '') + ' ' + window.JOGOS[id].nome), ' ', el('small', {style:'color:var(--tinta2)'}, rotulo[tipoDe(id)] || '')),
+        el('button', {class:'peq sec', onclick: function(){ mudar(id, ocultar); }}, ocultar ? '🗑️ Excluir do site' : '↩️ Restaurar'));
+    }
+    var campo = el('input', {type:'search', placeholder:'Digite o nome do jogo, simulador ou ferramenta', value: buscaItens, 'aria-label':'Buscar item',
+      oninput: function(){ buscaItens = this.value; desenhar(); var c = caixa.querySelector('input'); c.focus(); c.setSelectionRange(c.value.length, c.value.length); }});
+    caixa.replaceChildren(el('h2', {}, '🗑️ Excluir do site'),
+      el('p', {class:'sub'}, 'Procure o item e clique em excluir. Ele some do site na hora e pode ser restaurado depois. Tarefas já enviadas às turmas continuam abrindo.'),
+      aviso || null, campo,
+      t ? (achados.length ? el('div', {style:'margin-top:8px'}, achados.map(function(id){ return linha(id, true); })) : el('p', {class:'vazio'}, 'Nenhum item encontrado.')) : null,
+      ocultos.length ? el('div', {style:'margin-top:16px'}, el('h3', {}, 'Excluídos (' + ocultos.length + ')'), ocultos.map(function(id){ return linha(id, false); })) : null);
+  }
+  desenhar();
+  return caixa;
+}
 function desenharAdmin(){
   var nome = el('input', {type:'text', id:'cNome', maxlength:'80', placeholder:'Ex.: Maria da Silva'});
   var login = el('input', {type:'text', id:'cLogin', maxlength:'80', autocapitalize:'none', spellcheck:'false', placeholder:'Ex.: maria.silva'});
@@ -2168,7 +2211,7 @@ function desenharAdmin(){
   }, id:'buscaC'});
 
   app.replaceChildren(
-    cartaoVisitas(), cartaoDepoimentos(), cartaoAvisos(),
+    cartaoVisitas(), cartaoDepoimentos(), cartaoAvisos(), cartaoItens(),
     el('div', {class:'card'}, el('h2', {}, '👥 Contas'),
       contas.erro ? msg('erro', 'Erro ao carregar: ' + contas.erro) : null,
       el('div', {class:'resumo'},

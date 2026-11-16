@@ -35,6 +35,17 @@
     });
   }
   window.GamificaAPI = {rpc: rpc};
+  /* itens que o administrador tirou do site: somem das listas do catálogo */
+  fetch(URL_ + '/rest/v1/itens_ocultos?select=id', {headers: {apikey: KEY_, Authorization: 'Bearer ' + KEY_}})
+    .then(function(r){ return r.ok ? r.json() : []; }).then(function(L){
+      function aplicar(){ (L || []).forEach(function(x){
+        [].forEach.call(document.querySelectorAll('a.item[href$="' + x.id + '.html"], a.bt[href$="demo/' + x.id + '.html"]'), function(a){
+          if(a.getAttribute('href').split('/').pop() === x.id + '.html') a.remove(); });
+        if(location.pathname.replace(/\/$/, '').split('/').pop() === x.id + '.html' && /\/catalogo\//.test(location.pathname)){
+          var m = document.getElementById('conteudo'); if(m) m.innerHTML = '<div class="card"><h1>Atividade indisponível</h1><p>Esta atividade não está mais no site.</p><p><a class="bt" href="./">📚 Ver o catálogo</a></p></div>'; }
+      }); }
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', aplicar); else aplicar();
+    }).catch(function(){});
   window.GamificaDep = {mostrar: mostrarDep};
   window.GamificaForms = {
     depoimento: function(id){ ligar(id, function(d){ return rpc('enviar_depoimento', {p_nome: d.get('nome'), p_funcao: d.get('funcao'), p_texto: d.get('texto')}).then(function(){ return '✅ Obrigado! Seu depoimento será publicado depois que o professor Haroldo aprovar.'; }); }); },
