@@ -263,6 +263,41 @@
   .lp-faq p{margin:0 0 12px;color:var(--tinta2);font-weight:600}
   @media(max-width:600px){.lp-vitrine{grid-template-columns:repeat(2,1fr);gap:10px}.lp-vitrine .nota{height:70px;font-size:34px}}
   @media(max-width:900px){.lp-hero{grid-template-columns:1fr}.lp-hero.retorno .lp-login{order:-1}.lp-esq{padding:24px 20px}}
+  /* ---- vendas: demos, benefícios, plano, chamada final e barra fixa ---- */
+  .lp-micro{margin:14px 0 0!important;font-size:.92rem!important;font-weight:700!important;opacity:.9!important}
+  .lp-micro b{color:var(--marca)}
+  .lp-vitrine a{position:relative}
+  .lp-selo{position:absolute;z-index:2;top:8px;left:8px;background:var(--verde);color:#fff;font-size:.72rem;font-weight:800;border-radius:999px;padding:3px 9px}
+  .lp-jogar{display:block;margin-top:8px;font-weight:800;color:var(--azul)}
+  .lp-benef{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .lp-benef>div{background:var(--cartao);border:2px solid var(--linha);border-radius:var(--r);padding:16px;box-shadow:var(--sombra)}
+  .lp-benef .ic{font-size:1.9rem;line-height:1}
+  .lp-benef h3{font-size:1.08rem;margin:8px 0 4px}
+  .lp-benef p{margin:0;color:var(--tinta2);font-weight:600}
+  .lp-plano .pro{border-color:var(--marca-borda);box-shadow:0 0 0 3px var(--marca),var(--sombra);padding:18px}
+  .lp-plano .lado{padding:18px}
+  .lp-plano .preco small{font-size:1rem;color:var(--tinta2);font-family:var(--f-corpo);font-weight:800}
+  .lp-plano .dia{margin:6px 0 0;font-weight:800;color:var(--verde)}
+  .lp-plano ul.ok{list-style:none;padding-left:0}
+  .lp-plano ul.ok li{padding-left:26px;position:relative;margin:6px 0}
+  .lp-plano ul.ok li::before{content:"✔";position:absolute;left:0;color:var(--verde);font-weight:800}
+  .lp-seg{list-style:none;margin:12px 0 0;padding:0;font-size:.9rem;font-weight:700;color:var(--tinta2)}
+  .lp-seg li{margin:4px 0}
+  .lp-dep{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .lp-dep blockquote{margin:0;background:var(--cartao);border:2px solid var(--linha);border-radius:var(--r);padding:16px;font-weight:600;box-shadow:var(--sombra)}
+  .lp-dep cite{display:block;margin-top:8px;font-style:normal;font-weight:800;color:var(--tinta2)}
+  .lp-final{margin:30px 0 10px;background:linear-gradient(135deg,var(--hero-bg),var(--hero-bg2));color:#fff;border-radius:22px;padding:28px 22px;text-align:center;box-shadow:var(--sombra)}
+  .lp-final h2{color:#fff;font-size:clamp(1.4rem,3.4vw,2rem);margin:0 0 6px}
+  .lp-final p{margin:0 0 16px;font-weight:600;opacity:.93}
+  .lp-final .lp-cta{justify-content:center}
+  .lp-fixo{display:none}
+  @media(max-width:900px){
+    .lp-fixo{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;gap:8px;align-items:center;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--hero-bg);box-shadow:0 -6px 18px -8px rgba(0,0,0,.45)}
+    .lp-fixo button{flex:1;white-space:nowrap;margin:0;padding:11px 8px;font-size:.95rem;border-radius:12px;font-weight:800}
+    .lp-fixo .a{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.4);color:#fff}
+    .lp-fixo .b{background:var(--coral);border:2px solid var(--coral);color:#fff}
+    body:has(.lp-fixo) footer{padding-bottom:84px}
+  }
   .teste-gratis{margin:18px 20px 22px;padding:14px;border-radius:12px;background:#eef2ff;text-align:center}
   .teste-gratis p{margin:0 0 10px;font-weight:700}
   .teste-gratis a{display:inline-block;text-decoration:none}
@@ -724,7 +759,8 @@ function desenharCompra(){
     el('div', {class:'nota', style:'--n:var(--n-amarelo)'}, el('span', {class:'emoji'}, '🎓')),
     el('div', {style:'padding:18px 20px 22px'},
       el('h2', {}, 'Acesso ao Plano Pró'),
-      el('p', {class:'sub'}, 'Login e senha só seus, para todos os jogos, simuladores e ferramentas do site. Sem prazo de teste.'),
+      el('p', {class:'sub'}, 'Login e senha só seus, para todos os jogos, simuladores e ferramentas do site.'),
+      el('p', {class:'sub2', style:'margin-top:0'}, '🔒 Pagamento seguro pelo Mercado Pago · ⚡ Acesso na hora · ↩️ 7 dias para desistir'),
       form,
       el('button', {type:'button', class:'sec', style:'width:100%;margin-top:12px', onclick: desenharLogin}, '← Voltar')))));
 }
@@ -1100,12 +1136,14 @@ function montarApresentacao(cartaoLogin, retorno){
     el('div', {class:'lp-esq'},
       el('span', {class:'lp-pill'}, '🎓 Feito por professor, para a sala de aula'),
       el('h2', {}, 'Jogos e simuladores para a turma aprender de forma ', el('em', {}, 'lúdica')),
-      el('p', {}, ids.length + ' atividades prontas para usar na aula, com ranking, pódio, notas e tabelas para imprimir. Os alunos entram por um link, sem cadastro.'),
+      el('p', {}, ids.length + ' atividades prontas para a sua aula. A turma joga pelo celular, por um link, e as notas já chegam prontas para você, sem corrigir nada à mão.'),
       el('div', {class:'lp-cta'},
         el('button', {type:'button', class:'grande', onclick: desenharDegustacao}, '⏱️ Experimentar grátis · 10 min'),
+        el('button', {type:'button', class:'sec', onclick: desenharCompra}, '💳 Assinar por ' + reais(PRECO_MES) + ' ao mês'),
         el('a', {href:'catalogo/', class:'sec'}, '📚 Ver o catálogo')),
       el('ul', {class:'lp-chips'},
-        el('li', {}, '✔ Sem instalar nada'), el('li', {}, '✔ Celular, tablet e computador'), el('li', {}, '✔ Habilidades da BNCC indicadas'))),
+        el('li', {}, '✔ Sem instalar nada'), el('li', {}, '✔ Celular, tablet e computador'), el('li', {}, '✔ Habilidades da BNCC indicadas')),
+      el('p', {class:'lp-micro'}, el('b', {}, 'Menos de R$ 0,35 por dia'), ' · Pix ou cartão · 7 dias para desistir')),
     el('div', {class:'lp-login'}, cartaoLogin));
 
   var numeros = el('section', {class:'lp-numeros', 'aria-label':'O site em números'},
@@ -1128,24 +1166,82 @@ function montarApresentacao(cartaoLogin, retorno){
       el('div', {}, el('div', {class:'n'}, '2'), el('h3', {}, 'Envie o link para a turma'), el('p', {}, 'Os alunos abrem no celular, sem login e sem instalar.')),
       el('div', {}, el('div', {class:'n'}, '3'), el('h3', {}, 'Acompanhe os resultados'), el('p', {}, 'Ranking, pódio e notas por aluno e por turma, prontos para imprimir.'))));
 
-  var plano = el('section', {class:'lp-sec'},
-    el('h2', {}, '💳 Para o professor'),
+  /* demonstrações que abrem sem cadastro */
+  var demosIds = ['tabuada-turbo','invasao-alienigena','fracoes-visuais','jogo-hanoi'].filter(function(id){ return window.JOGOS[id]; });
+  var demos = demosIds.length ? el('section', {class:'lp-sec'},
+    el('h2', {}, '🕹️ Jogue agora, sem cadastro'),
+    el('p', {class:'sub'}, 'Abra um jogo completo e veja como a sua turma vai aprender. Não precisa de login nem de e-mail.'),
+    el('div', {class:'lp-vitrine'}, demosIds.map(function(id){ var j = window.JOGOS[id];
+      return el('a', {href:'demo/' + id + '.html'},
+        el('span', {class:'lp-selo'}, 'GRÁTIS'),
+        el('div', {class:'nota', style:corDe(id)}, el('span', {class:'emoji', 'aria-hidden':'true'}, j.emoji || '🎮')),
+        el('div', {class:'c'}, el('h3', {}, j.nome), el('small', {}, j.tema || j.conteudo || ''), el('span', {class:'lp-jogar'}, '▶ Jogar grátis')));
+    }))) : null;
+
+  function benef(ic, t, d){ return el('div', {}, el('div', {class:'ic', 'aria-hidden':'true'}, ic), el('h3', {}, t), el('p', {}, d)); }
+  var beneficios = el('section', {class:'lp-sec'},
+    el('h2', {}, '⏰ Menos tempo corrigindo, mais tempo ensinando'),
+    el('p', {class:'sub'}, 'O que o Plano Pró faz por você e pela turma.'),
+    el('div', {class:'lp-benef'},
+      benef('✅', 'Correção automática', 'A turma faz a tarefa e a nota de cada aluno já chega pronta para você.'),
+      benef('🏆', 'Ranking e pódio', 'A disputa saudável faz a turma querer jogar de novo e estudar mais.'),
+      benef('📄', 'Relatório em Word', 'Nomes e notas de cada turma, prontos para imprimir ou guardar.'),
+      benef('⚡', 'Quiz ao vivo', 'No Gamifica Live os alunos respondem pelo celular e o placar aparece no telão.'),
+      benef('📷', 'Leitor de Gabaritos', 'Corrija provas de papel apontando a câmera do celular.'),
+      benef('📝', 'Gerador de Provas', 'Monte provas nas versões A, B, C e D, já com cartão-resposta.')));
+
+  /* depoimentos: a seção só aparece quando houver depoimentos aprovados */
+  var listaDep = el('div', {class:'lp-dep'});
+  var depo = el('section', {class:'lp-sec', hidden:'hidden'}, el('h2', {style:'margin-bottom:12px'}, '💬 O que dizem os professores'), listaDep);
+  Promise.all([
+    Promise.resolve().then(function(){ return sb.rpc('depoimentos_publicos'); }).then(function(r){ return (r && r.data) || []; }).catch(function(){ return []; }),
+    fetch('depoimentos.json', {cache:'no-store'}).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; })
+  ]).then(function(p){
+    var L = (p[0] || []).concat(p[1] || []).filter(function(d){ return d && d.texto; }).slice(0, 6); if(!L.length) return;
+    L.forEach(function(d){ listaDep.append(el('blockquote', {}, '“' + d.texto + '”', el('cite', {}, d.nome + (d.funcao ? ' · ' + d.funcao : '')))); });
+    depo.hidden = false;
+  }).catch(function(){});
+
+  var plano = el('section', {class:'lp-sec', id:'plano'},
+    el('h2', {}, '💳 Um plano só, com tudo liberado'),
     el('div', {class:'lp-plano', style:'margin-top:12px'},
-      el('div', {class:'card'}, el('h3', {}, 'Plano Pró'), el('div', {class:'preco'}, 'R$ 10,00'),
-        el('ul', {}, el('li', {}, 'Todas as atividades liberadas'), el('li', {}, 'Atribuir tarefas para as turmas'), el('li', {}, 'Notas e ranking por turma')),
-        el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, 'Comprar acesso ao Plano Pró')),
-      el('div', {class:'card'}, el('h3', {}, 'Quer testar antes?'), el('p', {class:'sub', style:'margin-top:8px'}, 'A degustação é grátis e dura 10 minutos: você abre as atividades e vê como funciona na prática.'),
+      el('div', {class:'card pro'}, el('h3', {}, 'Plano Pró'), el('div', {class:'preco'}, reais(PRECO_MES), el('small', {}, ' por mês')),
+        el('p', {class:'dia'}, 'Menos de R$ 0,35 por dia para usar com todas as suas turmas.'),
+        el('ul', {class:'ok'}, el('li', {}, 'Todas as ' + ids.length + ' atividades liberadas'), el('li', {}, 'Tarefas com link e prazo para as turmas'),
+          el('li', {}, 'Notas, ranking e relatório em Word'), el('li', {}, 'Gamifica Live, Leitor de Gabaritos e Gerador de Provas'),
+          el('li', {}, 'Atividades novas sem pagar a mais')),
+        el('button', {type:'button', class:'grande', style:'width:100%', onclick: desenharCompra}, '💳 Quero o Plano Pró'),
+        el('ul', {class:'lp-seg'}, el('li', {}, '🔒 Pix ou cartão, pelo Mercado Pago'), el('li', {}, '⚡ Acesso liberado assim que o pagamento é aprovado'),
+          el('li', {}, '🗓️ Você escolhe de 1 a 12 meses, sem renovação automática'), el('li', {}, '↩️ 7 dias para desistir e receber o valor de volta'))),
+      el('div', {class:'card lado'}, el('h3', {}, 'Quer testar antes?'), el('p', {class:'sub', style:'margin-top:8px'}, 'A degustação é grátis e dura 10 minutos: você abre as atividades e vê como funciona na prática.'),
         el('button', {type:'button', class:'sec', style:'width:100%', onclick: desenharDegustacao}, '⏱️ Começar a degustação grátis'),
-        el('p', {class:'sub2'}, '🎓 Aluno? Use o link que o seu professor enviou. Você não precisa de login.'))));
+        el('p', {class:'sub2'}, '🎓 Aluno? Use o link que o seu professor enviou. Você não precisa de login.'),
+        el('p', {class:'sub2'}, 'Criado por Prof. Dr. Haroldo Aleixo de Lima Junior, professor de Matemática. Ficou com dúvida? ',
+          el('a', {href:'https://wa.me/' + WHATSAPP_TESTE + '?text=' + encodeURIComponent('Olá! Tenho uma dúvida sobre o Plano Pró do Gamifica Educação.'), target:'_blank', rel:'noopener', style:'font-weight:800'}, '💬 Fale com ele pelo WhatsApp'), '.'))));
 
   var duvidas = el('section', {class:'lp-sec lp-faq'},
     el('h2', {style:'margin-bottom:12px'}, '❓ Dúvidas frequentes'),
+    faq('Quanto custa?', reais(PRECO_MES) + ' por mês. Você escolhe de 1 a 12 meses e paga uma vez só, por Pix ou cartão.'),
+    faq('Como recebo o meu acesso?', 'Assim que o pagamento é aprovado, o seu login e a sua senha aparecem na tela. É só entrar e usar.'),
+    faq('A cobrança se repete sozinha?', 'Não. Quando o período termina, o acesso é encerrado e você renova só se quiser. As tarefas e as notas já criadas continuam guardadas.'),
+    faq('E se eu não gostar?', 'Você pode desistir em até 7 dias depois da compra e receber o valor de volta. Basta pedir pelo WhatsApp.'),
     faq('O aluno precisa criar conta?', 'Não. O aluno entra pelo link enviado pelo professor e informa só o nome e a turma.'),
     faq('Preciso instalar algum programa?', 'Não. Tudo abre direto no navegador, no celular, no tablet ou no computador.'),
     faq('Para quais níveis de ensino?', 'Fundamental 1, Fundamental 2, Ensino Médio e Superior, com atividades de Matemática, Educação Financeira, saúde e outras áreas.'),
-    faq('Posso testar antes de comprar?', 'Sim. Use a degustação grátis de 10 minutos.'));
+    faq('Posso testar antes de comprar?', 'Sim. Use a degustação grátis de 10 minutos ou abra um dos jogos de demonstração, sem cadastro.'));
 
-  return el('div', {class:'lp'}, hero, numeros, vitrine, passos, plano, duvidas);
+  var fecho = el('section', {class:'lp-final'},
+    el('h2', {}, 'Leve a próxima aula para outro nível'),
+    el('p', {}, 'Comece pela degustação grátis ou libere tudo agora por ' + reais(PRECO_MES) + ' ao mês.'),
+    el('div', {class:'lp-cta'},
+      el('button', {type:'button', class:'grande', onclick: desenharCompra}, '💳 Quero o Plano Pró'),
+      el('button', {type:'button', class:'sec', onclick: desenharDegustacao}, '⏱️ Experimentar grátis · 10 min')));
+
+  var fixo = el('div', {class:'lp-fixo', role:'region', 'aria-label':'Começar'},
+    el('button', {type:'button', class:'a', onclick: desenharDegustacao}, '⏱️ Testar grátis'),
+    el('button', {type:'button', class:'b', onclick: desenharCompra}, '💳 Assinar · R$ ' + PRECO_MES + '/mês'));
+
+  return el('div', {class:'lp'}, hero, numeros, demos, beneficios, vitrine, passos, depo, plano, duvidas, fecho, fixo);
 }
 
 /* ---------- abas ---------- */
