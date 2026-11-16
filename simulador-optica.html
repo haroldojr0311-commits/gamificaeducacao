@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Óptica | Gamifica Educação</title>
+<style>
+:root{--bg:#060614;--bg2:#0d0d2b;--bg3:#14143d;--primary:#7c5cfc;--secondary:#fc5c7d;--accent:#43e97b;--cyan:#00d2ff;--yellow:#f9ca24;--orange:#fd9644;--text:#e8e8ff;--text2:#9999cc;--border:#2a2a5a;--card:#111130;--glow:rgba(124,92,252,0.3)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+header{background:linear-gradient(135deg,#1a0533 0%,#060614 50%,#001a33 100%);text-align:center;padding:28px 20px 20px;border-bottom:2px solid var(--primary);position:relative;overflow:hidden}
+header::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 50%,rgba(124,92,252,0.15) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(0,210,255,0.1) 0%,transparent 60%);pointer-events:none}
+.hero-emoji{font-size:3rem;display:block;margin-bottom:8px;filter:drop-shadow(0 0 20px var(--cyan))}
+h1{font-size:1.8rem;font-weight:800;background:linear-gradient(90deg,var(--cyan),var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text2);font-size:.9rem;margin-top:4px}
+.tabs-nav{display:flex;gap:4px;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.tabs-nav::-webkit-scrollbar{display:none}
+.tab-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:9px 16px;border-radius:8px;cursor:pointer;white-space:nowrap;font-size:.85rem;font-weight:600;transition:all .2s}
+.tab-btn:hover{border-color:var(--primary);color:var(--text)}
+.tab-btn.active{background:linear-gradient(135deg,var(--primary),#5b3fd4);border-color:var(--primary);color:#fff;box-shadow:0 0 12px var(--glow)}
+.tab-content{display:none;padding:20px 16px;animation:fadeIn .3s ease}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.sim-wrapper{display:flex;flex-direction:column;gap:16px;max-width:800px;margin:0 auto}
+.canvas-container{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:relative}
+canvas{display:block;width:100%;height:auto;cursor:crosshair}
+.controls{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.controls h3{color:var(--cyan);font-size:.95rem;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.ctrl-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.ctrl-grid{grid-template-columns:1fr}}
+.ctrl-item label{display:block;color:var(--text2);font-size:.78rem;margin-bottom:4px}
+.ctrl-item input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer}
+.ctrl-item .val{color:var(--yellow);font-weight:700;font-size:.85rem}
+.ctrl-item select{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:6px;font-size:.85rem;cursor:pointer}
+.results{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px}
+.results h3{color:var(--accent);font-size:.95rem;margin-bottom:12px}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.result-card .label{color:var(--text2);font-size:.72rem;margin-bottom:4px}
+.result-card .value{font-size:1.1rem;font-weight:700;color:var(--yellow)}
+.result-card .sub{color:var(--text2);font-size:.7rem;margin-top:2px}
+.formula-box{background:var(--bg2);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:12px 14px;margin-top:12px;font-size:.85rem;color:var(--text2);line-height:1.8}
+.formula-box .formula{color:var(--cyan);font-weight:700;font-size:.95rem}
+.info-badge{display:inline-block;background:rgba(252,92,125,.15);border:1px solid var(--secondary);color:var(--secondary);border-radius:20px;padding:3px 10px;font-size:.75rem;font-weight:700}
+.real-badge{background:rgba(67,233,123,.15);border-color:var(--accent);color:var(--accent)}
+.virtual-badge{background:rgba(0,210,255,.15);border-color:var(--cyan);color:var(--cyan)}
+.tir-warning{background:rgba(253,150,68,.15);border:1px solid var(--orange);border-radius:8px;padding:10px 14px;color:var(--orange);font-size:.85rem;text-align:center;font-weight:600;margin-top:8px}
+/* Quiz */
+.quiz-container{max-width:700px;margin:0 auto}
+.quiz-header{text-align:center;margin-bottom:24px}
+.quiz-header h2{color:var(--primary);font-size:1.4rem}
+.progress-bar{background:var(--bg3);border-radius:20px;height:8px;margin:12px 0 4px;overflow:hidden}
+.progress-fill{background:linear-gradient(90deg,var(--primary),var(--cyan));border-radius:20px;height:100%;transition:width .4s ease}
+.question-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:16px}
+.question-card .qnum{color:var(--text2);font-size:.8rem;margin-bottom:8px}
+.question-card .qtext{font-size:1rem;line-height:1.6;margin-bottom:18px;color:var(--text)}
+.options{display:flex;flex-direction:column;gap:10px}
+.option-btn{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;text-align:left;cursor:pointer;color:var(--text);font-size:.9rem;transition:all .2s;display:flex;align-items:center;gap:10px}
+.option-btn:hover:not(:disabled){border-color:var(--primary);background:rgba(124,92,252,.1)}
+.option-btn.correct{border-color:var(--accent);background:rgba(67,233,123,.15);color:var(--accent)}
+.option-btn.wrong{border-color:var(--secondary);background:rgba(252,92,125,.1);color:var(--secondary)}
+.option-btn:disabled{cursor:not-allowed}
+.opt-letter{background:var(--bg2);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.explanation{background:var(--bg3);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;padding:12px 14px;margin-top:12px;font-size:.85rem;color:var(--text2);display:none}
+.quiz-nav{display:flex;justify-content:center;margin-top:16px}
+.quiz-nav button{background:linear-gradient(135deg,var(--primary),#5b3fd4);border:none;color:#fff;padding:12px 32px;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s}
+.quiz-nav button:hover{transform:translateY(-2px);box-shadow:0 4px 20px var(--glow)}
+.score-card{background:var(--card);border:2px solid var(--primary);border-radius:16px;padding:32px;text-align:center;max-width:400px;margin:0 auto}
+.score-emoji{font-size:4rem;margin-bottom:12px}
+.score-card h3{font-size:1.5rem;color:var(--primary);margin-bottom:8px}
+.score-card .score-num{font-size:3rem;font-weight:900;color:var(--yellow)}
+.score-card p{color:var(--text2);font-size:.9rem;margin:8px 0 20px}
+.btn-restart{background:linear-gradient(135deg,var(--accent),#2ecc71);border:none;color:#000;padding:12px 28px;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer}
+footer{text-align:center;padding:20px;color:var(--text2);font-size:.8rem;border-top:1px solid var(--border);margin-top:16px}
+footer a{color:var(--primary);text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+  <span class="hero-emoji">🔭</span>
+  <h1>Simulador de Óptica</h1>
+  <div class="subtitle">Espelhos · Refração · Lentes | <em>Prof. Dr. Haroldo Aleixo de Lima Junior</em></div>
+</header>
+
+<nav class="tabs-nav">
+  <button class="tab-btn active" onclick="showTab('plano')">🪞 Espelho Plano</button>
+  <button class="tab-btn" onclick="showTab('esferico')">🔵 Espelhos Esféricos</button>
+  <button class="tab-btn" onclick="showTab('refracao')">💡 Refração</button>
+  <button class="tab-btn" onclick="showTab('lentes')">🔍 Lentes</button>
+  <button class="tab-btn" onclick="showTab('quiz')">📝 Quiz</button>
+</nav>
+
+<!-- TAB 1: ESPELHO PLANO -->
+<div class="tab-content active" id="tab-plano">
+<div class="sim-wrapper">
+  <div class="canvas-container"><canvas id="cvPlano" width="600" height="300"></canvas></div>
+  <div class="controls">
+    <h3>⚙️ Controles</h3>
+    <div class="ctrl-grid">
+      <div class="ctrl-item">
+        <label>Distância do objeto: <span class="val" id="vPlanoP">120</span> u</label>
+        <input type="range" id="slPlanoP" min="40" max="260" value="120" oninput="drawPlano()">
+      </div>
+      <div class="ctrl-item">
+        <label>Altura do objeto: <span class="val" id="vPlanoH">60</span> u</label>
+        <input type="range" id="slPlanoH" min="20" max="100" value="60" oninput="drawPlano()">
+      </div>
+      <div class="ctrl-item">
+        <label>Ângulo do raio incidente: <span class="val" id="vPlanoA">35</span>°</label>
+        <input type="range" id="slPlanoA" min="10" max="80" value="35" oninput="drawPlano()">
+      </div>
+    </div>
+  </div>
+  <div class="results">
+    <h3>📐 Lei da Reflexão</h3>
+    <div class="result-grid">
+      <div class="result-card"><div class="label">Ângulo de incidência (θᵢ)</div><div class="value" id="rPlanoTi">35°</div><div class="sub">medido pela normal</div></div>
+      <div class="result-card"><div class="label">Ângulo de reflexão (θᵣ)</div><div class="value" id="rPlanoTr">35°</div><div class="sub">θᵢ = θᵣ ✓</div></div>
+      <div class="result-card"><div class="label">Distância da imagem</div><div class="value" id="rPlanoPi">120 u</div><div class="sub">atrás do espelho</div></div>
+      <div class="result-card"><div class="label">Natureza da imagem</div><div class="value" id="rPlanoNat">—</div></div>
+    </div>
+    <div class="formula-box">
+      <div class="formula">θᵢ = θᵣ</div>
+      O ângulo de incidência é igual ao ângulo de reflexão, ambos medidos em relação à <strong>normal</strong> (linha perpendicular à superfície).
+      A imagem é sempre <strong>virtual, direita e do mesmo tamanho</strong> que o objeto.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 2: ESPELHOS ESFÉRICOS -->
+<div class="tab-content" id="tab-esferico">
+<div class="sim-wrapper">
+  <div class="canvas-container"><canvas id="cvEsferico" width="600" height="320"></canvas></div>
+  <div class="controls">
+    <h3>⚙️ Controles</h3>
+    <div class="ctrl-grid">
+      <div class="ctrl-item">
+        <label>Tipo de espelho:</label>
+        <select id="slEsfTipo" onchange="drawEsferico()">
+          <option value="concavo">Côncavo (convergente, f &gt; 0)</option>
+          <option value="convexo">Convexo (divergente, f &lt; 0)</option>
+        </select>
+      </div>
+      <div class="ctrl-item">
+        <label>Distância focal: <span class="val" id="vEsfF">80</span> u</label>
+        <input type="range" id="slEsfF" min="30" max="140" value="80" oninput="drawEsferico()">
+      </div>
+      <div class="ctrl-item">
+        <label>Distância do objeto (p): <span class="val" id="vEsfP">160</span> u</label>
+        <input type="range" id="slEsfP" min="20" max="300" value="160" oninput="drawEsferico()">
+      </div>
+    </div>
+  </div>
+  <div class="results">
+    <h3>📐 Equação de Gauss</h3>
+    <div class="result-grid">
+      <div class="result-card"><div class="label">Foco (f)</div><div class="value" id="rEsfF">80 u</div></div>
+      <div class="result-card"><div class="label">Distância da imagem (p')</div><div class="value" id="rEsfPi">— u</div></div>
+      <div class="result-card"><div class="label">Ampliação (M)</div><div class="value" id="rEsfM">—</div></div>
+      <div class="result-card"><div class="label">Natureza</div><div class="value" id="rEsfNat" style="font-size:.85rem">—</div></div>
+    </div>
+    <div class="formula-box">
+      <div class="formula">1/f = 1/p + 1/p'&nbsp;&nbsp;&nbsp;&nbsp;M = −p'/p</div>
+      <strong>p</strong> = distância objeto–espelho &nbsp;|&nbsp; <strong>p'</strong> = distância imagem–espelho &nbsp;|&nbsp; <strong>f</strong> = distância focal<br>
+      p' > 0 → imagem real (na frente) &nbsp;|&nbsp; p' < 0 → imagem virtual (atrás)
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 3: REFRAÇÃO -->
+<div class="tab-content" id="tab-refracao">
+<div class="sim-wrapper">
+  <div class="canvas-container"><canvas id="cvRefracao" width="600" height="320"></canvas></div>
+  <div class="controls">
+    <h3>⚙️ Controles</h3>
+    <div class="ctrl-grid">
+      <div class="ctrl-item">
+        <label>Meio 1 — índice n₁: <span class="val" id="vRefN1">1.00</span></label>
+        <select id="slRefN1" onchange="drawRefracao()">
+          <option value="1.00">Vácuo / Ar (n = 1,00)</option>
+          <option value="1.33">Água (n = 1,33)</option>
+          <option value="1.50">Vidro (n = 1,50)</option>
+          <option value="2.42">Diamante (n = 2,42)</option>
+        </select>
+      </div>
+      <div class="ctrl-item">
+        <label>Meio 2 — índice n₂: <span class="val" id="vRefN2">1.50</span></label>
+        <select id="slRefN2" onchange="drawRefracao()">
+          <option value="1.00">Vácuo / Ar (n = 1,00)</option>
+          <option value="1.33">Água (n = 1,33)</option>
+          <option value="1.50" selected>Vidro (n = 1,50)</option>
+          <option value="2.42">Diamante (n = 2,42)</option>
+        </select>
+      </div>
+      <div class="ctrl-item">
+        <label>Ângulo de incidência (θ₁): <span class="val" id="vRefA">40</span>°</label>
+        <input type="range" id="slRefA" min="1" max="89" value="40" oninput="drawRefracao()">
+      </div>
+    </div>
+  </div>
+  <div class="results">
+    <h3>📐 Lei de Snell-Descartes</h3>
+    <div class="result-grid">
+      <div class="result-card"><div class="label">θ₁ (incidência)</div><div class="value" id="rRefT1">40°</div></div>
+      <div class="result-card"><div class="label">θ₂ (refração)</div><div class="value" id="rRefT2">—</div></div>
+      <div class="result-card"><div class="label">Ângulo crítico</div><div class="value" id="rRefTc">—</div></div>
+      <div class="result-card"><div class="label">Situação</div><div class="value" id="rRefSit" style="font-size:.8rem">—</div></div>
+    </div>
+    <div id="tirWarning" class="tir-warning" style="display:none">⚠️ Reflexão Total Interna! O raio não consegue atravessar a superfície.</div>
+    <div class="formula-box">
+      <div class="formula">n₁ · sen θ₁ = n₂ · sen θ₂</div>
+      <strong>n₁, n₂</strong> = índices de refração dos meios &nbsp;|&nbsp; <strong>θ₁, θ₂</strong> medidos em relação à normal<br>
+      Se n₁ > n₂ e θ₁ ≥ θ_crítico → <strong>Reflexão Total Interna</strong>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 4: LENTES -->
+<div class="tab-content" id="tab-lentes">
+<div class="sim-wrapper">
+  <div class="canvas-container"><canvas id="cvLentes" width="600" height="320"></canvas></div>
+  <div class="controls">
+    <h3>⚙️ Controles</h3>
+    <div class="ctrl-grid">
+      <div class="ctrl-item">
+        <label>Tipo de lente:</label>
+        <select id="slLenTipo" onchange="drawLentes()">
+          <option value="convergente">Convergente (f &gt; 0)</option>
+          <option value="divergente">Divergente (f &lt; 0)</option>
+        </select>
+      </div>
+      <div class="ctrl-item">
+        <label>Distância focal: <span class="val" id="vLenF">80</span> u</label>
+        <input type="range" id="slLenF" min="30" max="140" value="80" oninput="drawLentes()">
+      </div>
+      <div class="ctrl-item">
+        <label>Distância do objeto (p): <span class="val" id="vLenP">150</span> u</label>
+        <input type="range" id="slLenP" min="20" max="300" value="150" oninput="drawLentes()">
+      </div>
+    </div>
+  </div>
+  <div class="results">
+    <h3>📐 Equação de Gauss (Lentes)</h3>
+    <div class="result-grid">
+      <div class="result-card"><div class="label">Foco (f)</div><div class="value" id="rLenF">80 u</div></div>
+      <div class="result-card"><div class="label">Distância da imagem (p')</div><div class="value" id="rLenPi">— u</div></div>
+      <div class="result-card"><div class="label">Ampliação (M)</div><div class="value" id="rLenM">—</div></div>
+      <div class="result-card"><div class="label">Natureza</div><div class="value" id="rLenNat" style="font-size:.85rem">—</div></div>
+    </div>
+    <div class="formula-box">
+      <div class="formula">1/f = 1/p + 1/p'&nbsp;&nbsp;&nbsp;&nbsp;M = −p'/p</div>
+      A mesma equação dos espelhos, com convenção de sinais:<br>
+      <strong>f > 0</strong> → lente convergente (convexa) &nbsp;|&nbsp; <strong>f < 0</strong> → lente divergente (côncava)<br>
+      p' > 0 → imagem real (do outro lado) &nbsp;|&nbsp; p' < 0 → imagem virtual (mesmo lado do objeto)
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 5: QUIZ -->
+<div class="tab-content" id="tab-quiz">
+<div class="quiz-container">
+  <div class="quiz-header">
+    <h2>🧠 Quiz de Óptica</h2>
+    <p style="color:var(--text2);font-size:.85rem">Teste seus conhecimentos!</p>
+    <div class="progress-bar"><div class="progress-fill" id="qProgress" style="width:0%"></div></div>
+    <div style="color:var(--text2);font-size:.8rem" id="qProgressLabel">Questão 0 de 5</div>
+  </div>
+  <div id="quizArea"></div>
+  <div class="quiz-nav" id="quizNav" style="display:none">
+    <button onclick="nextQuestion()">Próxima →</button>
+  </div>
+</div>
+</div>
+
+<footer>
+  <a href="https://gamificaeducacao.com.br" target="_blank">gamificaeducacao.com.br</a> · Prof. Dr. Haroldo Aleixo de Lima Junior
+</footer>
+
+<script>
+// ===================== UTILS =====================
+function drawArrow(ctx,x1,y1,x2,y2,color,width=2){
+  ctx.save();ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=width;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  const a=Math.atan2(y2-y1,x2-x1);const hs=8;
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hs*Math.cos(a-0.4),y2-hs*Math.sin(a-0.4));
+  ctx.lineTo(x2-hs*Math.cos(a+0.4),y2-hs*Math.sin(a+0.4));
+  ctx.closePath();ctx.fill();ctx.restore();
+}
+function drawDashed(ctx,x1,y1,x2,y2,color,width=1.5){
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  ctx.setLineDash([]);ctx.restore();
+}
+function drawLabel(ctx,txt,x,y,color='#e8e8ff',size=12){
+  ctx.save();ctx.fillStyle=color;ctx.font=`${size}px Segoe UI`;ctx.fillText(txt,x,y);ctx.restore();
+}
+function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
+
+// ===================== TAB SWITCHER =====================
+function showTab(id){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(id==='plano')drawPlano();
+  else if(id==='esferico')drawEsferico();
+  else if(id==='refracao')drawRefracao();
+  else if(id==='lentes')drawLentes();
+}
+
+// ===================== ESPELHO PLANO =====================
+function drawPlano(){
+  const canvas=document.getElementById('cvPlano');
+  const ctx=canvas.getContext('2d');
+  const W=600,H=300;
+  ctx.clearRect(0,0,W,H);
+
+  // gradient bg
+  const gb=ctx.createLinearGradient(0,0,0,H);gb.addColorStop(0,'#060614');gb.addColorStop(1,'#0d0d2b');
+  ctx.fillStyle=gb;ctx.fillRect(0,0,W,H);
+
+  const p=parseInt(document.getElementById('slPlanoP').value);
+  const objH=parseInt(document.getElementById('slPlanoH').value);
+  const angDeg=parseInt(document.getElementById('slPlanoA').value);
+  document.getElementById('vPlanoP').textContent=p;
+  document.getElementById('vPlanoH').textContent=objH;
+  document.getElementById('vPlanoA').textContent=angDeg;
+
+  const scale=0.8;
+  const mirrorX=380, axY=H/2;
+  const objX=mirrorX-p*scale;
+  const imgX=mirrorX+p*scale;
+  const oTop=axY-objH*scale/2, oBot=axY+objH*scale/2;
+  const iTop=axY-objH*scale/2, iBot=axY+objH*scale/2;
+
+  // eixo óptico
+  drawDashed(ctx,20,axY,W-20,axY,'#2a2a5a',1);
+
+  // espelho
+  const mH=H*0.75;
+  ctx.save();ctx.strokeStyle='#7c5cfc';ctx.lineWidth=4;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(mirrorX,axY-mH/2);ctx.lineTo(mirrorX,axY+mH/2);ctx.stroke();
+  // hachuras
+  ctx.lineWidth=1;ctx.strokeStyle='#2a2a5a';
+  for(let y=axY-mH/2;y<axY+mH/2;y+=12){ctx.beginPath();ctx.moveTo(mirrorX,y);ctx.lineTo(mirrorX+10,y+10);ctx.stroke();}
+  ctx.restore();
+
+  // normal
+  drawDashed(ctx,mirrorX-50,axY,mirrorX+50,axY,'#2a2a5a',1.5);
+
+  // objeto
+  drawArrow(ctx,objX,oBot,objX,oTop,'#43e97b',3);
+  drawLabel(ctx,'Objeto',objX-32,oTop-6,'#43e97b');
+
+  // imagem (virtual, tracejada)
+  ctx.save();ctx.globalAlpha=0.5;
+  drawArrow(ctx,imgX,iBot,imgX,iTop,'#00d2ff',2);
+  ctx.restore();
+  drawLabel(ctx,'Imagem (virtual)',imgX+6,iTop-6,'#00d2ff');
+
+  // raio incidente (da ponta do objeto ao espelho)
+  const ang=angDeg*Math.PI/180;
+  const hx=mirrorX, hy=axY;
+  // posição de incidência no espelho baseada no ângulo
+  const incHitY=axY;
+  const hitX=mirrorX, hitY=incHitY;
+  const srcX=hitX-(p*scale)*1.0, srcY=hitY+Math.tan(ang)*(p*scale);
+  drawArrow(ctx,clamp(srcX,10,W-10),clamp(srcY,10,H-10),hitX,hitY,'#f9ca24',2);
+
+  // raio refletido
+  const refEndX=hitX+p*scale*0.8;
+  const refEndY=hitY-Math.tan(ang)*(p*scale*0.8);
+  drawArrow(ctx,hitX,hitY,clamp(refEndX,10,W-10),clamp(refEndY,10,H-10),'#fc5c7d',2);
+
+  // prolongamento para imagem virtual
+  drawDashed(ctx,hitX,hitY,clamp(hitX+p*scale*0.8,10,W-10),clamp(hitY+Math.tan(ang)*(p*scale*0.8),10,H-10),'#fc5c7d',1.5);
+
+  // arco θᵢ e θᵣ
+  const r=36;
+  ctx.save();ctx.strokeStyle='#f9ca24';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(hitX,hitY,r,Math.PI-ang,Math.PI,false);ctx.stroke();
+  drawLabel(ctx,'θᵢ',hitX-r-18,hitY+8,'#f9ca24',11);
+  ctx.strokeStyle='#fc5c7d';
+  ctx.beginPath();ctx.arc(hitX,hitY,r,Math.PI,Math.PI+ang,false);ctx.stroke();
+  drawLabel(ctx,'θᵣ',hitX-r-18,hitY-8,'#fc5c7d',11);
+  ctx.restore();
+
+  // normal
+  drawDashed(ctx,mirrorX-60,hitY,mirrorX+60,hitY,'#55558a',1.5);
+  drawLabel(ctx,'Normal',mirrorX+6,hitY-10,'#55558a',10);
+
+  // resultados
+  document.getElementById('rPlanoTi').textContent=angDeg+'°';
+  document.getElementById('rPlanoTr').textContent=angDeg+'°';
+  document.getElementById('rPlanoPi').textContent=p+' u';
+  document.getElementById('rPlanoNat').innerHTML='<span class="virtual-badge">Virtual · Direita · Mesmo tamanho</span>';
+}
+
+// ===================== ESPELHOS ESFÉRICOS =====================
+function drawEsferico(){
+  const canvas=document.getElementById('cvEsferico');
+  const ctx=canvas.getContext('2d');
+  const W=600,H=320;
+  ctx.clearRect(0,0,W,H);
+  const gb=ctx.createLinearGradient(0,0,0,H);gb.addColorStop(0,'#060614');gb.addColorStop(1,'#0d0d2b');
+  ctx.fillStyle=gb;ctx.fillRect(0,0,W,H);
+
+  const tipo=document.getElementById('slEsfTipo').value;
+  const fAbs=parseInt(document.getElementById('slEsfF').value);
+  const p=parseInt(document.getElementById('slEsfP').value);
+  document.getElementById('vEsfF').textContent=fAbs;
+  document.getElementById('vEsfP').textContent=p;
+
+  const f=tipo==='concavo'?fAbs:-fAbs;
+  const scale=0.7, axY=H/2, mirrorX=440;
+  const objH_c=55; // altura do objeto em canvas pixels
+
+  // p' via Gauss: 1/f = 1/p + 1/p' => p'=fp/(p-f)
+  let pLinha,M;
+  if(Math.abs(p-f)<0.001){pLinha=Infinity;M=NaN;}
+  else{pLinha=(p*f)/(p-f);M=-pLinha/p;}
+
+  document.getElementById('rEsfF').textContent=(f>0?'+':'')+f+' u';
+
+  // eixo
+  drawDashed(ctx,20,axY,W-20,axY,'#2a2a5a',1);
+
+  // espelho
+  const mH=H*0.72;
+  ctx.save();
+  ctx.strokeStyle='#7c5cfc';ctx.lineWidth=4;ctx.lineCap='round';
+  if(tipo==='concavo'){
+    ctx.beginPath();ctx.arc(mirrorX+60,axY,65,Math.PI*0.75,Math.PI*1.25,false);ctx.stroke();
+  } else {
+    ctx.beginPath();ctx.arc(mirrorX-60,axY,65,Math.PI*-0.25,Math.PI*0.25,false);ctx.stroke();
+  }
+  // hachuras
+  ctx.lineWidth=1;ctx.strokeStyle='#2a2a5a';
+  for(let y=axY-mH/2;y<axY+mH/2;y+=14){
+    ctx.beginPath();ctx.moveTo(mirrorX,y);
+    ctx.lineTo(tipo==='concavo'?mirrorX+12:mirrorX-12,y+12);ctx.stroke();
+  }
+  ctx.restore();
+
+  // posição do objeto no canvas
+  const objX=mirrorX-p*scale;
+  const FX=mirrorX-f*scale; // foco frente
+  const CX=mirrorX-2*f*scale; // centro de curvatura
+
+  // objeto
+  if(objX>20){
+    drawArrow(ctx,objX,axY+objH_c/2,objX,axY-objH_c/2,'#43e97b',3);
+    drawLabel(ctx,'Obj',objX-16,axY-objH_c/2-6,'#43e97b',11);
+  }
+
+  // foco
+  if(FX>20&&FX<W-10){
+    ctx.save();ctx.fillStyle='#f9ca24';ctx.beginPath();ctx.arc(FX,axY,5,0,Math.PI*2);ctx.fill();ctx.restore();
+    drawLabel(ctx,'F',FX-5,axY+16,'#f9ca24',11);
+  }
+  if(CX>20&&CX<W-10){
+    ctx.save();ctx.fillStyle='#fd9644';ctx.beginPath();ctx.arc(CX,axY,5,0,Math.PI*2);ctx.fill();ctx.restore();
+    drawLabel(ctx,'C',CX-5,axY+16,'#fd9644',11);
+  }
+
+  // raios principais (côncavo, objeto real fora do foco)
+  if(tipo==='concavo'&&p>Math.abs(f)&&objX>20){
+    const tipX=objX, tipY=axY-objH_c/2;
+
+    // Raio 1: paralelo ao eixo → passa por F
+    const h1=tipY; // height on mirror
+    // hit on mirror at same height
+    const r1hx=mirrorX, r1hy=tipY;
+    drawArrow(ctx,tipX,tipY,r1hx,r1hy,'#00d2ff',1.5);
+    // reflected toward F
+    const dxF=FX-r1hx, dyF=axY-r1hy;
+    const len=Math.sqrt(dxF*dxF+dyF*dyF);
+    const ext=200/len;
+    drawArrow(ctx,r1hx,r1hy,r1hx+dxF*ext,r1hy+dyF*ext,'#00d2ff',1.5);
+
+    // Raio 2: passa por F → reflete paralelo
+    // from tip to mirror, through F
+    // direction from tip toward F, hits mirror
+    if(FX<objX){
+      const dx2=r1hx-tipX,dy2=axY-tipY; // dir to F extended to mirror
+      // hits mirror at mirrorX; param t=(mirrorX-tipX)/(tipX goes to FX direction)
+      const t2=(mirrorX-tipX)/(FX-tipX+0.001);
+      const r2hy=tipY+(axY-tipY)*t2;
+      const r2hx=mirrorX;
+      drawArrow(ctx,tipX,tipY,r2hx,r2hy,'#f9ca24',1.5);
+      drawArrow(ctx,r2hx,r2hy,r2hx-220,r2hy,'#f9ca24',1.5); // parallel to axis left
+    }
+
+    // imagem
+    if(isFinite(pLinha)){
+      const imgX_c=mirrorX-pLinha*scale;
+      const imgH_c=M*objH_c/2;
+      if(pLinha>0&&imgX_c>10&&imgX_c<W-10){
+        // real: solid
+        drawArrow(ctx,imgX_c,axY+Math.abs(M)*objH_c/2,imgX_c,axY-Math.abs(M)*objH_c/2,'#fc5c7d',2.5);
+        drawLabel(ctx,"Img",imgX_c+4,axY-Math.abs(M)*objH_c/2-6,'#fc5c7d',11);
+      } else if(pLinha<0){
+        const imgX_v=mirrorX+Math.abs(pLinha)*scale;
+        ctx.save();ctx.globalAlpha=0.5;
+        drawArrow(ctx,imgX_v,axY+Math.abs(M)*objH_c/2,imgX_v,axY-Math.abs(M)*objH_c/2,'#fc5c7d',2);
+        ctx.restore();
+        drawLabel(ctx,"Img (virt)",imgX_v+4,axY-Math.abs(M)*objH_c/2-6,'#fc5c7d',11);
+      }
+    }
+  }
+
+  // resultados
+  if(!isFinite(pLinha)){
+    document.getElementById('rEsfPi').textContent='∞';
+    document.getElementById('rEsfM').textContent='∞';
+    document.getElementById('rEsfNat').innerHTML='Imagem no infinito';
+  } else {
+    document.getElementById('rEsfPi').textContent=(pLinha>0?'+':'')+pLinha.toFixed(1)+' u';
+    document.getElementById('rEsfM').textContent=(!isNaN(M)?M.toFixed(2):'∞');
+    const real=pLinha>0;
+    const direita=M>0;
+    const ampliada=Math.abs(M)>1;
+    const badge=real?'real-badge':'virtual-badge';
+    const nat=(real?'Real':'Virtual')+', '+(direita?'direta':'invertida')+', '+(ampliada?'ampliada':'reduzida');
+    document.getElementById('rEsfNat').innerHTML=`<span class="${badge}">${nat}</span>`;
+  }
+}
+
+// ===================== REFRAÇÃO =====================
+function drawRefracao(){
+  const canvas=document.getElementById('cvRefracao');
+  const ctx=canvas.getContext('2d');
+  const W=600,H=320;
+  ctx.clearRect(0,0,W,H);
+
+  const n1=parseFloat(document.getElementById('slRefN1').value);
+  const n2=parseFloat(document.getElementById('slRefN2').value);
+  const t1Deg=parseInt(document.getElementById('slRefA').value);
+  document.getElementById('vRefN1').textContent=n1.toFixed(2);
+  document.getElementById('vRefN2').textContent=n2.toFixed(2);
+  document.getElementById('vRefA').textContent=t1Deg;
+
+  const t1=t1Deg*Math.PI/180;
+  const sinT2=(n1*Math.sin(t1))/n2;
+  const tir=sinT2>1;
+  const t2=tir?null:Math.asin(sinT2);
+  const tCrit=(n1>n2)?Math.asin(n2/n1)*180/Math.PI:null;
+
+  // bg - dois meios
+  const interfY=H/2, interfX=W/2;
+  const gb1=ctx.createLinearGradient(0,0,0,interfY);gb1.addColorStop(0,'#060614');gb1.addColorStop(1,'#0d1a2b');
+  ctx.fillStyle=gb1;ctx.fillRect(0,0,W,interfY);
+  const gb2=ctx.createLinearGradient(0,interfY,0,H);gb2.addColorStop(0,'#0a1a3a');gb2.addColorStop(1,'#060614');
+  ctx.fillStyle=gb2;ctx.fillRect(0,interfY,W,interfY);
+
+  // interface
+  ctx.save();ctx.strokeStyle='#7c5cfc';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(0,interfY);ctx.lineTo(W,interfY);ctx.stroke();ctx.restore();
+
+  // labels meios
+  drawLabel(ctx,`Meio 1  (n₁ = ${n1.toFixed(2)})`,16,30,'#9999cc',12);
+  drawLabel(ctx,`Meio 2  (n₂ = ${n2.toFixed(2)})`,16,interfY+22,'#9999cc',12);
+
+  // normal
+  drawDashed(ctx,interfX,20,interfX,H-20,'#2a2a5a',1.5);
+  drawLabel(ctx,'Normal',interfX+6,24,'#2a2a5a',10);
+
+  // raio incidente
+  const rayLen=140;
+  const ix=interfX-Math.sin(t1)*rayLen, iy=interfY-Math.cos(t1)*rayLen;
+  drawArrow(ctx,ix,iy,interfX,interfY,'#f9ca24',2.5);
+
+  if(tir){
+    // Reflexão total interna
+    const rx=interfX+Math.sin(t1)*rayLen, ry=interfY-Math.cos(t1)*rayLen;
+    drawArrow(ctx,interfX,interfY,rx,ry,'#fc5c7d',2.5);
+    drawLabel(ctx,'Reflexão Total!',interfX+8,interfY-50,'#fc5c7d',13);
+  } else {
+    // raio refratado
+    const rx2=interfX+Math.sin(t2)*rayLen, ry2=interfY+Math.cos(t2)*rayLen;
+    drawArrow(ctx,interfX,interfY,rx2,ry2,'#43e97b',2.5);
+
+    // arcos ângulos
+    const r=50;
+    ctx.save();ctx.strokeStyle='#f9ca24';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(interfX,interfY,r,Math.PI*1.5,Math.PI*1.5+t1,false);ctx.stroke();
+    drawLabel(ctx,'θ₁',interfX+8,interfY-r+10,'#f9ca24',11);
+    ctx.strokeStyle='#43e97b';
+    ctx.beginPath();ctx.arc(interfX,interfY,r,Math.PI*0.5-t2,Math.PI*0.5,false);ctx.stroke();
+    drawLabel(ctx,'θ₂',interfX+8,interfY+r-10,'#43e97b',11);
+    ctx.restore();
+  }
+
+  // ângulo crítico arc
+  if(tCrit!==null){
+    ctx.save();ctx.strokeStyle='#fd9644';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+    const tcR=tCrit*Math.PI/180;
+    const tcx=interfX-Math.sin(tcR)*100, tcy=interfY-Math.cos(tcR)*100;
+    ctx.beginPath();ctx.moveTo(interfX,interfY);ctx.lineTo(tcx,tcy);ctx.stroke();
+    ctx.setLineDash([]);ctx.restore();
+    drawLabel(ctx,`θc = ${tCrit.toFixed(1)}°`,tcx-50,tcy-8,'#fd9644',10);
+  }
+
+  // resultados
+  document.getElementById('rRefT1').textContent=t1Deg+'°';
+  document.getElementById('rRefT2').textContent=tir?'—':((t2*180/Math.PI).toFixed(1)+'°');
+  document.getElementById('rRefTc').textContent=tCrit?tCrit.toFixed(1)+'°':'—';
+  document.getElementById('rRefSit').innerHTML=tir?'<span class="info-badge" style="background:rgba(253,150,68,.2);border-color:#fd9644;color:#fd9644">Reflexão Total Interna</span>':
+    (n2>n1?'<span class="virtual-badge">Raio aproxima-se da normal</span>':'<span class="real-badge">Raio afasta-se da normal</span>');
+  document.getElementById('tirWarning').style.display=tir?'block':'none';
+}
+
+// ===================== LENTES =====================
+function drawLentes(){
+  const canvas=document.getElementById('cvLentes');
+  const ctx=canvas.getContext('2d');
+  const W=600,H=320;
+  ctx.clearRect(0,0,W,H);
+  const gb=ctx.createLinearGradient(0,0,0,H);gb.addColorStop(0,'#060614');gb.addColorStop(1,'#0d0d2b');
+  ctx.fillStyle=gb;ctx.fillRect(0,0,W,H);
+
+  const tipo=document.getElementById('slLenTipo').value;
+  const fAbs=parseInt(document.getElementById('slLenF').value);
+  const p=parseInt(document.getElementById('slLenP').value);
+  document.getElementById('vLenF').textContent=fAbs;
+  document.getElementById('vLenP').textContent=p;
+
+  const f=tipo==='convergente'?fAbs:-fAbs;
+  const scale=0.68, axY=H/2, lensX=320;
+  const objH_c=55;
+
+  let pLinha,M;
+  if(Math.abs(p-f)<0.001){pLinha=Infinity;M=NaN;}
+  else{pLinha=(p*f)/(p-f);M=-pLinha/p;}
+
+  // eixo
+  drawDashed(ctx,20,axY,W-20,axY,'#2a2a5a',1);
+
+  // lente
+  ctx.save();ctx.strokeStyle='#7c5cfc';ctx.lineWidth=3;
+  if(tipo==='convergente'){
+    // biconvexa
+    ctx.beginPath();ctx.arc(lensX-10,axY,50,Math.PI*-0.3,Math.PI*0.3,false);ctx.stroke();
+    ctx.beginPath();ctx.arc(lensX+10,axY,50,Math.PI*0.7,Math.PI*1.3,false);ctx.stroke();
+    // setas das extremidades
+    const lH=55;
+    drawArrow(ctx,lensX,axY-lH+10,lensX,axY-lH,'#7c5cfc',3);
+    drawArrow(ctx,lensX,axY+lH-10,lensX,axY+lH,'#7c5cfc',3);
+  } else {
+    // bicôncava
+    ctx.beginPath();ctx.arc(lensX+15,axY,55,Math.PI*0.65,Math.PI*1.35,false);ctx.stroke();
+    ctx.beginPath();ctx.arc(lensX-15,axY,55,Math.PI*-0.35,Math.PI*0.35,false);ctx.stroke();
+    const lH=55;
+    ctx.lineWidth=3;ctx.strokeStyle='#7c5cfc';
+    // setas apontando para dentro
+    ctx.beginPath();ctx.moveTo(lensX,axY-lH);ctx.lineTo(lensX,axY+lH);ctx.stroke();
+    drawArrow(ctx,lensX,axY-lH+10,lensX,axY-lH+2,'#7c5cfc',3);
+    drawArrow(ctx,lensX,axY+lH-10,lensX,axY+lH-2,'#7c5cfc',3);
+  }
+  ctx.restore();
+
+  const FX1=lensX-f*scale; // foco objeto
+  const FX2=lensX+f*scale; // foco imagem
+
+  // focos
+  for(const fx of[FX1,FX2]){
+    if(fx>10&&fx<W-10){
+      ctx.save();ctx.fillStyle='#f9ca24';ctx.beginPath();ctx.arc(fx,axY,5,0,Math.PI*2);ctx.fill();ctx.restore();
+      drawLabel(ctx,'F',fx-5,axY+16,'#f9ca24',11);
+    }
+  }
+
+  // objeto
+  const objX=lensX-p*scale;
+  if(objX>10&&objX<lensX-5){
+    drawArrow(ctx,objX,axY+objH_c/2,objX,axY-objH_c/2,'#43e97b',3);
+    drawLabel(ctx,'Obj',objX-16,axY-objH_c/2-6,'#43e97b',11);
+  }
+
+  // raios principais convergente
+  if(tipo==='convergente'&&p>0&&objX>10){
+    const tipY=axY-objH_c/2;
+    // raio 1: paralelo → passa por F2
+    drawArrow(ctx,objX,tipY,lensX,tipY,'#00d2ff',1.5);
+    if(isFinite(pLinha)&&pLinha>0){
+      const imgX_c=lensX+pLinha*scale;
+      const imgTipY=axY-Math.abs(M)*objH_c/2*(M>0?1:-1);
+      // from lensX,tipY to imgTipY
+      drawArrow(ctx,lensX,tipY,Math.min(imgX_c+20,W-10),lensX+(imgTipY-tipY)*(Math.min(imgX_c+20,W-10)-lensX)/(imgX_c-lensX+0.1),'#00d2ff',1.5);
+    } else {
+      const dy=axY-tipY;
+      const dx=FX2-lensX;
+      drawArrow(ctx,lensX,tipY,lensX+200,tipY+dy*200/dx,'#00d2ff',1.5);
+    }
+    // raio 2: central (passa pelo centro sem desvio)
+    drawArrow(ctx,objX,tipY,lensX+(lensX-objX)*0.7,tipY+0,'#f9ca24',1.5); // approx
+  }
+
+  // imagem
+  if(isFinite(pLinha)){
+    const imgX_c=lensX+pLinha*scale;
+    const imgH_c=Math.abs(M)*objH_c;
+    if(pLinha>0&&imgX_c>10&&imgX_c<W-10){
+      const yt=axY-(M<0?1:-1)*imgH_c/2;
+      const yb=axY+(M<0?1:-1)*imgH_c/2;
+      drawArrow(ctx,imgX_c,Math.max(yt,yb),imgX_c,Math.min(yt,yb),'#fc5c7d',2.5);
+      drawLabel(ctx,"Img",imgX_c+4,Math.min(yt,yb)-6,'#fc5c7d',11);
+    } else if(pLinha<0){
+      const imgX_v=lensX+pLinha*scale; // pLinha<0 => left of lens
+      ctx.save();ctx.globalAlpha=0.5;
+      drawArrow(ctx,imgX_v,axY+imgH_c/2,imgX_v,axY-imgH_c/2,'#fc5c7d',2);
+      ctx.restore();
+      drawLabel(ctx,"Img (virt)",imgX_v+4,axY-imgH_c/2-6,'#fc5c7d',11);
+    }
+  }
+
+  // resultados
+  document.getElementById('rLenF').textContent=(f>0?'+':'')+f+' u';
+  if(!isFinite(pLinha)){
+    document.getElementById('rLenPi').textContent='∞';
+    document.getElementById('rLenM').textContent='∞';
+    document.getElementById('rLenNat').innerHTML='Imagem no infinito';
+  } else {
+    document.getElementById('rLenPi').textContent=(pLinha>0?'+':'')+pLinha.toFixed(1)+' u';
+    document.getElementById('rLenM').textContent=(!isNaN(M)?M.toFixed(2):'—');
+    const real=pLinha>0;
+    const direita=M>0;
+    const ampliada=Math.abs(M)>1;
+    const badge=real?'real-badge':'virtual-badge';
+    const nat=(real?'Real':'Virtual')+', '+(direita?'direta':'invertida')+', '+(ampliada?'ampliada':'reduzida');
+    document.getElementById('rLenNat').innerHTML=`<span class="${badge}">${nat}</span>`;
+  }
+}
+
+// ===================== QUIZ =====================
+const QUIZ=[
+  {q:"Qual é a Lei da Reflexão?",opts:["θᵢ = θᵣ","θᵢ + θᵣ = 90°","θᵣ = 2 · θᵢ","θᵢ · θᵣ = 90"],ans:0,
+   exp:"O ângulo de incidência (θᵢ) é sempre igual ao ângulo de reflexão (θᵣ), ambos medidos em relação à normal à superfície."},
+  {q:"Um espelho côncavo com objeto em p = 2f (duas vezes a distância focal). Como é a imagem?",opts:["Real, invertida, mesmo tamanho","Virtual, direita, ampliada","Real, invertida, ampliada","Imagem no infinito"],ans:0,
+   exp:"Com p = 2f, a equação de Gauss dá p' = 2f também. Portanto M = −1: imagem real, invertida e do mesmo tamanho."},
+  {q:"Um espelho convexo sempre forma imagens:",opts:["Virtuais, direitas e reduzidas","Reais, invertidas e ampliadas","Virtuais, invertidas e reduzidas","Reais, direitas e ampliadas"],ans:0,
+   exp:"Espelhos convexos são divergentes (f < 0). A equação de Gauss sempre fornece p' < 0 e 0 < M < 1, independentemente de onde o objeto esteja."},
+  {q:"Um raio de luz passa do vidro (n = 1,5) para o ar (n = 1,0). O ângulo de refração é:",opts:["Maior que o de incidência","Igual ao de incidência","Menor que o de incidência","Pode haver reflexão total interna"],ans:3,
+   exp:"Como n₁ > n₂ (vidro → ar), o raio se afasta da normal e θ₂ > θ₁. Se θ₁ ≥ θc, ocorre Reflexão Total Interna e o raio não atravessa a superfície!"},
+  {q:"Uma lente convergente com objeto entre o foco e a lente (p < f) forma:",opts:["Real, invertida, ampliada","Virtual, direita e ampliada (lupa)","Real, direita e reduzida","Virtual, invertida e reduzida"],ans:1,
+   exp:"Com p < f numa lente convergente, p' < 0: a imagem é virtual, do mesmo lado do objeto, direita e ampliada — é o princípio da lupa!"},
+];
+
+let qCurrent=0, qScore=0, qAnswered=false;
+
+function renderQuestion(){
+  if(qCurrent>=QUIZ.length){showScore();return;}
+  const q=QUIZ[qCurrent];
+  const pct=qCurrent/QUIZ.length*100;
+  document.getElementById('qProgress').style.width=pct+'%';
+  document.getElementById('qProgressLabel').textContent=`Questão ${qCurrent+1} de ${QUIZ.length}`;
+  const html=`<div class="question-card">
+    <div class="qnum">Questão ${qCurrent+1} · ${qCurrent===0?'🌱 Básico':qCurrent<3?'🔥 Intermediário':'⚡ Desafio'}</div>
+    <div class="qtext">${q.q}</div>
+    <div class="options">
+      ${q.opts.map((o,i)=>`<button class="option-btn" onclick="selectOpt(${i})" id="opt${i}">
+        <span class="opt-letter">${'ABCD'[i]}</span>${o}</button>`).join('')}
+    </div>
+    <div class="explanation" id="explanation">${q.exp}</div>
+  </div>`;
+  document.getElementById('quizArea').innerHTML=html;
+  document.getElementById('quizNav').style.display='none';
+  qAnswered=false;
+}
+
+function selectOpt(i){
+  if(qAnswered)return;
+  qAnswered=true;
+  const q=QUIZ[qCurrent];
+  document.querySelectorAll('.option-btn').forEach(b=>b.disabled=true);
+  const sel=document.getElementById('opt'+i);
+  const cor=document.getElementById('opt'+q.ans);
+  sel.classList.add(i===q.ans?'correct':'wrong');
+  cor.classList.add('correct');
+  document.getElementById('explanation').style.display='block';
+  if(i===q.ans)qScore++;
+  document.getElementById('quizNav').style.display='flex';
+}
+
+function nextQuestion(){
+  qCurrent++;
+  renderQuestion();
+}
+
+function showScore(){
+  document.getElementById('qProgress').style.width='100%';
+  document.getElementById('qProgressLabel').textContent='Concluído!';
+  const pct=Math.round(qScore/QUIZ.length*100);
+  const em=pct>=80?'🏆':pct>=60?'👍':'📚';
+  const msg=pct>=80?'Excelente! Você domina Óptica!':pct>=60?'Bom trabalho! Revise os erros.':'Continue estudando!';
+  document.getElementById('quizArea').innerHTML=`<div class="score-card">
+    <div class="score-emoji">${em}</div>
+    <h3>Quiz Concluído!</h3>
+    <div class="score-num">${qScore}/${QUIZ.length}</div>
+    <p>${pct}% de acertos · ${msg}</p>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 Tentar Novamente</button>
+  </div>`;
+  document.getElementById('quizNav').style.display='none';
+}
+
+function restartQuiz(){
+  qCurrent=0;qScore=0;qAnswered=false;
+  document.getElementById('qProgress').style.width='0%';
+  renderQuestion();
+}
+
+// init
+drawPlano();
+drawEsferico();
+drawRefracao();
+drawLentes();
+renderQuestion();
+</script>
+</body>
+</html>

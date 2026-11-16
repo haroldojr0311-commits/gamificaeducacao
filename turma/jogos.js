@@ -785,6 +785,16 @@ window.JOGOS = {
     ferramenta: true,
     conteudo: "Inclusão"
   },
+  "simulador-optica": {
+    bncc: ["EM13CNT301", "EM13CNT302"],
+    nivel: ["Ensino Médio", "Superior"],
+    nome: "Simulador de Óptica",
+    tema: "Espelhos, Refração e Lentes",
+    desc: "Explore espelhos planos e esféricos, refração de luz com a Lei de Snell e lentes convergentes/divergentes. Simulações interativas com raios, cálculo automático pela Equação de Gauss e quiz final.",
+    emoji: "🔭", cor: "azul",
+    tipo: "simulador",
+    conteudo: "Física"
+  },
   "soap-express-esf": {
     nivel: ["Superior"],
     nome: "SOAP Express ESF",
