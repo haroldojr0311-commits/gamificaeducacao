@@ -132,6 +132,8 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 60px}
 :focus-visible{outline:3px solid var(--azul);outline-offset:2px}
 @media(max-width:900px){.feed.colunas{column-count:2}}
 @media(max-width:600px){.feed.colunas{column-count:1}.feed.grade{grid-template-columns:1fr}.hero{padding:20px}.faixa{min-height:100px}}
+/* Mural de exemplo: no celular os cards ficam lado a lado (2 por linha) */
+@media(max-width:600px){.feed.grade.duas{grid-template-columns:1fr 1fr;gap:8px}.feed.duas .pub{padding:9px;gap:6px;border-radius:14px}.feed.duas .pub h3,.feed.duas .pub .titulo{font-size:14px;line-height:1.2}.feed.duas .pub .texto{font-size:13px}.feed.duas .pub .legenda,.feed.duas .comentarios{font-size:12.5px}.feed.duas .pub .rodape{font-size:11px}.feed.duas .comentar input{min-width:0;width:100%;flex:1 1 100%}.feed.duas .comentar .btn,.feed.duas .pub .btn{font-size:13px;padding:6px 10px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* ===== Mural no estilo Padlet: coluna lateral + quadro com tema ===== */
@@ -488,6 +490,7 @@ window.addEventListener('hashchange', rota);
 /* ---------- tela inicial ---------- */
 /* Mural de demonstração (só para ver, curtir e comentar) */
 const EXEMPLO = '#/m/4a16cd92-e278-41a4-b028-78195287512c?c=YN9T6B';
+const ID_EXEMPLO = '4a16cd92-e278-41a4-b028-78195287512c';
 function vistaInicio(){
   const meus = lerMeus();
   const cards = meus.map(m => el('a', {class:'mcard', href:'#/m/' + m.id},
@@ -624,6 +627,7 @@ function pedirCodigo(id, aviso){
 
 /* ---------- mural ---------- */
 async function vistaMural(id){
+  const ehExemplo = id === ID_EXEMPLO;
   app.replaceChildren(el('p', {class:'ajuda'}, 'Carregando o mural…'));
   const meu = meuMural(id);
   const token = meu ? meu.token : null;
@@ -943,7 +947,7 @@ async function vistaMural(id){
     ...(canPublicar ? [] : [el('label', {for:'autor', style:'display:block;font-weight:800;margin-top:10px'}, 'Seu nome (para comentar)'), campoNome]));
 
   /* ----- publicações ----- */
-  const feed = el('div', {class:'feed ' + layout, 'aria-label':'Publicações'});
+  const feed = el('div', {class:'feed ' + layout + (ehExemplo ? ' duas' : ''), 'aria-label':'Publicações'});
   const areaPend = el('section', {class:'painel naoimprimir', 'aria-label':'Aguardando aprovação'});
 
   function desenharPendentes(){
@@ -955,7 +959,7 @@ async function vistaMural(id){
       el('div', {class:'feed grade', style:'margin-top:12px'}, pendentes.map(p => cartao(p, true))));
   }
   function desenharFeed(){
-    feed.className = 'feed ' + layout;
+    feed.className = 'feed ' + layout + (ehExemplo ? ' duas' : '');
     const itens = (layout === 'linha') ? [...publicacoes].reverse() : publicacoes;
     feed.replaceChildren(...(itens.length ? itens.map(p => cartao(p, false)) : [el('div', {class:'vazio', style:'grid-column:1/-1'}, el('div', {class:'ico'}, '✨'), el('h2', {}, 'Crie a primeira publicação'), el('p', {}, canPublicar ? 'Toque no botão ＋ (ou use o painel) para começar o mural.' : 'Ainda não há publicações neste mural.'))]));
   }
