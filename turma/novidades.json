@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-17",
+    "hora": "10:28",
+    "titulo": "Nova ferramenta: Controle Universal da Sala",
+    "texto": "Controle TV, projetor e ar-condicionado em um só lugar, com cenas como Iniciar aula e Desligar tudo. Funciona em modo demonstração ou ligado ao Home Assistant para comandar aparelhos reais.",
+    "link": "/catalogo/controle-universal.html",
+    "jogo": "controle-universal"
+  },
+  {
+    "data": "2026-11-17",
     "hora": "00:50",
     "titulo": "Novo simulador: Sistema Solar 3D",
     "texto": "Planetas com texturas, fases da Lua, eclipses, estações do ano, Leis de Kepler, escala didática ou proporcional, calculadora de peso e idade em cada astro e 5 missões com pontuação.",

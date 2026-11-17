@@ -249,6 +249,15 @@ window.JOGOS = {
     emoji: "🧮", cor: "azul", ferramenta: true,
     tipo: "ferramenta"
   },
+  "controle-universal": {
+    conteudo: "Organização da sala",
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
+    nome: "Controle Universal da Sala",
+    tema: "Ferramenta do professor",
+    desc: "Controle TV, projetor e ar-condicionado em um só lugar, com cenas de aula e modo demonstração.",
+    emoji: "🎛️", cor: "azul", ferramenta: true,
+    tipo: "ferramenta"
+  },
   "cronometro": {
     conteudo: "Organização da sala",
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
