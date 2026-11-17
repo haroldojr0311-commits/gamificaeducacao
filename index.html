@@ -1055,6 +1055,7 @@ function faixaNovidades(){
 }
 
 function entrarNoSite(){
+  sincronizarFavoritos(true);
   mostrarAvisoVencimento();
   faixaNovidades();
   /* link direto para um jogo (ex.: botão "Ver" da página de novidades): ?jogo=id */
@@ -1319,7 +1320,7 @@ function mostrarAba(){
 }
 
 /* ---------- aba Jogos ---------- */
-/* ---------- favoritos e usados recentemente (ficam neste aparelho) ---------- */
+/* ---------- favoritos (sincronizados na conta) e usados recentemente (ficam neste aparelho) ---------- */
 function lerLista(k){ try{ var v = JSON.parse(ler(k) || '[]'); return Array.isArray(v) ? v.filter(function(id){ return window.JOGOS[id]; }) : []; }catch(e){ return []; } }
 function favoritos(){ return lerLista('gam-favoritos'); }
 /* Recentes guardam o dia/hora do uso; só valem os últimos 7 dias (itens antigos, sem data, saem da lista) */
@@ -1334,10 +1335,53 @@ function marcarRecente(id){
   r.unshift({i: id, t: Date.now()});
   guardar('gam-recentes', JSON.stringify(r.slice(0, 12)));
 }
+/* Favoritos na conta: o mesmo login mostra os mesmos favoritos no celular e no computador.
+   Guardados em dados_ferramentas (ferramenta '_favoritos'); vale o registro mais novo. */
+var FAV_ID = '_favoritos', favUltimaSinc = 0;
+function salvarFavoritosNuvem(lista){
+  if(!sessao || visitante) return;
+  var t = Date.now();
+  guardar('gam-fav-uid', sessao.user.id); guardar('gam-fav-t', String(t));
+  salvarDadosFerramenta(FAV_ID, {lista: lista, t: t});
+}
+async function sincronizarFavoritos(forcar){
+  if(!sessao || visitante || !perfil) return;
+  if(!forcar && Date.now() - favUltimaSinc < 15000) return;
+  favUltimaSinc = Date.now();
+  try{
+    var uid = sessao.user.id;
+    var r = await sb.from('dados_ferramentas').select('dados').eq('ferramenta', FAV_ID).maybeSingle();
+    if(r.error) return;
+    var nuvem = r.data && r.data.dados && Array.isArray(r.data.dados.lista) ? r.data.dados : null;
+    var uidSalvo = ler('gam-fav-uid');
+    var outraConta = !!uidSalvo && uidSalvo !== uid;
+    var local = outraConta ? [] : favoritos();
+    var tLocal = outraConta ? 0 : Number(ler('gam-fav-t') || 0);
+    var antes = JSON.stringify(favoritos());
+    var nova = null, t = Date.now();
+    if(!nuvem){ if(local.length) nova = local; }
+    else if(!uidSalvo && local.length){ nova = nuvem.lista.concat(local.filter(function(id){ return nuvem.lista.indexOf(id) < 0; })); }
+    else if((nuvem.t || 0) > tLocal){ guardar('gam-favoritos', JSON.stringify(nuvem.lista)); guardar('gam-fav-uid', uid); guardar('gam-fav-t', String(nuvem.t || 0)); nova = null; }
+    else if(tLocal > (nuvem.t || 0)){ nova = local; t = tLocal; }
+    if(nova){
+      guardar('gam-favoritos', JSON.stringify(nova)); guardar('gam-fav-uid', uid); guardar('gam-fav-t', String(t));
+      await salvarDadosFerramenta(FAV_ID, {lista: nova, t: t});
+    }
+    guardar('gam-fav-uid', uid);
+    if(JSON.stringify(favoritos()) !== antes) redesenharSeJogos();
+  }catch(e){}
+}
+function redesenharSeJogos(){
+  if(document.getElementById('player')) return;
+  var aba = document.querySelector('nav.abas button[aria-current="page"]');
+  if(aba && /Jogos|Simuladores|Ferramentas/.test(aba.textContent)) desenharJogos(qualAtual);
+}
+document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') sincronizarFavoritos(false); });
+window.addEventListener('focus', function(){ sincronizarFavoritos(false); });
 function botaoFav(id){
   var on = favoritos().indexOf(id) >= 0;
   var b = el('span', {class:'fav' + (on ? ' on' : ''), role:'button', tabindex:'0', title: on ? 'Tirar dos favoritos' : 'Adicionar aos favoritos', 'aria-label': on ? 'Tirar dos favoritos' : 'Adicionar aos favoritos', 'aria-pressed': String(on)}, on ? '★' : '☆');
-  function alternar(ev){ ev.preventDefault(); ev.stopPropagation(); var f = favoritos(), i = f.indexOf(id); if(i >= 0) f.splice(i, 1); else f.unshift(id); guardar('gam-favoritos', JSON.stringify(f)); desenharJogos(qualAtual); }
+  function alternar(ev){ ev.preventDefault(); ev.stopPropagation(); var f = favoritos(), i = f.indexOf(id); if(i >= 0) f.splice(i, 1); else f.unshift(id); guardar('gam-favoritos', JSON.stringify(f)); salvarFavoritosNuvem(f); desenharJogos(qualAtual); }
   b.addEventListener('click', alternar);
   b.addEventListener('keydown', function(ev){ if(ev.key === 'Enter' || ev.key === ' ') alternar(ev); });
   return b;
