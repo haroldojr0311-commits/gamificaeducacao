@@ -209,7 +209,7 @@ window.JOGOS = {
     nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Pitágoras e Trigonometria na Vida Real",
     tema: "Triângulo retângulo em situações reais",
-    desc: "Cenas realistas com medidas de verdade: decolagem com altímetro, resgate dos bombeiros com escada (regra 4:1), rampa em escala real pela NBR 9050 e altura de árvore com teodolito e visão pela luneta. Seno, cosseno, tangente e Pitágoras passo a passo, com desafio final.",
+    desc: "Cenas realistas em 2D e 3D (gire e aproxime a câmera), com medidas de verdade: decolagem com altímetro, resgate dos bombeiros com escada (regra 4:1), rampa em escala real pela NBR 9050 e altura de árvore com teodolito e visão pela luneta. Seno, cosseno, tangente e Pitágoras passo a passo, com desafio final.",
     emoji: "✈️", cor: "azul",
     tipo: "simulador"
   },

@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-16",
+    "hora": "22:10",
+    "titulo": "Pitágoras e Trigonometria na Vida Real agora em 3D",
+    "texto": "As quatro cenas (decolagem, resgate com escada, rampa NBR 9050 e teodolito) ganharam versão 3D com luz do sol, sombras e câmera que gira e aproxima. No teodolito, a visão pela luneta é em 3D.",
+    "link": "catalogo/simulador-pitagoras-trigonometria.html",
+    "jogo": "simulador-pitagoras-trigonometria"
+  },
+  {
+    "data": "2026-11-16",
     "hora": "20:50",
     "titulo": "Pitágoras e Trigonometria na Vida Real: nova versão realista",
     "texto": "Cenas com proporções reais: decolagem com altímetro, resgate dos bombeiros com escada, rampa em escala real pela NBR 9050 e árvore medida com teodolito e visão pela luneta. Cálculo passo a passo e desafio final.",
