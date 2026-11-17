@@ -307,8 +307,43 @@
 
   window.ResultadoJogo = window.ResultadoJogo || {};
   /* Insere o código de som/proteção antes de qualquer script do jogo */
-  window.ResultadoJogo.preparar = function(html, tema){
-    var tag = '<script>window.__gamificaTema=' + JSON.stringify(String(tema || '')) + ';(' + jogoPatch.toString() + ')();(' + somTematico.toString() + ')();(' + protecaoTela.toString() + ')();</script>';
+  /* Sincroniza com a conta os dados que a ferramenta guarda no navegador.
+     Roda antes da ferramenta: entrega os dados salvos na conta e envia ao site as mudanças.
+     Autocontida (é copiada como texto para dentro da ferramenta) e nunca interrompe a ferramenta. */
+  function sincronia(seed){
+    try{
+      if(!seed || !seed.ativo || window.parent === window) return;
+      var real = window.localStorage;
+      var sGet = Storage.prototype.getItem, sSet = Storage.prototype.setItem;
+      var sDel = Storage.prototype.removeItem, sLimpa = Storage.prototype.clear;
+      var rastreadas = {}, ultimo = null, timer = null;
+      function snapshot(){
+        var o = {};
+        Object.keys(rastreadas).forEach(function(k){ var v = sGet.call(real, k); if(v !== null) o[k] = v; });
+        return o;
+      }
+      function enviar(){
+        try{
+          var s = JSON.stringify(snapshot());
+          if(s === ultimo) return;
+          ultimo = s;
+          window.parent.postMessage({gcSync: 1, dados: JSON.parse(s)}, location.origin);
+        }catch(e){}
+      }
+      function agendar(){ clearTimeout(timer); timer = setTimeout(enviar, 700); }
+      var d = seed.dados || {};
+      Object.keys(d).forEach(function(k){ try{ sSet.call(real, k, d[k]); rastreadas[k] = true; }catch(e){} });
+      Storage.prototype.getItem = function(k){ if(this === real){ rastreadas[k] = true; agendar(); } return sGet.call(this, k); };
+      Storage.prototype.setItem = function(k, v){ var r = sSet.call(this, k, v); if(this === real){ rastreadas[k] = true; agendar(); } return r; };
+      Storage.prototype.removeItem = function(k){ var r = sDel.call(this, k); if(this === real){ delete rastreadas[k]; agendar(); } return r; };
+      Storage.prototype.clear = function(){ var r = sLimpa.call(this); if(this === real){ rastreadas = {}; agendar(); } return r; };
+      window.addEventListener('pagehide', enviar);
+      agendar();
+    }catch(e){}
+  }
+
+  window.ResultadoJogo.preparar = function(html, tema, seed){
+    var tag = '<script>window.__gamificaTema=' + JSON.stringify(String(tema || '')) + ';(' + jogoPatch.toString() + ')();(' + somTematico.toString() + ')();(' + protecaoTela.toString() + ')();(' + sincronia.toString() + ')(' + JSON.stringify(seed || {ativo: false}).replace(/</g, '\\u003c') + ');</script>';
     return /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, function(m){ return m + tag; }) : tag + html;
   };
   /* Proteção básica também na própria página do portal */

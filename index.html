@@ -1521,6 +1521,30 @@ async function compartilharJogo(id, caixa){
     caixa.append(el('p', {style:'margin:0;color:#dc2626'}, '😕 ' + (e.message || 'Não consegui gerar o link.')));
   }
 }
+/* Dados das ferramentas guardados na conta (sincronizados entre aparelhos) */
+async function carregarDadosFerramenta(id){
+  try{
+    var r = await sb.from('dados_ferramentas').select('dados').eq('ferramenta', id).maybeSingle();
+    if(r.error) return null;
+    return r.data && r.data.dados ? r.data.dados : {};
+  }catch(e){ return null; }
+}
+async function salvarDadosFerramenta(id, dados){
+  try{
+    if(!sessao) return;
+    await sb.from('dados_ferramentas').upsert(
+      {user_id: sessao.user.id, ferramenta: id, dados: dados, atualizado_em: new Date().toISOString()},
+      {onConflict: 'user_id,ferramenta'});
+  }catch(e){}
+}
+/* Recebe da ferramenta as mudanças nos dados e grava na conta */
+window.__sincJanelas = [];
+window.addEventListener('message', function(ev){
+  if(ev.origin !== location.origin || !ev.data || ev.data.gcSync !== 1) return;
+  var j = window.__sincJanelas.find(function(x){ return x.win === ev.source; });
+  if(j) salvarDadosFerramenta(j.id, ev.data.dados);
+});
+
 async function abrirJogo(id){
   var j = window.JOGOS[id];
   marcarRecente(id);
@@ -1551,11 +1575,19 @@ async function abrirJogo(id){
     if(!r.ok){ var e = await r.json().catch(function(){ return {}; }); throw new Error(e.erro || 'Erro ' + r.status); }
     var html = await r.text();
     if(!document.getElementById('player')) return;
-    urlJogo = URL.createObjectURL(new Blob([ResultadoJogo.preparar(html, j.tema || j.conteudo || '')], {type:'text/html'}));
+    var seed = {ativo: false, dados: {}};
+    if(!visitante && sessao){
+      var remoto = await carregarDadosFerramenta(id);
+      if(remoto !== null) seed = {ativo: true, dados: remoto};
+    }
+    urlJogo = URL.createObjectURL(new Blob([ResultadoJogo.preparar(html, j.tema || j.conteudo || '', seed)], {type:'text/html'}));
     quadro = el('iframe', {title: j.nome, allow:'fullscreen; autoplay; camera; microphone; clipboard-write; xr-spatial-tracking'});
     quadro.src = urlJogo + '#livre';
     ResultadoJogo.anexar(quadro, j.nome);
     miolo.replaceWith(quadro);
+    if(seed.ativo){
+      window.__sincJanelas = window.__sincJanelas.concat([{win: quadro.contentWindow, id: id}]).slice(-10);
+    }
   }catch(e){
     miolo.textContent = '😕 ' + (e.message || 'Não foi possível abrir o jogo.') + ' Tente de novo.';
   }
