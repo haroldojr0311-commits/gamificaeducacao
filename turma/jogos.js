@@ -254,7 +254,7 @@ window.JOGOS = {
     nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio", "Superior"],
     nome: "Controle Universal da Sala",
     tema: "Ferramenta do professor",
-    desc: "Controle TV, projetor e ar-condicionado em um só lugar, com cenas de aula e modo demonstração.",
+    desc: "TV LG e Samsung, projetor Epson e BenQ, ar-condicionado LG e Samsung em um só controle, com cenas de aula.",
     emoji: "🎛️", cor: "azul", ferramenta: true,
     tipo: "ferramenta"
   },
