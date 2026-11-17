@@ -785,6 +785,16 @@ window.JOGOS = {
     ferramenta: true,
     conteudo: "Inclusão"
   },
+  "sistema-solar-3d": {
+    bncc: ["EF08CI12", "EF08CI13", "EF09CI14", "EM13CNT204"],
+    nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
+    nome: "Sistema Solar 3D",
+    tema: "Planetas, Lua, Estações e Eclipses",
+    desc: "Viaje pelo Sistema Solar em 3D: veja as fases da Lua, eclipses, estações do ano e as Leis de Kepler, alterne entre escala didática e proporcional e calcule seu peso e sua idade em cada astro. Inclui 5 missões com pontuação.",
+    emoji: "🪐", cor: "azul",
+    tipo: "simulador",
+    conteudo: "Astronomia"
+  },
   "simulador-optica": {
     bncc: ["EM13CNT301", "EM13CNT302"],
     nivel: ["Ensino Médio", "Superior"],

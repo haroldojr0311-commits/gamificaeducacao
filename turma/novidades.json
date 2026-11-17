@@ -1,5 +1,13 @@
 [
   {
+    "data": "2026-11-17",
+    "hora": "00:50",
+    "titulo": "Novo simulador: Sistema Solar 3D",
+    "texto": "Planetas com texturas, fases da Lua, eclipses, estações do ano, Leis de Kepler, escala didática ou proporcional, calculadora de peso e idade em cada astro e 5 missões com pontuação.",
+    "link": "/catalogo/sistema-solar-3d.html",
+    "jogo": "sistema-solar-3d"
+  },
+  {
     "data": "2026-11-16",
     "hora": "23:55",
     "titulo": "Mural Eletrônico ganhou um mural de exemplo",
