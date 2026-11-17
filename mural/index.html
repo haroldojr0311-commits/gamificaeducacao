@@ -486,6 +486,8 @@ function rota(){
 window.addEventListener('hashchange', rota);
 
 /* ---------- tela inicial ---------- */
+/* Mural de demonstração (só para ver, curtir e comentar) */
+const EXEMPLO = '#/m/4a16cd92-e278-41a4-b028-78195287512c?c=YN9T6B';
 function vistaInicio(){
   const meus = lerMeus();
   const cards = meus.map(m => el('a', {class:'mcard', href:'#/m/' + m.id},
@@ -516,7 +518,9 @@ function vistaInicio(){
     el('section', {class:'hero'},
       el('h1', {}, 'Seus murais'),
       el('p', {}, 'Crie um mural e compartilhe o código com a turma. Os alunos não precisam de conta.'),
-      el('button', {class:'btn', onclick: abrirCriar}, '➕ Criar novo mural')),
+      el('div', {class:'acoes', style:'gap:10px;margin:0'},
+        el('button', {class:'btn', onclick: abrirCriar}, '➕ Criar novo mural'),
+        el('a', {class:'btn', href: EXEMPLO, style:'background:#fff;color:#1d2b53;border-color:#fff;text-decoration:none'}, '✨ Ver mural de exemplo'))),
     formEntrada,
     meus.length
       ? el('div', {class:'grade-murais'}, cards)
@@ -524,7 +528,8 @@ function vistaInicio(){
           el('div', {class:'ico', 'aria-hidden':'true'}, '🧱'),
           el('h2', {}, 'Crie o primeiro mural'),
           el('p', {}, 'Escolha um título, uma cor e um layout. Depois, publique a primeira contribuição.'),
-          el('button', {class:'btn', onclick: abrirCriar}, '➕ Criar mural')),
+          el('button', {class:'btn', onclick: abrirCriar}, '➕ Criar mural'),
+          el('p', {class:'ajuda', style:'margin-top:10px'}, 'Quer ver um mural pronto antes? ', el('a', {href: EXEMPLO}, 'Abra o mural de exemplo'), '.')),
     el('p', {class:'ajuda', style:'margin-top:18px'}, 'Os seus murais aparecem só neste navegador. Para acessá-los de outro aparelho, guarde o link e o código de cada mural.'));
 }
 

@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-16",
+    "hora": "23:55",
+    "titulo": "Mural Eletrônico ganhou um mural de exemplo",
+    "texto": "Veja um mural pronto, com texto, imagem, vídeo, áudio, arquivo e link, cores, comentários e curtidas. Abra o Mural e toque em Ver mural de exemplo.",
+    "link": "/mural/",
+    "jogo": "mural-eletronico"
+  },
+  {
+    "data": "2026-11-16",
     "hora": "22:10",
     "titulo": "Pitágoras e Trigonometria na Vida Real agora em 3D",
     "texto": "As quatro cenas (decolagem, resgate com escada, rampa NBR 9050 e teodolito) ganharam versão 3D com luz do sol, sombras e câmera que gira e aproxima. No teodolito, a visão pela luneta é em 3D.",
