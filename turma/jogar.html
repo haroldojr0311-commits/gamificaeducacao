@@ -130,22 +130,39 @@ function registrarSaida(){
 function voltarAtividade(){
   fora = false; esconderBloqueio(); entrarTelaCheia();
 }
+/* Anti-cola sem falso alarme: só conta como saída se a tela ficar oculta/sem tela cheia por mais de GRACA_MS.
+   Puxar a barra de notificações, deslizar a tela para cima/baixo ou um toque na borda duram menos que isso. */
+var GRACA_MS = 1800, tOculto = null, tTela = null, ocultoDesde = 0;
 document.addEventListener('visibilitychange', function(){
   if(!prova()) return;
-  if(document.hidden) { registrarSaida(); }
-  else if(fora) { mostrarBloqueio('⚠ Atenção: você saiu da atividade',
+  if(document.hidden){
+    ocultoDesde = Date.now(); clearTimeout(tOculto);
+    tOculto = setTimeout(function(){ if(document.hidden) registrarSaida(); }, GRACA_MS);
+  } else {
+    clearTimeout(tOculto);
+    var fiquei = ocultoDesde ? Date.now() - ocultoDesde : 0; ocultoDesde = 0;
+    if(!fora && fiquei >= GRACA_MS) registrarSaida();
+    else if(fora) { mostrarBloqueio('⚠ Atenção: você saiu da atividade',
       'Este site usa um sistema anti-cola. Sua saída desta tela foi registrada e o professor será avisado. Para continuar, toque no botão abaixo.',
       '▶ Voltar à atividade'); }
+  }
 });
 document.addEventListener('fullscreenchange', function(){
   if(!prova() || !telaCheiaOk) return;
-  if(!document.fullscreenElement) { registrarSaida(); }
+  clearTimeout(tTela);
+  if(document.fullscreenElement){ if(/tela cheia/.test(statusEl.textContent)) setStatus('', ''); return; }
+  tTela = setTimeout(function(){
+    if(!prova() || document.fullscreenElement) return;
+    if(document.hidden || !document.hasFocus()) registrarSaida();
+    else if(!statusEl.textContent) setStatus('⛶ Toque no botão amarelo para voltar à tela cheia', '');
+  }, GRACA_MS);
 });
 /* Sem copiar, colar ou menu de contexto durante a tarefa */
 ['copy','cut','paste','contextmenu'].forEach(function(ev){
   document.addEventListener(ev, function(e){
     if(!prova()) return;
     e.preventDefault();
+    if(ev === 'contextmenu') return; /* toque longo no tablet gera este evento: só bloqueia o menu, sem registrar saída */
     if(!fora){
       fora = true; saidas++; gravarSaidas();
       mostrarBloqueio('⚠ Atenção: tentativa de cola',
