@@ -1323,15 +1323,16 @@ function mostrarAba(){
 /* ---------- favoritos (sincronizados na conta) e usados recentemente (ficam neste aparelho) ---------- */
 function lerLista(k){ try{ var v = JSON.parse(ler(k) || '[]'); return Array.isArray(v) ? v.filter(function(id){ return window.JOGOS[id]; }) : []; }catch(e){ return []; } }
 function favoritos(){ return lerLista('gam-favoritos'); }
-/* Recentes guardam o dia/hora do uso; só valem os últimos 7 dias (itens antigos, sem data, saem da lista) */
-var DIAS_RECENTE = 7;
+/* Recentes guardam o dia/hora do uso; só valem as últimas 6 horas. Se nada foi usado nesse período, a seção some (fica vazia) */
+var HORAS_RECENTE = 6;
 function lerRecentesBrutos(){ try{ var v = JSON.parse(ler('gam-recentes') || '[]'); return Array.isArray(v) ? v.filter(function(x){ return x && typeof x === 'object' && window.JOGOS[x.i] && x.t; }) : []; }catch(e){ return []; } }
 function recentes(){
-  var limite = Date.now() - DIAS_RECENTE * 86400000;
+  var limite = Date.now() - HORAS_RECENTE * 3600000;
   return lerRecentesBrutos().filter(function(x){ return x.t >= limite; }).sort(function(a, b){ return b.t - a.t; }).map(function(x){ return x.i; });
 }
 function marcarRecente(id){
-  var r = lerRecentesBrutos().filter(function(x){ return x.i !== id; });
+  var limite = Date.now() - HORAS_RECENTE * 3600000;
+  var r = lerRecentesBrutos().filter(function(x){ return x.i !== id && x.t >= limite; });
   r.unshift({i: id, t: Date.now()});
   guardar('gam-recentes', JSON.stringify(r.slice(0, 12)));
 }
@@ -1378,6 +1379,9 @@ function redesenharSeJogos(){
 }
 document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') sincronizarFavoritos(false); });
 window.addEventListener('focus', function(){ sincronizarFavoritos(false); });
+/* Renova "Usados recentemente" a cada 6 horas (e a cada minuto confere se algum item venceu) */
+var assinRec = JSON.stringify(recentes());
+setInterval(function(){ var n = JSON.stringify(recentes()); if(n !== assinRec){ assinRec = n; redesenharSeJogos(); } }, 60000);
 function botaoFav(id){
   var on = favoritos().indexOf(id) >= 0;
   var b = el('span', {class:'fav' + (on ? ' on' : ''), role:'button', tabindex:'0', title: on ? 'Tirar dos favoritos' : 'Adicionar aos favoritos', 'aria-label': on ? 'Tirar dos favoritos' : 'Adicionar aos favoritos', 'aria-pressed': String(on)}, on ? '★' : '☆');
