@@ -829,7 +829,7 @@ window.JOGOS = {
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Rota Neon: Cidade Solar",
     tema: "Desconto, troco, juros e câmbio",
-    desc: "Dirija pela cidade praiana ao pôr do sol, siga o GPS até cada cliente e resolva 12 problemas de dinheiro. A cada nível anoitece, e você decide entre poupar ou comprar o turbo.",
+    desc: "Dirija em 3D por uma cidade neon ao pôr do sol, siga a seta e o minimapa até cada cliente e resolva 12 problemas de dinheiro. A cada nível anoitece. Tem modo leve para aparelhos mais simples.",
     emoji: "🏎️", cor: "lilas",
     conteudo: "Educação Financeira"
   },

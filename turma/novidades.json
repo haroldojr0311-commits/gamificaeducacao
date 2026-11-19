@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-19",
+    "hora": "01:13",
+    "titulo": "Rota Neon agora em 3D",
+    "texto": "A cidade ganhou prédios com janelas acesas, palmeiras, mar, pôr do sol e câmera atrás do carro. Dirija com as setas, siga a seta de GPS e o minimapa. O modo leve (2D) continua disponível pelo botão no topo.",
+    "link": "/catalogo/rota-neon.html",
+    "jogo": "rota-neon"
+  },
+  {
+    "data": "2026-11-19",
     "hora": "01:03",
     "titulo": "Rota Neon: Cidade Solar, agora dirigindo",
     "texto": "Novo título e abertura de cinema. Dirija com as setas ou botões na tela, siga o GPS e o minimapa, desvie dos cones e veja a cidade anoitecer a cada nível. Tem modo automático para quem prefere não dirigir e 3 estações de rádio.",
