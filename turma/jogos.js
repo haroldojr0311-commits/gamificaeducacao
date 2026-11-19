@@ -840,4 +840,14 @@ window.JOGOS = {
     emoji: "🏎️", cor: "lilas",
     conteudo: "Educação Financeira"
   },
+  "operacao-blindagem-wald": {
+    bncc: ["EM13MAT102", "EM13MAT106"],
+    nivel: ["Ensino Médio", "Superior"],
+    nome: "Operação Blindagem: o Caso Abraham Wald",
+    tema: "Viés de sobrevivência e probabilidade condicional",
+    desc: "Uma história real da 2ª Guerra: os aviões voltam cheios de furos e você decide onde colocar o aço. Depois descobre o raciocínio do matemático Abraham Wald, conta aviões com números simples, simula 400 aviões e aprende a diferença entre P(A | R) e P(R | A). Tem XP, patentes, conquistas, sons e desafio final com 6 questões.",
+    emoji: "✈️", cor: "verde",
+    conteudo: "Estatística e probabilidade",
+    tipo: "simulador"
+  },
 };
