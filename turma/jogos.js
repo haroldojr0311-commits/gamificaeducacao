@@ -824,4 +824,13 @@ window.JOGOS = {
     ferramenta: true,
     conteudo: "Saúde e bem-estar"
   },
+  "rota-neon": {
+    bncc: ["EF07MA02", "EF09MA05", "EM13MAT203", "EM13MAT303"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Rota Neon",
+    tema: "Desconto, troco, juros e câmbio",
+    desc: "Entregador numa cidade praiana neon: dirija até o local, resolva a conta, receba o pagamento e decida entre poupar ou investir no turbo.",
+    emoji: "🏎️", cor: "lilas",
+    conteudo: "Educação Financeira"
+  },
 };

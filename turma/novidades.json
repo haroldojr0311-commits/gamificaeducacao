@@ -1,5 +1,13 @@
 [
   {
+    "data": "2026-11-19",
+    "hora": "00:46",
+    "titulo": "Novo jogo: Rota Neon",
+    "texto": "Dirija numa cidade praiana neon, faça entregas e resolva 12 problemas de desconto, troco, juros e câmbio. No fim de cada nível, decida entre poupar ou comprar o turbo.",
+    "link": "/catalogo/rota-neon.html",
+    "jogo": "rota-neon"
+  },
+  {
     "data": "2026-11-18",
     "hora": "22:20",
     "titulo": "Laboratório Estatístico: desvio em módulo",
