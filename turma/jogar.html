@@ -409,6 +409,26 @@ async function carregarJogo(){
   }
 }
 // O nome do aluno é entregue ao jogo por mensagem (não vai na URL).
+/* Teclado vai para o jogo aberto: foca o quadro e repassa setas/teclas se o foco ficou na página */
+(function(){
+  function quadroAberto(){ return document.querySelector('#player iframe, body.jogando #quadro'); }
+  function repassa(e){
+    var q = quadroAberto(); if(!q || e.defaultPrevented) return;
+    if(e.key === 'Escape') return;
+    var a = document.activeElement;
+    if(a === q || (a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable))) return;
+    try{
+      var d = q.contentWindow && q.contentWindow.document; if(!d) return;
+      var ev = new q.contentWindow.KeyboardEvent(e.type, {key: e.key, code: e.code, keyCode: e.keyCode, which: e.which, shiftKey: e.shiftKey, bubbles: true, cancelable: true});
+      (d.activeElement || d.body || d).dispatchEvent(ev);
+      if(/^(Arrow|Page| $)/.test(e.key) || e.key === ' ') e.preventDefault();
+    }catch(_){}
+  }
+  document.addEventListener('keydown', repassa);
+  document.addEventListener('keyup', repassa);
+  window.__focarQuadro = function(q){ q.addEventListener('load', function(){ try{ q.focus(); q.contentWindow.focus(); }catch(_){} }); };
+})();
+if(window.__focarQuadro) window.__focarQuadro(quadro);
 quadro.addEventListener('load', function(){
   try{ var pg = lerProg();
     quadro.contentWindow.postMessage({tipo:'gamifica-aluno', nome: aluno.nome, turma: aluno.turma, estado: (pg && pg.save) || null}, '*'); }catch(e){}

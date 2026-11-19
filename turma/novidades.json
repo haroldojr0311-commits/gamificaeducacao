@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-19",
+    "hora": "15:35",
+    "titulo": "Setas do teclado funcionando nos jogos",
+    "texto": "Ao abrir um jogo pelo site, as setas e as teclas do computador vão direto para o jogo, mesmo sem clicar dentro dele antes. Vale para o Rota Neon e para todos os jogos de teclado.",
+    "link": "/catalogo/rota-neon.html",
+    "jogo": "rota-neon"
+  },
+  {
+    "data": "2026-11-19",
     "hora": "15:20",
     "titulo": "Rota Neon agora tem ronco de motor",
     "texto": "O carro faz o ronco grave de um carro antigo de 6 cilindros, que acelera junto com a velocidade e dá umas falhadas e estouros no escapamento. O botão 🔊 desliga o som.",

@@ -1633,6 +1633,7 @@ async function abrirJogo(id){
     quadro = el('iframe', {title: j.nome, allow:'fullscreen; autoplay; camera; microphone; clipboard-write; xr-spatial-tracking'});
     quadro.src = urlJogo + '#livre';
     ResultadoJogo.anexar(quadro, j.nome);
+    if(window.__focarQuadro) window.__focarQuadro(quadro);
     miolo.replaceWith(quadro);
     if(seed.ativo){
       window.__sincJanelas = window.__sincJanelas.concat([{win: quadro.contentWindow, id: id}]).slice(-10);
@@ -1641,6 +1642,25 @@ async function abrirJogo(id){
     miolo.textContent = '😕 ' + (e.message || 'Não foi possível abrir o jogo.') + ' Tente de novo.';
   }
 }
+/* Teclado vai para o jogo aberto: foca o quadro e repassa setas/teclas se o foco ficou na página */
+(function(){
+  function quadroAberto(){ return document.querySelector('#player iframe, body.jogando #quadro'); }
+  function repassa(e){
+    var q = quadroAberto(); if(!q || e.defaultPrevented) return;
+    if(e.key === 'Escape') return;
+    var a = document.activeElement;
+    if(a === q || (a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable))) return;
+    try{
+      var d = q.contentWindow && q.contentWindow.document; if(!d) return;
+      var ev = new q.contentWindow.KeyboardEvent(e.type, {key: e.key, code: e.code, keyCode: e.keyCode, which: e.which, shiftKey: e.shiftKey, bubbles: true, cancelable: true});
+      (d.activeElement || d.body || d).dispatchEvent(ev);
+      if(/^(Arrow|Page| $)/.test(e.key) || e.key === ' ') e.preventDefault();
+    }catch(_){}
+  }
+  document.addEventListener('keydown', repassa);
+  document.addEventListener('keyup', repassa);
+  window.__focarQuadro = function(q){ q.addEventListener('load', function(){ try{ q.focus(); q.contentWindow.focus(); }catch(_){} }); };
+})();
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && document.getElementById('player') && !document.fullscreenElement) voltarDoJogo(); });
 /* Setas, Page Up/Down, Início e Fim rolam a página mesmo depois de clicar em qualquer ponto do site */
 document.addEventListener('keydown', function(e){
