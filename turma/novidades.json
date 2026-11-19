@@ -1,5 +1,13 @@
 [
   {
+    "data": "2026-11-18",
+    "hora": "22:20",
+    "titulo": "Laboratório Estatístico: desvio em módulo",
+    "texto": "Na etapa dos desvios, o aluno agora calcula |xᵢ − x̄| e digita só o número positivo (a resposta com sinal também é aceita), antes de achar o desvio médio.",
+    "link": "/catalogo/estatistica-agrupados.html",
+    "jogo": "estatistica-agrupados"
+  },
+  {
     "data": "2026-11-17",
     "hora": "14:00",
     "titulo": "Controle Universal da Sala agora com as marcas",
