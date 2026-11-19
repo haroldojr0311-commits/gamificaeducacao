@@ -827,9 +827,9 @@ window.JOGOS = {
   "rota-neon": {
     bncc: ["EF07MA02", "EF09MA05", "EM13MAT203", "EM13MAT303"],
     nivel: ["Fundamental 2", "Ensino Médio"],
-    nome: "Rota Neon",
+    nome: "Rota Neon: Cidade Solar",
     tema: "Desconto, troco, juros e câmbio",
-    desc: "Entregador numa cidade praiana neon: dirija até o local, resolva a conta, receba o pagamento e decida entre poupar ou investir no turbo.",
+    desc: "Dirija pela cidade praiana ao pôr do sol, siga o GPS até cada cliente e resolva 12 problemas de dinheiro. A cada nível anoitece, e você decide entre poupar ou comprar o turbo.",
     emoji: "🏎️", cor: "lilas",
     conteudo: "Educação Financeira"
   },
