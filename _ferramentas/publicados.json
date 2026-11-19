@@ -139,6 +139,18 @@
    "arquivo": "(criado pelo Claude) roda-gigante.html",
    "atividade": "Roda-Gigante Trigonométrica",
    "id": "roda-gigante"
+  },
+  {
+   "arquivo": "simulador-optica.html",
+   "bytes": 40403,
+   "atividade": "Simulador de Óptica",
+   "id": "simulador-optica"
+  },
+  {
+   "arquivo": "simulador-pitagoras-trigonometria.html",
+   "bytes": 50612,
+   "atividade": "Pitágoras e Trigonometria na Vida Real",
+   "id": "simulador-pitagoras-trigonometria"
   }
  ]
 }
