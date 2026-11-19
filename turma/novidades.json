@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-19",
+    "hora": "14:40",
+    "titulo": "Rota Neon agora é 100% Educação Financeira",
+    "texto": "São 44 tipos de pergunta, entre conceitos (receita, despesa, poupança, inflação, juros, cartão, golpes) e cálculos (desconto, juros simples e compostos, orçamento, 50-30-20). Cada turno tem 15 entregas e as perguntas mudam a cada partida.",
+    "link": "/catalogo/rota-neon.html",
+    "jogo": "rota-neon"
+  },
+  {
+    "data": "2026-11-19",
     "hora": "13:38",
     "titulo": "Integral na Gestão agora segue a lista de exercícios",
     "texto": "As questões 1 a 10 são os exercícios e as 11 a 20 são as situações-problema da lista, com os mesmos números e gabarito. Sem funções exponenciais, logarítmicas ou trigonométricas.",

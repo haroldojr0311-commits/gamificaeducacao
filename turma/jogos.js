@@ -835,8 +835,8 @@ window.JOGOS = {
     bncc: ["EF07MA02", "EF09MA05", "EM13MAT203", "EM13MAT303"],
     nivel: ["Fundamental 2", "Ensino Médio"],
     nome: "Rota Neon: Cidade Solar",
-    tema: "Desconto, troco, juros e câmbio",
-    desc: "Dirija em 3D por uma cidade neon ao pôr do sol, siga a seta e o minimapa até cada cliente e resolva 12 problemas de dinheiro. A cada nível anoitece. Tem modo leve para aparelhos mais simples.",
+    tema: "Conceitos e cálculos de Educação Financeira",
+    desc: "Dirija em 3D por uma cidade neon ao pôr do sol, siga a seta e o minimapa até cada cliente e responda perguntas de Educação Financeira: orçamento, receita e despesa, poupança, desconto, juros simples e compostos, inflação, cartão de crédito e golpes. São 44 tipos de pergunta, 15 por turno, que mudam a cada partida. A cada nível anoitece. Tem modo leve para aparelhos mais simples.",
     emoji: "🏎️", cor: "lilas",
     conteudo: "Educação Financeira"
   },
