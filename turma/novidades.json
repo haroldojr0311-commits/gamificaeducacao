@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-19",
+    "hora": "15:20",
+    "titulo": "Rota Neon agora tem ronco de motor",
+    "texto": "O carro faz o ronco grave de um carro antigo de 6 cilindros, que acelera junto com a velocidade e dá umas falhadas e estouros no escapamento. O botão 🔊 desliga o som.",
+    "link": "/catalogo/rota-neon.html",
+    "jogo": "rota-neon"
+  },
+  {
+    "data": "2026-11-19",
     "hora": "14:55",
     "titulo": "Novo: Operação Blindagem, o caso Abraham Wald",
     "texto": "Storytelling em 5 capítulos sobre viés de sobrevivência: o aluno decide onde blindar os aviões da 2ª Guerra, descobre o raciocínio de Wald, faz contas simples, usa um simulador de 400 aviões e termina com 6 questões. Ensino Médio e Superior.",
