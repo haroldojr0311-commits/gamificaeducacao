@@ -763,7 +763,7 @@ window.JOGOS = {
     nivel: ["Superior"],
     nome: "Integral na Gestão",
     tema: "Integral definida (aplicações em Administração, Economia e Contabilidade)",
-    desc: "10 missões de gestão (custo, receita, lucro, excedente, assinaturas) resolvidas com integral definida: escolha a integral, ache a antiderivada e calcule, vendo a área no gráfico. Pontos, combo, estrelas e nota enviada ao professor.",
+    desc: "Dois modos com integral definida: 10 missões de gestão (custo, receita, lucro, excedente) e 10 exercícios da lista (polinômios, eˣ, ln x, sen e cos). Escolha a integral, ache a antiderivada e calcule vendo a área no gráfico. Pontos, combo, estrelas e nota enviada ao professor.",
     emoji: "📈", cor: "azul", conteudo: "Cálculo"
   },
   "integral-em-passos": {

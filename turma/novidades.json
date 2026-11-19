@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-19",
+    "hora": "13:38",
+    "titulo": "Integral na Gestão ganhou a Lista de exercícios",
+    "texto": "Novo modo com 10 exercícios de integral definida da lista: polinômios, eˣ, ln x, seno e cosseno, com gráfico da área e nota para o professor.",
+    "link": "catalogo/",
+    "jogo": "integral-na-gestao"
+  },
+  {
+    "data": "2026-11-19",
     "hora": "02:10",
     "titulo": "Novo jogo: Integral na Gestão",
     "texto": "10 missões de Administração, Economia e Contabilidade resolvidas com integral definida, com o gráfico da área, pontos, combo e nota enviada ao professor.",
