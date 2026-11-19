@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-19",
+    "hora": "02:10",
+    "titulo": "Novo jogo: Integral na Gestão",
+    "texto": "10 missões de Administração, Economia e Contabilidade resolvidas com integral definida, com o gráfico da área, pontos, combo e nota enviada ao professor.",
+    "link": "catalogo/",
+    "jogo": "integral-na-gestao"
+  },
+  {
+    "data": "2026-11-19",
     "hora": "01:13",
     "titulo": "Rota Neon agora em 3D",
     "texto": "A cidade ganhou prédios com janelas acesas, palmeiras, mar, pôr do sol e câmera atrás do carro. Dirija com as setas, siga a seta de GPS e o minimapa. O modo leve (2D) continua disponível pelo botão no topo.",

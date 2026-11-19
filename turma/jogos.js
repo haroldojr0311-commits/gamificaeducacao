@@ -759,6 +759,13 @@ window.JOGOS = {
     emoji: "🔺", cor: "laranja",
     conteudo: "Geometria"
   },
+  "integral-na-gestao": {
+    nivel: ["Superior"],
+    nome: "Integral na Gestão",
+    tema: "Integral definida (aplicações em Administração, Economia e Contabilidade)",
+    desc: "10 missões de gestão (custo, receita, lucro, excedente, assinaturas) resolvidas com integral definida: escolha a integral, ache a antiderivada e calcule, vendo a área no gráfico. Pontos, combo, estrelas e nota enviada ao professor.",
+    emoji: "📈", cor: "azul", conteudo: "Cálculo"
+  },
   "integral-em-passos": {
     nivel: ["Ensino Médio", "Superior"],
     nome: "Integral em Passos",
