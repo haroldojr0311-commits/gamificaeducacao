@@ -50,7 +50,7 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 40px}
 .item:hover{transform:translateY(-3px)}
 .item .nota{height:80px;display:grid;place-items:center;font-size:40px;position:relative}
 .item .nota small{position:absolute;left:8px;top:7px;font-size:12px;font-weight:800;background:rgba(255,255,255,.7);border-radius:99px;padding:1px 8px}
-.item .c{padding:10px 12px 14px}.item h3{font-size:1.05rem;margin:0 0 4px}.item p{margin:0;font-size:14px;color:var(--tinta2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.item .c{padding:10px 12px 14px}.item h3{font-size:1.05rem;margin:0 0 4px}.item p{margin:0;font-size:14px;color:var(--tinta2);line-height:1.45}
 .filtros{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
 .filtros button{font:inherit;font-weight:800;font-size:14px;border:2px solid var(--linha);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--tinta)}
 .filtros button[aria-pressed=true]{background:#1d2b53;color:#fff;border-color:#1d2b53}

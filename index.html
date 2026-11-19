@@ -114,7 +114,7 @@
   .faixa-rapida .grade-jogos{margin-bottom:8px}
   .corpo{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px;flex:1;width:100%}
   .corpo h3{font-size:1.08rem}
-  .corpo p{margin:0;color:var(--tinta2);font-size:.88rem;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .corpo p{margin:0;color:var(--tinta2);font-size:.88rem;font-weight:600;line-height:1.4}
 
   .barra-escolha{position:sticky;bottom:10px;z-index:30;display:flex;align-items:center;gap:10px;margin:14px 0 0;padding:10px 12px;border-radius:14px;background:var(--cartao,#fff);border:2px solid var(--linha);box-shadow:0 10px 28px rgba(0,0,0,.18)}
   .barra-escolha[hidden]{display:none}
@@ -245,6 +245,7 @@
   .lp-vitrine a:hover,.lp-vitrine a:focus-visible{transform:translateY(-4px);box-shadow:var(--sombra)}
   .lp-vitrine .nota{height:92px;font-size:44px}
   .lp-vitrine .c{padding:10px 12px 12px}
+  .lp-vitrine .lp-desc{margin:6px 0 8px;font-size:.85rem;font-weight:600;line-height:1.4;color:var(--tinta2)}
   .lp-vitrine h3{font-size:1.02rem}
   .lp-vitrine small{display:block;color:var(--tinta2);font-weight:700;margin-top:2px}
   .lp-passos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
@@ -1225,7 +1226,7 @@ function montarApresentacao(cartaoLogin, retorno, direto){
       return el('a', {href:'demo/' + id + '.html'},
         el('span', {class:'lp-selo'}, 'GRÁTIS'),
         el('div', {class:'nota', style:corDe(id)}, capDe(id), el('span', {class:'emoji', 'aria-hidden':'true'}, j.emoji || '🎮')),
-        el('div', {class:'c'}, el('h3', {}, j.nome), el('small', {}, j.tema || j.conteudo || ''), el('span', {class:'lp-jogar'}, '▶ Jogar grátis')));
+        el('div', {class:'c'}, el('h3', {}, j.nome), el('small', {}, j.tema || j.conteudo || ''), j.desc ? el('p', {class:'lp-desc'}, j.desc) : null, el('span', {class:'lp-jogar'}, '▶ Jogar grátis')));
     }))) : null;
 
   function benef(ic, t, d){ return el('div', {}, el('div', {class:'ic', 'aria-hidden':'true'}, ic), el('h3', {}, t), el('p', {}, d)); }
