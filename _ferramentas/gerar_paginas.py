@@ -48,9 +48,25 @@ main{max-width:1080px;margin:0 auto;padding:22px 16px 40px}
 .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .item{position:relative;display:flex;flex-direction:column;background:#fff;border:2px solid var(--linha);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--tinta);transition:transform .15s}
 .item:hover{transform:translateY(-3px)}
-.item .nota{height:80px;display:grid;place-items:center;font-size:40px;position:relative}
-.item .nota small{position:absolute;left:8px;top:7px;font-size:12px;font-weight:800;background:rgba(255,255,255,.7);border-radius:99px;padding:1px 8px}
-.item .c{padding:10px 12px 14px}.item h3{font-size:1.05rem;margin:0 0 4px}.item p{margin:0;font-size:14px;color:var(--tinta2);line-height:1.45}
+.item .nota{height:104px;display:grid;place-items:center;font-size:50px;position:relative;line-height:1}
+.item .c{padding:10px 14px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
+.item .tema{align-self:flex-start;font-size:12px;font-weight:800;color:var(--tinta2);background:#eef2fb;border-radius:99px;padding:2px 9px;line-height:1.5}
+.item h3{font-size:1.05rem;margin:2px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.item p{margin:0;font-size:14px;color:var(--tinta2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.item .mais{margin-top:auto;padding-top:6px;font-size:13px;font-weight:800;color:var(--azul)}
+.item:hover,.item:focus-visible{border-color:#9db4e6;box-shadow:0 8px 22px rgba(29,43,83,.10)}
+.busca{display:flex;gap:8px;align-items:center;margin:0 0 14px;position:relative}
+.busca input{flex:1;font:inherit;font-size:17px;padding:13px 14px 13px 44px;border:2px solid var(--linha);border-radius:14px;background:#fff;color:var(--tinta);min-width:0}
+.busca input:focus{outline:3px solid #2f63d6;outline-offset:1px;border-color:#2f63d6}
+.busca::before{content:'🔎';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}
+.busca button{font:inherit;font-weight:800;border:2px solid var(--linha);background:#fff;border-radius:12px;padding:10px 14px;cursor:pointer;color:var(--tinta)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.item[hidden],.vazio[hidden],.busca button[hidden]{display:none}
+.contagem{font-weight:800;color:var(--tinta2);font-size:14px;margin:0 0 12px}
+.vazio{text-align:center;padding:30px 10px;color:var(--tinta2)}.vazio b{display:block;font-size:2rem}
+@media(max-width:700px){.topo nav{flex-wrap:nowrap;overflow-x:auto;width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}.topo nav::-webkit-scrollbar{display:none}.topo nav a{white-space:nowrap;flex:none}.topo nav a.cta{order:-1}}
+@media(max-width:600px){.grade{grid-template-columns:1fr;gap:10px}.item{flex-direction:row;min-height:118px}.item .nota{width:96px;height:auto;flex:none;font-size:40px}.item .nota:has(img.cap){height:auto}.item .c{padding:10px 12px 12px}.item p{-webkit-line-clamp:2}.item .mais{display:none}.selo-demo{top:auto;bottom:6px;right:auto;left:6px;font-size:.65rem;padding:2px 7px}
+}
 .filtros{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
 .filtros button{font:inherit;font-weight:800;font-size:14px;border:2px solid var(--linha);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--tinta)}
 .filtros button[aria-pressed=true]{background:#1d2b53;color:#fff;border-color:#1d2b53}
@@ -93,6 +109,9 @@ button.bt{font:inherit;cursor:pointer}
 .share-menu a,.share-menu button{font:inherit;font-weight:700;border:2px solid var(--linha);border-radius:12px;padding:9px 12px;background:#fff;color:inherit;text-decoration:none;cursor:pointer}
 .novi{display:grid;gap:12px}.novi article{border:2px solid var(--linha);border-radius:16px;padding:14px 16px;background:#fff}
 .novi time{font-size:.85rem;font-weight:800;color:var(--tinta2)}.novi h3{margin:4px 0}.novi p{margin:6px 0 0}
+@media(max-width:600px){.card .filtros{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -22px 12px;padding:2px 22px}.card .filtros::-webkit-scrollbar{display:none}.filtros button{white-space:nowrap;flex:none}
+.hero{padding:22px 16px}.numeros{grid-template-columns:repeat(4,1fr);gap:6px}.numeros div{padding:8px 2px;font-size:12px;line-height:1.25}.numeros b{font-size:1.5rem}
+#demos p:last-child{display:flex;overflow-x:auto;scrollbar-width:none}#demos .bt{white-space:nowrap;flex:none;padding:10px 14px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 """
 
@@ -148,14 +167,59 @@ def pagina(titulo, desc, corpo, caminho, extra_head='', absoluto=False):
 </html>
 """
 
+
+# ---------- imagem de compartilhamento (og/<id>.png) para quem ainda não tem ----------
+def gerar_og(k, v):
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except ImportError:
+        return False
+    W, H = 1200, 630
+    c1, c2 = {'jogo': ((90, 45, 191), (45, 107, 222)), 'simulador': ((0, 183, 148), (8, 132, 226)), 'ferramenta': ((29, 45, 80), (0, 169, 129))}[tipo(v)]
+    im = Image.new('RGB', (W, H)); px = im.load()
+    for y in range(H):
+        for x in range(0, W, 4):
+            f = (x / W + y / H) / 2
+            cor = tuple(int(c1[i] + (c2[i] - c1[i]) * f) for i in range(3))
+            for dx in range(4): px[x + dx, y] = cor
+    d = ImageDraw.Draw(im)
+    fonte = lambda t: ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', t)
+    rot = {'jogo': 'JOGO', 'simulador': 'SIMULADOR', 'ferramenta': 'FERRAMENTA'}[tipo(v)]
+    fr = fonte(28); w = d.textlength(rot, font=fr)
+    d.rounded_rectangle((60, 60, 60 + w + 60, 120), radius=18, fill='white'); d.text((90, 72), rot, font=fr, fill=c1)
+    tam = 84
+    while True:
+        ft = fonte(tam); linhas, atual = [], ''
+        for pal in v['nome'].split():
+            teste = (atual + ' ' + pal).strip()
+            if d.textlength(teste, font=ft) <= W - 120: atual = teste
+            else: linhas.append(atual); atual = pal
+        linhas.append(atual)
+        if len(linhas) <= 3 or tam <= 52: break
+        tam -= 8
+    y = 200
+    for ln in linhas[:3]: d.text((60, y), ln, font=ft, fill='white'); y += int(tam * 1.18)
+    d.text((60, 560), 'gamificaeducacao.com.br', font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 34), fill='white')
+    os.makedirs(os.path.join(RAIZ, 'og'), exist_ok=True)
+    im.save(os.path.join(RAIZ, 'og', k + '.png'), optimize=True)
+    return True
+_novos_og = [k for k in J if not os.path.exists(os.path.join(RAIZ, 'og', k + '.png')) and gerar_og(k, J[k])]
+if _novos_og: print('og criadas:', len(_novos_og))
 DEMOS_SET = set(json.load(open(os.path.join(RAIZ, 'turma', 'demos.json'), encoding='utf-8')))
 def tem_captura(k): return os.path.exists(os.path.join(RAIZ, 'capturas', k + '.webp'))
+import unicodedata
+def sem_acento(t): return ''.join(c for c in unicodedata.normalize('NFD', str(t).lower()) if unicodedata.category(c) != 'Mn')
+def raiz(w):
+    for x, y in (('oes', 'ao'), ('aes', 'ao'), ('ais', 'al'), ('eis', 'el'), ('ns', 'm')):
+        if w.endswith(x) and len(w) > 4: return w[:-len(x)] + y
+    return w[:-1] if len(w) > 3 and w.endswith('s') else w
+def busca_txt(v): return ' '.join(raiz(w) for w in re.findall(r'[a-z0-9]+', sem_acento(' '.join([v.get('nome', ''), v.get('tema', ''), v.get('conteudo', '') or '', v.get('desc', ''), ' '.join(v.get('bncc', []) or []), NOME_TIPO[tipo(v)]]))))
 def cartao(k, v, pref=''):
     selo = '<span class="selo-demo">▶️ Demo grátis</span>' if k in DEMOS_SET else ''
     cap = f'<img class="cap" loading="lazy" src="{pref}../capturas/{e(k)}.webp" alt="Tela de {e(v["nome"])}">' if tem_captura(k) else ''
-    return (f'<a class="item" href="{pref}{e(k)}.html" data-tipo="{tipo(v)}" data-nivel="{e("|".join(v.get("nivel", [])))}">{selo}'
-            f'<div class="nota" style="background:{COR.get(v.get("cor"), "#ffe27a")}">{cap}<small>{e(v.get("tema", ""))}</small>{e(v.get("emoji", "🎲"))}</div>'
-            f'<div class="c"><h3>{e(v["nome"])}</h3><p>{e(v.get("desc", ""))}</p></div></a>')
+    return (f'<a class="item" href="{pref}{e(k)}.html" data-tipo="{tipo(v)}" data-nivel="{e("|".join(v.get("nivel", [])))}" data-busca="{e(busca_txt(v))}">{selo}'
+            f'<div class="nota" style="background:{COR.get(v.get("cor"), "#ffe27a")}" aria-hidden="true">{cap}{e(v.get("emoji", "🎲"))}</div>'
+            f'<div class="c"><span class="tema">{e(v.get("tema", ""))}</span><h3>{e(v["nome"])}</h3><p>{e(v.get("desc", ""))}</p><span class="mais">Ver detalhes →</span></div></a>')
 
 SHARE_JS = """<script>document.addEventListener('click',function(ev){var q=ev.target.closest('[data-copiar-quieto]');if(q){ev.preventDefault();if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(q.getAttribute('data-copiar-quieto')).catch(function(){});return;}var b=ev.target.closest('[data-share]');if(!b)return;ev.preventDefault();var box=b.parentNode,menu=box.querySelector('.share-menu'),ok=box.querySelector('.ok');var dados={title:b.getAttribute('data-titulo'),text:b.getAttribute('data-texto'),url:b.getAttribute('data-share')};if(navigator.share){navigator.share(dados).catch(function(err){if(err&&err.name!=='AbortError'&&menu)menu.hidden=false;});return;}if(menu){menu.hidden=!menu.hidden;if(ok)ok.textContent='';}});</script>"""
 COPIAR_JS = """<script>document.addEventListener('click',function(ev){var b=ev.target.closest('[data-copiar]');if(!b)return;var u=b.getAttribute('data-copiar'),ok=(b.closest('.compartilhar')||b.parentNode).querySelector('.ok');function f(){if(ok){ok.textContent='✅ Link copiado!';setTimeout(function(){ok.textContent='';},2500);}}
@@ -166,20 +230,29 @@ for _d in DEMOS: assert _d in J and os.path.exists(os.path.join(RAIZ, 'demo', _d
 ordenados = sorted(J.items(), key=lambda kv: kv[1]['nome'].lower())
 os.makedirs(os.path.join(RAIZ, 'catalogo'), exist_ok=True)
 numeros = (f'<div class="numeros"><div><b>{TOTAL}</b>aplicações</div><div><b>{cont["jogo"]}</b>jogos</div>'
-           f'<div><b>{cont["simulador"]}</b>simuladores</div><div><b>{cont["ferramenta"]}</b>ferramentas do professor</div></div>')
+           f'<div><b>{cont["simulador"]}</b>simuladores</div><div><b>{cont["ferramenta"]}</b>ferramentas</div></div>')
 
 # ---------- catálogo ----------
 filtros = ('<div class="filtros" id="fTipo">' + ''.join(f'<button type="button" data-t="{t}" aria-pressed="{"true" if t == "todos" else "false"}">{n}</button>'
            for t, n in [('todos', 'Todos'), ('jogo', '🎮 Jogos'), ('simulador', '🔬 Simuladores'), ('ferramenta', '🧰 Ferramentas')]) + '</div>'
            '<div class="filtros" id="fNivel">' + ''.join(f'<button type="button" data-n="{n}" aria-pressed="{"true" if n == "todos" else "false"}">{"Todos os níveis" if n == "todos" else n}</button>'
            for n in ['todos'] + NIVEIS) + '</div>')
-corpo = (f'<div class="card hero"><h1>Catálogo de aplicações</h1><p class="sub">Jogos, simuladores e ferramentas para usar em sala de aula, no projetor ou no celular dos alunos.</p>{numeros}<p style="margin-top:16px"><a class="bt" href="../#degustacao">⏱️ Experimentar grátis</a><a class="bt sec" href="../novidades.html">🆕 Novidades</a></p></div>'
-         '<div class="card" id="demos"><h2>▶️ Demonstrações grátis</h2><p class="sub">Jogue 5 minutos por dia em cada jogo, sem cadastro.</p><p>' + ''.join(f'<a class="bt" href="../demo/{d}.html">▶️ {e(J[d]["nome"])}</a>' for d in DEMOS) + '</p></div>'
-         f'<div class="card">{filtros}<div class="grade" id="grade">{"".join(cartao(k, v) for k, v in ordenados)}</div></div>'
+corpo = (f'<div class="card hero"><h1>Catálogo de aplicações</h1><p class="sub">Jogos, simuladores e ferramentas para usar em sala de aula, no projetor ou no celular dos alunos.</p>{numeros}<p style="margin-top:16px"><a class="bt" href="../#degustacao">⏱️ Degustação grátis · 10 min</a><a class="bt sec" href="../novidades.html">🆕 Novidades</a></p></div>'
+         '<div class="card" id="demos"><h2>▶️ Demonstrações grátis</h2><p class="sub">Sem cadastro: jogue até 5 minutos por dia em cada um destes jogos. Quer conhecer tudo? A <a href="../#degustacao">degustação grátis</a> libera todas as atividades por 10 minutos.</p><p>' + ''.join(f'<a class="bt" href="../demo/{d}.html">▶️ {e(J[d]["nome"])}</a>' for d in DEMOS) + '</p></div>'
+         f'<div class="card"><form class="busca" role="search" onsubmit="return false"><label for="q" class="sr">Buscar atividade</label><input id="q" type="search" placeholder="Buscar: frações, porcentagem, quiz, EF06MA…" autocomplete="off" enterkeyhint="search"><button type="button" id="limpar" hidden>Limpar</button></form>{filtros}<p class="contagem" id="contagem" role="status" aria-live="polite">{TOTAL} atividades</p><div class="grade" id="grade">{"".join(cartao(k, v) for k, v in ordenados)}</div><div class="vazio" id="vazio" hidden><b>🔍</b>Nenhuma atividade encontrada. Tente outra palavra ou limpe os filtros.<p><button type="button" class="bt sec" id="limpar2">Limpar busca e filtros</button></p></div></div>'
          """<script>
-(function(){var t='todos',n='todos';function f(){document.querySelectorAll('#grade .item').forEach(function(a){var ok=(t==='todos'||a.dataset.tipo===t)&&(n==='todos'||a.dataset.nivel.split('|').indexOf(n)>=0);a.style.display=ok?'':'none';});}
-document.querySelectorAll('#fTipo button').forEach(function(b){b.onclick=function(){t=b.dataset.t;document.querySelectorAll('#fTipo button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});f();};});
-document.querySelectorAll('#fNivel button').forEach(function(b){b.onclick=function(){n=b.dataset.n;document.querySelectorAll('#fNivel button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});f();};});})();
+(function(){var t='todos',n='todos',q='',inp=document.getElementById('q'),lim=document.getElementById('limpar'),cont=document.getElementById('contagem'),vaz=document.getElementById('vazio'),itens=[].slice.call(document.querySelectorAll('#grade .item'));
+function norm(x){return (x||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').trim();}
+function raiz(w){var r=[['oes','ao'],['aes','ao'],['ais','al'],['eis','el'],['ns','m']];for(var i=0;i<r.length;i++){if(w.length>4&&w.slice(-r[i][0].length)===r[i][0])return w.slice(0,-r[i][0].length)+r[i][1];}return (w.length>3&&w.slice(-1)==='s')?w.slice(0,-1):w;}
+function f(){var termos=norm(q).split(/[^a-z0-9]+/).filter(Boolean).map(raiz),vis=0;itens.forEach(function(a){var ok=(t==='todos'||a.dataset.tipo===t)&&(n==='todos'||a.dataset.nivel.split('|').indexOf(n)>=0)&&termos.every(function(w){return a.dataset.busca.indexOf(w)>=0;});a.hidden=!ok;if(ok)vis++;});
+cont.textContent=vis===1?'1 atividade':vis+' atividades';vaz.hidden=vis>0;lim.hidden=!q;}
+function marca(g,b){document.querySelectorAll(g+' button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});}
+document.querySelectorAll('#fTipo button').forEach(function(b){b.onclick=function(){t=b.dataset.t;marca('#fTipo',b);f();};});
+document.querySelectorAll('#fNivel button').forEach(function(b){b.onclick=function(){n=b.dataset.n;marca('#fNivel',b);f();};});
+var tm;inp.addEventListener('input',function(){clearTimeout(tm);tm=setTimeout(function(){q=inp.value;f();try{history.replaceState(null,'',q?'?q='+encodeURIComponent(q):location.pathname);}catch(e){}},120);});
+lim.onclick=function(){inp.value='';q='';f();inp.focus();try{history.replaceState(null,'',location.pathname);}catch(e){}};
+document.getElementById('limpar2').onclick=function(){inp.value='';q='';t='todos';n='todos';marca('#fTipo',document.querySelector('#fTipo button'));marca('#fNivel',document.querySelector('#fNivel button'));f();inp.focus();};
+var p=new URLSearchParams(location.search).get('q');if(p){inp.value=p;q=p;}f();})();
 </script>
 <div class="card" id="depCat" hidden><h2>O que dizem os professores</h2><div id="listaDepCat"></div></div>
 <script>
@@ -427,7 +500,7 @@ for n in json.load(open(os.path.join(RAIZ, 'turma', 'novidades.json'), encoding=
     if jid and jid not in J_TODOS: pend.append(f'novidade "{n.get("titulo")}" aponta para jogo inexistente "{jid}"')
 # rodapé com o total sempre em dia ("mais de N aplicações", N em dezenas)
 dez = (TOTAL // 10) * 10
-novo_idx = re.sub(r'Catálogo \(mais de \d+ aplicações\)', f'Catálogo (mais de {dez} aplicações)', idx)
+novo_idx = re.sub(r'<span id="totalApps">[^<]*</span>', f'<span id="totalApps">{TOTAL}</span>', idx)
 if novo_idx != idx: open(os.path.join(RAIZ, 'index.html'), 'w', encoding='utf-8').write(novo_idx)
 if pend:
     print('⚠ PENDÊNCIAS NO CATÁLOGO (' + str(len(pend)) + '):')

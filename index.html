@@ -424,6 +424,7 @@
   transform: translateY(16px);
   transition: opacity .4s ease, transform .4s ease;
 }
+@media (prefers-reduced-motion: reduce){ .lp-vitrine a{opacity:1;transform:none} }
 .lp-vitrine a.gm-vis {
   opacity: 1;
   transform: translateY(0);
@@ -484,7 +485,7 @@
 </div></header>
 <nav class="abas" id="abas" hidden></nav>
 <main id="app"><div class="card">Carregando…</div></main>
-<footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br><span class="links-rodape"><a href="catalogo/">Catálogo (<span id="totalApps">mais de 60</span> aplicações)</a> · <a href="mural/">Mural Eletrônico</a> · <a href="novidades.html">Novidades</a> · <a href="como-funciona.html">Como funciona</a> · <a href="sobre.html">Sobre</a> · <a href="privacidade.html">Privacidade</a> · <a href="termos.html">Termos de uso</a></span></footer>
+<footer>Desenvolvido por <i>Prof. Dr. Haroldo Aleixo de Lima Junior</i><br><span class="links-rodape"><a href="catalogo/">Catálogo (<span id="totalApps">97</span> aplicações)</a> · <a href="mural/">Mural Eletrônico</a> · <a href="novidades.html">Novidades</a> · <a href="como-funciona.html">Como funciona</a> · <a href="sobre.html">Sobre</a> · <a href="privacidade.html">Privacidade</a> · <a href="termos.html">Termos de uso</a></span></footer>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
@@ -2457,6 +2458,8 @@ iniciar();
       });
     }, { threshold: 0.1 });
     items.forEach(function(a) { obs2.observe(a); });
+    // segurança: se a animação não disparar (celular lento, captura, leitor), mostra tudo
+    setTimeout(function(){ items.forEach(function(a){ a.classList.add('gm-vis'); }); }, 1800);
   }
 
   // MELHORIA 3: Mockup SVG no hero

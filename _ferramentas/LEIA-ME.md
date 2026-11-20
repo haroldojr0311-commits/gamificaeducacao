@@ -48,3 +48,8 @@ Os alunos usam `turma/jogar.html?a=CÓDIGO` (link gerado na aba "Turmas e notas"
 - Imagem real da atividade em `capturas/<id>.webp` (640×400). O catálogo (`gerar_paginas.py`) usa sozinho quando o arquivo existe.
 - Na página inicial e no portal, acrescente o id em `CAPTURAS` no `index.html`.
 - Página "Sobre" (`sobre.html`, foto em `sobre-foto.jpg`) é gerada pelo `gerar_paginas.py`.
+
+## Catálogo: busca e imagens de compartilhamento (nov/2026)
+- O catálogo tem busca (nome, tema, conteúdo, descrição, BNCC), sem acento e aceitando singular/plural. Endereço com busca: `catalogo/?q=frações`.
+- `gerar_paginas.py` cria sozinho `og/<id>.png` para quem ainda não tem imagem de compartilhamento (precisa do Pillow).
+- Os cartões mostram no máximo 3 linhas de descrição; o texto completo fica na página da atividade.
