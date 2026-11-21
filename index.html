@@ -492,7 +492,7 @@
 <script src="turma/supabase-config.js"></script>
 <script src="turma/jogos.js?v=20261119145540"></script>
 <script src="turma/qr.js"></script>
-<script src="turma/resultado-jogo.js?v=20261102223800"></script>
+<script src="turma/resultado-jogo.js?v=20261121133000"></script>
 <script>ResultadoJogo.protegerPagina();</script>
 <script>
 (function(){
@@ -1633,7 +1633,7 @@ async function abrirJogo(id){
     urlJogo = URL.createObjectURL(new Blob([ResultadoJogo.preparar(html, j.tema || j.conteudo || '', seed)], {type:'text/html'}));
     quadro = el('iframe', {title: j.nome, allow:'fullscreen; autoplay; camera; microphone; clipboard-write; xr-spatial-tracking'});
     quadro.src = urlJogo + '#livre';
-    ResultadoJogo.anexar(quadro, j.nome);
+    ResultadoJogo.anexar(quadro, j.nome, id);
     if(window.__focarQuadro) window.__focarQuadro(quadro);
     miolo.replaceWith(quadro);
     if(seed.ativo){

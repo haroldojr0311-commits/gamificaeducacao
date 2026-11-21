@@ -98,6 +98,112 @@
 
 
 
+
+  /* Festa de vitória (antes do relatório) — jogos listados em FESTA_VITORIA */
+  var FESTA_VITORIA = {'domino-equivalencias': true};
+  var somFestaMudo = false;
+  try{ somFestaMudo = localStorage.getItem('gm_festa_mudo') === '1'; }catch(e){}
+  function somVitoria(){
+    if(somFestaMudo) return null;
+    var Ctx = window.AudioContext || window.webkitAudioContext; if(!Ctx) return null;
+    var c; try{ c = new Ctx(); }catch(e){ return null; }
+    var t = c.currentTime + .05, mestre = c.createGain(); mestre.gain.value = .35; mestre.connect(c.destination);
+    function nota(f, ini, dur, tipo, vol){
+      var o = c.createOscillator(), g = c.createGain(); o.type = tipo || 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t + ini); g.gain.linearRampToValueAtTime(vol || .5, t + ini + .02);
+      g.gain.exponentialRampToValueAtTime(.001, t + ini + dur); o.connect(g); g.connect(mestre); o.start(t + ini); o.stop(t + ini + dur + .05);
+    }
+    /* Fanfarra: Dó-Mi-Sol-Dó agudo + acorde final */
+    [[523,0,.18],[659,.16,.18],[784,.32,.18],[1047,.5,.5]].forEach(function(n){ nota(n[0], n[1], n[2], 'square', .22); nota(n[0], n[1], n[2], 'triangle', .4); });
+    [523,659,784,1047].forEach(function(f){ nota(f, 1.0, 1.4, 'triangle', .25); });
+    /* Palmas (ruído em rajadas) */
+    var tam = c.sampleRate * .06, buf = c.createBuffer(1, tam, c.sampleRate), d = buf.getChannelData(0);
+    for(var i = 0; i < tam; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / tam, 3);
+    for(var k = 0; k < 26; k++){
+      var src = c.createBufferSource(), g = c.createGain(), fl = c.createBiquadFilter();
+      fl.type = 'bandpass'; fl.frequency.value = 1200 + Math.random() * 1500; src.buffer = buf; g.gain.value = .5 * Math.random() + .2;
+      src.connect(fl); fl.connect(g); g.connect(mestre); src.start(t + 1.0 + k * .085 + Math.random() * .05);
+    }
+    return c;
+  }
+  function festaVitoria(info, depois){
+    info = info || {};
+    var nota = Number(info.nota) || 0, nome = String(info.aluno || '').split(' ')[0];
+    if(/não identificado/i.test(info.aluno || '')) nome = '';
+    var frase = nota >= 8 ? 'Você dominou as equivalências! Seu esforço fez a diferença.'
+              : nota >= 6 ? 'Mandou bem! Cada partida deixa você mais craque.'
+              : 'Você chegou até o fim! Persistir é o que faz campeões.';
+    var fundo = document.createElement('div');
+    fundo.setAttribute('role', 'dialog'); fundo.setAttribute('aria-modal', 'true'); fundo.setAttribute('aria-label', 'Você venceu');
+    fundo.style.cssText = 'position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;padding:16px;font-family:Fredoka,Nunito,system-ui,sans-serif;background:radial-gradient(circle at 50% 40%,#2f4aa0 0%,#1d2b53 70%);overflow:hidden;opacity:0;transition:opacity .35s';
+    var st = document.createElement('style');
+    st.textContent = '@keyframes gfPula{0%{transform:scale(.3) rotate(-12deg);opacity:0}60%{transform:scale(1.12) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0)}}' +
+      '@keyframes gfBrilho{to{transform:rotate(360deg)}}@keyframes gfFlutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}' +
+      '@keyframes gfSobe{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}';
+    fundo.appendChild(st);
+    var cv = document.createElement('canvas'); cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
+    fundo.appendChild(cv);
+    var c = document.createElement('div');
+    c.style.cssText = 'position:relative;text-align:center;color:#fff;max-width:440px;width:100%';
+    c.innerHTML =
+      '<div style="position:relative;width:210px;height:210px;margin:0 auto;animation:gfPula .8s cubic-bezier(.2,1.4,.4,1) both">' +
+        '<div style="position:absolute;inset:-40px;border-radius:50%;background:repeating-conic-gradient(rgba(255,214,90,.5) 0 10deg,transparent 10deg 20deg);animation:gfBrilho 12s linear infinite"></div>' +
+        '<svg viewBox="0 0 200 200" width="210" height="210" style="position:relative;animation:gfFlutua 2.4s ease-in-out infinite .8s" aria-hidden="true">' +
+          '<defs><linearGradient id="gfOuro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3a8"/><stop offset=".45" stop-color="#ffd23f"/><stop offset="1" stop-color="#e09a00"/></linearGradient></defs>' +
+          '<path d="M52 40h96v34c0 30-22 52-48 52S52 104 52 74z" fill="url(#gfOuro)" stroke="#b97800" stroke-width="3"/>' +
+          '<path d="M52 50H30c0 26 12 40 28 42M148 50h22c0 26-12 40-28 42" fill="none" stroke="#e0ad00" stroke-width="8" stroke-linecap="round"/>' +
+          '<rect x="88" y="124" width="24" height="24" fill="#e0ad00"/><rect x="62" y="146" width="76" height="18" rx="5" fill="#d9442f"/><rect x="54" y="162" width="92" height="16" rx="5" fill="#a8321f"/>' +
+          /* peça de dominó no troféu */
+          '<g transform="translate(78 52) rotate(-8 22 30)"><rect width="44" height="60" rx="7" fill="#fff" stroke="#1d2b53" stroke-width="3"/><line x1="6" y1="30" x2="38" y2="30" stroke="#1d2b53" stroke-width="2.5"/>' +
+          '<circle cx="22" cy="15" r="4.5" fill="#1d2b53"/><circle cx="12" cy="40" r="4" fill="#1d2b53"/><circle cx="32" cy="40" r="4" fill="#1d2b53"/><circle cx="12" cy="51" r="4" fill="#1d2b53"/><circle cx="32" cy="51" r="4" fill="#1d2b53"/></g>' +
+          '<path d="M40 20l4 9 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1zM165 14l3 6 6 1-5 4 1 6-5-3-5 3 1-6-5-4 6-1z" fill="#fff3a8"/>' +
+        '</svg></div>' +
+      '<h2 style="margin:18px 0 4px;font-size:clamp(2rem,9vw,3rem);font-weight:700;letter-spacing:.5px;color:#ffd23f;text-shadow:0 4px 0 #b97800,0 10px 24px rgba(0,0,0,.35);animation:gfSobe .5s .5s both">VOCÊ VENCEU!</h2>' +
+      '<p style="margin:0 0 6px;font-size:1.25rem;font-weight:600;animation:gfSobe .5s .7s both">' + (nome ? 'Parabéns, ' + esc(nome) + '! 🎉' : 'Parabéns! 🎉') + '</p>' +
+      '<p style="margin:0 auto 18px;max-width:340px;font-family:Nunito,system-ui,sans-serif;font-size:1.02rem;line-height:1.45;opacity:.95;animation:gfSobe .5s .9s both">' + esc(frase) + '</p>';
+    var bt = document.createElement('button'); bt.type = 'button'; bt.textContent = '📋 Ver meu relatório';
+    bt.style.cssText = 'font:inherit;font-size:1.1rem;font-weight:700;border:0;border-radius:14px;padding:13px 22px;cursor:pointer;background:#ffd23f;color:#1d2b53;box-shadow:0 5px 0 #b97800;animation:gfSobe .5s 1.1s both';
+    var som = document.createElement('button'); som.type = 'button'; som.setAttribute('aria-label', 'Ligar ou desligar o som');
+    som.textContent = somFestaMudo ? '🔇' : '🔊';
+    som.style.cssText = 'position:absolute;top:12px;right:12px;z-index:2;font-size:1.3rem;border:0;border-radius:50%;width:44px;height:44px;cursor:pointer;background:rgba(255,255,255,.18);color:#fff';
+    c.appendChild(bt); fundo.appendChild(c); fundo.appendChild(som); document.body.appendChild(fundo);
+    requestAnimationFrame(function(){ fundo.style.opacity = '1'; });
+    var audio = somVitoria();
+    som.addEventListener('click', function(){
+      somFestaMudo = !somFestaMudo; som.textContent = somFestaMudo ? '🔇' : '🔊';
+      try{ localStorage.setItem('gm_festa_mudo', somFestaMudo ? '1' : '0'); }catch(e){}
+      if(somFestaMudo && audio){ try{ audio.close(); }catch(e){} audio = null; }
+    });
+    /* Confete */
+    var ctx = cv.getContext('2d'), W, H, pecas = [], cores = ['#ffd23f','#d9442f','#12865f','#2f63d6','#b9d4ff','#ffb4a6','#a6e4c6','#d8c9ff'], vivo = true;
+    function tamanho(){ var r = window.devicePixelRatio || 1; W = fundo.clientWidth; H = fundo.clientHeight; cv.width = W * r; cv.height = H * r; ctx.setTransform(r, 0, 0, r, 0, 0); }
+    tamanho(); window.addEventListener('resize', tamanho);
+    function rajada(n, x){ for(var i = 0; i < n; i++) pecas.push({x: x, y: H + 10, vx: (Math.random() - .5) * 9, vy: -(9 + Math.random() * 9), r: Math.random() * 6.28, vr: (Math.random() - .5) * .3, w: 6 + Math.random() * 7, h: 4 + Math.random() * 6, c: cores[i % cores.length]}); }
+    rajada(90, W * .2); rajada(90, W * .8);
+    var chuva = setInterval(function(){ for(var i = 0; i < 6; i++) pecas.push({x: Math.random() * W, y: -10, vx: (Math.random() - .5) * 2, vy: 2 + Math.random() * 2, r: Math.random() * 6.28, vr: (Math.random() - .5) * .2, w: 6 + Math.random() * 7, h: 4 + Math.random() * 6, c: cores[(Math.random() * cores.length) | 0]}); }, 120);
+    setTimeout(function(){ rajada(70, W * .5); }, 900);
+    (function quadro(){
+      if(!vivo) return;
+      ctx.clearRect(0, 0, W, H);
+      pecas = pecas.filter(function(p){ return p.y < H + 30; });
+      pecas.forEach(function(p){ p.vy += .22; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.abs(Math.cos(p.r * 2))); ctx.restore(); });
+      requestAnimationFrame(quadro);
+    })();
+    var fechado = false;
+    function seguir(){
+      if(fechado) return; fechado = true; vivo = false; clearInterval(chuva); window.removeEventListener('resize', tamanho);
+      fundo.style.opacity = '0';
+      setTimeout(function(){ if(fundo.parentNode) fundo.parentNode.removeChild(fundo); if(audio){ try{ audio.close(); }catch(e){} } }, 350);
+      if(typeof depois === 'function') depois();
+    }
+    bt.addEventListener('click', seguir);
+    setTimeout(function(){ try{ bt.focus(); }catch(e){} }, 1200);
+  }
+  window.ResultadoJogo = window.ResultadoJogo || {};
+  window.ResultadoJogo.festaVitoria = festaVitoria;
+  window.ResultadoJogo.temFesta = function(id){ return !!FESTA_VITORIA[id]; };
+
   /* Relatório em PDF: abre a versão para impressão; em "Imprimir" escolha "Salvar como PDF" */
   function relatorioHtml(d){
     var linhas = [['Aluno(a)', d.aluno], ['Série / turma', d.serie], ['Atividade', d.atividade], ['Acertos', d.acertos + ' de ' + d.total], ['Nota (0 a 10)', nota1(d.nota)], ['Pontos', d.pontos], ['Data', d.data]];
@@ -375,7 +481,7 @@
     pdf: pdf,
     baixarWord: baixarWord,
     /* quadro: o iframe do jogo; titulo: nome da atividade (para o resultado) */
-    anexar: function(quadro, titulo){
+    anexar: function(quadro, titulo, id){
       quadro.addEventListener('load', function(){
         var win; try{ win = quadro.contentWindow; }catch(e){ return; }
         var G = win && win.GAMIFICA;
@@ -389,11 +495,13 @@
           var a = Math.round(Number(acertos)), t = Math.round(Number(total));
           if(t >= 1 && a >= 0){
             if(a > t) a = t;
-            mostrarResultado({
+            var dados = {
               aluno: G.aluno || 'Aluno(a) não identificado', serie: G.turma || '—', atividade: titulo || 'Atividade',
               acertos: a, total: t, nota: a / t * 10, pontos: Math.max(0, Math.round(Number(pontos) || 0)),
               data: new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})
-            });
+            };
+            if(id && FESTA_VITORIA[id]) festaVitoria(dados, function(){ mostrarResultado(dados); });
+            else mostrarResultado(dados);
           }
           return r;
         };

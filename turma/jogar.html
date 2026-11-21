@@ -71,7 +71,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="jogos.js"></script>
-<script src="resultado-jogo.js?v=20261102223800"></script>
+<script src="resultado-jogo.js?v=20261121133000"></script>
 <script>ResultadoJogo.protegerPagina();</script>
 <script>
 (function(){
@@ -477,7 +477,9 @@ async function enviar(){
   setStatus('✔ Nota enviada: ' + fmtNota(Number(r.data)) + ' (' + pendente.p_acertos + '/' + pendente.p_total + ')', 'st-ok');
   var dados = dadosResultado(Number(r.data), pendente.p_acertos, pendente.p_total, pendente.p_pontos);
   gravarProg({nome: aluno.nome, turma: aluno.turma, estado: 'concluido', nota: Number(r.data), acertos: pendente.p_acertos, total: pendente.p_total, pontos: pendente.p_pontos, data: dados.data});
-  festa(Number(r.data), pendente.p_acertos, pendente.p_total, pendente.p_pontos);
+  var nF = Number(r.data), aF = pendente.p_acertos, tF = pendente.p_total, pF = pendente.p_pontos;
+  if(ResultadoJogo.temFesta && ResultadoJogo.temFesta(atividade.jogo)) ResultadoJogo.festaVitoria({aluno: aluno.nome, nota: nF}, function(){ festa(nF, aF, tF, pF); });
+  else festa(nF, aF, tF, pF);
 }
 
 window.addEventListener('beforeunload', function(e){
