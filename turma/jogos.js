@@ -811,6 +811,16 @@ window.JOGOS = {
     tipo: "simulador",
     conteudo: "Astronomia"
   },
+  "show-da-matematica": {
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Show da Matemática",
+    tema: "Acaso, padrões e fractais",
+    desc: "Cinco experimentos animados para passar na TV da feira de ciências: Tabuleiro de Galton, tabuada no círculo, girassol de Fibonacci, π pela chuva de pontos e Triângulo de Sierpinski. Roda sozinho, com música, narração e QR Code.",
+    emoji: "🎪", cor: "lilas",
+    tipo: "simulador",
+    ferramenta: true,
+    conteudo: "Estatística e probabilidade"
+  },
   "simulador-optica": {
     bncc: ["EM13CNT301", "EM13CNT302"],
     nivel: ["Ensino Médio", "Superior"],

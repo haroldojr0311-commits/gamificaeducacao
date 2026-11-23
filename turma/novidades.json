@@ -1,5 +1,13 @@
 [
   {
+    "data": "2026-11-22",
+    "hora": "22:15",
+    "titulo": "Novo: Show da Matemática",
+    "texto": "Cinco experimentos animados para a TV da feira de ciências, com música e narração: curva normal, tabuada que desenha, girassol de Fibonacci, π pela sorte e fractal de Sierpinski.",
+    "link": "/catalogo/show-da-matematica.html",
+    "jogo": "show-da-matematica"
+  },
+  {
     "data": "2026-11-19",
     "hora": "15:35",
     "titulo": "Setas do teclado funcionando nos jogos",
