@@ -450,6 +450,10 @@
 
   window.ResultadoJogo.preparar = function(html, tema, seed){
     var tag = '<script>window.__gamificaTema=' + JSON.stringify(String(tema || '')) + ';(' + jogoPatch.toString() + ')();(' + somTematico.toString() + ')();(' + protecaoTela.toString() + ')();(' + sincronia.toString() + ')(' + JSON.stringify(seed || {ativo: false}).replace(/</g, '\\u003c') + ');</script>';
+    /* Gamifica Cards: folha de impressão 1 mm menor que o A4 (com 297 mm exatos sobrava uma folha em branco entre os cartões) */
+    if(html.indexOf('folhaC') > -1 && /<\/head>/i.test(html)) html = html.replace(/<\/head>/i, function(m){
+      return '<style>@media print{.folhaC{height:296mm!important;overflow:hidden!important;break-inside:avoid;page-break-inside:avoid}.folhaC svg{height:148mm!important}}</style>' + m;
+    });
     return /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, function(m){ return m + tag; }) : tag + html;
   };
   /* Proteção básica também na própria página do portal */
