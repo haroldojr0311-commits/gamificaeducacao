@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-25",
+    "hora": "11:30",
+    "titulo": "Corpo Humano 3D: pinça e nomes em todas as camadas",
+    "texto": "Zoom com o movimento de pinça dos dedos no celular, no tablet e no trackpad. Agora os principais nomes aparecem também nos ossos, nos músculos e nas regiões do corpo; ao aproximar, surgem mais nomes.",
+    "link": "/catalogo/corpo-humano-interativo.html",
+    "jogo": "corpo-humano-interativo"
+  },
+  {
+    "data": "2026-11-25",
     "hora": "11:00",
     "titulo": "Corpo Humano agora em 3D",
     "texto": "O simulador do corpo humano virou 3D com modelos anatômicos reais: gire o corpo, aproxime com zoom e toque em um órgão para a câmera chegar perto. Coração por dentro, pele, músculos e ossos, sangue circulando, jornadas guiadas, Modo Aula e missões.",
