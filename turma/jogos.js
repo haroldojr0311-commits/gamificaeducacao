@@ -374,6 +374,15 @@ window.JOGOS = {
     emoji: "🧬", cor: "verde",
     tipo: "simulador", conteudo: "Biologia celular"
   },
+  "corpo-humano-interativo": {
+    bncc: ["EF05CI06", "EF05CI07"],
+    nivel: ["Fundamental 1", "Fundamental 2", "Ensino Médio"],
+    nome: "Corpo Humano Interativo",
+    tema: "Sistemas do corpo humano",
+    desc: "Veja o coração bater, os pulmões respirarem e o alimento ser digerido, tudo junto e em movimento. Tem camadas (ossos, músculos e pele), jornadas guiadas do oxigênio e do alimento, Modo Aula para projetar, 4 missões e desafio final com nota.",
+    emoji: "🫀", cor: "coral",
+    tipo: "simulador", conteudo: "Corpo humano"
+  },
   "demo-porcentagem": {
     nivel: ["Fundamental 2"],
     nome: "Quiz de teste",
