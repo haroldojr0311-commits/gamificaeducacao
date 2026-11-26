@@ -353,7 +353,7 @@ window.JOGOS = {
     nivel: ["Ensino Médio", "Superior"],
     nome: "Armadilha do Cartão",
     tema: "Juros compostos",
-    desc: "Administre um salário por 6 meses e decida a fatura: pagar tudo, o mínimo, parcelar ou atrasar. Veja a conta passo a passo, os juros sobre juros crescerem e encare o Desafio Final.",
+    desc: "Cada aluno recebe salário, fatura, limite e juros diferentes e decide por 6 meses: pagar tudo, o mínimo, parcelar ou atrasar. Imprevistos, tentações, desafio de cálculo a cada mês e Desafio Final com 10 questões sorteadas. Relatório para imprimir, PDF ou Word.",
     emoji: "💳", cor: "lilas",
     conteudo: "Educação Financeira",
     tipo: "simulador"

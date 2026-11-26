@@ -206,6 +206,7 @@ async function iniciar(){
   if(r.error){ return erroTela('Sem conexão', 'Não consegui abrir a atividade. Verifique a internet e tente de novo.'); }
   if(!r.data || r.data.length === 0){ return erroTela('Atividade não encontrada', 'Ela pode ter sido encerrada ou o link está incompleto. Fale com seu professor.'); }
   atividade = r.data[0];
+  try { var rp = await sb.rpc('professor_da_atividade', {p_codigo: codigo}); atividade.professor = (rp && typeof rp.data === 'string') ? rp.data : ''; } catch(e){ atividade.professor = ''; }
   if(atividade.bloqueio === 'encerrada') return erroTela('Atividade encerrada', 'Seu professor já encerrou esta atividade. Fale com ele para mais informações.');
   if(atividade.bloqueio === 'ainda_nao') return erroTela('Atividade ainda não abriu ⏳', 'Seu professor programou esta atividade para abrir em breve. Aguarde e tente de novo mais tarde.');
   if(atividade.bloqueio === 'expirada') return erroTela('Prazo encerrado ⏰', 'O prazo para realizar esta atividade já passou. Fale com seu professor.');
@@ -347,6 +348,8 @@ function turmaValida(t){
 function telaNome(){
   var nome = el('input', {type:'text', id:'nome', maxlength:'80', autocomplete:'name', placeholder:'Nome e sobrenome', value: ler('gm_nome')});
   var turma = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Ex.: 3A, 3 A ou 3ª série A', value: atividade.turma || ler('gm_turma')});
+  /* Se o professor já definiu a turma ao atribuir, o aluno digita só o nome */
+  var turmaFixa = !!(atividade.turma && turmaValida(normalizaTurma(atividade.turma)));
   var aviso = el('div');
   var form = el('form', {onsubmit: function(ev){
     ev.preventDefault(); aviso.replaceChildren();
@@ -360,13 +363,14 @@ function telaNome(){
     comecar();
   }},
     el('label', {for:'nome'}, 'Seu nome completo *'), nome,
-    el('label', {for:'turma'}, 'Sua série e turma *'), turma,
+    turmaFixa ? el('p', {class:'muted', style:'margin:8px 0 12px'}, '🏫 Série/turma: ' + normalizaTurma(atividade.turma) + (atividade.professor ? ' · 👩‍🏫 Professor(a): ' + atividade.professor : '')) : null,
+    turmaFixa ? null : el('label', {for:'turma'}, 'Sua série e turma *'), turmaFixa ? null : turma,
     el('button', {type:'submit'}, '🚀 Começar'), aviso);
   var J = window.JOGOS[atividade.jogo];
   var cores = {amarelo:'#ffe27a', coral:'#ffb4a6', verde:'#a6e4c6', azul:'#b9d4ff', lilas:'#d8c9ff', laranja:'#ffc88a'};
   mostrar(el('div', {class:'post', style:'--n:' + (cores[J.cor] || cores.amarelo)}, J.tema ? el('span', {class:'tema'}, J.tema) : null, J.emoji || '🎮'),
     el('h1', {}, atividade.titulo),
-    el('p', {class:'muted'}, 'Digite seu nome completo (nome e sobrenome) e sua série e turma. Ao terminar, sua nota é enviada automaticamente ao professor.'),
+    el('p', {class:'muted'}, turmaFixa ? 'Digite seu nome completo (nome e sobrenome). Ao terminar, sua nota é enviada automaticamente ao professor.' : 'Digite seu nome completo (nome e sobrenome) e sua série e turma. Ao terminar, sua nota é enviada automaticamente ao professor.'),
     form);
 }
 
@@ -431,7 +435,7 @@ async function carregarJogo(){
 if(window.__focarQuadro) window.__focarQuadro(quadro);
 quadro.addEventListener('load', function(){
   try{ var pg = lerProg();
-    quadro.contentWindow.postMessage({tipo:'gamifica-aluno', nome: aluno.nome, turma: aluno.turma, estado: (pg && pg.save) || null}, '*'); }catch(e){}
+    quadro.contentWindow.postMessage({tipo:'gamifica-aluno', nome: aluno.nome, turma: aluno.turma, professor: atividade.professor || '', estado: (pg && pg.save) || null}, '*'); }catch(e){}
 });
 var statusEl = document.getElementById('barra-status');
 document.getElementById('barra-tela').addEventListener('click', function(){ if(document.fullscreenElement) document.exitFullscreen(); else entrarTelaCheia(); });

@@ -34,7 +34,8 @@
     salvarEstado: function(obj){ if(!noPortal) return false; try { window.parent.postMessage({tipo: 'gamifica-estado', estado: obj}, '*'); return true; } catch(e){ return false; } },
     turma: '',
     /* Chama fn(nome, turma) quando o nome do aluno chegar */
-    aoReceberAluno: function(fn){ if (G.aluno) fn(G.aluno, G.turma); else ouvintes.push(fn); },
+    professor: '',
+    aoReceberAluno: function(fn){ if (G.aluno) fn(G.aluno, G.turma, G.professor); else ouvintes.push(fn); },
     /* Coloca o nome do aluno no campo indicado (e trava), mesmo se ele aparecer depois */
     preencherNome: function(seletor, max){ campos.push({sel: seletor, max: max}); preencherTodos(); },
     /* Envia a nota: acertos de um total (a nota é acertos ÷ total × 10) */
@@ -79,10 +80,11 @@
     if (!d || d.tipo !== 'gamifica-aluno' || typeof d.nome !== 'string') return;
     G.aluno = d.nome.trim().replace(/\s+/g, ' ');
     G.turma = typeof d.turma === 'string' ? d.turma.trim() : '';
+    G.professor = typeof d.professor === 'string' ? d.professor.trim() : '';
     G.estado = (d.estado && typeof d.estado === 'object') ? d.estado : null;
     preencherTodos();
     var fs = ouvintes; ouvintes = [];
-    fs.forEach(function(fn){ try { fn(G.aluno, G.turma); } catch(e){} });
+    fs.forEach(function(fn){ try { fn(G.aluno, G.turma, G.professor); } catch(e){} });
   });
 
   function observar(){
