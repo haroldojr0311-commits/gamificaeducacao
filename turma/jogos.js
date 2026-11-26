@@ -353,9 +353,10 @@ window.JOGOS = {
     nivel: ["Ensino Médio", "Superior"],
     nome: "Armadilha do Cartão",
     tema: "Juros compostos",
-    desc: "Simule o rotativo mês a mês: pagar o mínimo, parcelar e ver os juros sobre juros crescerem.",
+    desc: "Administre um salário por 6 meses e decida a fatura: pagar tudo, o mínimo, parcelar ou atrasar. Veja a conta passo a passo, os juros sobre juros crescerem e encare o Desafio Final.",
     emoji: "💳", cor: "lilas",
-    conteudo: "Educação Financeira"
+    conteudo: "Educação Financeira",
+    tipo: "simulador"
   },
   "geoar-solidos-ar": {
     bncc: ["EF06MA17"],

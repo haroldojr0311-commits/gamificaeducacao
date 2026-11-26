@@ -1,5 +1,13 @@
 [
   {
+    "data": "2026-11-26",
+    "hora": "10:30",
+    "titulo": "Armadilha do Cartão revisado para os alunos",
+    "texto": "Agora o salário tem contas fixas e o aluno só escolhe o que o dinheiro paga. Conta passo a passo de cada mês, fórmula dos juros compostos explicada, parcelamento calculado corretamente, nota justa por decisão, Desafio Final com 6 questões, sons e layout para celular.",
+    "link": "/catalogo/armadilha-cartao.html",
+    "jogo": "armadilha-cartao"
+  },
+  {
     "data": "2026-11-25",
     "hora": "11:30",
     "titulo": "Corpo Humano 3D: pinça e nomes em todas as camadas",
