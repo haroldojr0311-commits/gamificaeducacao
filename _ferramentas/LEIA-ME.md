@@ -27,7 +27,7 @@ Os alunos usam `turma/jogar.html?a=CÓDIGO` (link gerado na aba "Turmas e notas"
    conteudo (obrigatório para jogos e simuladores), bncc quando houver código claro, tipo/ferramenta.
 3. Conteúdo novo? Acrescentar em `ICONE_CONTEUDO` e `ORDEM_CONTEUDOS` no `index.html`.
 4. Jogo e simulador atribuíveis devem chamar `GAMIFICA.enviar(acertos, total, pontos)` ao terminar.
-5. Novidade em `turma/novidades.json` (data, hora, titulo, texto, link, jogo).
+5. Novidade em `turma/novidades.json` (data, hora, titulo, texto, link, jogo). A hora é a hora REAL da publicação no horário de Brasília: use `TZ=America/Sao_Paulo date +%H:%M` no momento do commit (nunca estimar).
 6. Trocar o `?v=` do jogos.js no `index.html` e a VERSAO do `sw.js`.
 7. `python3 _ferramentas/gerar_paginas.py`: gera catálogo, sitemap, contagens e rodapé e CONFERE o catálogo.
    Se aparecer "⚠ PENDÊNCIAS", corrigir antes de publicar.
