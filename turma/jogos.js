@@ -58,6 +58,15 @@ window.JOGOS = {
     emoji: "👾", cor: "azul",
     conteudo: "Proporção e porcentagem"
   },
+  "missao-moda-media-mediana": {
+    bncc: ["EF08MA25", "EM13MAT316"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Missão MMM: Moda, Média e Mediana",
+    tema: "Medidas de tendência central",
+    desc: "Seis fases passo a passo para quem tem dificuldade: o aluno conta, ordena e digita os valores para achar moda, mediana, média simples e média ponderada, decide qual medida usar e enfrenta o Robô Bagunça. Pontos, estrelas, medalhas e relatório final.",
+    emoji: "📊", cor: "verde",
+    conteudo: "Estatística e probabilidade"
+  },
   "estatistica-agrupados": {
     bncc: ["EF08MA25", "EM13MAT316", "EM13MAT406"],
     nivel: ["Fundamental 2", "Ensino Médio", "Superior"],
