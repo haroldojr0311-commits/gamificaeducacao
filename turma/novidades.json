@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "10:40",
+    "titulo": "Jornada Financeira: pergunta do Projeto de Vida mais clara",
+    "texto": "Na fase 12, a pergunta final do Projeto de Vida ficou em uma linha só, com texto mais simples.",
+    "link": "/catalogo/jornada-financeira.html",
+    "jogo": "jornada-financeira"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "10:30",
     "titulo": "Novo jogo: Jornada Financeira (13 fases)",
     "texto": "Jogo completo de Educação Financeira: o aluno escolhe um personagem e passa por metas, inflação, reserva de emergência, risco e retorno, juros compostos, simulação com dado e moeda, ajustes no plano e uma trilha final de 15 questões. Pontos, estrelas, conquistas, ranking e certificado.",
