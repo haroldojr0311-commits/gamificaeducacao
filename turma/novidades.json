@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "14:35",
+    "titulo": "Educação Financeira: tabelas junto das perguntas",
+    "texto": "Nas questões que dependem de uma tabela ou gráfico (ofertas de empréstimo e CET, fatores de compra por impulso, inflação da cesta), as informações agora aparecem logo acima da resposta, sem precisar voltar à tela anterior. A contagem de estrelas de cada parte também foi corrigida.",
+    "link": "/novidades.html",
+    "jogo": ""
+  },
+  {
+    "data": "2026-11-27",
     "hora": "14:23",
     "titulo": "Turmas: escolha a turma primeiro",
     "texto": "Em Atividades desenvolvidas e em Cadastrar turmas, a tela ficou mais limpa: primeiro você escolhe a turma em uma caixa de seleção e só então aparecem as atividades ou os alunos dela. O cadastro de turma nova fica no botão Cadastrar nova turma.",
