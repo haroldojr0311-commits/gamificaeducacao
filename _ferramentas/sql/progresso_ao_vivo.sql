@@ -1,0 +1,4 @@
+-- Progresso ao vivo das tarefas (aplicado em 27/11/2026 no projeto "Gamefica teste")
+-- Tabela public.progresso + função public.registrar_progresso(p_codigo, p_nome, p_turma, p_acertos, p_respondidas, p_total, p_pontos, p_concluido)
+-- O aluno grava pela função (security definer); o professor só lê/apaga o progresso das próprias atividades (RLS).
+-- Ver a migração "progresso_ao_vivo" no Supabase para o SQL completo.

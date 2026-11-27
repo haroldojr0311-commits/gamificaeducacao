@@ -40,21 +40,75 @@ window.JOGOS = {
     emoji: "💰", cor: "verde",
     conteudo: "Educação Financeira"
   },
+  "jornada-financeira-parte-1": {
+    bncc: ["EM13MAT104", "EM13MAT203"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Jornada Financeira · Parte 1",
+    tema: "Metas, inflação e proteção",
+    desc: "Fases 1 a 4 (cerca de 11 atividades sorteadas, nota própria): sonho, meta e planejamento, inflação com o supermercado do tempo, reserva de emergência e seguro, risco, retorno e prazo. O aluno escolhe um personagem.",
+    emoji: "🎯", cor: "amarelo",
+    conteudo: "Educação Financeira"
+  },
+  "jornada-financeira-parte-2": {
+    bncc: ["EM13MAT203", "EM13MAT303"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Jornada Financeira · Parte 2",
+    tema: "Investimentos e juros compostos",
+    desc: "Fases 5 a 9 (nota própria): escolher entre poupança, CDB e ações, simulador de juros compostos, simulação com dado e moeda, ajustes de estratégia e revisão do plano até a meta caber.",
+    emoji: "📈", cor: "verde",
+    conteudo: "Educação Financeira"
+  },
+  "jornada-financeira-parte-3": {
+    bncc: ["EM13MAT203", "EM13MAT303"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Jornada Financeira · Parte 3",
+    tema: "Trajetória e trilha final",
+    desc: "Fases 10 a 13 (nota própria): a vida financeira do personagem como narrativa, linha do tempo, tela de apresentação com reflexão do Projeto de Vida e trilha final de 8 questões sorteadas.",
+    emoji: "🏁", cor: "laranja",
+    conteudo: "Educação Financeira"
+  },
+  "missao-cidadao-consciente-parte-1": {
+    bncc: ["EM13MAT104", "EM13MAT203"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Missão Cidadão Consciente · Parte 1",
+    tema: "Ética, CET, golpes e segurança",
+    desc: "Missões 1 a 4 (cerca de 12 atividades sorteadas, nota própria): dilemas éticos, comparador de empréstimos com CET, detetive de golpes e medidor de senha forte.",
+    emoji: "🕵️", cor: "azul",
+    conteudo: "Educação Financeira"
+  },
+  "missao-cidadao-consciente-parte-2": {
+    bncc: ["EM13MAT104", "EM13MAT203"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Missão Cidadão Consciente · Parte 2",
+    tema: "Dados, consumo e meio ambiente",
+    desc: "Missões 5 a 8 (nota própria): LGPD e Open Finance, caça aos gatilhos dos anúncios, critérios ASG e greenwashing, escolhas de consumo e a conta da garrafa reutilizável.",
+    emoji: "🌱", cor: "verde",
+    conteudo: "Educação Financeira"
+  },
+  "missao-cidadao-consciente-parte-3": {
+    bncc: ["EM13MAT203", "EM13MAT311"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Missão Cidadão Consciente · Parte 3",
+    tema: "Bets, cidadania e trilha final",
+    desc: "Missões 9 a 13 (nota própria): simulador de apostas e perda média, psicologia financeira, cidadania financeira, diagnóstico do bairro com cartaz de campanha e trilha final de 8 questões sorteadas.",
+    emoji: "🎰", cor: "lilas",
+    conteudo: "Educação Financeira"
+  },
   "missao-cidadao-consciente": {
     bncc: ["EM13MAT104", "EM13MAT203", "EM13MAT311"],
     nivel: ["Fundamental 2", "Ensino Médio"],
-    nome: "Missão Cidadão Consciente",
+    nome: "Missão Cidadão Consciente (completo)",
     tema: "Ética, golpes e consumo consciente",
-    desc: "Jogo em 13 missões: o aluno é o Agente da Vila Horizonte e cuida de três medidores (Confiança, Segurança e Planeta). Dilemas éticos, comparador de empréstimos com CET, detetive de golpes, medidor de senha, LGPD e Open Finance, caça aos gatilhos de anúncios, critérios ASG e greenwashing, simulador de apostas, psicologia financeira, cidadania financeira, diagnóstico do bairro com cartaz de campanha e trilha final de 16 questões. Calculadora flutuante.",
+    desc: "Versão completa (13 missões, até 3 atividades sorteadas por missão). O aluno é o Agente da Vila Horizonte e cuida de três medidores (Confiança, Segurança e Planeta). Dilemas éticos, comparador de empréstimos com CET, detetive de golpes, medidor de senha, LGPD e Open Finance, caça aos gatilhos de anúncios, critérios ASG e greenwashing, simulador de apostas, psicologia financeira, cidadania financeira, diagnóstico do bairro com cartaz de campanha e trilha final de 8 questões sorteadas. Calculadora flutuante. Para tarefas menores, use as Partes 1, 2 e 3.",
     emoji: "🕵️", cor: "azul",
     conteudo: "Educação Financeira"
   },
   "jornada-financeira": {
     bncc: ["EM13MAT104", "EM13MAT203", "EM13MAT303"],
     nivel: ["Fundamental 2", "Ensino Médio"],
-    nome: "Jornada Financeira: Construindo o Futuro",
+    nome: "Jornada Financeira: Construindo o Futuro (completo)",
     tema: "Metas, inflação e investimentos",
-    desc: "Jogo em 13 fases: o aluno escolhe um personagem e cuida da vida financeira dele. Sonho, meta e planejamento, inflação, reserva de emergência e seguro, risco e retorno, renda fixa e variável, simulador de juros compostos, simulação com dado e moeda, ajustes no plano, narrativa da trajetória e trilha final de 15 questões com resolução.",
+    desc: "Versão completa (13 fases, até 3 atividades sorteadas por fase). O aluno escolhe um personagem e cuida da vida financeira dele. Sonho, meta e planejamento, inflação, reserva de emergência e seguro, risco e retorno, renda fixa e variável, simulador de juros compostos, simulação com dado e moeda, ajustes no plano, narrativa da trajetória e trilha final de 8 questões sorteadas, com resolução. Para tarefas menores, use as Partes 1, 2 e 3.",
     emoji: "🧭", cor: "amarelo",
     conteudo: "Educação Financeira"
   },

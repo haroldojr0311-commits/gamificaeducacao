@@ -49,6 +49,11 @@
       try { window.parent.postMessage({tipo: 'gamifica-resultado', acertos: acertos, total: total, pontos: pontos}, '*'); } catch(e){ return false; }
       return true;
     },
+    /* Progresso ao vivo (painel do professor): acertos e respondidas até agora, de um total previsto */
+    progresso: function(acertos, respondidas, total, pontos){
+      if (!noPortal) return false;
+      try { window.parent.postMessage({tipo: 'gamifica-progresso', acertos: Math.max(0, Math.round(Number(acertos) || 0)), respondidas: Math.max(0, Math.round(Number(respondidas) || 0)), total: Math.max(0, Math.round(Number(total) || 0)), pontos: Math.max(0, Math.round(Number(pontos) || 0))}, '*'); return true; } catch(e){ return false; }
+    },
     /* Contador simples de perguntas (para jogos com perguntas espalhadas) */
     zerar: function(){ contagem.certas = 0; contagem.total = 0; },
     contar: function(certa){ contagem.total++; if (certa) contagem.certas++; },
