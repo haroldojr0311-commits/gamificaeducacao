@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "14:23",
+    "titulo": "Turmas: escolha a turma primeiro",
+    "texto": "Em Atividades desenvolvidas e em Cadastrar turmas, a tela ficou mais limpa: primeiro você escolhe a turma em uma caixa de seleção e só então aparecem as atividades ou os alunos dela. O cadastro de turma nova fica no botão Cadastrar nova turma.",
+    "link": "./#turmas"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "14:06",
     "titulo": "Abas com nomes novos",
     "texto": "A aba Turmas e notas agora se chama Atividades desenvolvidas, e a aba Minhas turmas agora se chama Cadastrar turmas. Tudo continua funcionando do mesmo jeito.",
