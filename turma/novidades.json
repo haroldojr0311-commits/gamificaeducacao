@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "13:52",
+    "titulo": "Nova aba Minhas turmas: cadastre turmas e alunos",
+    "texto": "Cadastre cada turma uma vez, digitando os nomes ou colando a lista do Excel ou do Word. Coloque ou retire alunos quando quiser. Na hora de atribuir uma tarefa, é só escolher a turma na lista, e as mesmas turmas aparecem no Campeonato de Tarefas.",
+    "link": "./#cadastro"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "13:45",
     "titulo": "Turmas e notas: filtro por turma",
     "texto": "Em Minhas atividades agora há uma barra Turma: toque em uma turma para ver só as atividades dela, com a contagem de atividades e de entregas dos alunos. Turmas escritas de jeitos diferentes (3ª A, 3A, 3º ano A) ficam juntas, e o site lembra a última turma escolhida.",

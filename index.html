@@ -124,6 +124,21 @@
   .escolhido .mini{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:26px;background:var(--n,var(--n-amarelo));flex-shrink:0}
 
   /* Minhas atividades */
+  textarea.cad-colar{width:100%;min-height:120px;padding:12px 13px;border:2px solid var(--linha);border-radius:12px;font:inherit;font-size:.95rem;background:var(--cartao);resize:vertical}
+  textarea.cad-colar:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px rgba(47,99,214,.18)}
+  .cad-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:14px}
+  .cad-turma{border:2px solid var(--linha);border-radius:var(--r);background:var(--cartao);overflow:hidden;display:flex;flex-direction:column}
+  .cad-topo{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--n-azul)}
+  .cad-topo h3{margin:0;font-family:var(--f-display);font-size:1.25rem;flex:1}
+  .cad-topo .tag{background:#fff}
+  .cad-alunos{list-style:none;margin:0;padding:6px 10px;max-height:280px;overflow:auto;counter-reset:al}
+  .cad-alunos li{display:flex;align-items:center;gap:8px;padding:5px 4px;border-bottom:1px dashed var(--linha);font-size:.93rem;counter-increment:al}
+  .cad-alunos li::before{content:counter(al);min-width:22px;color:var(--tinta2);font-weight:800;font-size:.8rem}
+  .cad-alunos li span{flex:1}
+  .cad-x{border:0;background:none;box-shadow:none;color:var(--coral);font-size:1rem;padding:2px 8px;cursor:pointer;border-radius:8px}
+  .cad-x:hover{background:#ffe9e5;transform:none}
+  .cad-acoes{padding:10px 12px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--linha);background:var(--cartao2)}
+  .cad-linha{display:flex;gap:8px}.cad-linha input{flex:1;padding:9px 11px}
   .grade-ativ{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
   .ativ{display:flex;flex-direction:column;border:2px solid var(--linha);border-radius:var(--r);overflow:hidden;background:var(--cartao)}
   .ativ .topo-ativ{background:var(--n,var(--n-amarelo));display:flex;align-items:center;gap:12px;padding:12px 14px;color:var(--tinta-nota)}
@@ -538,7 +553,7 @@ var perfil = null;      // {nome, papel, login, validade}
 var SID = null;         // identificador desta sessão (um aparelho por vez)
 var aba = 'jogos';
 var vigia = null;
-var atividades = [], contagem = {}, turmasAtiv = {}, filtroTurma = (function(){ try{ return localStorage.getItem('gm_filtro_turma') || 'todas'; }catch(e){ return 'todas'; } })(), abertaId = null, modo = 'melhor', resultadosBrutos = [], progressoBruto = [], tvAberta = null;
+var cadTurmas = null, atividades = [], contagem = {}, turmasAtiv = {}, filtroTurma = (function(){ try{ return localStorage.getItem('gm_filtro_turma') || 'todas'; }catch(e){ return 'todas'; } })(), abertaId = null, modo = 'melhor', resultadosBrutos = [], progressoBruto = [], tvAberta = null;
 var jogoEscolhido = null;
 var atrFiltro = {busca:'', tipo:'todos', nivel:'todos', cont:'todos'};
 var contas = [], buscaContas = '';
@@ -1095,7 +1110,7 @@ function entrarNoSite(){
     botaoMeuAcesso(),
     el('button', {class:'sec peq', onclick: sair}, 'Sair')].filter(function(x){ return x; }));
   var h = (location.hash || '').replace('#', '');
-  if(h === 'turmas' || h === 'jogos' || h === 'simuladores' || h === 'ferramentas' || (h === 'admin' && perfil.papel === 'admin')) aba = h;
+  if(h === 'turmas' || h === 'cadastro' || h === 'jogos' || h === 'simuladores' || h === 'ferramentas' || (h === 'admin' && perfil.papel === 'admin')) aba = h;
   else if(h === 'atribuir') aba = 'atribuir'; /* ainda aceita via botão dos cards */
   iniciarVigia();
   desenharAbas(); mostrarAba();
@@ -1326,7 +1341,7 @@ function montarApresentacao(cartaoLogin, retorno, direto){
 
 /* ---------- abas ---------- */
 function desenharAbas(){
-  var itens = [['jogos', '🎮 Jogos'], ['simuladores', '🔬 Simuladores'], ['ferramentas', '🧰 Ferramentas'], ['turmas', '👩‍🏫 Turmas e notas']];
+  var itens = [['jogos', '🎮 Jogos'], ['simuladores', '🔬 Simuladores'], ['ferramentas', '🧰 Ferramentas'], ['turmas', '👩‍🏫 Turmas e notas'], ['cadastro', '🏫 Minhas turmas']];
   if(visitante) itens = itens.slice(0, 3);
   else if(perfil.papel === 'admin') itens.push(['admin', '🛡️ Administração']);
   abasBox.replaceChildren.apply(abasBox, itens.map(function(it){
@@ -1337,6 +1352,7 @@ function desenharAbas(){
 function mostrarAba(){
   if(aba === 'turmas') carregarAtividades().then(desenharTurmas);
   else if(aba === 'atribuir') desenharAtribuir();
+  else if(aba === 'cadastro') carregarCadTurmas().then(desenharCadastro);
   else if(aba === 'simuladores' || aba === 'ferramentas') desenharJogos(aba);
   else if(aba === 'admin') carregarContas().then(desenharAdmin);
   else desenharJogos();
@@ -1742,6 +1758,136 @@ function barraTurmas(){
     }}, f[1]);
   })));
 }
+/* ---------- Minhas turmas (cadastro) ----------
+   Ficam no mesmo lugar do Campeonato de Tarefas (dados_ferramentas 'campeonato-tarefas':
+   ct_turmas e ct_alunos_<id>, em texto JSON). Assim a ferramenta mostra as mesmas turmas. */
+var CT_ID = 'campeonato-tarefas';
+function novoIdCad(){ return Math.random().toString(36).slice(2, 7) + Date.now().toString(36).slice(-5); }
+function lerJsonCad(v, padrao){ if(v === undefined || v === null) return padrao; if(typeof v !== 'string') return v; try{ return JSON.parse(v); }catch(e){ return padrao; } }
+function semAcento(t){ return String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim(); }
+async function carregarCadTurmas(){
+  var d = await carregarDadosFerramenta(CT_ID);
+  if(d === null){ cadTurmas = cadTurmas || []; return cadTurmas; }
+  var ts = lerJsonCad(d.ct_turmas, []);
+  cadTurmas = (Array.isArray(ts) ? ts : []).map(function(t){
+    var al = lerJsonCad(d['ct_alunos_' + t.id], []);
+    return {id: t.id, nome: t.nome, alunos: Array.isArray(al) ? al.filter(function(a){ return a && a.nome; }) : []};
+  });
+  return cadTurmas;
+}
+async function salvarCadTurmas(removidas){
+  var d = await carregarDadosFerramenta(CT_ID);
+  if(d === null) return false;
+  d = Object.assign({}, d);
+  d.ct_turmas = JSON.stringify(cadTurmas.map(function(t){ return {id: t.id, nome: t.nome}; }));
+  cadTurmas.forEach(function(t){ d['ct_alunos_' + t.id] = JSON.stringify(t.alunos); });
+  (removidas || []).forEach(function(id){ ['ct_alunos_', 'ct_checks_', 'ct_tarefas_'].forEach(function(p){ delete d[p + id]; }); });
+  var atual = lerJsonCad(d.ct_turmaAtual, null);
+  if(!cadTurmas.some(function(t){ return t.id === atual; })) d.ct_turmaAtual = JSON.stringify(cadTurmas.length ? cadTurmas[0].id : null);
+  try{
+    var r = await sb.from('dados_ferramentas').upsert({user_id: sessao.user.id, ferramenta: CT_ID, dados: d, atualizado_em: new Date().toISOString()}, {onConflict: 'user_id,ferramenta'});
+    return !r.error;
+  }catch(e){ return false; }
+}
+/* Lê nomes colados do Excel (colunas separadas por tab), do Word ou digitados, um por linha */
+function lerNomesColados(txt){
+  var linhas = String(txt || '').replace(/\r/g, '').split('\n');
+  if(linhas.length === 1 && /[;,]/.test(linhas[0]) && !/\t/.test(linhas[0])) linhas = linhas[0].split(/[;,]/);
+  var nomes = [];
+  linhas.forEach(function(l){
+    var cel = l.split('\t').map(function(c){ return c.replace(/^\s*(n[ºo°]?\s*)?\d+\s*[\.\)\-–:]?\s+/i, '').replace(/^[•\-–*]\s*/, '').replace(/\s+/g, ' ').trim(); })
+      .filter(function(c){ return c && /[a-zà-ú]/i.test(c) && !/^\d/.test(c) && c.length > 1; });
+    if(!cel.length) return;
+    var n = cel.sort(function(a, b){ return b.length - a.length; })[0];
+    if(/^(nome|nomes|aluno|alunos|nome do aluno|nome do\(a\) aluno\(a\)|estudante|estudantes)$/i.test(semAcento(n).replace(/[:]/g, ''))) return;
+    nomes.push(n);
+  });
+  return nomes;
+}
+function juntarAlunos(t, nomes){
+  var tem = {}; t.alunos.forEach(function(a){ tem[semAcento(a.nome)] = 1; });
+  var novos = 0;
+  nomes.forEach(function(n){ var k = semAcento(n); if(!tem[k]){ tem[k] = 1; t.alunos.push({id: novoIdCad(), nome: n}); novos++; } });
+  t.alunos.sort(function(a, b){ return a.nome.localeCompare(b.nome, 'pt-BR', {sensitivity:'base'}); });
+  return novos;
+}
+function desenharCadastro(avisoTxt){
+  var aviso = el('div');
+  if(avisoTxt) aviso.append(msg(avisoTxt[0], avisoTxt[1]));
+  async function gravar(texto, removidas){
+    var ok = await salvarCadTurmas(removidas);
+    desenharCadastro(ok ? ['ok', texto] : ['erro', 'Não foi possível salvar. Confira a internet e tente de novo.']);
+  }
+  var nome = el('input', {type:'text', maxlength:'40', placeholder:'Ex.: 3ª A', 'aria-label':'Nome da turma'});
+  var colar = el('textarea', {class:'cad-colar', placeholder:'Cole aqui os nomes copiados do Excel ou do Word, ou digite um nome por linha.\n\nEx.:\nAna Clara Souza\nBruno Henrique Lima', 'aria-label':'Nomes dos alunos'});
+  var previa = el('small', {style:'opacity:.75'});
+  colar.oninput = function(){ var n = lerNomesColados(colar.value).length; previa.textContent = n ? '✅ ' + n + (n === 1 ? ' nome encontrado' : ' nomes encontrados') : ''; };
+  var criar = el('button', {type:'submit', class:'grande'}, '➕ Cadastrar turma');
+  var formNova = el('form', {onsubmit: function(ev){
+    ev.preventDefault();
+    var n = nome.value.trim();
+    if(!n){ nome.focus(); aviso.replaceChildren(msg('erro', 'Dê um nome para a turma.')); return; }
+    if(cadTurmas.some(function(t){ return chaveTurma(t.nome) === chaveTurma(n); })){ aviso.replaceChildren(msg('erro', 'Já existe a turma ' + n + '. Para colocar alunos nela, use “Colar vários” no cartão da turma.')); return; }
+    var t = {id: novoIdCad(), nome: n, alunos: []};
+    var qt = juntarAlunos(t, lerNomesColados(colar.value));
+    cadTurmas.push(t);
+    cadTurmas.sort(function(a, b){ return a.nome.localeCompare(b.nome, 'pt-BR', {numeric:true}); });
+    criar.disabled = true;
+    gravar('Turma ' + n + ' cadastrada com ' + qt + (qt === 1 ? ' aluno.' : ' alunos.'));
+  }},
+    el('div', {class:'duas'},
+      el('div', {}, el('label', {}, 'Nome da turma'), nome),
+      el('div', {}, el('label', {}, 'Alunos (opcional agora)'), colar, previa)),
+    el('div', {style:'margin-top:10px'}, criar));
+  var cartoes = cadTurmas.map(function(t){
+    var lista = el('ul', {class:'cad-alunos'}, t.alunos.length ? t.alunos.map(function(a){
+      return el('li', {}, el('span', {}, a.nome), el('button', {type:'button', class:'cad-x', title:'Retirar ' + a.nome, 'aria-label':'Retirar ' + a.nome, onclick: function(){
+        if(!window.confirm('Retirar ' + a.nome + ' da turma ' + t.nome + '?')) return;
+        t.alunos = t.alunos.filter(function(x){ return x !== a; });
+        gravar(a.nome + ' saiu da turma ' + t.nome + '.');
+      }}, '✕'));
+    }) : el('li', {}, el('span', {style:'opacity:.6'}, 'Nenhum aluno ainda.')));
+    var um = el('input', {type:'text', maxlength:'80', placeholder:'Nome completo do aluno', 'aria-label':'Adicionar aluno em ' + t.nome});
+    var addUm = function(){ var n = um.value.replace(/\s+/g, ' ').trim(); if(!n) { um.focus(); return; }
+      var q = juntarAlunos(t, [n]); if(!q){ aviso.replaceChildren(msg('info', n + ' já está na turma ' + t.nome + '.')); return; }
+      gravar(n + ' entrou na turma ' + t.nome + '.'); };
+    um.onkeydown = function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); addUm(); } };
+    var area = el('textarea', {class:'cad-colar', style:'display:none;min-height:90px', placeholder:'Cole os nomes (um por linha)'});
+    var btnVarios = el('button', {type:'button', class:'peq sec', onclick: function(){
+      if(area.style.display === 'none'){ area.style.display = ''; area.focus(); btnVarios.textContent = '✅ Adicionar os nomes colados'; return; }
+      var q = juntarAlunos(t, lerNomesColados(area.value));
+      if(!q){ aviso.replaceChildren(msg('info', 'Nenhum nome novo encontrado.')); return; }
+      gravar(q + (q === 1 ? ' aluno novo' : ' alunos novos') + ' na turma ' + t.nome + '.');
+    }}, '📋 Colar vários');
+    return el('div', {class:'cad-turma'},
+      el('div', {class:'cad-topo'}, el('span', {style:'font-size:1.6rem', 'aria-hidden':'true'}, '🏫'), el('h3', {}, t.nome),
+        el('span', {class:'tag'}, '👥 ' + t.alunos.length)),
+      lista,
+      el('div', {class:'cad-acoes'},
+        el('div', {class:'cad-linha'}, um, el('button', {type:'button', class:'peq', onclick: addUm}, '➕')),
+        area,
+        el('div', {class:'linha'}, btnVarios,
+          el('button', {type:'button', class:'peq sec', onclick: function(){
+            var n = window.prompt('Novo nome da turma:', t.nome); if(!n || !n.trim() || n.trim() === t.nome) return;
+            t.nome = n.trim(); gravar('Turma renomeada para ' + t.nome + '.');
+          }}, '✏️ Renomear'),
+          el('button', {type:'button', class:'peq sec', onclick: function(){
+            if(!t.alunos.length || !window.confirm('Retirar TODOS os ' + t.alunos.length + ' alunos de ' + t.nome + '? A turma continua cadastrada.')) return;
+            t.alunos = []; gravar('Lista de alunos de ' + t.nome + ' esvaziada.');
+          }}, '🧹 Esvaziar'),
+          el('button', {type:'button', class:'peq perigo', onclick: function(){
+            if(!window.confirm('Excluir a turma ' + t.nome + '? Ela também sai do Campeonato de Tarefas (com as marcações dela). As notas das atividades já feitas continuam guardadas.')) return;
+            cadTurmas = cadTurmas.filter(function(x){ return x !== t; });
+            gravar('Turma ' + t.nome + ' excluída.', [t.id]);
+          }}, '🗑 Excluir'))));
+  });
+  app.replaceChildren(
+    el('div', {class:'card'}, el('h2', {}, '🏫 Minhas turmas'),
+      el('p', {class:'sub'}, 'Cadastre as turmas uma vez e use em todo o site: ao atribuir tarefas e no Campeonato de Tarefas. Você pode colocar ou retirar alunos quando quiser.'),
+      aviso, formNova),
+    el('div', {class:'card'}, el('h2', {}, '📚 Turmas cadastradas (' + cadTurmas.length + ')'),
+      cadTurmas.length ? el('div', {class:'cad-grade'}, cartoes) : el('p', {class:'vazio'}, 'Nenhuma turma ainda. Cadastre a primeira acima.')));
+}
 function atividadesDaTurma(){
   if(filtroTurma === 'todas') return atividades;
   return atividades.filter(function(a){ var t = turmasAtiv[a.id]; return filtroTurma === 'sem' ? !t : !!(t && t[filtroTurma]); });
@@ -1750,7 +1896,17 @@ function desenharAtribuir(){
   var ids = idsJogos().filter(function(id){ return !window.JOGOS[id].ferramenta; });
   if(jogoEscolhido && ids.indexOf(jogoEscolhido) < 0) jogoEscolhido = null;
   var titulo  = el('input', {type:'text', id:'titulo', maxlength:'120', placeholder:'Ex.: Porcentagem – lista 1'});
-  var turma   = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Ex.: 3ª A (opcional)'});
+  var turma   = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Digite a turma (ex.: 3ª A)', style:'display:none;margin-top:6px'});
+  var turmaSel = el('select', {id:'turma-sel', 'aria-label':'Turma'}, el('option', {value:''}, '⏳ Carregando turmas…'));
+  function montarSelTurma(){
+    var ops = [el('option', {value:''}, '— Sem turma —')];
+    (cadTurmas || []).forEach(function(t){ ops.push(el('option', {value: t.nome}, t.nome + ' (' + t.alunos.length + (t.alunos.length === 1 ? ' aluno)' : ' alunos)'))); });
+    ops.push(el('option', {value:'__outra'}, '✏️ Outra turma (digitar)'));
+    turmaSel.replaceChildren.apply(turmaSel, ops);
+    if(cadTurmas && cadTurmas.length === 1) turmaSel.value = cadTurmas[0].nome;
+  }
+  turmaSel.onchange = function(){ var o = turmaSel.value === '__outra'; turma.style.display = o ? '' : 'none'; if(o) turma.focus(); };
+  if(cadTurmas) montarSelTurma(); else carregarCadTurmas().then(montarSelTurma);
   var abreEm  = el('input', {type:'datetime-local', id:'abre-em', title:'Deixe em branco para liberar imediatamente'});
   var fechaEm = el('input', {type:'datetime-local', id:'fecha-em', title:'Deixe em branco para nunca expirar'});
   var aviso   = el('div');
@@ -1849,7 +2005,7 @@ function desenharAtribuir(){
     var abre  = abreEm.value  ? new Date(abreEm.value).toISOString()  : null;
     var fecha = fechaEm.value ? new Date(fechaEm.value).toISOString() : null;
     if(abre && fecha && new Date(fecha) <= new Date(abre)){ aviso.append(msg('erro', 'A data de encerramento deve ser depois da data de abertura.')); botao.disabled = false; return; }
-    var r = await sb.from('atividades').insert({jogo: jogoEscolhido, titulo: t, turma: turma.value.trim() || null, abre_em: abre, fecha_em: fecha}).select().single();
+    var r = await sb.from('atividades').insert({jogo: jogoEscolhido, titulo: t, turma: (turmaSel.value === '__outra' ? turma.value.trim() : turmaSel.value) || null, abre_em: abre, fecha_em: fecha}).select().single();
     botao.disabled = false;
     if(r.error){ aviso.append(msg('erro', 'Não foi possível criar: ' + r.error.message)); return; }
     jogoEscolhido = null; abertaId = null;
@@ -1863,7 +2019,8 @@ function desenharAtribuir(){
     resumoEscolha,
     el('div', {class:'duas', style:'margin-top:6px'},
       el('div', {}, el('label', {for:'titulo'}, 'Nome da atividade'), titulo),
-      el('div', {}, el('label', {for:'turma'}, 'Turma'), turma)),
+      el('div', {}, el('label', {for:'turma-sel'}, 'Turma'), turmaSel, turma,
+        el('small', {style:'opacity:.7;font-size:.78rem'}, 'Cadastre suas turmas na aba ', el('a', {href:'#cadastro', onclick: function(ev){ ev.preventDefault(); aba = 'cadastro'; history.replaceState(null, '', '#cadastro'); desenharAbas(); mostrarAba(); }}, '🏫 Minhas turmas'), '.'))),
     el('div', {class:'datas-prazo', style:'margin-top:10px'},
       el('p', {style:'margin:0 0 8px;font-size:.82rem;color:var(--sub);display:flex;align-items:center;gap:6px'},
         el('span', {style:'font-size:1rem'}, '📅'),
