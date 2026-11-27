@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "09:20",
+    "titulo": "Missão MMM: recomeçar com outro nome",
+    "texto": "No final da missão agora há o botão Novo jogador: volta para a tela inicial com o campo do nome livre e o teclado abre sozinho no celular. \"Jogar tudo de novo\" também volta para a tela do nome.",
+    "link": "/catalogo/missao-moda-media-mediana.html",
+    "jogo": "missao-moda-media-mediana"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "08:30",
     "titulo": "Novo jogo: Missão MMM (moda, média e mediana)",
     "texto": "Atividade longa e gamificada em 6 fases: o aluno conta, ordena e digita os valores para encontrar moda, mediana, média simples e média ponderada, escolhe a medida certa em casos reais e vence o Robô Bagunça. Feedback a cada passo, dicas, sons, estrelas, medalhas, relatório final e desafio para o caderno com gabarito.",
