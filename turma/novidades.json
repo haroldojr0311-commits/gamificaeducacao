@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "10:30",
+    "titulo": "Novo jogo: Jornada Financeira (13 fases)",
+    "texto": "Jogo completo de Educação Financeira: o aluno escolhe um personagem e passa por metas, inflação, reserva de emergência, risco e retorno, juros compostos, simulação com dado e moeda, ajustes no plano e uma trilha final de 15 questões. Pontos, estrelas, conquistas, ranking e certificado.",
+    "link": "/catalogo/jornada-financeira.html",
+    "jogo": "jornada-financeira"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "09:20",
     "titulo": "Missão MMM: recomeçar com outro nome",
     "texto": "No final da missão agora há o botão Novo jogador: volta para a tela inicial com o campo do nome livre e o teclado abre sozinho no celular. \"Jogar tudo de novo\" também volta para a tela do nome.",

@@ -40,6 +40,15 @@ window.JOGOS = {
     emoji: "💰", cor: "verde",
     conteudo: "Educação Financeira"
   },
+  "jornada-financeira": {
+    bncc: ["EM13MAT104", "EM13MAT203", "EM13MAT303"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Jornada Financeira: Construindo o Futuro",
+    tema: "Metas, inflação e investimentos",
+    desc: "Jogo em 13 fases: o aluno escolhe um personagem e cuida da vida financeira dele. Sonho, meta e planejamento, inflação, reserva de emergência e seguro, risco e retorno, renda fixa e variável, simulador de juros compostos, simulação com dado e moeda, ajustes no plano, narrativa da trajetória e trilha final de 15 questões com resolução.",
+    emoji: "🧭", cor: "amarelo",
+    conteudo: "Educação Financeira"
+  },
   "orcamento-em-familia": {
     bncc: ["EM13MAT203"],
     nivel: ["Fundamental 2", "Ensino Médio"],
