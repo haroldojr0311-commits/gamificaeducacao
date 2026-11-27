@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "11:30",
+    "titulo": "Jornada Financeira: calculadora flutuante",
+    "texto": "Botão 🧮 no canto da tela abre uma calculadora com parênteses, porcentagem e potência (xʸ). Ela pode ser arrastada e tem o botão \"Usar na resposta\", que coloca o resultado direto no campo da questão.",
+    "link": "/catalogo/jornada-financeira.html",
+    "jogo": "jornada-financeira"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "11:20",
     "titulo": "Jornada Financeira: alternativas reequilibradas",
     "texto": "As alternativas foram reescritas para que a resposta certa não seja sempre a mais longa. Agora o aluno precisa ler e pensar em todas as opções.",
