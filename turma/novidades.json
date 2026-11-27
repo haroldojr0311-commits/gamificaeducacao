@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "14:01",
+    "titulo": "Tarefas: o aluno escolhe o nome na lista da turma",
+    "texto": "Quando a tarefa é atribuída a uma turma cadastrada em Minhas turmas, o aluno não digita mais o nome: ele escolhe o próprio nome na lista. Assim acabam os nomes escritos errado ou repetidos nas notas. Se o nome não estiver na lista, ainda dá para digitar.",
+    "link": "./#cadastro"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "13:52",
     "titulo": "Nova aba Minhas turmas: cadastre turmas e alunos",
     "texto": "Cadastre cada turma uma vez, digitando os nomes ou colando a lista do Excel ou do Word. Coloque ou retire alunos quando quiser. Na hora de atribuir uma tarefa, é só escolher a turma na lista, e as mesmas turmas aparecem no Campeonato de Tarefas.",

@@ -1,0 +1,3 @@
+-- Aplicado no Supabase em 27/11/2026: lista de nomes da turma da atividade (para o aluno escolher o nome).
+-- Lê ct_turmas / ct_alunos_<id> de dados_ferramentas 'campeonato-tarefas' do professor da atividade.
+-- Ver função public.alunos_da_atividade(p_codigo) e public.chave_turma(t) no banco.

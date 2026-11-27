@@ -359,23 +359,47 @@ function turmaValida(t){
 }
 
 function telaNome(){
+  /* Turma cadastrada pelo professor: o aluno escolhe o nome na lista */
+  if(atividade.turma && atividade.alunos === undefined){
+    atividade.alunos = [];
+    mostrar(el('p', {class:'muted'}, '⏳ Carregando a lista da turma…'));
+    Promise.race([sb.rpc('alunos_da_atividade', {p_codigo: codigo}), new Promise(function(ok){ setTimeout(function(){ ok({}); }, 5000); })])
+      .then(function(r){ if(r && Array.isArray(r.data)) atividade.alunos = r.data; }, function(){})
+      .then(telaNome);
+    return;
+  }
+  var lista = (atividade.alunos || []).filter(function(x){ return typeof x === 'string' && x.trim(); });
+  var nomeSel = null, digitar = false;
   var nome = el('input', {type:'text', id:'nome', maxlength:'80', autocomplete:'name', placeholder:'Nome e sobrenome', value: ler('gm_nome')});
   var turma = el('input', {type:'text', id:'turma', maxlength:'40', placeholder:'Ex.: 3A, 3 A ou 3ª série A', value: atividade.turma || ler('gm_turma')});
   /* Se o professor já definiu a turma ao atribuir, o aluno digita só o nome */
   var turmaFixa = !!(atividade.turma && turmaValida(normalizaTurma(atividade.turma)));
   var aviso = el('div');
+  var caixaNome = el('div', {}, nome);
+  if(turmaFixa && lista.length){
+    var salvo = ler('gm_nome');
+    nomeSel = el('select', {id:'nome-sel', 'aria-label':'Escolha seu nome',
+      style:'width:100%;padding:14px;border:2px solid var(--line);border-radius:14px;font-size:1.05rem;background:#fff;font:inherit'},
+      [el('option', {value:''}, '👇 Toque aqui e escolha seu nome')].concat(lista.map(function(n){ return el('option', {value: n}, n); })));
+    if(salvo && lista.indexOf(salvo) >= 0) nomeSel.value = salvo;
+    var naoEstou = el('a', {href:'#', style:'display:inline-block;margin:8px 0 4px;font-size:.92rem'}, 'Meu nome não está na lista');
+    naoEstou.onclick = function(ev){ ev.preventDefault(); digitar = true; nome.value = ''; caixaNome.replaceChildren(nome); nome.focus(); };
+    caixaNome.replaceChildren(nomeSel, naoEstou);
+  }
   var form = el('form', {onsubmit: function(ev){
     ev.preventDefault(); aviso.replaceChildren();
-    var n = nome.value.trim().replace(/\s+/g, ' ');
+    var porLista = nomeSel && !digitar;
+    var n = (porLista ? nomeSel.value : nome.value).trim().replace(/\s+/g, ' ');
     var s = normalizaTurma(turma.value);
-    var erroNome = nomeValido(n);
+    if(porLista && !n){ aviso.append(el('div', {class:'msg erro'}, 'Escolha o seu nome na lista.')); nomeSel.focus(); return; }
+    var erroNome = porLista ? '' : nomeValido(n);
     if(erroNome){ aviso.append(el('div', {class:'msg erro'}, erroNome)); return; }
     if(!turmaValida(s)){ aviso.append(el('div', {class:'msg erro'}, 'Digite sua série e turma (ex.: 3A ou 3ª série A).')); return; }
     aluno = {nome: n, turma: s};
     guardar('gm_nome', aluno.nome); guardar('gm_turma', aluno.turma);
     comecar();
   }},
-    el('label', {for:'nome'}, 'Seu nome completo *'), nome,
+    el('label', {for: nomeSel ? 'nome-sel' : 'nome'}, nomeSel ? 'Escolha o seu nome *' : 'Seu nome completo *'), caixaNome,
     turmaFixa ? el('p', {class:'muted', style:'margin:8px 0 12px'}, '🏫 Série/turma: ' + normalizaTurma(atividade.turma) + (atividade.professor ? ' · 👩‍🏫 Professor(a): ' + atividade.professor : '')) : null,
     turmaFixa ? null : el('label', {for:'turma'}, 'Sua série e turma *'), turmaFixa ? null : turma,
     el('button', {type:'submit'}, '🚀 Começar'), aviso);
@@ -383,7 +407,7 @@ function telaNome(){
   var cores = {amarelo:'#ffe27a', coral:'#ffb4a6', verde:'#a6e4c6', azul:'#b9d4ff', lilas:'#d8c9ff', laranja:'#ffc88a'};
   mostrar(el('div', {class:'post', style:'--n:' + (cores[J.cor] || cores.amarelo)}, J.tema ? el('span', {class:'tema'}, J.tema) : null, J.emoji || '🎮'),
     el('h1', {}, atividade.titulo),
-    el('p', {class:'muted'}, turmaFixa ? 'Digite seu nome completo (nome e sobrenome). Ao terminar, sua nota é enviada automaticamente ao professor.' : 'Digite seu nome completo (nome e sobrenome) e sua série e turma. Ao terminar, sua nota é enviada automaticamente ao professor.'),
+    el('p', {class:'muted'}, nomeSel ? 'Escolha o seu nome na lista da turma. Ao terminar, sua nota é enviada automaticamente ao professor.' : turmaFixa ? 'Digite seu nome completo (nome e sobrenome). Ao terminar, sua nota é enviada automaticamente ao professor.' : 'Digite seu nome completo (nome e sobrenome) e sua série e turma. Ao terminar, sua nota é enviada automaticamente ao professor.'),
     form);
 }
 
