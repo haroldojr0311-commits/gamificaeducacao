@@ -151,6 +151,13 @@
    "bytes": 50612,
    "atividade": "Pitágoras e Trigonometria na Vida Real",
    "id": "simulador-pitagoras-trigonometria"
+  },
+  {
+   "arquivo": "missao-moda-media-mediana.html",
+   "bytes": 60381,
+   "mtimeMs": 1795778766942,
+   "atividade": "Missão MMM: Moda, Média e Mediana",
+   "id": "missao-moda-media-mediana"
   }
  ]
 }
