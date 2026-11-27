@@ -40,6 +40,15 @@ window.JOGOS = {
     emoji: "💰", cor: "verde",
     conteudo: "Educação Financeira"
   },
+  "missao-cidadao-consciente": {
+    bncc: ["EM13MAT104", "EM13MAT203", "EM13MAT311"],
+    nivel: ["Fundamental 2", "Ensino Médio"],
+    nome: "Missão Cidadão Consciente",
+    tema: "Ética, golpes e consumo consciente",
+    desc: "Jogo em 13 missões: o aluno é o Agente da Vila Horizonte e cuida de três medidores (Confiança, Segurança e Planeta). Dilemas éticos, comparador de empréstimos com CET, detetive de golpes, medidor de senha, LGPD e Open Finance, caça aos gatilhos de anúncios, critérios ASG e greenwashing, simulador de apostas, psicologia financeira, cidadania financeira, diagnóstico do bairro com cartaz de campanha e trilha final de 16 questões. Calculadora flutuante.",
+    emoji: "🕵️", cor: "azul",
+    conteudo: "Educação Financeira"
+  },
   "jornada-financeira": {
     bncc: ["EM13MAT104", "EM13MAT203", "EM13MAT303"],
     nivel: ["Fundamental 2", "Ensino Médio"],

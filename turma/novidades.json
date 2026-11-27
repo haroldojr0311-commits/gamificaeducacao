@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "11:24",
+    "titulo": "Novo jogo: Missão Cidadão Consciente (13 missões)",
+    "texto": "Segundo jogo da Educação Financeira: ética, CET, golpes, segurança digital, LGPD, publicidade, sustentabilidade, apostas, psicologia financeira e cidadania. O aluno cuida dos medidores de Confiança, Segurança e Planeta da Vila Horizonte e termina com cartaz de campanha, certificado e trilha de 16 questões.",
+    "link": "/catalogo/missao-cidadao-consciente.html",
+    "jogo": "missao-cidadao-consciente"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "11:10",
     "titulo": "Jornada Financeira: calculadora flutuante",
     "texto": "Botão 🧮 no canto da tela abre uma calculadora com parênteses, porcentagem e potência (xʸ). Ela pode ser arrastada e tem o botão \"Usar na resposta\", que coloca o resultado direto no campo da questão.",
