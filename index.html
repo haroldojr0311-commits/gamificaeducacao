@@ -1753,7 +1753,7 @@ function barraTurmas(){
   if(!chaves.length){ filtroTurma = 'todas'; return null; }
   if(filtroTurma && filtroTurma !== 'todas' && filtroTurma !== 'sem' && !conta[filtroTurma]) filtroTurma = '';
   if(filtroTurma === 'sem' && !sem) filtroTurma = '';
-  var ops = [['', '👇 Escolha a turma'], ['todas', 'Todas as turmas (' + atividades.length + ')']].concat(chaves.map(function(k){ return [k, rotuloTurma[k] + ' (' + conta[k] + (conta[k] === 1 ? ' atividade)' : ' atividades)')]; }));
+  var ops = [['', '👇 Escolha a turma'], ['todas', 'Todas as turmas (' + chaves.length + (chaves.length === 1 ? ' turma, ' : ' turmas, ') + atividades.length + (atividades.length === 1 ? ' atividade)' : ' atividades)')]].concat(chaves.map(function(k){ return [k, rotuloTurma[k] + ' (' + conta[k] + (conta[k] === 1 ? ' atividade)' : ' atividades)')]; }));
   if(sem) ops.push(['sem', 'Sem turma (' + sem + ')']);
   var sel = el('select', {id:'sel-turma', 'aria-label':'Turma', style:'max-width:420px;font-weight:700'}, ops.map(function(o){ return el('option', {value: o[0]}, o[1]); }));
   sel.value = filtroTurma;

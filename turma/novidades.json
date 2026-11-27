@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "14:39",
+    "titulo": "Turmas: contagem corrigida",
+    "texto": "Na escolha da turma, a opção \"Todas as turmas\" agora mostra o número de turmas e o de atividades separados (ex.: 8 turmas, 10 atividades).",
+    "link": "/novidades.html",
+    "jogo": ""
+  },
+  {
+    "data": "2026-11-27",
     "hora": "14:35",
     "titulo": "Educação Financeira: tabelas junto das perguntas",
     "texto": "Nas questões que dependem de uma tabela ou gráfico (ofertas de empréstimo e CET, fatores de compra por impulso, inflação da cesta), as informações agora aparecem logo acima da resposta, sem precisar voltar à tela anterior. A contagem de estrelas de cada parte também foi corrigida.",
