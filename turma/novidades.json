@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "11:20",
+    "titulo": "Jornada Financeira: alternativas reequilibradas",
+    "texto": "As alternativas foram reescritas para que a resposta certa não seja sempre a mais longa. Agora o aluno precisa ler e pensar em todas as opções.",
+    "link": "/catalogo/jornada-financeira.html",
+    "jogo": "jornada-financeira"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "11:10",
     "titulo": "Tarefas: botão Outro aluno no final",
     "texto": "Em todos os jogos, simuladores e ferramentas atribuídos como tarefa, a tela final agora tem o botão \"Outro aluno: colocar outro nome\". Ele limpa o aparelho e volta para a tela do nome, para o próximo aluno fazer a tarefa no mesmo computador ou celular.",
