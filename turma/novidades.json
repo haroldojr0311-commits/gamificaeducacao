@@ -1,6 +1,13 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "14:06",
+    "titulo": "Abas com nomes novos",
+    "texto": "A aba Turmas e notas agora se chama Atividades desenvolvidas, e a aba Minhas turmas agora se chama Cadastrar turmas. Tudo continua funcionando do mesmo jeito.",
+    "link": "./#turmas"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "14:01",
     "titulo": "Tarefas: o aluno escolhe o nome na lista da turma",
     "texto": "Quando a tarefa é atribuída a uma turma cadastrada em Minhas turmas, o aluno não digita mais o nome: ele escolhe o próprio nome na lista. Assim acabam os nomes escritos errado ou repetidos nas notas. Se o nome não estiver na lista, ainda dá para digitar.",

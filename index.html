@@ -1341,7 +1341,7 @@ function montarApresentacao(cartaoLogin, retorno, direto){
 
 /* ---------- abas ---------- */
 function desenharAbas(){
-  var itens = [['jogos', '🎮 Jogos'], ['simuladores', '🔬 Simuladores'], ['ferramentas', '🧰 Ferramentas'], ['turmas', '👩‍🏫 Turmas e notas'], ['cadastro', '🏫 Minhas turmas']];
+  var itens = [['jogos', '🎮 Jogos'], ['simuladores', '🔬 Simuladores'], ['ferramentas', '🧰 Ferramentas'], ['turmas', '👩‍🏫 Atividades desenvolvidas'], ['cadastro', '🏫 Cadastrar turmas']];
   if(visitante) itens = itens.slice(0, 3);
   else if(perfil.papel === 'admin') itens.push(['admin', '🛡️ Administração']);
   abasBox.replaceChildren.apply(abasBox, itens.map(function(it){
@@ -1715,7 +1715,7 @@ document.addEventListener('keydown', function(e){
   window.scrollBy({top: mapa[e.key], behavior: 'smooth'});
 });
 
-/* ---------- aba Atribuir tarefas e aba Turmas e notas ---------- */
+/* ---------- aba Atribuir tarefas e aba Atividades desenvolvidas ---------- */
 async function carregarAtividades(){
   var a = await sb.from('atividades').select('*').eq('professor_id', sessao.user.id).order('criada_em', {ascending:false});
   atividades = a.error ? [] : a.data;
@@ -1758,7 +1758,7 @@ function barraTurmas(){
     }}, f[1]);
   })));
 }
-/* ---------- Minhas turmas (cadastro) ----------
+/* ---------- Cadastrar turmas (cadastro) ----------
    Ficam no mesmo lugar do Campeonato de Tarefas (dados_ferramentas 'campeonato-tarefas':
    ct_turmas e ct_alunos_<id>, em texto JSON). Assim a ferramenta mostra as mesmas turmas. */
 var CT_ID = 'campeonato-tarefas';
@@ -1882,7 +1882,7 @@ function desenharCadastro(avisoTxt){
           }}, '🗑 Excluir'))));
   });
   app.replaceChildren(
-    el('div', {class:'card'}, el('h2', {}, '🏫 Minhas turmas'),
+    el('div', {class:'card'}, el('h2', {}, '🏫 Cadastrar turmas'),
       el('p', {class:'sub'}, 'Cadastre as turmas uma vez e use em todo o site: ao atribuir tarefas e no Campeonato de Tarefas. Você pode colocar ou retirar alunos quando quiser.'),
       aviso, formNova),
     el('div', {class:'card'}, el('h2', {}, '📚 Turmas cadastradas (' + cadTurmas.length + ')'),
@@ -2020,7 +2020,7 @@ function desenharAtribuir(){
     el('div', {class:'duas', style:'margin-top:6px'},
       el('div', {}, el('label', {for:'titulo'}, 'Nome da atividade'), titulo),
       el('div', {}, el('label', {for:'turma-sel'}, 'Turma'), turmaSel, turma,
-        el('small', {style:'opacity:.7;font-size:.78rem'}, 'Cadastre suas turmas na aba ', el('a', {href:'#cadastro', onclick: function(ev){ ev.preventDefault(); aba = 'cadastro'; history.replaceState(null, '', '#cadastro'); desenharAbas(); mostrarAba(); }}, '🏫 Minhas turmas'), '.'))),
+        el('small', {style:'opacity:.7;font-size:.78rem'}, 'Cadastre suas turmas na aba ', el('a', {href:'#cadastro', onclick: function(ev){ ev.preventDefault(); aba = 'cadastro'; history.replaceState(null, '', '#cadastro'); desenharAbas(); mostrarAba(); }}, '🏫 Cadastrar turmas'), '.'))),
     el('div', {class:'datas-prazo', style:'margin-top:10px'},
       el('p', {style:'margin:0 0 8px;font-size:.82rem;color:var(--sub);display:flex;align-items:center;gap:6px'},
         el('span', {style:'font-size:1rem'}, '📅'),
@@ -2036,7 +2036,7 @@ function desenharAtribuir(){
   mostrarEscolha();
   app.replaceChildren(
     el('div', {class:'card'}, el('h2', {}, '✨ Nova atividade para a turma'),
-      el('p', {class:'sub'}, 'Escolha o jogo, dê um nome e gere o link. Os alunos abrem em qualquer lugar (celular ou computador), sem login, e a nota chega em “Turmas e notas”.'), form));
+      el('p', {class:'sub'}, 'Escolha o jogo, dê um nome e gere o link. Os alunos abrem em qualquer lugar (celular ou computador), sem login, e a nota chega em “Atividades desenvolvidas”.'), form));
 }
 function desenharTurmas(){
   var barra = atividades.length ? barraTurmas() : null, vis = atividadesDaTurma();

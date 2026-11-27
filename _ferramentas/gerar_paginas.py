@@ -261,7 +261,7 @@ window.addEventListener('DOMContentLoaded',function(){GamificaDep.mostrar('lista
 open(os.path.join(RAIZ, 'catalogo', 'index.html'), 'w').write(pagina(f'Catálogo: {TOTAL} jogos, simuladores e ferramentas educacionais · Gamifica Educação',
     f'{TOTAL} aplicações educacionais: {cont["jogo"]} jogos, {cont["simulador"]} simuladores e {cont["ferramenta"]} ferramentas para o professor, do Fundamental ao Superior.', corpo, 'catalogo/'))
 
-USO = {'jogo': ['Jogue no projetor com a turma toda ou deixe cada aluno jogar no celular.', 'Em “Atribuir tarefas”, gere um link: os alunos jogam sem login e a nota chega para você em “Turmas e notas”.'],
+USO = {'jogo': ['Jogue no projetor com a turma toda ou deixe cada aluno jogar no celular.', 'Em “Atribuir tarefas”, gere um link: os alunos jogam sem login e a nota chega para você em “Atividades desenvolvidas”.'],
        'simulador': ['Projete e explore com a turma: mude os valores e peça que os alunos façam previsões antes de ver o resultado.', 'Use como laboratório em duplas, no computador ou no celular.'],
        'ferramenta': ['Ferramenta para o dia a dia do professor: abra no computador da sala ou no celular.', 'Funciona direto no navegador, sem instalar nada.']}
 for k, v in ordenados:
@@ -321,7 +321,7 @@ FAQ = [
     ('Como funciona a degustação grátis?', 'Na tela de entrada, toque em “Degustação grátis”: você navega pelo portal por alguns minutos para conhecer as aplicações. Na degustação não é possível atribuir tarefas e nada fica salvo.'),
     ('Quanto custa o Plano Pró?', 'R$ 10,00 por mês. Você escolhe de 1 a 12 meses e paga por Pix ou cartão pelo Mercado Pago. O login e a senha aparecem na tela assim que o pagamento é aprovado.'),
     ('Posso usar em mais de um aparelho?', 'O login funciona em um aparelho por vez. Se você entrar em outro aparelho, o anterior é desconectado.'),
-    ('Os alunos precisam de login ou de cadastro?', 'Não. Em “Atribuir tarefas” você gera um link (ou QR code). O aluno abre, digita o nome e a turma, joga, e a nota chega para você em “Turmas e notas”, com planilha e relatório em Word.'),
+    ('Os alunos precisam de login ou de cadastro?', 'Não. Em “Atribuir tarefas” você gera um link (ou QR code). O aluno abre, digita o nome e a turma, joga, e a nota chega para você em “Atividades desenvolvidas”, com planilha e relatório em Word.'),
     ('Como funcionam o Gamifica Live (Quiz ao vivo) e a Enquete?', 'Você projeta a tela e os alunos entram pelo celular com um código: gamificaeducacao.com.br/vivo (quiz) ou gamificaeducacao.com.br/enquete (enquete e nuvem de palavras). As respostas aparecem no projetor na hora.'),
     ('Funciona no celular?', 'Sim. As aplicações se adaptam à tela do celular e do tablet. Você também pode instalar o site como aplicativo: no celular, abra o menu do navegador e toque em “Adicionar à tela inicial”.'),
     ('Posso imprimir atividades?', 'Sim. Várias ferramentas geram material para imprimir ou salvar em PDF: fichas de tabuada e cálculo mental, planificação de sólidos para montar, desenhos no plano cartesiano, provas, caça-palavras, sudoku e bingo.'),
@@ -333,7 +333,7 @@ corpo = (f'<div class="card hero"><h1>Como funciona</h1><p class="sub">Aprender 
          '<div><b>Entre no portal</b><br>Faça a degustação grátis ou entre com o seu login do Plano Pró.</div>'
          '<div><b>Escolha a aplicação</b><br>Filtre por nível (Fundamental 1 ao Superior) e por conteúdo, ou busque pelo nome. Guarde as preferidas na ⭐.</div>'
          '<div><b>Use em aula</b><br>Projete para a turma, deixe os alunos jogarem no celular ou imprima as fichas.</div>'
-         '<div><b>Acompanhe as notas</b><br>Atribua tarefas por link ou QR code e veja as notas em “Turmas e notas”, com planilha e relatório.</div>'
+         '<div><b>Acompanhe as notas</b><br>Atribua tarefas por link ou QR code e veja as notas em “Atividades desenvolvidas”, com planilha e relatório.</div>'
          '</div></div>'
          '<div class="card"><h2>Perguntas frequentes</h2>' + ''.join(f'<details><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in FAQ) + '</div>'
          '<div class="card" id="depoimentos"><h2>Depoimentos de professores</h2><div id="listaDep"></div>'
