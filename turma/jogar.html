@@ -225,6 +225,17 @@ function telaRetomar(){
     el('button', {type:'button', onclick: function(){ aluno = {nome: prog.nome, turma: prog.turma || ''}; comecar(true); }}, '▶️ Continuar a atividade'),
     el('button', {type:'button', class:'sec', onclick: function(){ prog = null; try{ localStorage.removeItem(chaveProg()); }catch(e){} telaNome(); }}, 'Não sou eu / começar do zero'));
 }
+function novoAluno(){
+  /* Libera o aparelho para outro aluno: apaga o andamento local e volta à tela do nome (vazia) */
+  document.getElementById('parabens').classList.remove('on');
+  try{ localStorage.removeItem(chaveProg()); localStorage.removeItem('gm_nome'); if(!(atividade.turma && turmaValida(normalizaTurma(atividade.turma)))) localStorage.removeItem('gm_turma'); }catch(e){}
+  prog = null; aluno = {nome:'', turma:''}; concluida = false; pendente = null; enviando = false;
+  try{ quadro.src = 'about:blank'; }catch(e){}
+  document.body.className = ''; setStatus('', ''); esconderBloqueio();
+  if(document.fullscreenElement){ try{ document.exitFullscreen(); }catch(e){} }
+  telaNome();
+  setTimeout(function(){ var n = document.getElementById('nome'); if(n){ n.value = ''; n.focus(); } }, 80);
+}
 function telaConcluida(){
   mostrar(el('div', {class:'emoji'}, '🏆'),
     el('h1', {}, 'Você já concluiu esta atividade!'),
@@ -232,7 +243,8 @@ function telaConcluida(){
     el('p', {class:'muted'}, mensagemFinal(Number(prog.nota)).texto),
     el('p', {id:'posicao-msg', style:'font-weight:800;color:#312e81'}, 'Calculando sua posição…'),
     blocoResultado({aluno: prog.nome, serie: prog.turma || '—', atividade: atividade.titulo, acertos: prog.acertos, total: prog.total, nota: Number(prog.nota), pontos: prog.pontos || 0, data: prog.data || '—'}),
-    el('button', {type:'button', onclick: function(){ aluno = {nome: prog.nome, turma: prog.turma || ''}; prog = null; comecar(); }}, '🔁 Jogar de novo para melhorar'));
+    el('button', {type:'button', onclick: function(){ aluno = {nome: prog.nome, turma: prog.turma || ''}; prog = null; comecar(); }}, '🔁 Jogar de novo para melhorar'),
+    el('button', {type:'button', class:'sec', onclick: novoAluno}, '👥 Outro aluno: colocar outro nome'));
   buscarPosicao(prog.nome, prog.turma).then(function(pos){ var q = document.getElementById('posicao-msg'); if(q) q.textContent = textoPosicao(pos); });
 }
 function mensagemFinal(n){
@@ -288,7 +300,8 @@ function festa(nota, acertos, total, pontos){
     el('p', {class:'muted'}, 'Você terminou a atividade. Sua nota:'), el('div', {class:'nota'}, fmtNota(nota)),
     el('p', {}, m.texto), el('p', {id:'posicao-msg', style:'font-weight:800;color:#312e81'}, 'Calculando sua posição…'), el('div', {id:'ranking-final'}), blocoResultado(dados),
     el('button', {type:'button', onclick: function(){ document.getElementById('parabens').classList.remove('on'); }}, '👍 Fechar'),
-    el('button', {type:'button', class:'sec', onclick: function(){ document.getElementById('parabens').classList.remove('on'); prog = null; comecar(); }}, '🔁 Jogar de novo'));
+    el('button', {type:'button', class:'sec', onclick: function(){ document.getElementById('parabens').classList.remove('on'); prog = null; comecar(); }}, '🔁 Jogar de novo'),
+    el('button', {type:'button', class:'sec', onclick: novoAluno}, '👥 Outro aluno: colocar outro nome'));
   document.getElementById('parabens').classList.add('on');
   if(aluno.nome !== 'Não identificado') buscarPosicao(aluno.nome, aluno.turma).then(function(pos){ var q = document.getElementById('posicao-msg'); if(q) q.textContent = textoPosicao(pos); });
   mostrarRanking();

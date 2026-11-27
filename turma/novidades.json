@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "11:10",
+    "titulo": "Tarefas: botão Outro aluno no final",
+    "texto": "Em todos os jogos, simuladores e ferramentas atribuídos como tarefa, a tela final agora tem o botão \"Outro aluno: colocar outro nome\". Ele limpa o aparelho e volta para a tela do nome, para o próximo aluno fazer a tarefa no mesmo computador ou celular.",
+    "link": "/novidades.html",
+    "jogo": ""
+  },
+  {
+    "data": "2026-11-27",
     "hora": "10:40",
     "titulo": "Jornada Financeira: pergunta do Projeto de Vida mais clara",
     "texto": "Na fase 12, a pergunta final do Projeto de Vida ficou em uma linha só, com texto mais simples.",
