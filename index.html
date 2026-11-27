@@ -538,7 +538,7 @@ var perfil = null;      // {nome, papel, login, validade}
 var SID = null;         // identificador desta sessão (um aparelho por vez)
 var aba = 'jogos';
 var vigia = null;
-var atividades = [], contagem = {}, abertaId = null, modo = 'melhor', resultadosBrutos = [], progressoBruto = [], tvAberta = null;
+var atividades = [], contagem = {}, turmasAtiv = {}, filtroTurma = (function(){ try{ return localStorage.getItem('gm_filtro_turma') || 'todas'; }catch(e){ return 'todas'; } })(), abertaId = null, modo = 'melhor', resultadosBrutos = [], progressoBruto = [], tvAberta = null;
 var jogoEscolhido = null;
 var atrFiltro = {busca:'', tipo:'todos', nivel:'todos', cont:'todos'};
 var contas = [], buscaContas = '';
@@ -1704,16 +1704,47 @@ async function carregarAtividades(){
   var a = await sb.from('atividades').select('*').eq('professor_id', sessao.user.id).order('criada_em', {ascending:false});
   atividades = a.error ? [] : a.data;
   var ids = atividades.map(function(x){ return x.id; });
-  contagem = {};
+  contagem = {}; turmasAtiv = {};
+  atividades.forEach(function(x){ if(x.turma) addTurma(x.id, x.turma); });
   if(!ids.length) return;
   var r = await sb.from('resultados').select('atividade_id,aluno_nome,aluno_turma').in('atividade_id', ids).limit(5000);
   if(!r.error){
-    var vistos = {};
+    var vistos = {}, comTurma = {};
+    atividades.forEach(function(x){ if(x.turma) comTurma[x.id] = 1; });
     r.data.forEach(function(x){
       var k = x.atividade_id + '#' + chaveAluno(x);
       if(!vistos[k]){ vistos[k] = 1; contagem[x.atividade_id] = (contagem[x.atividade_id] || 0) + 1; }
+      if(!comTurma[x.atividade_id] && x.aluno_turma) addTurma(x.atividade_id, x.aluno_turma);
     });
   }
+}
+/* turma: "3ª A", "3a a" e "3A" viram a mesma chave */
+function chaveTurma(t){ return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[ªº°.\s\-_]/g,'').replace(/serie|ano/g,''); }
+var rotuloTurma = {};
+function addTurma(id, t){
+  var k = chaveTurma(t); if(!k) return;
+  if(!rotuloTurma[k]) rotuloTurma[k] = String(t).trim();
+  (turmasAtiv[id] = turmasAtiv[id] || {})[k] = 1;
+}
+function barraTurmas(){
+  var conta = {}, sem = 0;
+  atividades.forEach(function(a){ var t = turmasAtiv[a.id]; if(!t) sem++; else Object.keys(t).forEach(function(k){ conta[k] = (conta[k] || 0) + 1; }); });
+  var chaves = Object.keys(conta).sort(function(x, y){ return rotuloTurma[x].localeCompare(rotuloTurma[y], 'pt-BR', {numeric:true}); });
+  if(filtroTurma !== 'todas' && filtroTurma !== 'sem' && !conta[filtroTurma]) filtroTurma = 'todas';
+  if(filtroTurma === 'sem' && !sem) filtroTurma = 'todas';
+  var ops = [['todas', 'Todas (' + atividades.length + ')']].concat(chaves.map(function(k){ return [k, rotuloTurma[k] + ' (' + conta[k] + ')']; }));
+  if(sem && chaves.length) ops.push(['sem', 'Sem turma (' + sem + ')']);
+  if(!chaves.length) return null;
+  return el('div', {class:'filtros', role:'group', 'aria-label':'Turma'}, [el('span', {class:'filtros-rot'}, 'Turma')].concat(ops.map(function(f){
+    return el('button', {type:'button', class:'filtro', 'aria-pressed': String(filtroTurma === f[0]), onclick: function(){
+      filtroTurma = f[0]; try{ localStorage.setItem('gm_filtro_turma', f[0]); }catch(e){}
+      desenharTurmas();
+    }}, f[1]);
+  })));
+}
+function atividadesDaTurma(){
+  if(filtroTurma === 'todas') return atividades;
+  return atividades.filter(function(a){ var t = turmasAtiv[a.id]; return filtroTurma === 'sem' ? !t : !!(t && t[filtroTurma]); });
 }
 function desenharAtribuir(){
   var ids = idsJogos().filter(function(id){ return !window.JOGOS[id].ferramenta; });
@@ -1851,12 +1882,17 @@ function desenharAtribuir(){
       el('p', {class:'sub'}, 'Escolha o jogo, dê um nome e gere o link. Os alunos abrem em qualquer lugar (celular ou computador), sem login, e a nota chega em “Turmas e notas”.'), form));
 }
 function desenharTurmas(){
+  var barra = atividades.length ? barraTurmas() : null, vis = atividadesDaTurma();
+  var alunosT = vis.reduce(function(s, a){ return s + (contagem[a.id] || 0); }, 0);
+  var resumoT = (barra && filtroTurma !== 'todas')
+    ? el('p', {class:'sub'}, '📌 ' + (filtroTurma === 'sem' ? 'Sem turma' : rotuloTurma[filtroTurma]) + ': ' + vis.length + (vis.length === 1 ? ' atividade' : ' atividades') + ' · ' + alunosT + ' entregas de alunos')
+    : null;
   var lista = atividades.length === 0
     ? el('p', {class:'vazio'}, 'Você ainda não atribuiu nenhuma tarefa. Use a aba “Atribuir tarefas” para criar a primeira.')
-    : el('div', {class:'grade-ativ'}, atividades.map(cartaoAtividade));
+    : el('div', {class:'grade-ativ'}, vis.map(cartaoAtividade));
   app.replaceChildren(
     el('div', {class:'card', id:'minhas'}, el('h2', {}, '📚 Minhas atividades'),
-      el('p', {class:'sub'}, 'Copie o link e cole na Sala do Futuro, no Classroom, no Moodle ou no WhatsApp.'), lista),
+      el('p', {class:'sub'}, 'Copie o link e cole na Sala do Futuro, no Classroom, no Moodle ou no WhatsApp.'), barra, resumoT, lista),
     el('div', {id:'area-resultados'}));
   if(abertaId) mostrarResultados(abertaId);
 }
