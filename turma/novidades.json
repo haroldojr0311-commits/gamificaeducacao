@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-28",
+    "hora": "10:00",
+    "titulo": "Novo game: Missão PEFM-SP – Desafio FGV Ciências",
+    "texto": "Preparação para a prova objetiva do concurso SEDUC-SP (PEFM – Ciências, banca FGV): 52 questões inéditas, Simulado Oficial de 30 questões com nota de corte (15 pontos) e desempate, Campanha por eixos com medalhas, Cultura do Erro, Desafio Relâmpago, esquemas em SVG, Raio-X do distrator e relatório de estudo em CSV.",
+    "link": "/?jogo=missao-pefm-sp-ciencias",
+    "jogo": "missao-pefm-sp-ciencias"
+  },
+  {
+    "data": "2026-11-28",
     "hora": "09:53",
     "titulo": "Missão Aprovação SEDUC-SP: 227 questões",
     "texto": "O banco passou de 100 para 227 questões no estilo FGV, com 44 cenas no Identifique a técnica e 56 flashcards. Agora o game sorteia primeiro as questões que você ainda não respondeu, então cada partida traz questões novas.",
