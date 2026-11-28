@@ -6,6 +6,14 @@
 // bncc: códigos de habilidade da BNCC (Matemática) atendidos.
 // tipo: "simulador" | "ferramenta" (aba onde aparece; sem tipo = Jogos). conteudo: agrupa os jogos na aba Jogos.
 window.JOGOS = {
+  "missao-aprovacao-seduc-sp": {
+    nivel: ["Superior"],
+    nome: "Missão Aprovação SEDUC-SP: Gestão de Sala de Aula",
+    tema: "Concurso SEDUC-SP 2026 · Bloco I",
+    desc: "Game para professores estudarem a parte comum do concurso SEDUC-SP (edital 01/2026, banca FGV): Lemov (Aula nota 10 3.0), Willingham, Wiggins & McTighe e Weinstein. Trilha com mini-aulas e macetes, 100 questões no estilo FGV, simulado cronometrado com relatório por autor, cenas para identificar a técnica e 40 flashcards.",
+    emoji: "🎓", cor: "lilas",
+    conteudo: "Formação docente e concursos"
+  },
   "aventura-do-pi": {
     bncc: ["EF07MA31", "EF07MA33", "EF08MA19"],
     nivel: ["Fundamental 2", "Ensino Médio"],

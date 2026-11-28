@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "22:09",
+    "titulo": "Novo: Missão Aprovação SEDUC-SP (Gestão de Sala de Aula)",
+    "texto": "Game para professores estudarem o Bloco I do concurso SEDUC-SP (edital 01/2026, banca FGV): Lemov, Willingham, Wiggins & McTighe e Weinstein. São 100 questões no estilo FGV, mini-aulas com macetes, simulado cronometrado, 'Identifique a técnica' e 40 flashcards. Nova categoria: Formação docente e concursos.",
+    "link": "/?jogo=missao-aprovacao-seduc-sp",
+    "jogo": "missao-aprovacao-seduc-sp"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "14:39",
     "titulo": "Turmas: contagem corrigida",
     "texto": "Na escolha da turma, a opção \"Todas as turmas\" agora mostra o número de turmas e o de atividades separados (ex.: 8 turmas, 10 atividades).",
