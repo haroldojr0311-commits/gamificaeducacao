@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-27",
+    "hora": "22:18",
+    "titulo": "Missão Aprovação SEDUC-SP: correção",
+    "texto": "Corrigido o problema que impedia abrir os modos do game (Trilha, Simulado, Identifique a técnica e Flashcards) dentro do site.",
+    "link": "/?jogo=missao-aprovacao-seduc-sp",
+    "jogo": "missao-aprovacao-seduc-sp"
+  },
+  {
+    "data": "2026-11-27",
     "hora": "22:09",
     "titulo": "Novo: Missão Aprovação SEDUC-SP (Gestão de Sala de Aula)",
     "texto": "Game para professores estudarem o Bloco I do concurso SEDUC-SP (edital 01/2026, banca FGV): Lemov, Willingham, Wiggins & McTighe e Weinstein. São 100 questões no estilo FGV, mini-aulas com macetes, simulado cronometrado, 'Identifique a técnica' e 40 flashcards. Nova categoria: Formação docente e concursos.",
