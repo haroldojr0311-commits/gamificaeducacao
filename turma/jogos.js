@@ -10,7 +10,7 @@ window.JOGOS = {
     nivel: ["Superior"],
     nome: "Missão Aprovação SEDUC-SP: Gestão de Sala de Aula",
     tema: "Concurso SEDUC-SP 2026 · Bloco I",
-    desc: "Game para professores estudarem a parte comum do concurso SEDUC-SP (edital 01/2026, banca FGV): Lemov (Aula nota 10 3.0), Willingham, Wiggins & McTighe e Weinstein. Trilha com mini-aulas e macetes, 100 questões no estilo FGV, simulado cronometrado com relatório por autor, cenas para identificar a técnica e 40 flashcards.",
+    desc: "Game para professores estudarem a parte comum do concurso SEDUC-SP (edital 01/2026, banca FGV): Lemov (Aula nota 10 3.0), Willingham, Wiggins & McTighe e Weinstein. Trilha com mini-aulas e macetes, 227 questões no estilo FGV (o game prioriza as que você ainda não viu), simulado cronometrado com relatório por autor, 44 cenas para identificar a técnica e 56 flashcards.",
     emoji: "🎓", cor: "lilas",
     conteudo: "Formação docente e concursos"
   },

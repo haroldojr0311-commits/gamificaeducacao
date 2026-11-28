@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-28",
+    "hora": "09:53",
+    "titulo": "Missão Aprovação SEDUC-SP: 227 questões",
+    "texto": "O banco passou de 100 para 227 questões no estilo FGV, com 44 cenas no Identifique a técnica e 56 flashcards. Agora o game sorteia primeiro as questões que você ainda não respondeu, então cada partida traz questões novas.",
+    "link": "/?jogo=missao-aprovacao-seduc-sp",
+    "jogo": "missao-aprovacao-seduc-sp"
+  },
+  {
+    "data": "2026-11-28",
     "hora": "08:28",
     "titulo": "Missão Aprovação SEDUC-SP: botão Menu",
     "texto": "Dentro da Trilha, do Simulado, do Identifique a técnica e dos Flashcards agora aparece o botão amarelo ◀ Menu no topo, que volta para a tela inicial do game sem sair do jogo.",
