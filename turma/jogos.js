@@ -18,7 +18,7 @@ window.JOGOS = {
     nivel: ["Superior"],
     nome: "Missão PEFM-SP: Desafio FGV Ciências",
     tema: "Concurso SEDUC-SP 2026 · PEFM Ciências",
-    desc: "Game para professores se prepararem para a prova objetiva do concurso SEDUC-SP (PEFM – Ciências, banca FGV): 52 questões inéditas no estilo FGV, com Gestão de Sala de Aula (Lemov, Willingham, Wiggins & McTighe, Weinstein) e os 5 eixos de Ciências. Simulado oficial de 30 questões com nota de corte e desempate, Campanha por eixos com medalhas, Cultura do Erro, Desafio Relâmpago, gráficos e esquemas, Raio-X do distrator e relatório de estudo.",
+    desc: "Game para o concurso SEDUC-SP (Edital 01/2026, PEFM – Ciências, banca FGV): 94 questões inéditas no estilo FGV, sendo 75 de Ciências (15 por eixo, nível de licenciatura, com cálculos, gráficos e afirmativas I-II-III) e 19 de Gestão de Sala de Aula. Simulado oficial de 30 questões com nota de corte e desempate, Treino Discursivo com os 5 critérios do edital, Campanha por eixos com medalhas, Cultura do Erro, Desafio Relâmpago, Raio-X do distrator e relatório de estudo.",
     emoji: "🔬", cor: "verde",
     conteudo: "Formação docente e concursos"
   },

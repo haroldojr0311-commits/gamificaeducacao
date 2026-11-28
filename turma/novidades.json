@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-28",
+    "hora": "10:16",
+    "titulo": "Missão PEFM-SP: 75 questões de Ciências e treino discursivo",
+    "texto": "O game do concurso SEDUC-SP (Ciências) agora segue o Edital 01/2026: 15 questões por eixo em nível de licenciatura (cálculos, gráficos, heredograma, curvas de solubilidade e de CO₂, afirmativas I-II-III), novo Treino Discursivo com 2 questões, padrão de resposta e os 5 critérios de correção, e Desafio Relâmpago com 7 questões de Ciências.",
+    "link": "/?jogo=missao-pefm-sp-ciencias",
+    "jogo": "missao-pefm-sp-ciencias"
+  },
+  {
+    "data": "2026-11-28",
     "hora": "10:00",
     "titulo": "Novo game: Missão PEFM-SP – Desafio FGV Ciências",
     "texto": "Preparação para a prova objetiva do concurso SEDUC-SP (PEFM – Ciências, banca FGV): 52 questões inéditas, Simulado Oficial de 30 questões com nota de corte (15 pontos) e desempate, Campanha por eixos com medalhas, Cultura do Erro, Desafio Relâmpago, esquemas em SVG, Raio-X do distrator e relatório de estudo em CSV.",
