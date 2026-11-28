@@ -22,6 +22,14 @@ window.JOGOS = {
     emoji: "🔬", cor: "verde",
     conteudo: "Formação docente e concursos"
   },
+  "missao-pefm-sp-matematica": {
+    nivel: ["Superior"],
+    nome: "Missão PEFM-SP: Desafio FGV Matemática",
+    tema: "Concurso SEDUC-SP 2026 · PEFM Matemática",
+    desc: "Game para o concurso SEDUC-SP (Edital 01/2026, PEFM – Matemática, banca FGV): 50 questões inéditas em 4 eixos do Bloco II (números, álgebra e funções, geometria e medidas, dados e combinatória), com figuras, gráficos e modelagem no estilo FGV. Simulado oficial de 20 questões com cronômetro, nota de corte e desempate, Trilha de domínio com selos, Cultura do Erro, Sprint FGV, rascunho digital, calculadora, autópsia do distrator e relatório de estudo.",
+    emoji: "➗", cor: "azul",
+    conteudo: "Formação docente e concursos"
+  },
   "aventura-do-pi": {
     bncc: ["EF07MA31", "EF07MA33", "EF08MA19"],
     nivel: ["Fundamental 2", "Ensino Médio"],

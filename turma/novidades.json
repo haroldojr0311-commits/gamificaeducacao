@@ -1,6 +1,14 @@
 [
   {
     "data": "2026-11-28",
+    "hora": "11:50",
+    "titulo": "Novo game: Missão PEFM-SP – Desafio FGV Matemática",
+    "texto": "Preparação para o concurso SEDUC-SP (Edital 01/2026, banca FGV): 50 questões de Matemática em 4 eixos, com figuras e gráficos, Simulado Oficial de 20 questões, Trilha de domínio, Cultura do Erro, Sprint FGV, rascunho digital e calculadora.",
+    "link": "/?jogo=missao-pefm-sp-matematica",
+    "jogo": "missao-pefm-sp-matematica"
+  },
+  {
+    "data": "2026-11-28",
     "hora": "10:24",
     "titulo": "Missão PEFM-SP: foco na prova objetiva",
     "texto": "O Treino Discursivo foi retirado. O game agora se concentra na prova objetiva do Edital 01/2026: Simulado Oficial, Campanha por eixos, Cultura do Erro e Desafio Relâmpago.",
