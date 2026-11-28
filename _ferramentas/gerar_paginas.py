@@ -319,7 +319,7 @@ FAQ = [
     ('Para quais séries serve?', 'Há aplicações para o Fundamental 1, o Fundamental 2, o Ensino Médio e o Superior. No portal, use o filtro “Nível” para ver as recomendadas para cada etapa.'),
     ('Só tem Matemática?', 'A maior parte das aplicações é de Matemática, mas muitas servem para qualquer disciplina: Gamifica Live (Quiz ao vivo), Enquete e Nuvem de Palavras, Bingo, Caça-palavras, Sorteador, Cronômetro, Mapa da sala, Leitor de gabaritos e os jogos com editor (como o “Crie o seu” do Ligar e Classificar).'),
     ('Como funciona a degustação grátis?', 'Na tela de entrada, toque em “Degustação grátis”: você navega pelo portal por alguns minutos para conhecer as aplicações. Na degustação não é possível atribuir tarefas e nada fica salvo.'),
-    ('Quanto custa o Plano Pró?', 'R$ 10,00 por mês. Você escolhe de 1 a 12 meses e paga por Pix ou cartão pelo Mercado Pago. O login e a senha aparecem na tela assim que o pagamento é aprovado.'),
+    ('Quanto custa o Plano Pró?', 'Plano Mensal: R$ 14,90 por mês. Plano Anual: R$ 9,99 por mês (R$ 119,88 à vista por 12 meses). Pague por Pix ou cartão pelo Mercado Pago, sem renovação automática. O login e a senha aparecem na tela assim que o pagamento é aprovado.'),
     ('Posso usar em mais de um aparelho?', 'O login funciona em um aparelho por vez. Se você entrar em outro aparelho, o anterior é desconectado.'),
     ('Os alunos precisam de login ou de cadastro?', 'Não. Em “Atribuir tarefas” você gera um link (ou QR code). O aluno abre, digita o nome e a turma, joga, e a nota chega para você em “Atividades desenvolvidas”, com planilha e relatório em Word.'),
     ('Como funcionam o Gamifica Live (Quiz ao vivo) e a Enquete?', 'Você projeta a tela e os alunos entram pelo celular com um código: gamificaeducacao.com.br/vivo (quiz) ou gamificaeducacao.com.br/enquete (enquete e nuvem de palavras). As respostas aparecem no projetor na hora.'),
@@ -438,7 +438,7 @@ termos = f"""<div class="card legal"><h1>Termos de Uso</h1><p class="sub">Últim
 <p>Ao usar o <b>Gamifica Educação</b> (gamificaeducacao.com.br), você concorda com estes termos.</p>
 <h2>1. O serviço</h2><p>O portal oferece jogos, simuladores e ferramentas educacionais que funcionam no navegador. O conteúdo pode ser ampliado, alterado ou reorganizado para melhorar o serviço.</p>
 <h2>2. Degustação grátis</h2><p>A degustação permite conhecer o portal por tempo limitado, sem atribuir tarefas e sem salvar dados. Há um limite de degustações por e-mail.</p>
-<h2>3. Plano Pró</h2><ul><li>O acesso é contratado por período (de 1 a 12 meses) e pago por Pix ou cartão pelo Mercado Pago.</li>
+<h2>3. Plano Pró</h2><ul><li>O acesso é contratado pelo plano Mensal (1 mês, R$ 14,90) ou Anual (12 meses, R$ 119,88) e pago por Pix ou cartão pelo Mercado Pago.</li>
 <li>O login é <b>pessoal e intransferível</b> e funciona em um aparelho por vez. Entrar em outro aparelho desconecta o anterior.</li>
 <li>Ao fim do período contratado, o acesso é encerrado até a renovação. As tarefas e as notas já criadas continuam guardadas.</li>
 <li><b>Direito de arrependimento:</b> como a compra é feita pela internet, você pode desistir em até 7 dias após a contratação e receber o valor pago de volta, conforme o art. 49 do Código de Defesa do Consumidor. Basta pedir pelo contato abaixo.</li></ul>
