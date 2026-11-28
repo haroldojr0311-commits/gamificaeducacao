@@ -1,5 +1,13 @@
 [
   {
+    "data": "2026-11-28",
+    "hora": "08:28",
+    "titulo": "Missão Aprovação SEDUC-SP: botão Menu",
+    "texto": "Dentro da Trilha, do Simulado, do Identifique a técnica e dos Flashcards agora aparece o botão amarelo ◀ Menu no topo, que volta para a tela inicial do game sem sair do jogo.",
+    "link": "/?jogo=missao-aprovacao-seduc-sp",
+    "jogo": "missao-aprovacao-seduc-sp"
+  },
+  {
     "data": "2026-11-27",
     "hora": "22:18",
     "titulo": "Missão Aprovação SEDUC-SP: correção",
